@@ -2315,7 +2315,7 @@ extern void clear_ed_task(struct task_struct *p, struct rq *rq);
 extern void migrate_ed_task(struct task_struct *p, struct rq *src_rq, struct rq *dest_rq);
 
 #ifdef CONFIG_UCLAMP_TASK
-unsigned int uclamp_eff_value(struct task_struct *p, unsigned int clamp_id);
+enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
 
 static __always_inline
 unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
