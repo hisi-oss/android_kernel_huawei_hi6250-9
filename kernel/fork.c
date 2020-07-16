@@ -1957,12 +1957,14 @@ static __latent_entropy struct task_struct *copy_process(
 	write_unlock_irq(&tasklist_lock);
 
 	proc_fork_connector(p);
+
 #ifdef CONFIG_HW_QOS_THREAD
 	iaware_proc_fork_inherit(p, current);
 #endif
 #if ((defined(CONFIG_HW_VIP_THREAD)) || (defined(CONFIG_HW_QOS_THREAD)))
 	iaware_proc_fork_connector(p);
 #endif
+	sched_post_fork(p);
 	cgroup_post_fork(p);
 	threadgroup_change_end(current);
 	perf_event_fork(p);
