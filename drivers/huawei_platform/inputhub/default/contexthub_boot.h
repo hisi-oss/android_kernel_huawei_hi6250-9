@@ -188,25 +188,25 @@ typedef struct coul_core_info {
 	int r_coul_mohm;
 }coul_core_info_t;
 
-struct BrightData {
-	uint32_t mipiData;
-	uint32_t brightData;
-	uint64_t timeStamp;
-};
+typedef struct {
+	u16 mipiData;
+	u16 brightData;
+	u32 timeStamp;
+} bright_data_als_ud_t;
 
-struct ReadDataAlsUd{
+typedef struct {
 	float rdata;
 	float gdata;
 	float bdata;
 	float irdata;
-};
+} read_data_als_ud_t;
 
-struct AlsUdConfig{
+typedef struct ALS_UD_CONFIG {
 	u8 screen_status;
 	u64 als_rgb_pa;
-	struct BrightData BrightData_input;
-	struct ReadDataAlsUd read_data_history;
-};
+	bright_data_als_ud_t BrightData_input;
+	read_data_als_ud_t read_data_history;
+} als_ud_config_t;
 
 struct CONFIG_ON_DDR
 {
@@ -220,9 +220,7 @@ struct CONFIG_ON_DDR
 	timestamp_kernel_t timestamp_base;
 	timestamp_iomcu_base_t timestamp_base_iomcu;
 	coul_core_info_t coul_info;
-	struct AlsUdConfig als_ud_config;
-	u32 te_irq_tcs3701;
-	u32 old_dc_flag;
+	als_ud_config_t als_ud_config;
 };
 
 /*receive data from mcu,you should copy the buf each time.*/
