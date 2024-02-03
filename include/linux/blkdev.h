@@ -1200,7 +1200,6 @@ do {								\
 } while (0)
 #endif
 
-extern void blk_queue_dump_register(struct request_queue *q, lld_dump_status_fn func);
 extern int blk_register_queue(struct gendisk *disk);
 extern void blk_unregister_queue(struct gendisk *disk);
 extern blk_qc_t generic_make_request(struct bio *bio);

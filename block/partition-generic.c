@@ -468,7 +468,6 @@ rescan:
 		}
 		return -EIO;
 	}
-	hisi_blk_check_partition_done(disk, true);
 	/*
 	 * If any partition code tried to read beyond EOD, try
 	 * unlocking native capacity even if partition table is

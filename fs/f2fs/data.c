@@ -242,11 +242,6 @@ static struct bio *__bio_alloc(struct f2fs_sb_info *sbi, block_t blk_addr,
 	f2fs_target_device(sbi, blk_addr, bio);
 	bio->bi_end_io = is_read ? f2fs_read_end_io : f2fs_write_end_io;
 	bio->bi_private = is_read ? NULL : sbi;
-#ifdef CONFIG_F2FS_FS_ENCRYPTION
-	bio->hisi_bio.ci_key = NULL;
-	bio->hisi_bio.ci_key_len = 0;
-	bio->hisi_bio.ci_key_index = -1;
-#endif
 
 	return bio;
 }
@@ -469,15 +464,6 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
 	/* Allocate a new bio */
 	bio = __bio_alloc(fio->sbi, fio->new_blkaddr, 1, is_read_io(fio->op));
 
-#ifdef CONFIG_F2FS_FS_ENCRYPTION
-	if (fio->ci_key) {
-		bio->hisi_bio.ci_key = fio->ci_key;
-		bio->hisi_bio.ci_key_len = fio->ci_key_len;
-		bio->hisi_bio.ci_key_index = fio->ci_key_index;
-		bio->hisi_bio.index = page->index;
-	}
-#endif
-
 	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
 		bio_put(bio);
 		return -EFAULT;
@@ -532,13 +518,6 @@ next:
 	    (io->fio.op != fio->op || io->fio.op_flags != fio->op_flags) ||
 			!__same_bdev(sbi, fio->new_blkaddr, io->bio)))
 		__submit_merged_bio(io);
-#ifdef CONFIG_F2FS_FS_ENCRYPTION
-	else if ((io->bio) && ((io->bio->hisi_bio.ci_key != fio->ci_key) ||
-				(io->bio->hisi_bio.ci_key_len != fio->ci_key_len) ||
-				(fio->ci_key &&	io->last_index_in_bio !=
-						bio_page->index - 1)))
-		__submit_merged_bio(io);
-#endif
 
 alloc_new:
 	if (io->bio == NULL) {
@@ -567,19 +546,7 @@ alloc_new:
 			io->bio->bi_opf |= REQ_NOMERGE;
 
 		io->fio = *fio;
-#ifdef CONFIG_F2FS_FS_ENCRYPTION
-		io->bio->hisi_bio.ci_key = fio->ci_key;
-		io->bio->hisi_bio.ci_key_len = fio->ci_key_len;
-		io->bio->hisi_bio.ci_key_index = fio->ci_key_index;
-		if (fio->ci_key)
-			io->bio->hisi_bio.index = bio_page->index;
-#endif
 	}
-
-#ifdef CONFIG_F2FS_FS_ENCRYPTION
-	f2fs_bug_on(sbi, (io->bio->hisi_bio.ci_key != fio->ci_key) ||
-			(io->bio->hisi_bio.ci_key_len != fio->ci_key_len));
-#endif
 
 	if (bio_add_page(io->bio, bio_page, PAGE_SIZE, 0) < PAGE_SIZE) {
 		__submit_merged_bio(io);
@@ -640,14 +607,6 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
 	bio->bi_end_io = f2fs_read_end_io;
 	bio->bi_private = ctx;
 	bio_set_op_attrs(bio, REQ_OP_READ, 0);
-#ifdef CONFIG_F2FS_FS_ENCRYPTION
-	if (need_key) {
-		bio->hisi_bio.ci_key = fscrypt_ci_key(inode);
-		bio->hisi_bio.ci_key_len = fscrypt_ci_key_len(inode);
-		bio->hisi_bio.ci_key_index = fscrypt_ci_key_index(inode);
-		bio->hisi_bio.index = page->index;
-	}
-#endif
 
 	return bio;
 }
