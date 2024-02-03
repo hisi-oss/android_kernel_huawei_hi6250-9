@@ -15,6 +15,7 @@
 
 #define pr_fmt(fmt) "cpu-boost: " fmt
 
+#include <../kernel/sched/sched.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/cpufreq.h>
@@ -35,6 +36,8 @@ struct cpu_sync {
 };
 
 static DEFINE_PER_CPU(struct cpu_sync, sync_info);
+
+static DEFINE_MUTEX(boost_mutex);
 
 static struct kthread_work input_boost_work;
 
@@ -57,6 +60,29 @@ static struct task_struct *cpu_boost_worker_thread;
 // alex.naidis@paranoidandroid.co Rework scheduling setup - end
 
 #define MIN_INPUT_INTERVAL (100 * USEC_PER_MSEC)
+
+#ifdef CONFIG_HISI_EAS_SCHED
+extern int global_boost_enable;
+
+static void boost_kick_cpus(void)
+{
+	int i;
+	struct cpumask kick_mask;
+	u32 nr_running;
+
+	mutex_lock(&boost_mutex);
+
+	cpumask_andnot(&kick_mask, cpu_online_mask, cpu_isolated_mask);
+
+	for_each_cpu(i, &kick_mask) {
+		if (capacity_orig_of(i) != SCHED_CAPACITY_SCALE) {
+			smp_send_reschedule(i);
+		}
+	}
+
+	mutex_unlock(&boost_mutex);
+}
+#endif
 
 static int set_input_boost_freq(const char *buf, const struct kernel_param *kp)
 {
@@ -190,9 +216,9 @@ static void do_input_boost_rem(struct work_struct *work)
 	update_policy_online();
 
 	if (sched_boost_active) {
-		ret = sched_set_boost(0);
-		if (ret)
-			pr_err("cpu-boost: HMP boost disable failed\n");
+#ifdef CONFIG_HISI_EAS_SCHED
+		global_boost_enable = 0;
+#endif
 		sched_boost_active = false;
 	}
 }
@@ -204,7 +230,9 @@ static void do_input_boost(struct kthread_work *work)
 
 	cancel_delayed_work_sync(&input_boost_rem);
 	if (sched_boost_active) {
-		sched_set_boost(0);
+#ifdef CONFIG_HISI_EAS_SCHED
+		global_boost_enable = 0;
+#endif
 		sched_boost_active = false;
 	}
 
@@ -219,12 +247,12 @@ static void do_input_boost(struct kthread_work *work)
 	update_policy_online();
 
 	/* Enable scheduler boost to migrate tasks to big cluster */
-	if (sched_boost_on_input > 0) {
-		ret = sched_set_boost(sched_boost_on_input);
-		if (ret)
-			pr_err("cpu-boost: HMP boost enable failed\n");
-		else
-			sched_boost_active = true;
+	if (sched_boost_on_input) {
+#ifdef CONFIG_HISI_EAS_SCHED
+		global_boost_enable = 1;
+		boost_kick_cpus();
+#endif
+		sched_boost_active = true;
 	}
 
 	schedule_delayed_work(&input_boost_rem, msecs_to_jiffies(input_boost_ms));
