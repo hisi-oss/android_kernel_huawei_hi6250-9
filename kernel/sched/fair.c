@@ -11849,53 +11849,6 @@ kick_active_balance(struct rq *rq, struct task_struct *p, int new_cpu)
 	return rc;
 }
 
-#ifdef CONFIG_HISI_EAS_SCHED
-static DEFINE_RAW_SPINLOCK(migration_lock);
-#endif
-void check_for_migration(struct rq *rq, struct task_struct *p)
-{
-	int new_cpu;
-	int active_balance;
-	int cpu = task_cpu(p);
-
-	if (energy_aware() && rq->misfit_task) {
-		if (rq->curr->state != TASK_RUNNING ||
-		    rq->curr->nr_cpus_allowed == 1)
-			return;
-
-#ifdef CONFIG_HISI_EAS_SCHED
-		raw_spin_lock(&migration_lock);
-		new_cpu = select_energy_cpu_brute(p, cpu, 0);
-		if (capacity_orig_of(new_cpu) <= capacity_orig_of(cpu)) {
-			new_cpu = select_max_spare_capacity_cpu(p, cpu);
-			if (capacity_orig_of(new_cpu) <= capacity_orig_of(cpu))
-				goto out_unlock;
-		}
-
-		active_balance = kick_active_balance(rq, p, new_cpu);
-		if (active_balance) {
-			mark_reserved(new_cpu);
-			raw_spin_unlock(&migration_lock);
-			stop_one_cpu_nowait(cpu,
-					active_load_balance_cpu_stop,
-					rq, &rq->active_balance_work);
-			return;
-		}
-out_unlock:
-		raw_spin_unlock(&migration_lock);
-#else
-		new_cpu = select_energy_cpu_brute(p, cpu, 0);
-		if (capacity_orig_of(new_cpu) > capacity_orig_of(cpu)) {
-			active_balance = kick_active_balance(rq, p, new_cpu);
-			if (active_balance)
-				stop_one_cpu_nowait(cpu,
-						active_load_balance_cpu_stop,
-						rq, &rq->active_balance_work);
-		}
-#endif
-	}
-}
-
 #endif /* CONFIG_SMP */
 
 /*

@@ -4215,9 +4215,6 @@ void scheduler_tick(void)
 	trigger_vip_balance(rq);
 #endif
 
-	if (curr->sched_class == &fair_sched_class)
-		check_for_migration(rq, curr);
-
 #ifdef CONFIG_HISI_RT_ACTIVE_LB
 	if (curr->sched_class == &rt_sched_class)
 		check_for_rt_migration(rq, curr);
