@@ -7,5 +7,4 @@ KBUILD_CPPFLAGS += -Idrivers/hisi/modem/drv/nvim
 
 obj-y			+= sc_balong.o
 
-subdir-ccflags-y := -Werror
 
