@@ -1046,6 +1046,9 @@ ifneq ($(strip $(clang)), true)
 KBUILD_CFLAGS   += $(call cc-option,-Werror=incompatible-pointer-types)
 endif
 
+# Relax pragma-pack usage
+KBUILD_CFLAGS   += $(call cc-option,-Wno-pragma-pack)
+
 # use the deterministic mode of AR if available
 KBUILD_ARFLAGS := $(call ar-option,D)
 
