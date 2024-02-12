@@ -185,3 +185,4 @@ obj-$(CONFIG_CONNECTIVITY_HI110X) += connectivity/
 obj-$(CONFIG_CONTEXTHUB)          += contexthub/
 obj-$(CONFIG_HW_GADGET)           += hwusb/
 obj-$(CONFIG_AUDIOKIT)            += devkit/audiokit/
+obj-$(CONFIG_LCDKIT_DRIVER)	  += devkit/lcdkit/
