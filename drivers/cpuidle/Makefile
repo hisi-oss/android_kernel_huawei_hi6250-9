@@ -20,6 +20,10 @@ obj-$(CONFIG_ARM_EXYNOS_CPUIDLE)        += cpuidle-exynos.o
 obj-$(CONFIG_ARM_CPUIDLE)		+= cpuidle-arm.o
 
 ###############################################################################
+# ARM64 drivers
+obj-$(CONFIG_HISI_MULTIDRV_CPUIDLE)	+= hisi-multidrv-cpuidle.o
+
+###############################################################################
 # MIPS drivers
 obj-$(CONFIG_MIPS_CPS_CPUIDLE)		+= cpuidle-cps.o
 
