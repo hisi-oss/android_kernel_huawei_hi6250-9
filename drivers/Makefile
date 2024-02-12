@@ -176,3 +176,7 @@ obj-$(CONFIG_ANDROID)		+= android/
 obj-$(CONFIG_NVMEM)		+= nvmem/
 obj-$(CONFIG_FPGA)		+= fpga/
 obj-$(CONFIG_TEE)		+= tee/
+
+# Hisi
+obj-$(CONFIG_HISILICON_PLATFORM) += hisi/
+obj-$(CONFIG_HUAWEI_PLATFORM)    += huawei_platform/
