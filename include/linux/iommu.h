@@ -32,6 +32,17 @@
 #define IOMMU_NOEXEC	(1 << 3)
 #define IOMMU_MMIO	(1 << 4) /* e.g. things like MSI doorbells */
 
+#if CONFIG_HISI_IOMMU
+#define IOMMU_DEVICE	(1 << 7)
+#define IOMMU_SEC	(1 << 8)
+#define IOMMU_EXEC      (1 << 9)
+#endif
+
+#ifdef CONFIG_HISI_LB
+#define IOMMU_PORT_SHIFT (12)
+#define IOMMU_PORT_MASK	(0xFF << IOMMU_PORT_SHIFT)
+#endif
+
 struct iommu_ops;
 struct iommu_group;
 struct bus_type;
@@ -84,6 +95,7 @@ struct iommu_domain {
 	void *handler_token;
 	struct iommu_domain_geometry geometry;
 	void *iova_cookie;
+	void *priv;
 };
 
 enum iommu_cap {
@@ -130,6 +142,28 @@ struct iommu_dm_region {
 	size_t			length;
 	int			prot;
 };
+
+#ifdef CONFIG_HISI_IOMMU
+/* metadata for iommu mapping */
+struct iommu_map_format {
+	unsigned long iova_start;
+	unsigned long iova_size;
+	unsigned long iommu_ptb_base;
+	unsigned long iommu_iova_base;
+	unsigned long header_size;
+	unsigned long phys_page_line;
+	unsigned long virt_page_line;
+	unsigned long is_tile;
+	unsigned long prot;
+};
+
+struct tile_format {
+	unsigned long header_size;
+	unsigned long is_tile;
+	unsigned long phys_page_line;
+	unsigned long virt_page_line;
+};
+#endif
 
 #ifdef CONFIG_IOMMU_API
 
@@ -272,6 +306,15 @@ struct device *iommu_device_create(struct device *parent, void *drvdata,
 void iommu_device_destroy(struct device *dev);
 int iommu_device_link(struct device *dev, struct device *link);
 void iommu_device_unlink(struct device *dev, struct device *link);
+
+#ifdef CONFIG_HISI_IOMMU
+int iommu_map_tile(struct iommu_domain *domain, unsigned long iova,
+		    struct scatterlist *sg, size_t size, int prot,
+		    struct tile_format *format);
+
+int iommu_unmap_tile(struct iommu_domain *domain, unsigned long iova,
+		      size_t size);
+#endif
 
 /* Window handling function prototypes */
 extern int iommu_domain_window_enable(struct iommu_domain *domain, u32 wnd_nr,
