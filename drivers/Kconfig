@@ -212,4 +212,6 @@ source "drivers/dsm/Kconfig"
 
 source "drivers/connectivity/Kconfig"
 
+source "drivers/contexthub/Kconfig"
+
 endmenu

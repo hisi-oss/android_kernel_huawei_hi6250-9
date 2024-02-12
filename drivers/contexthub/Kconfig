@@ -1,0 +1,9 @@
+config CONTEXTHUB
+	bool "Sensor CONTEXTHUB driver"
+	depends on INPUTHUB || INPUTHUB_20
+	default n
+	help
+	Sensor CONTEXTHUB driver.
+
+source "drivers/contexthub/flp/Kconfig"
+
