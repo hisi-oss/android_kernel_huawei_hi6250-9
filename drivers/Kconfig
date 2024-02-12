@@ -208,4 +208,6 @@ source "drivers/hisi/Kconfig"
 
 source "drivers/huawei_platform/Kconfig"
 
+source "drivers/dsm/Kconfig"
+
 endmenu
