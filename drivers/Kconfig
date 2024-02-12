@@ -224,4 +224,6 @@ source "drivers/devkit/tpkit/Kconfig"
 
 source "drivers/bootdevice/Kconfig"
 
+source "drivers/switch/Kconfig"
+
 endmenu

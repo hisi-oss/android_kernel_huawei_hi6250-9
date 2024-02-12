@@ -188,3 +188,4 @@ obj-$(CONFIG_AUDIOKIT)            += devkit/audiokit/
 obj-$(CONFIG_LCDKIT_DRIVER)	  += devkit/lcdkit/
 obj-$(CONFIG_HUAWEI_TS_KIT)       += devkit/tpkit/
 obj-$(CONFIG_HISI_BOOTDEVICE)     += bootdevice/
+obj-$(CONFIG_SWITCH)		  += switch/
