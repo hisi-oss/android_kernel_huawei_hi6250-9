@@ -186,3 +186,4 @@ obj-$(CONFIG_CONTEXTHUB)          += contexthub/
 obj-$(CONFIG_HW_GADGET)           += hwusb/
 obj-$(CONFIG_AUDIOKIT)            += devkit/audiokit/
 obj-$(CONFIG_LCDKIT_DRIVER)	  += devkit/lcdkit/
+obj-$(CONFIG_HUAWEI_TS_KIT)       += devkit/tpkit/

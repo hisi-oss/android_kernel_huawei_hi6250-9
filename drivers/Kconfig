@@ -220,4 +220,6 @@ source "drivers/devkit/audiokit/Kconfig"
 
 source "drivers/devkit/lcdkit/Kconfig"
 
+source "drivers/devkit/tpkit/Kconfig"
+
 endmenu
