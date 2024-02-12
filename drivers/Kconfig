@@ -216,4 +216,6 @@ source "drivers/contexthub/Kconfig"
 
 source "drivers/hwusb/Kconfig"
 
+source "drivers/devkit/audiokit/Kconfig"
+
 endmenu

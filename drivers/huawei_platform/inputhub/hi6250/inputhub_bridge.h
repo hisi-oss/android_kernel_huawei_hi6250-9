@@ -9,7 +9,7 @@
 #ifndef __LINUX_INPUTHUB_CMU_H__
 #define __LINUX_INPUTHUB_CMU_H__
 #include <linux/types.h>
-#include  <global_ddr_map.h>
+#include <global_ddr_map.h>
 #include "rdr_sensorhub.h"
 #include <huawei_platform/power/charging_core_sh.h>
 #include <huawei_platform/power/huawei_charger_sh.h>

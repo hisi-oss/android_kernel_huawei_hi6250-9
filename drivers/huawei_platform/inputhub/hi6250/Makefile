@@ -1,5 +1,6 @@
 #ifdef CONFIG_CONTEXTHUB_SHMEM
 ccflags-y  += -I$(srctree)/drivers/contexthub/
+ccfags-y += -I$(srctree)/drivers/hisi/ap/platform/hi6250/
 #endif
 
 # InputHub Driver

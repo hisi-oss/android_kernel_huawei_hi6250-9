@@ -184,3 +184,4 @@ obj-$(CONFIG_HUAWEI_DSM)          += dsm/
 obj-$(CONFIG_CONNECTIVITY_HI110X) += connectivity/
 obj-$(CONFIG_CONTEXTHUB)          += contexthub/
 obj-$(CONFIG_HW_GADGET)           += hwusb/
+obj-$(CONFIG_AUDIOKIT)            += devkit/audiokit/
