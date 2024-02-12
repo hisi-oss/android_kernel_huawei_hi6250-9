@@ -696,9 +696,13 @@ static const struct file_operations spidev_fops = {
 static struct class *spidev_class;
 
 #ifdef CONFIG_OF
+#ifndef CONFIG_HISI_SPI
 static const struct of_device_id spidev_dt_ids[] = {
 	{ .compatible = "rohm,dh2228fv" },
 	{ .compatible = "lineartechnology,ltc2488" },
+#else
+	{ .compatible = "arm,pl022" },/*lint !e785 */
+#endif
 	{},
 };
 MODULE_DEVICE_TABLE(of, spidev_dt_ids);
@@ -754,9 +758,11 @@ static int spidev_probe(struct spi_device *spi)
 	 * compatible string, it is a Linux implementation thing
 	 * rather than a description of the hardware.
 	 */
+#ifndef CONFIG_HISI_SPI
 	WARN(spi->dev.of_node &&
 	     of_device_is_compatible(spi->dev.of_node, "spidev"),
 	     "%pOF: buggy DT: spidev listed directly in DT\n", spi->dev.of_node);
+#endif
 
 	spidev_probe_acpi(spi);
 
@@ -826,6 +832,358 @@ static int spidev_remove(struct spi_device *spi)
 	return 0;
 }
 
+#ifdef CONFIG_HISI_SPI
+static const struct of_device_id spidev1_dt_ids[] = {
+	{ .compatible = "spi_dev1"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev1_dt_ids);
+
+static struct spi_driver spidev_spi_driver1 = {
+	.driver = {
+		.name =		"spi_dev1",
+		.owner =	THIS_MODULE,/*lint !e84  !e64*/
+		.of_match_table = of_match_ptr(spidev1_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev2_dt_ids[] = {
+	{ .compatible = "spi_dev2"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev2_dt_ids);
+
+static struct spi_driver spidev_spi_driver2 = {
+	.driver = {
+		.name =		"spi_dev2",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev2_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev3_dt_ids[] = {
+	{ .compatible = "spi_dev3"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev3_dt_ids);
+
+static struct spi_driver spidev_spi_driver3 = {
+	.driver = {
+		.name =		"spi_dev3",
+		.owner =	THIS_MODULE,/*lint !e785 !e64 */
+		.of_match_table = of_match_ptr(spidev3_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev10_dt_ids[] = {
+	{ .compatible = "spi_dev10"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev10_dt_ids);
+
+static struct spi_driver spidev_spi_driver10 = {
+	.driver = {
+		.name =		"spi_dev10",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev10_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev11_dt_ids[] = {
+	{ .compatible = "spi_dev11"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev11_dt_ids);
+
+static struct spi_driver spidev_spi_driver11 = {
+	.driver = {
+		.name =         "spi_dev11",
+		.owner =        THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev11_dt_ids),
+	},/*lint !e785 */
+	.probe =        spidev_probe,
+	.remove =       spidev_remove,
+
+       /* NOTE:  suspend/resume methods are not necessary here.
+	* We don't do anything except pass the requests to/from
+	* the underlying controller.  The refrigerator handles
+	* most issues; the controller driver handles the rest.
+	*/
+};
+
+static const struct of_device_id spidev12_dt_ids[] = {
+	{ .compatible = "spi_dev12"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev12_dt_ids);
+
+static struct spi_driver spidev_spi_driver12 = {
+	.driver = {
+		.name =         "spi_dev12",
+		.owner =        THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev12_dt_ids),
+	},/*lint !e785 */
+	.probe =        spidev_probe,
+	.remove =       spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev13_dt_ids[] = {
+	{ .compatible = "spi_dev13"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev13_dt_ids);
+
+static struct spi_driver spidev_spi_driver13 = {
+	.driver = {
+		.name =         "spi_dev13",
+		.owner =        THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev13_dt_ids),
+	},/*lint !e785 */
+	.probe =        spidev_probe,
+	.remove =       spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+static const struct of_device_id spidev21_dt_ids[] = {
+	{ .compatible = "spi_dev21"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+
+MODULE_DEVICE_TABLE(of, spidev21_dt_ids);
+
+static struct spi_driver spidev_spi_driver21 = {
+	.driver = {
+		.name =		"spi_dev21",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev21_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev30_dt_ids[] = {
+	{ .compatible = "spi_dev30"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev30_dt_ids);
+static struct spi_driver spidev_spi_driver30 = {
+	.driver = {
+		.name =		"spi_dev30",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev30_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev31_dt_ids[] = {
+	{ .compatible = "spi_dev31"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev31_dt_ids);
+static struct spi_driver spidev_spi_driver31 = {
+	.driver = {
+		.name =		"spi_dev31",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev31_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev32_dt_ids[] = {
+	{ .compatible = "spi_dev32"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev32_dt_ids);
+static struct spi_driver spidev_spi_driver32 = {
+	.driver = {
+		.name =		"spi_dev32",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev32_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev33_dt_ids[] = {
+	{ .compatible = "spi_dev33"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev33_dt_ids);
+static struct spi_driver spidev_spi_driver33 = {
+	.driver = {
+		.name =		"spi_dev33",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev33_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev40_dt_ids[] = {
+	{ .compatible = "spi_dev40"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev40_dt_ids);
+static struct spi_driver spidev_spi_driver40 = {
+	.driver = {
+		.name =		"spi_dev40",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev40_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev41_dt_ids[] = {
+	{ .compatible = "spi_dev41"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev41_dt_ids);
+static struct spi_driver spidev_spi_driver41 = {
+	.driver = {
+		.name =		"spi_dev41",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev41_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev42_dt_ids[] = {
+	{ .compatible = "spi_dev42"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev42_dt_ids);
+static struct spi_driver spidev_spi_driver42 = {
+	.driver = {
+		.name =		"spi_dev42",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev42_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+
+static const struct of_device_id spidev43_dt_ids[] = {
+	{ .compatible = "spi_dev43"},/*lint !e785 */
+	{},/*lint !e785 */
+};
+MODULE_DEVICE_TABLE(of, spidev43_dt_ids);
+static struct spi_driver spidev_spi_driver43 = {
+	.driver = {
+		.name =		"spi_dev43",
+		.owner =	THIS_MODULE,/*lint !e64 */
+		.of_match_table = of_match_ptr(spidev43_dt_ids),
+	},/*lint !e785 */
+	.probe =	spidev_probe,
+	.remove =	spidev_remove,
+
+	/* NOTE:  suspend/resume methods are not necessary here.
+	 * We don't do anything except pass the requests to/from
+	 * the underlying controller.  The refrigerator handles
+	 * most issues; the controller driver handles the rest.
+	 */
+};
+#else
 static struct spi_driver spidev_spi_driver = {
 	.driver = {
 		.name =		"spidev",
@@ -841,6 +1199,7 @@ static struct spi_driver spidev_spi_driver = {
 	 * most issues; the controller driver handles the rest.
 	 */
 };
+#endif
 
 /*-------------------------------------------------------------------------*/
 
@@ -859,24 +1218,162 @@ static int __init spidev_init(void)
 
 	spidev_class = class_create(THIS_MODULE, "spidev");
 	if (IS_ERR(spidev_class)) {
+#ifndef CONFIG_HISI_SPI
 		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver.driver.name);
+#endif
 		return PTR_ERR(spidev_class);
 	}
 
+#ifdef CONFIG_HISI_SPI
+	status = spi_register_driver(&spidev_spi_driver1);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver1.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver2);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver2.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver3);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver3.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver10);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver10.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver11);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver11.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver12);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver12.driver.name);
+	 }
+
+	status = spi_register_driver(&spidev_spi_driver13);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver13.driver.name);
+	 }
+
+	status = spi_register_driver(&spidev_spi_driver21);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver21.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver30);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver30.driver.name);
+	}
+
+
+	status = spi_register_driver(&spidev_spi_driver31);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver31.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver32);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver32.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver33);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver33.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver40);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver40.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver41);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver41.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver42);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver42.driver.name);
+	}
+
+	status = spi_register_driver(&spidev_spi_driver43);
+	if (status < 0) {
+		class_destroy(spidev_class);
+		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver43.driver.name);
+	}
+#else
 	status = spi_register_driver(&spidev_spi_driver);
 	if (status < 0) {
 		class_destroy(spidev_class);
 		unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver.driver.name);
 	}
+#endif
+
 	return status;
 }
 module_init(spidev_init);
 
 static void __exit spidev_exit(void)
 {
+#ifdef CONFIG_HISI_SPI
+	spi_unregister_driver(&spidev_spi_driver1);
+	spi_unregister_driver(&spidev_spi_driver2);
+	spi_unregister_driver(&spidev_spi_driver3);
+	spi_unregister_driver(&spidev_spi_driver10);
+	spi_unregister_driver(&spidev_spi_driver11);
+	spi_unregister_driver(&spidev_spi_driver12);
+	spi_unregister_driver(&spidev_spi_driver13);
+	spi_unregister_driver(&spidev_spi_driver21);
+	spi_unregister_driver(&spidev_spi_driver30);
+	spi_unregister_driver(&spidev_spi_driver31);
+	spi_unregister_driver(&spidev_spi_driver32);
+	spi_unregister_driver(&spidev_spi_driver33);
+	spi_unregister_driver(&spidev_spi_driver40);
+	spi_unregister_driver(&spidev_spi_driver41);
+	spi_unregister_driver(&spidev_spi_driver42);
+	spi_unregister_driver(&spidev_spi_driver43);
+
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver1.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver2.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver3.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver10.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver11.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver12.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver13.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver21.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver30.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver31.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver32.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver33.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver40.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver41.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver42.driver.name);
+	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver43.driver.name);
+#else
 	spi_unregister_driver(&spidev_spi_driver);
 	class_destroy(spidev_class);
 	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver.driver.name);
+#endif
 }
 module_exit(spidev_exit);
 
