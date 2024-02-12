@@ -16,6 +16,9 @@
 #include <linux/err.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
+#ifdef CONFIG_HISI_CLK
+#include <linux/clkdev.h>
+#endif
 
 /*
  * DOC: basic fixed-rate clock that cannot gate
@@ -183,6 +186,10 @@ static struct clk *_of_fixed_clk_setup(struct device_node *node)
 		clk_unregister(clk);
 		return ERR_PTR(ret);
 	}
+
+#ifdef CONFIG_HISI_CLK
+	clk_register_clkdev(clk, clk_name, NULL);
+#endif
 
 	return clk;
 }

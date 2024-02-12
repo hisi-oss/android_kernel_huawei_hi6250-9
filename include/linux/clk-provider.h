@@ -197,6 +197,9 @@ struct clk_ops {
 	int		(*enable)(struct clk_hw *hw);
 	void		(*disable)(struct clk_hw *hw);
 	int		(*is_enabled)(struct clk_hw *hw);
+#ifdef CONFIG_HISI_CLK
+	int		(*get_source)(struct clk_hw *hw);
+#endif
 	void		(*disable_unused)(struct clk_hw *hw);
 	unsigned long	(*recalc_rate)(struct clk_hw *hw,
 					unsigned long parent_rate);
@@ -727,6 +730,11 @@ void clk_hw_unregister(struct clk_hw *hw);
 void devm_clk_hw_unregister(struct device *dev, struct clk_hw *hw);
 
 /* helper functions */
+unsigned long __clk_get_rate(struct clk *clk);
+void __clk_disable(struct clk *clk);
+int __clk_enable(struct clk *clk);
+struct clk *__clk_get_parent(struct clk *clk);
+unsigned long __clk_round_rate(struct clk *clk, unsigned long rate);
 const char *__clk_get_name(const struct clk *clk);
 const char *clk_hw_get_name(const struct clk_hw *hw);
 struct clk_hw *__clk_get_hw(struct clk *clk);

@@ -48,6 +48,12 @@ static void clk_gate_endisable(struct clk_hw *hw, int enable)
 
 	set ^= enable;
 
+#ifdef CONFIG_HISI_CLK
+	#define CLK_GATE_ALWAYS_ON_MASK   0x4
+	if ((!set) && (gate->flags & CLK_GATE_ALWAYS_ON_MASK))
+		return;
+#endif
+
 	if (gate->lock)
 		spin_lock_irqsave(gate->lock, flags);
 	else
