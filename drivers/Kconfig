@@ -222,4 +222,6 @@ source "drivers/devkit/lcdkit/Kconfig"
 
 source "drivers/devkit/tpkit/Kconfig"
 
+source "drivers/bootdevice/Kconfig"
+
 endmenu
