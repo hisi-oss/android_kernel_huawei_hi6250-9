@@ -1070,6 +1070,9 @@ enum nl80211_commands {
 	NL80211_CMD_NAN_MATCH,
 
 	/* add new commands above here */
+#ifdef CONFIG_HW_VOWIFI
+	NL80211_CMD_VOWIFI = 201,
+#endif
 
 	/* used to define NL80211_CMD_MAX below */
 	__NL80211_CMD_AFTER_LAST,

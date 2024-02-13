@@ -5087,6 +5087,17 @@ void cfg80211_disconnected(struct net_device *dev, u16 reason,
 			   const u8 *ie, size_t ie_len,
 			   bool locally_generated, gfp_t gfp);
 
+#ifdef CONFIG_HW_VOWIFI
+/**
+ * cfg80211_drv_vowifi - notification of vowifi event
+ *
+ * @dev: network device
+ * @gfp: allocation flags
+ *
+ */
+void cfg80211_drv_vowifi(struct net_device *dev, gfp_t gfp);
+#endif
+
 /**
  * cfg80211_ready_on_channel - notification of remain_on_channel start
  * @wdev: wireless device
