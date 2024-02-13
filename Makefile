@@ -373,6 +373,7 @@ USERINCLUDE    := \
 		-I$(objtree)/include/generated/uapi \
                 -include $(srctree)/include/linux/kconfig.h
 
+export TARGET_BOARD_PLATFORM = hi6250
 # Use LINUXINCLUDE when you must reference the include/ directory.
 # Needed to be compatible with the O= option
 LINUXINCLUDE    := \
@@ -380,7 +381,39 @@ LINUXINCLUDE    := \
 		-I$(objtree)/arch/$(hdr-arch)/include/generated/uapi \
 		-I$(objtree)/arch/$(hdr-arch)/include/generated \
 		$(if $(KBUILD_SRC), -I$(srctree)/include) \
-		-I$(objtree)/include
+		-I$(objtree)/include \
+		$(USERINCLUDE)
+
+LINUXINCLUDE += -I$(srctree)/mm \
+		-I$(srctree)/include \
+		-I$(srctree)/include/linux/hisi \
+		-I$(srctree)/drivers \
+		-I$(srctree)/drivers/huawei_platform \
+		-I$(srctree)/fs/proc
+
+ifeq ($(CFG_LCD_KIT),true)
+LINUXINCLUDE += -I$(objtree)/drivers/devkit/lcdkit/lcdkit3.0
+else
+LINUXINCLUDE += -I$(objtree)/drivers/devkit/lcdkit/lcdkit1.0
+endif
+
+ifeq ($(strip $(TARGET_BOARD_PLATFORM)), kirin980)
+LINUXINCLUDE += -I$(srctree)/drivers/hisi/ap/platform/$(TARGET_BOARD_PLATFORM)
+else
+ifeq ($(chip_type),es)
+LINUXINCLUDE += -I$(srctree)/drivers/hisi/ap/platform/$(TARGET_BOARD_PLATFORM)_es
+else
+ifeq ($(chip_type),m536)
+LINUXINCLUDE += -I$(srctree)/drivers/hisi/ap/platform/$(TARGET_BOARD_PLATFORM)_m536
+else
+LINUXINCLUDE += -I$(srctree)/drivers/hisi/ap/platform/$(TARGET_BOARD_PLATFORM)
+endif
+endif
+endif
+
+ifneq ($(BALONG_INC),)
+LINUXINCLUDE       += $(BALONG_INC)
+endif
 
 LINUXINCLUDE	+= $(filter-out $(LINUXINCLUDE),$(USERINCLUDE))
 
@@ -402,6 +435,29 @@ CLANG_FLAGS :=
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
 KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)
 KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
+
+# build drv only config
+OBB_SEPARATE        ?=$(separate)
+ifeq ($(strip $(OBB_SEPARATE)),true)
+KBUILD_CFLAGS += -DDRV_BUILD_SEPARATE
+KBUILD_AFLAGS += -DDRV_BUILD_SEPARATE
+KBUILD_CPPFLAGS += -DDRV_BUILD_SEPARATE
+endif
+
+#add SLT FEATURE to ap
+ifeq ($(strip $(hitest_type)),slt)
+KBUILD_CFLAGS += -D__SLT_FEATURE__
+endif
+
+ifneq ($(BALONG_FAMA_FLAGS),)
+KBUILD_CFLAGS += $(BALONG_FAMA_FLAGS)
+endif
+
+OBB_PRODUCT_NAME = hi6250
+CFG_PLATFORM = hi6250
+TARGET_ARM_TYPE = arm64
+export OBB_PRODUCT_NAME CFG_PLATFORM TARGET_ARM_TYPE 
+# add hisilicon balong configs end
 
 export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
 export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
@@ -749,6 +805,55 @@ endif
 
 ifneq ($(CONFIG_FRAME_WARN),0)
 KBUILD_CFLAGS += $(call cc-option,-Wframe-larger-than=${CONFIG_FRAME_WARN})
+endif
+
+ifeq ($(use_hash_log),true)
+KBUILD_CFLAGS += -fplugin=$(srctree)/../../prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/libexec/gcc/aarch64-linux-android/4.9.x/hashlog.so
+KBUILD_CFLAGS += -fplugin-arg-hashlog-keyconfdir=$(srctree)/../../vendor/hisi/ap/build/core/kernel_hash_key_config.txt
+ifeq ($(gen_loghash_file),true)
+KBUILD_CFLAGS += -fplugin-arg-hashlog-genkeyfile
+endif
+endif
+
+#KBUILD_CFLAGS += -fplugin=$(srctree)/../../prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/libexec/gcc/aarch64-linux-android/4.9.x/cfi.so -fplugin-arg-cfi-logfault
+ifdef CONFIG_HUAWEI_CFI
+KBUILD_CFLAGS += -fplugin=$(srctree)/../../prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/libexec/gcc/aarch64-linux-android/4.9.x/cfi.so -fplugin-arg-cfi-abortfn=__cfi_report
+KBUILD_CFLAGS += -fplugin-arg-cfi-tagvalue=$(CONFIG_HUAWEI_CFI_TAG)
+ifeq ($(CONFIG_HUAWEI_CFI_DEBUG),y)
+KBUILD_CFLAGS += -DHW_SAVE_CFI_LOG
+endif
+endif
+## kernel struct layout randomize
+ifdef CONFIG_GCC_PLUGIN_RANDSTRUCT
+###!!!!!! only support 100 white list ,and etch item must less than 64 ,split by ,
+rand_struct_whitelist=/rand_struct_whitelist_do_nothing/
+#rand_struct_whitelist=/modem/,/hisi/,/connectivity/,/wifi/,drivers/spmi_hisi/,drivers/hwusb/,drivers/rphone/,drivers/media/,drivers/vcodec/
+KBUILD_CFLAGS += -fplugin=$(srctree)/../../prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/libexec/gcc/aarch64-linux-android/4.9.x/randomize_layout.so
+RANDSTRUCT_SEED_VALUE = $(shell cat $(srctree)/randomize_layout_seed)
+KBUILD_CFLAGS += -fplugin-arg-randomize_layout-seed=$(RANDSTRUCT_SEED_VALUE)
+KBUILD_CFLAGS += -fplugin-arg-randomize_layout-whitelist=$(rand_struct_whitelist)
+
+ifdef CONFIG_GCC_PLUGIN_RANDSTRUCT_PERFORMANCE
+KBUILD_CFLAGS += -fplugin-arg-randomize_layout-performance-mode
+endif
+#KBUILD_CFLAGS += -fplugin-arg-randomize_layout-check_duplicate
+
+ifneq ($(RANDSTRUCT_SEED_VALUE),)
+ifdef CONFIG_GCC_PLUGIN_RANDSTRUCT_OPERATIONS
+KBUILD_CFLAGS += -fplugin-arg-randomize_layout-include_operations_struct
+endif
+KBUILD_CFLAGS += -DRANDSTRUCT_PLUGIN
+endif
+
+endif
+
+ifdef CONFIG_GCC_PLUGIN_STRUCTLEAK
+KBUILD_CFLAGS += -fplugin=$(srctree)/../../prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/libexec/gcc/aarch64-linux-android/4.9.x/structleak.so
+KBUILD_CFLAGS += -fplugin-arg-structleak-verbose
+##byref-all means all struct should be forcibly initialized, default initialized struct copy to user
+##KBUILD_CFLAGS += -fplugin-arg-structleak-byref-all
+
+KBUILD_CFLAGS += -DSTRUCTLEAK_PLUGIN
 endif
 
 # This selects the stack protector compiler flag. Testing it is delayed
