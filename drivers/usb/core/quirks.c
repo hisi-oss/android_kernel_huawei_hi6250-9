@@ -352,6 +352,9 @@ static const struct usb_device_id usb_quirk_list[] = {
 	/* novation SoundControl XL */
 	{ USB_DEVICE(0x1235, 0x0061), .driver_info = USB_QUIRK_RESET_RESUME },
 
+	/* Huawei TypeC Headset */
+	{ USB_DEVICE(0x12d1, 0x3a07), .driver_info = USB_QUIRK_PM_NO_RESET_RESUME},
+
 	{ }  /* terminating entry must be last */
 };
 

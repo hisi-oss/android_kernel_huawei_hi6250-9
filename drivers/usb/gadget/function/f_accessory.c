@@ -996,6 +996,8 @@ err:
 }
 EXPORT_SYMBOL_GPL(acc_ctrlrequest);
 
+#include "function-hisi/f_accessory_hisi.c"
+
 static int
 __acc_function_bind(struct usb_configuration *c,
 			struct usb_function *f, bool configfs)
@@ -1042,6 +1044,16 @@ __acc_function_bind(struct usb_configuration *c,
 		acc_highspeed_out_desc.bEndpointAddress =
 			acc_fullspeed_out_desc.bEndpointAddress;
 	}
+
+#ifdef CONFIG_HISI_USB_FUNC_ADD_SS_DESC
+	/* support super speed & plus hardware */
+	if (gadget_is_superspeed(c->cdev->gadget)) {
+		acc_superspeed_in_desc.bEndpointAddress =
+			acc_fullspeed_in_desc.bEndpointAddress;
+		acc_superspeed_out_desc.bEndpointAddress =
+			acc_fullspeed_out_desc.bEndpointAddress;
+	}
+#endif
 
 	DBG(cdev, "%s speed %s: IN/%s, OUT/%s\n",
 			gadget_is_dualspeed(c->cdev->gadget) ? "dual" : "full",
@@ -1422,6 +1434,10 @@ static struct usb_function *acc_alloc(struct usb_function_instance *fi)
 	dev->function.strings = acc_strings,
 	dev->function.fs_descriptors = fs_acc_descs;
 	dev->function.hs_descriptors = hs_acc_descs;
+#ifdef CONFIG_HISI_USB_FUNC_ADD_SS_DESC
+	dev->function.ss_descriptors = ss_acc_descs;
+	dev->function.ssp_descriptors = ss_acc_descs;
+#endif
 	dev->function.bind = acc_function_bind_configfs;
 	dev->function.unbind = acc_function_unbind;
 	dev->function.set_alt = acc_function_set_alt;

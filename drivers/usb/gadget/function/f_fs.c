@@ -1497,7 +1497,7 @@ ffs_fs_mount(struct file_system_type *t, int flags,
 	if (unlikely(ret < 0))
 		return ERR_PTR(ret);
 
-	ffs = ffs_data_new();
+	ffs = ffs_data_new(dev_name);
 	if (unlikely(!ffs))
 		return ERR_PTR(-ENOMEM);
 	ffs->file_perms = data.perms;
@@ -1637,13 +1637,19 @@ static void ffs_data_closed(struct ffs_data *ffs)
 	ffs_data_put(ffs);
 }
 
-static struct ffs_data *ffs_data_new(void)
+static struct ffs_data *ffs_data_new(const char *dev_name)
 {
 	struct ffs_data *ffs = kzalloc(sizeof *ffs, GFP_KERNEL);
 	if (unlikely(!ffs))
 		return NULL;
 
 	ENTER();
+
+	ffs->io_completion_wq = alloc_ordered_workqueue("%s", 0, dev_name);
+	if (!ffs->io_completion_wq) {
+		kfree(ffs);
+		return NULL;
+	}
 
 	atomic_set(&ffs->ref, 1);
 	atomic_set(&ffs->opened, 0);
@@ -1875,6 +1881,15 @@ static int ffs_func_eps_enable(struct ffs_function *func)
 
 		ep->ep->driver_data = ep;
 		ep->ep->desc = ds;
+
+#ifdef CONFIG_HISI_USB_CONFIGFS
+		if (config_ep_by_speed(ffs->gadget, &func->function,
+					ep->ep)) {
+			pr_err("ffs: config ep fail!\n");
+			ret = -EINVAL;
+			break;
+		}
+#endif
 
 		if (needs_comp_desc) {
 			comp_desc = (struct usb_ss_ep_comp_descriptor *)(ds +
