@@ -189,3 +189,12 @@ obj-$(CONFIG_LCDKIT_DRIVER)	  += devkit/lcdkit/
 obj-$(CONFIG_HUAWEI_TS_KIT)       += devkit/tpkit/
 obj-$(CONFIG_HISI_BOOTDEVICE)     += bootdevice/
 obj-$(CONFIG_SWITCH)		  += switch/
+obj-$(CONFIG_HI_VCODEC_VENC_HI3660) += vcodec/hi_vcodec/venc/drv/venc/
+obj-$(CONFIG_HI_VCODEC_VENC_HIVNA) += vcodec/hi_vcodec/venc_hivna/drv/venc/
+obj-$(CONFIG_HI_VCODEC_VDEC_HI3660) += vcodec/hi_vcodec/vdec/
+obj-$(CONFIG_HI_VCODEC_VDEC_HIVNA) += vcodec/hi_vcodec/vdec_hivna/
+ifeq ($(BOARD_CHARGER_ENABLE_DRM),true)
+obj-$(CONFIG_IMAGINATION_D5500_DRM_VCODEC)  += vcodec/imagination/D5500_DRM/
+else
+obj-$(CONFIG_IMAGINATION_D5500_VCODEC)  += vcodec/imagination/D5500/
+endif

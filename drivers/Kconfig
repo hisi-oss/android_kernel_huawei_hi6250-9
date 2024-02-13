@@ -226,4 +226,10 @@ source "drivers/bootdevice/Kconfig"
 
 source "drivers/switch/Kconfig"
 
+source "drivers/vcodec/hi_vcodec/Kconfig"
+
+source "drivers/vcodec/imagination/D5500/Kconfig"
+
+source "drivers/vcodec/imagination/D5500_DRM/Kconfig"
+
 endmenu
