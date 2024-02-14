@@ -125,12 +125,12 @@ extern struct cpufreq_frequency_table *cpufreq_frequency_get_table(unsigned int 
  *********************************************************************/
 /*lint -e715 -e713*/
 static ssize_t show_boost(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.boost);
 }
 
-static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_boost(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -152,54 +152,54 @@ static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
 
 #ifdef HIFREQ_HOTPLUG_SYSFS_ENABLE
 static ssize_t show_up_nr_threshold(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.up_nr_threshold);
 }
 
 static ssize_t show_down_nr_threshold(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.down_nr_threshold);
 }
 
 static ssize_t show_up_cnt_threshold(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.up_cnt_threshold);
 }
 
 static ssize_t show_down_cnt_threshold(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.down_cnt_threshold);
 }
 
 static ssize_t show_stay_up_delay(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.stay_up_delay);
 }
 
 static ssize_t show_stay_down_delay(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.stay_down_delay);
 }
 
 static ssize_t show_single_core_load_up_threshold(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.single_core_load_up_threshold);
 }
 
 static ssize_t show_single_core_load_down_threshold(struct kobject *kobj,
-				 struct attribute *attr, char *buf)
+				 struct kobj_attribute *attr, char *buf)
 {
 	return snprintf(buf, MAX_BUF_LEN, "%u\n", bL_cpufreq_data.single_core_load_down_threshold);
 }
 
-static ssize_t store_down_nr_threshold(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_down_nr_threshold(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -213,7 +213,7 @@ static ssize_t store_down_nr_threshold(struct kobject *kobj, struct attribute *a
 	return count;
 }
 
-static ssize_t store_up_nr_threshold(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_up_nr_threshold(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -227,7 +227,7 @@ static ssize_t store_up_nr_threshold(struct kobject *kobj, struct attribute *att
 	return count;
 }
 
-static ssize_t store_down_cnt_threshold(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_down_cnt_threshold(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -241,7 +241,7 @@ static ssize_t store_down_cnt_threshold(struct kobject *kobj, struct attribute *
 	return count;
 }
 
-static ssize_t store_up_cnt_threshold(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_up_cnt_threshold(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -255,7 +255,7 @@ static ssize_t store_up_cnt_threshold(struct kobject *kobj, struct attribute *at
 	return count;
 }
 
-static ssize_t store_stay_up_delay(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_stay_up_delay(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -269,7 +269,7 @@ static ssize_t store_stay_up_delay(struct kobject *kobj, struct attribute *attr,
 	return count;
 }
 
-static ssize_t store_stay_down_delay(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_stay_down_delay(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -283,7 +283,7 @@ static ssize_t store_stay_down_delay(struct kobject *kobj, struct attribute *att
 	return count;
 }
 
-static ssize_t store_single_core_load_up_threshold(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_single_core_load_up_threshold(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
@@ -297,7 +297,7 @@ static ssize_t store_single_core_load_up_threshold(struct kobject *kobj, struct 
 	return count;
 }
 
-static ssize_t store_single_core_load_down_threshold(struct kobject *kobj, struct attribute *attr,
+static ssize_t store_single_core_load_down_threshold(struct kobject *kobj, struct kobj_attribute *attr,
 				  const char *buf, size_t count)
 {
 	int ret;
