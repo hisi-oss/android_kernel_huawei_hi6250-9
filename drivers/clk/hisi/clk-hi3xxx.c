@@ -217,8 +217,8 @@ extern void __clk_disable(struct clk *clk);
 extern int __clk_prepare(struct clk *clk);
 extern void __clk_unprepare(struct clk *clk);
 #else
-extern int clk_core_prepare(struct clk_core *clk_core);
-extern void clk_core_unprepare(struct clk_core *clk_core);
+extern int clk_core_prepare(struct clk *clk);
+extern void clk_core_unprepare(struct clk *clk);
 #endif
 
 static int hi3xxx_clkgate_enable(struct clk_hw *hw)
@@ -245,7 +245,7 @@ static int hi3xxx_clkgate_enable(struct clk_hw *hw)
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 13, 0))
 		ret = __clk_prepare(friend_clk);
 #else
-		ret = clk_core_prepare(friend_clk->core);
+		ret = clk_core_prepare(friend_clk);
 #endif
 		if (ret) {
 			pr_err("[%s], friend clock prepare faild!", __func__);
@@ -256,7 +256,7 @@ static int hi3xxx_clkgate_enable(struct clk_hw *hw)
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 13, 0))
 		__clk_unprepare(friend_clk);
 #else
-		clk_core_unprepare(friend_clk->core);
+		clk_core_unprepare(friend_clk);
 #endif
 			pr_err("[%s], friend clock enable faild!", __func__);
 			return ret;
@@ -295,7 +295,7 @@ static void hi3xxx_clkgate_disable(struct clk_hw *hw)
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 13, 0))
 		__clk_unprepare(friend_clk);
 #else
-		clk_core_unprepare(friend_clk->core);
+		clk_core_unprepare(friend_clk);
 #endif
 	}
 #endif
