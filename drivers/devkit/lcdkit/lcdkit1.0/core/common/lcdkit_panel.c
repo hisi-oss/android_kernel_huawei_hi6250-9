@@ -1115,11 +1115,12 @@ static ssize_t lcdkit_amoled_acl_ctrl_store(void* pdata, const char* buf)
     ssize_t ret = 0;
     int flag = 0;
     unsigned int value[ACL_MAX_SIZE] = {0};
-    char *token, *cur;
+    char *token;
+    const char *cur;
     int i = 0;
 
     cur = buf;
-    while(token = strsep(&cur, ","))
+    while ((token = strsep((char **)&cur, ",")))
     {
         value[i++] = simple_strtol(token, NULL, 0);
         if(i >= ACL_MAX_SIZE)
