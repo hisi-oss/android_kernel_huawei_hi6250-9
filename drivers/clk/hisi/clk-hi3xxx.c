@@ -1936,7 +1936,7 @@ void __init hi3xxx_xfreq_clk_setup(struct device_node *np)
 	init->ops = &hi3xxx_xfreq_clk_ops;
 	init->parent_names = (parent_names ? &parent_names : NULL);
 	init->num_parents = (parent_names ? 1 : 0);
-	init->flags = CLK_IS_ROOT | CLK_GET_RATE_NOCACHE;
+	init->flags = CLK_GET_RATE_NOCACHE;
 	xfreq_np = of_find_compatible_node(NULL, NULL, "hisilicon,sysctrl");
 	xfreqclk->reg = of_iomap(xfreq_np, 0);
 	xfreqclk->hw.init = init;
