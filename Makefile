@@ -1013,6 +1013,9 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=date-time)
 # Mark incompatible-pointer-types as warning
 KBUILD_CFLAGS   += $(call cc-option,-Wno-incompatible-pointer-types)
 
+# Mark pragma-pack as warning
+KBUILD_CFLAGS   += $(call cc-option,-Wno-pragma-pack)
+
 # Require designated initializers for all marked structures
 KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
 
