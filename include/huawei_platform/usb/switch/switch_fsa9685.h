@@ -32,7 +32,7 @@ struct fsa9685_device_info {
 
 	struct mutex accp_detect_lock;
 	struct mutex accp_adaptor_reg_lock;
-	struct wake_lock usb_switch_lock;
+	struct wakeup_source usb_switch_lock;
 
 	struct work_struct g_intb_work;
 	struct delayed_work detach_delayed_work;

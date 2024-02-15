@@ -1374,7 +1374,7 @@ static void  firmware_update(const struct firmware *fw)
 	fullFileLength=(unsigned int) fw->size;
 	if (check_need_firmware_upgrade(fw))
 	{
-			wake_lock(&g_himax_ts_data->ts_flash_wake_lock);
+			__pm_stay_awake(&g_himax_ts_data->ts_flash_wake_lock);
 
 			#ifdef HX_CHIP_STATUS_MONITOR
 				HX_CHIP_POLLING_COUNT = 0;
@@ -1411,7 +1411,7 @@ static void  firmware_update(const struct firmware *fw)
 			}
 			TS_LOG_INFO("himax flash write end");
 
-			wake_unlock(&g_himax_ts_data->ts_flash_wake_lock);
+			__pm_relax(&g_himax_ts_data->ts_flash_wake_lock);
 
 #ifdef HX_CHIP_STATUS_MONITOR
 				HX_CHIP_POLLING_COUNT = 0;

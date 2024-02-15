@@ -37,7 +37,6 @@
 #include <linux/kthread.h>
 #include <linux/input.h>
 #include <linux/time.h>
-#include <linux/wakelock.h>
 #include <linux/syscalls.h>
 #include <linux/mutex.h>
 #include <linux/io.h>

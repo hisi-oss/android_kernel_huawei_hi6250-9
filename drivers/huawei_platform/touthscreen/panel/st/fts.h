@@ -352,7 +352,7 @@ struct fts_ts_info {
 	struct notifier_block notifier;
 	bool sensor_sleep;
 	bool stay_awake;
-	struct wake_lock wakelock;
+	struct wakeup_source wakelock;
 };
 
 typedef enum

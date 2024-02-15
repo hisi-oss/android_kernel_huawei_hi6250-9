@@ -29,7 +29,6 @@
 #include <linux/device.h>
 #include <linux/err.h>
 #include <linux/interrupt.h>
-#include <linux/wakelock.h>
 
 #include "switch_chip.h"
 #include <huawei_platform/log/hw_log.h>

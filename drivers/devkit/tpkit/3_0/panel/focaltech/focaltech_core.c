@@ -1484,8 +1484,8 @@ static int focal_check_key_gesture_report(struct ts_fingers *info,
 	}
 
 	if (0 != reprot_gesture_key_value) {
-		/*increase wake_lock time to avoid system suspend.*/
-		wake_lock_timeout(&g_focal_dev_data->ts_platform_data->ts_wake_lock, 5 * HZ);
+		/*increase __pm_stay_awake time to avoid system suspend.*/
+		__pm_wakeup_event(&g_focal_dev_data->ts_platform_data->ts_wake_lock, 5 * HZ);
 		mutex_lock(&wrong_touch_lock);
 		if (true == g_focal_dev_data->easy_wakeup_info.off_motion_on) {
 			g_focal_dev_data->easy_wakeup_info.off_motion_on = false;

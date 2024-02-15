@@ -99,7 +99,7 @@ s32 icc_channel_has_data(void)
 					read = (read >= fifo->size)? (read - fifo->size): (read);
 				}
 			}
-			wake_lock(&g_icc_ctrl.wake_lock);
+			__pm_stay_awake(&g_icc_ctrl.__pm_stay_awake);
 			if(!g_icc_ctrl.channels[i]->mode.union_stru.no_task)
 			{
 				if(g_icc_ctrl.channels[i]->mode.union_stru.task_shared)
@@ -154,17 +154,17 @@ static void icc_pm_notify_init(void)
 	register_pm_notifier(&g_icc_ctrl.pm_notify);
 }
 
-void icc_wake_lock_init(struct wake_lock *lock, int lock_id, const char *name)
+void icc_wake_lock_init(struct wakeup_source *lock, int lock_id, const char *name)
 {
-    wake_lock_init(lock, lock_id, name);
+    wakeup_source_init(lock, lock_id, name);
 }
-void icc_wake_lock(struct wake_lock *lock)
+void icc_wake_lock(struct wakeup_source *lock)
 {
-    wake_lock(lock);/*lint !e454 */
+    __pm_stay_awake(lock);/*lint !e454 */
 }/*lint !e454 */
-void icc_wake_unlock(struct wake_lock *lock)
+void icc_wake_unlock(struct wakeup_source *lock)
 {
-    wake_unlock(lock); /*lint !e455 */
+    __pm_relax(lock); /*lint !e455 */
 }
 
 extern s32 bsp_reset_ccpu_status_get(void);

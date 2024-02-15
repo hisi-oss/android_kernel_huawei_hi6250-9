@@ -1771,7 +1771,7 @@ s32 bsp_RfileCallback(u32 channel_id, u32 len, void *context)
 
         return BSP_OK;
     }
-    wake_lock(&g_stRfileMain.wake_lock);
+    __pm_stay_awake(&g_stRfileMain.__pm_stay_awake);
     osl_sem_up(&g_stRfileMain.semTask);
 
     return BSP_OK;
@@ -1857,7 +1857,7 @@ s32 rfile_TaskProc(void* obj)
         }
 
         g_stRfileMain.opState = EN_RFILE_DOING;
-        wake_lock(&g_stRfileMain.wake_lock);
+        __pm_stay_awake(&g_stRfileMain.__pm_stay_awake);
         if(g_stRfileMain.pmState == EN_RFILE_SLEEP_STATE)
         {
             printk("%s cur state in sleeping,wait for resume end!\n",__func__);
@@ -1869,7 +1869,7 @@ s32 rfile_TaskProc(void* obj)
         if(((u32)ret > RFILE_LEN_MAX) || (ret <= 0))
         {
             bsp_trace(BSP_LOG_LEVEL_DEBUG, BSP_MODU_RFILE, "![rfile]: <%s> icc_read %d.\n", __FUNCTION__, ret);
-            wake_unlock(&g_stRfileMain.wake_lock);
+            __pm_relax(&g_stRfileMain.__pm_stay_awake);
             g_stRfileMain.opState = EN_RFILE_IDLE;
             continue;   /* A-C?????????????? */
         }
@@ -1892,7 +1892,7 @@ s32 rfile_TaskProc(void* obj)
                 bsp_trace(BSP_LOG_LEVEL_ERROR, BSP_MODU_RFILE, "![rfile]: <%s> pFun failed %d.\n", __FUNCTION__, enOptype);
             }
         }
-        wake_unlock(&g_stRfileMain.wake_lock);
+        __pm_relax(&g_stRfileMain.__pm_stay_awake);
 
         /* ??????????????ICC?????????????????????????? */
         osl_sem_up(&g_stRfileMain.semTask);
@@ -1937,7 +1937,7 @@ s32 bsp_rfile_init(void)
     osl_sem_init(0, &(g_stRfileMain.semTask));
     osl_sem_init(0, &(g_stRfileMain.semCloseFps));
 
-    wake_lock_init(&g_stRfileMain.wake_lock,WAKE_LOCK_SUSPEND, "rfile_wakelock");
+    wakeup_source_init(&g_stRfileMain.__pm_stay_awake, "rfile_wakelock");
 
     g_stRfileMain.taskid = kthread_run(rfile_TaskProc, BSP_NULL, "rfile");
     if (IS_ERR(g_stRfileMain.taskid))

@@ -34,7 +34,6 @@
 #include <linux/param.h>
 #include <linux/bitops.h>
 #include <linux/termios.h>
-#include <linux/wakelock.h>
 #include <linux/of.h>
 #include <linux/of_gpio.h>
 #ifdef CONFIG_HWCONNECTIVITY
@@ -66,7 +65,7 @@ typedef struct bluetooth_sleep_data {
 	struct gpio gpio_bt_wake_host;	/* gpio BT_wake_host */
 	struct gpio gpio_host_wake_bt;	/* gpio host_wake_BT */
 	struct semaphore bt_seam;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	struct timer_list tx_timer;	/* Transmission check timer */
 	struct tasklet_struct hostwake_task;	/*Tasklet to respond to change in hostwake line */
 	struct proc_dir_entry *bluetooth_dir;
@@ -119,7 +118,7 @@ static void bluesleep_sleep_wakeup(void)
 		gpio_set_value(g_bs_data->gpio_host_wake_bt.gpio,
 			       LPM_BT_WAKE_ASSERT);
 		clear_bit(BT_ASLEEP, &g_bs_data->flags);
-		wake_lock(&g_bs_data->wake_lock);
+		__pm_stay_awake(&g_bs_data->wake_lock);
 	} else {
 		/*Tx idle, Rx   busy, we must also make host_wake asserted,     that is low
 		 * 1 means bt chip can sleep, in bluesleep.c
@@ -150,7 +149,7 @@ static void bluesleep_sleep_work(struct work_struct *work)
 		}
 		pr_info("bt going to sleep...\n");
 		set_bit(BT_ASLEEP, &g_bs_data->flags);
-		wake_lock_timeout(&g_bs_data->wake_lock, HZ / 2);
+		__pm_wakeup_event(&g_bs_data->wake_lock, HZ / 2);
 	} else {
 		pr_info("bluesleep_sleep_wakeup\n");
 		bluesleep_sleep_wakeup();
@@ -314,7 +313,7 @@ static int bluesleep_start(struct bluetooth_sleep_data *bs_data)
 
 	set_bit(BT_PROTO, &bs_data->flags);
 
-	wake_lock(&bs_data->wake_lock);
+	__pm_stay_awake(&bs_data->wake_lock);
 
 	up(&bs_data->bt_seam);
 	pr_info("%s, bluetooth power manage unit start -.\n", __func__);
@@ -359,7 +358,7 @@ static void bluesleep_stop(struct bluetooth_sleep_data *bs_data)
 
 	clear_bit(BT_PROTO, &bs_data->flags);
 
-	wake_unlock(&bs_data->wake_lock);
+	__pm_relax(&bs_data->wake_lock);
 
 	up(&bs_data->bt_seam);
 	pr_info("%s, bluetooth power manage unit stop -.\n", __func__);
@@ -611,7 +610,7 @@ static int bluesleep_probe(struct platform_device *pdev)
 	sema_init(&bluesleep_data->bt_seam, 1);
 
 	/* Initialize bluetooth wakelock */
-	wake_lock_init(&bluesleep_data->wake_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&bluesleep_data->wake_lock,
 		       "bluesleep");
 
 	/* Initialize timer     */
@@ -678,7 +677,7 @@ static int bluesleep_remove(struct platform_device *pdev)
 	remove_proc_entry("sleep", bs_data->bluetooth_dir);
 	remove_proc_entry("bluetooth", 0);
 
-	wake_lock_destroy(&bs_data->wake_lock);
+	wakeup_source_trash(&bs_data->wake_lock);
 
 	devm_kfree(bluetooth_sleep_dev, bs_data);
 	g_bs_data = NULL;

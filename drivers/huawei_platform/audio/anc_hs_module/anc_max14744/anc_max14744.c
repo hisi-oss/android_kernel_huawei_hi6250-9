@@ -23,7 +23,6 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
-#include <linux/wakelock.h>
 #include <linux/miscdevice.h>
 #include <linux/regulator/consumer.h>
 #include <linux/workqueue.h>
@@ -155,7 +154,7 @@ struct anc_max14744_priv {
 	struct mutex btn_mutex;
 	struct mutex charge_lock; /* charge status protect lock */
 	struct mutex invert_hs_lock;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 
 	/*lint -save -e* */
 	spinlock_t irq_lock;
@@ -510,7 +509,7 @@ void anc_max14744_refresh_headset_type(int headset_type)
 
 static void anc_hs_invert_ctl_work(struct work_struct* work)
 {
-	wake_lock(&g_anc_max14744_priv->wake_lock);
+	__pm_stay_awake(&g_anc_max14744_priv->wake_lock);
 	mutex_lock(&g_anc_max14744_priv->invert_hs_lock);
 
 	if (g_anc_max14744_priv->headset_type == ANC_HS_REVERT_4POLE) {
@@ -522,7 +521,7 @@ static void anc_hs_invert_ctl_work(struct work_struct* work)
 	}
 
 	mutex_unlock(&g_anc_max14744_priv->invert_hs_lock);
-	wake_unlock(&g_anc_max14744_priv->wake_lock);
+	__pm_relax(&g_anc_max14744_priv->wake_lock);
 }
 
 /*lint -save -e* */
@@ -1239,11 +1238,11 @@ static void anc_hs_plugin_work(struct work_struct *work)
 {
 	struct anc_hs_codec_ops *fops = &g_anc_max14744_priv->anc_dev->ops;
 
-	wake_lock(&g_anc_max14744_priv->wake_lock);
+	__pm_stay_awake(&g_anc_max14744_priv->wake_lock);
 
 	if (NULL != g_anc_max14744_priv->private_data)
 		fops->plug_in_detect(g_anc_max14744_priv->private_data);
-	wake_unlock(&g_anc_max14744_priv->wake_lock);
+	__pm_relax(&g_anc_max14744_priv->wake_lock);
 
 }
 
@@ -1251,20 +1250,20 @@ static void anc_hs_plugout_work(struct work_struct *work)
 {
 	struct anc_hs_codec_ops *fops = &g_anc_max14744_priv->anc_dev->ops;
 
-	wake_lock(&g_anc_max14744_priv->wake_lock);
+	__pm_stay_awake(&g_anc_max14744_priv->wake_lock);
 
 	if (NULL != g_anc_max14744_priv->private_data)
 		fops->plug_out_detect(g_anc_max14744_priv->private_data);
 
-	wake_unlock(&g_anc_max14744_priv->wake_lock);
+	__pm_relax(&g_anc_max14744_priv->wake_lock);
 
 }
 
 static void anc_hs_btn_work(struct work_struct *work)
 {
-	wake_lock(&g_anc_max14744_priv->wake_lock);
+	__pm_stay_awake(&g_anc_max14744_priv->wake_lock);
 	anc_max14744_btn_judge();
-	wake_unlock(&g_anc_max14744_priv->wake_lock);
+	__pm_relax(&g_anc_max14744_priv->wake_lock);
 
 }
 
@@ -1289,7 +1288,7 @@ static irqreturn_t anc_max14744_irq_handler(int irq, void *data)
 		return IRQ_HANDLED;
 	}
 
-	wake_lock_timeout(&g_anc_max14744_priv->wake_lock,
+	__pm_wakeup_event(&g_anc_max14744_priv->wake_lock,
 					  msecs_to_jiffies(1000));
 	irq_type = get_irq_type();
 
@@ -1903,7 +1902,7 @@ static int anc_max14744_probe(struct i2c_client *client,
 	mutex_init(&di->btn_mutex);
 	mutex_init(&di->invert_hs_lock);
 	spin_lock_init(&di->irq_lock);
-	wake_lock_init(&di->wake_lock, WAKE_LOCK_SUSPEND, "anc_max14744");
+	wakeup_source_init(&di->wake_lock, "anc_max14744");
 
 	/* init all values */
 	di->anc_hs_mode = ANC_HS_CHARGE_OFF;

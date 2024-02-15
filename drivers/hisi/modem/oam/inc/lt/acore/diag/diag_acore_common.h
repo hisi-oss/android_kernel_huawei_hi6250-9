@@ -134,7 +134,7 @@ typedef struct
 /*****************************************************************************
   7 Extern Global Variable
 *****************************************************************************/
-extern struct wake_lock diag_wakelock;
+extern struct wakeup_source diag_wakelock;
 
 /*****************************************************************************
   8 Fuction Extern

@@ -906,7 +906,7 @@ int sec_ts_firmware_update_on_probe(struct sec_ts_data *ts, bool force_update)
 		goto err_request_fw;
 	}
 	if(ts->ic_name == S6SY761X) {
-		wake_lock(&ts->wakelock);//add wakelock,avoid i2c suspend
+		__pm_stay_awake(&ts->wakelock);//add wakelock,avoid i2c suspend
 	}
 	for (ii = 0; ii < 3; ii++) {
 		ret = sec_ts_firmware_update(ts, fw_entry->data, fw_entry->size, 0, restore_cal, ii);
@@ -927,7 +927,7 @@ int sec_ts_firmware_update_on_probe(struct sec_ts_data *ts, bool force_update)
 		sec_ts_do_once_calibrate();
 	}
 	if(ts->ic_name == S6SY761X) {
-		wake_unlock(&ts->wakelock);//add wakelock,avoid i2c suspend
+		__pm_relax(&ts->wakelock);//add wakelock,avoid i2c suspend
 	}
 
 err_request_fw:

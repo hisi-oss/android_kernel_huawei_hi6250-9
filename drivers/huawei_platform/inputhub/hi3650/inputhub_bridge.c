@@ -15,7 +15,6 @@
 #include <linux/kernel.h>
 #include <linux/err.h>
 #include <linux/interrupt.h>
-#include <linux/wakelock.h>
 #include <linux/delay.h>
 #include <linux/hisi/hisi_mailbox.h>
 #include "inputhub_route.h"
@@ -146,7 +145,7 @@ atomic_t iom3_rec_state = ATOMIC_INIT(IOM3_RECOVERY_UNINIT);
 int iom3_power_state = ST_POWERON;
 static struct delayed_work iom3_rec_work;
 static struct workqueue_struct* iom3_rec_wq;
-static struct wake_lock iom3_rec_wl;
+static struct wakeup_source iom3_rec_wl;
 static struct completion iom3_rec_done;
 #endif
 
@@ -507,7 +506,7 @@ static void iom3_recovery_work(struct work_struct* work)
     u32 tx_buffer;
 
     hwlog_err("%s enter\n", __func__);
-    wake_lock(&iom3_rec_wl);
+    __pm_stay_awake(&iom3_rec_wl);
     peri_used_request();
     wait_for_completion(&sensorhub_rdr_completion);
 recovery_iom3:
@@ -520,7 +519,7 @@ recovery_iom3:
                                      IOM3_RECOVERY_FAILED, NULL);
         atomic_set(&iom3_rec_state, IOM3_RECOVERY_IDLE);
 	peri_used_release();
-        wake_unlock(&iom3_rec_wl);
+        __pm_relax(&iom3_rec_wl);
         hwlog_err("%s exit\n", __func__);
         return;
     }
@@ -587,7 +586,7 @@ recovery_iom3:
     blocking_notifier_call_chain(&iom3_recovery_notifier_list, IOM3_RECOVERY_3RD_DOING, NULL);	/*recovery pdr*/
     hwlog_err("%s pdr recovery\n", __func__);
     atomic_set(&iom3_rec_state, IOM3_RECOVERY_IDLE);
-    wake_unlock(&iom3_rec_wl);
+    __pm_relax(&iom3_rec_wl);
     hwlog_err("%s finish recovery\n", __func__);
     blocking_notifier_call_chain(&iom3_recovery_notifier_list,
                                  IOM3_RECOVERY_IDLE, NULL);
@@ -612,7 +611,7 @@ int iom3_need_recovery(int modid, exp_source_t f)
                              "sensorhub crash, trigger rdr dump\n");
         }
 
-        wake_lock_timeout(&iom3_rec_wl, 10 * HZ);
+        __pm_wakeup_event(&iom3_rec_wl, 10 * HZ);
         blocking_notifier_call_chain(&iom3_recovery_notifier_list,
                                      IOM3_RECOVERY_START, NULL);
 
@@ -793,7 +792,7 @@ static int inputhub_mcu_init(void)
 
     INIT_DELAYED_WORK(&iom3_rec_work, iom3_recovery_work);
     init_completion(&iom3_rec_done);
-    wake_lock_init(&iom3_rec_wl, WAKE_LOCK_SUSPEND, "iom3_rec_wl");
+    wakeup_source_init(&iom3_rec_wl, "iom3_rec_wl");
 #endif
 #ifdef SENSOR_DSM_CONFIG
     shb_dclient = dsm_register_client(&dsm_sensorhub);

@@ -145,7 +145,7 @@ static void coul_get_rm(struct smartstar_coul_device *di, int *rm);
 static int hisi_coul_pm_notify(struct notifier_block * nb, unsigned long mode, void * unused);
 static BASP_LEVEL_TYPE get_basp_level(struct smartstar_coul_device *di);
 struct coul_core_info_sh *g_di_coul_info_sh = NULL;
-static struct wake_lock coul_lock;
+static struct wakeup_source coul_lock;
 static void iscd_clear_sampled_info(struct smartstar_coul_device *di);
 static void check_batt_critical_electric_leakage(struct smartstar_coul_device *di);
 static void isc_config_splash2_file_sync(struct iscd_info *iscd);
@@ -289,27 +289,27 @@ static void check_coul_abnormal_rollback(struct smartstar_coul_device *di)
 
 /**********************************************************
 *  Function:       coul_wake_lock
-*  Description:   apply coul wake_lock
+*  Description:   apply coul __pm_stay_awake
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
 static void coul_wake_lock(void)
 {
     if (!wake_lock_active(&coul_lock)) {
-        wake_lock(&coul_lock);
+        __pm_stay_awake(&coul_lock);
         coul_core_info("coul core wake lock\n");
     }
 }/*lint !e454 !e456*/
 /**********************************************************
 *  Function:       coul_wake_unlock
-*  Description:   release coul wake_lock
+*  Description:   release coul __pm_stay_awake
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
 static void coul_wake_unlock(void)
 {
     if (wake_lock_active(&coul_lock)) {
-        wake_unlock(&coul_lock);/*lint !e455*/
+        __pm_relax(&coul_lock);/*lint !e455*/
         coul_core_info("coul core wake unlock\n");
     }
 }
@@ -10371,7 +10371,7 @@ static int  hisi_coul_probe(struct platform_device *pdev)
 	if (battery_is_removable) {
         INIT_DELAYED_WORK(&di->battery_check_delayed_work, battery_check_work);
 	}
-    wake_lock_init(&coul_lock, WAKE_LOCK_SUSPEND, "coul_wakelock");
+    wakeup_source_init(&coul_lock, "coul_wakelock");
     /* Init soc calc work */
     INIT_DELAYED_WORK(&di->calculate_soc_delayed_work, calculate_soc_work);
     INIT_WORK(&di->fault_work, coul_fault_work);

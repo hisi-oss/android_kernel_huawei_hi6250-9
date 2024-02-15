@@ -218,7 +218,7 @@ static void hisi_vbat_drop_interrupt_work(struct work_struct *work)
         #ifdef VBAT_DROP_TEST
             hisi_vbat_drop_print_auto_div_state(di);
         #endif
-		    wake_unlock(&di->vbatt_check_lock);/*lint !e455*/
+		    __pm_relax(&di->vbatt_check_lock);/*lint !e455*/
             return ;
         } else
             queue_delayed_work(system_power_efficient_wq,&di->vbat_drop_irq_work, msecs_to_jiffies(2000));
@@ -240,7 +240,7 @@ static irqreturn_t hisi_vbat_drop_irq_handler(int irq, void *data)
 {
 	struct hisi_vbat_drop_protect_dev *di = (struct hisi_vbat_drop_protect_dev *)data;
 
-	wake_lock(&di->vbatt_check_lock);
+	__pm_stay_awake(&di->vbatt_check_lock);
 
     pr_err("[%s] enter vbat handle!\n", __func__);
 
@@ -507,7 +507,7 @@ static int hisi_vbat_drop_protect_probe(struct platform_device *pdev)
     /*init vbat drop work*/
     INIT_DELAYED_WORK(&di->vbat_drop_irq_work, hisi_vbat_drop_interrupt_work);
 
-    wake_lock_init(&di->vbatt_check_lock, WAKE_LOCK_SUSPEND, "vbatt_drop_check_wake");
+    wakeup_source_init(&di->vbatt_check_lock, "vbatt_drop_check_wake");
 
 #ifdef CONFIG_HISI_HW_VOTE
 	hisi_vbat_drop_cluster_freq_limit_init(dev);

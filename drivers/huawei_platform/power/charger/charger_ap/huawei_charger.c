@@ -19,7 +19,6 @@
 #include <linux/delay.h>
 #include <linux/jiffies.h>
 #include <linux/hrtimer.h>
-#include <linux/wakelock.h>
 #include <linux/usb/otg.h>
 #include <linux/io.h>
 #include <linux/gpio.h>
@@ -96,10 +95,10 @@ BLOCKING_NOTIFIER_HEAD(charge_wake_unlock_list);
 /*lint -restore*/
 
 #define CHG_WAIT_PD_TIME 6
-static struct wake_lock charge_lock;
-static struct wake_lock otg_lock;
-static struct wake_lock stop_charge_lock;
-static struct wake_lock uscp_plugout_lock;
+static struct wakeup_source charge_lock;
+static struct wakeup_source otg_lock;
+static struct wakeup_source stop_charge_lock;
+static struct wakeup_source uscp_plugout_lock;
 extern struct charge_device_ops *g_ops;
 static struct water_detect_ops *g_wd_ops;
 static struct charge_switch_ops *g_sw_ops;
@@ -718,14 +717,14 @@ enum charge_done_type get_charge_done_type(void)
 
 /**********************************************************
 *  Function:       charge_wake_lock
-*  Description:   apply charge wake_lock
+*  Description:   apply charge __pm_stay_awake
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
 static void charge_wake_lock(void)
 {
 	if (!wake_lock_active(&charge_lock)) {
-		wake_lock(&charge_lock);
+		__pm_stay_awake(&charge_lock);
 		hwlog_info("charge wake lock\n");
 	}
 }
@@ -738,7 +737,7 @@ static void charge_wake_lock(void)
 static void uscp_plugout_wake_lock(void)
 {
 	if (!wake_lock_active(&uscp_plugout_lock)) {
-		wake_lock(&uscp_plugout_lock);
+		__pm_stay_awake(&uscp_plugout_lock);
 		hwlog_info("uscp_plugout_lock\n");
 	}
 }
@@ -751,34 +750,34 @@ static void uscp_plugout_wake_lock(void)
 static void uscp_plugout_wake_unlock(void)
 {
 	if (wake_lock_active(&uscp_plugout_lock)) {
-		wake_unlock(&uscp_plugout_lock);
+		__pm_relax(&uscp_plugout_lock);
 		hwlog_info("uscp_plugout_unlock\n");
 	}
 }
 /**********************************************************
 *  Function:       charge_wake_unlock
-*  Description:   release charge wake_lock
+*  Description:   release charge __pm_stay_awake
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
 static void charge_wake_unlock(void)
 {
 	if (wake_lock_active(&charge_lock)) {
-		wake_unlock(&charge_lock);
+		__pm_relax(&charge_lock);
 		hwlog_info("charge wake unlock\n");
 	}
 }
 static void otg_wake_lock(void)
 {
 	if (!wake_lock_active(&otg_lock)) {
-		wake_lock(&otg_lock);
+		__pm_stay_awake(&otg_lock);
 		hwlog_info("otg wake lock\n");
 	}
 }
 static void otg_wake_unlock(void)
 {
 	if (wake_lock_active(&otg_lock)) {
-		wake_unlock(&otg_lock);
+		__pm_relax(&otg_lock);
 		hwlog_info("otg wake unlock\n");
 	}
 }
@@ -3098,7 +3097,7 @@ static void charge_stop_charging(struct charge_device_info *di)
 	direct_charge_set_adapter_default_param();
 #endif
 
-	wake_lock_timeout(&stop_charge_lock, HZ);
+	__pm_wakeup_event(&stop_charge_lock, HZ);
 	mutex_lock(&charge_wakelock_flag_lock);
 	charge_lock_flag = CHARGE_NO_NEED_WAKELOCK;
 	charge_wake_unlock();
@@ -3962,7 +3961,7 @@ static void charge_process_vr_charge_event(struct charge_device_info *di)
 
 /**********************************************************
 *  Function:       charge_resume_wakelock_work
-*  Description:    apply wake_lock when resume
+*  Description:    apply __pm_stay_awake when resume
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
@@ -5649,10 +5648,10 @@ static int charge_probe(struct platform_device *pdev)
 	charge_parse_dts(di);
 	platform_set_drvdata(pdev, di);
 
-	wake_lock_init(&charge_lock, WAKE_LOCK_SUSPEND, "charge_wakelock");
-	wake_lock_init(&otg_lock, WAKE_LOCK_SUSPEND, "otg_wakelock");
-	wake_lock_init(&uscp_plugout_lock, WAKE_LOCK_SUSPEND, "uscp_plugout_lock");
-	wake_lock_init(&stop_charge_lock, WAKE_LOCK_SUSPEND, "stop_charge_wakelock");
+	wakeup_source_init(&charge_lock, "charge_wakelock");
+	wakeup_source_init(&otg_lock, "otg_wakelock");
+	wakeup_source_init(&uscp_plugout_lock, "uscp_plugout_lock");
+	wakeup_source_init(&stop_charge_lock, "stop_charge_wakelock");
 
 	init_completion(&emark_detect_comp);
 
@@ -5898,10 +5897,10 @@ charge_fail_3:
 charge_fail_2:
 	charger_event_queue_destroy(&di->event_queue);
 fail_create_event_queue:
-	wake_lock_destroy(&charge_lock);
-	wake_lock_destroy(&otg_lock);
-	wake_lock_destroy(&stop_charge_lock);
-	wake_lock_destroy(&uscp_plugout_lock);
+	wakeup_source_trash(&charge_lock);
+	wakeup_source_trash(&otg_lock);
+	wakeup_source_trash(&stop_charge_lock);
+	wakeup_source_trash(&uscp_plugout_lock);
 charge_fail_1:
 	di->ops = NULL;
 charge_fail_0:
@@ -5929,10 +5928,10 @@ static int charge_remove(struct platform_device *pdev)
 	hisi_charger_type_notifier_unregister(&di->usb_nb);
 	atomic_notifier_chain_unregister(&fault_notifier_list, &di->fault_nb);
 	charge_sysfs_remove_group(di);
-	wake_lock_destroy(&charge_lock);
-	wake_lock_destroy(&otg_lock);
-	wake_lock_destroy(&uscp_plugout_lock);
-	wake_lock_destroy(&stop_charge_lock);
+	wakeup_source_trash(&charge_lock);
+	wakeup_source_trash(&otg_lock);
+	wakeup_source_trash(&uscp_plugout_lock);
+	wakeup_source_trash(&stop_charge_lock);
 	cancel_delayed_work(&di->charge_work);
 	cancel_delayed_work(&di->otg_work);
 	cancel_delayed_work(&di->plugout_uscp_work);

@@ -6,7 +6,6 @@
 #include <linux/slab.h>
 #include <linux/delay.h>
 #include <linux/jiffies.h>
-#include <linux/wakelock.h>
 #include <linux/ioctl.h>
 #include <linux/io.h>
 #include <linux/gpio.h>

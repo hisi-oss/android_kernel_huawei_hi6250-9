@@ -10,7 +10,6 @@
 #include <linux/platform_device.h>
 #include <linux/kobject.h>
 #include <linux/irq.h>
-#include <linux/wakelock.h>
 #include <linux/mmc/sdio.h>
 #include <linux/mmc/host.h>
 #include <linux/mmc/card.h>

@@ -25,7 +25,6 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
-#include <linux/wakelock.h>
 #include <linux/miscdevice.h>
 #include <linux/workqueue.h>
 #include <linux/of_gpio.h>

@@ -377,7 +377,7 @@ int32 prepare_to_visit_node(struct ps_core_s *ps_core_d)
         return -EFAULT;
     }
 
-    /* lock wake_lock */
+    /* lock __pm_stay_awake */
     ps_core_d->ps_pm->bfg_wake_lock();
 
     /* open tty if tty has not been opened */

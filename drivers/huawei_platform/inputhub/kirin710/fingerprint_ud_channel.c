@@ -26,7 +26,7 @@
 static int fp_ref_cnt;
 static bool fingerprint_status[FINGERPRINT_TYPE_END];
 
-extern  struct wake_lock wlock;
+extern  struct wakeup_source wlock;
 extern int flag_for_sensor_test;
 
 extern bool really_do_enable_disable(int *ref_cnt, bool enable, int bit);

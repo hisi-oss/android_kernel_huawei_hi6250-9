@@ -156,7 +156,7 @@ static int elan_ktf_get_rawdata(struct ts_rawdata_info* info, struct ts_cmd_node
 	} else {
 		atomic_set(&elan_ts->tp_mode,TP_MODULETEST);
 	}
-	wake_lock(&elan_ts->wake_lock);
+	__pm_stay_awake(&elan_ts->wake_lock);
 	memset(info->result,0,sizeof(info->result));
 
 	/*elan mmi step 1 i2c test and alloc data buf*/
@@ -224,7 +224,7 @@ TEST_EXIT:
 	strncat(info->result,"_",sizeof("_"));
 	strncat(info->result,elan_ts->project_id,sizeof(elan_ts->project_id));
 	free_data_buf();
-	wake_unlock(&elan_ts->wake_lock);
+	__pm_relax(&elan_ts->wake_lock);
 	atomic_set(&elan_ts->tp_mode, TP_NORMAL);
 	elan_ktf_hw_reset();
 	TS_LOG_ERR("[elan]%s,end!,%s\n", __func__,info->result);
@@ -1063,7 +1063,7 @@ static int elan_ktf_fw_update_boot(char *file_name)
 	if(New_Fw_Ver!=(elan_ts->fw_ver)||elan_ts->sd_fw_updata)
 	{
 		atomic_set(&elan_ts->tp_mode,TP_FWUPDATA);
-		wake_lock(&elan_ts->wake_lock);
+		__pm_stay_awake(&elan_ts->wake_lock);
 		err=elan_firmware_update(fw_entry);
 		if (err) {
 			TS_LOG_ERR("[elan]:updata fw fail!\n");
@@ -1072,7 +1072,7 @@ static int elan_ktf_fw_update_boot(char *file_name)
 			TS_LOG_DEBUG("[elan]:updata fw success!\n");
 			atomic_set(&elan_ts->tp_mode,TP_NORMAL);
 		}
-		wake_unlock(&elan_ts->wake_lock);
+		__pm_relax(&elan_ts->wake_lock);
 	} else {
 		TS_LOG_INFO("[elan]:fw ver is new don't need updata!\n");
 	}
@@ -1683,7 +1683,7 @@ static int elan_ktf_init_chip(void)
 	  	TS_LOG_INFO("[elan]:misc_register finished!!\n");
 	}
 #endif
-	wake_lock_init(&elan_ts->wake_lock,WAKE_LOCK_SUSPEND,"elantp_wake_lock");
+	wakeup_source_init(&elan_ts->wake_lock,"elantp_wake_lock");
 	ret=check_fw_status();
 	if (ret<0) {
 		TS_LOG_ERR("[elan]:ic is unknow mode\n");

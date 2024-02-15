@@ -22,7 +22,6 @@
 #include <linux/of_irq.h>
 #include <linux/of_platform.h>
 #include <linux/of_gpio.h>
-#include <linux/wakelock.h>
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/initval.h>

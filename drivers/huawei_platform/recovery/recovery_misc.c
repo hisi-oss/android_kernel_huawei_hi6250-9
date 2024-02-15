@@ -17,7 +17,6 @@
 #include <linux/fb.h>
 #include <linux/timer.h>
 #include <linux/rtc.h>
-#include <linux/wakelock.h>
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/syscalls.h>

@@ -393,11 +393,11 @@ int tcpci_set_wake_lock(
 
 	if (new_lock != ori_lock) {
 		if (new_lock) {
-			TCPC_INFO("wake_lock=1\r\n");
-			wake_lock(&tcpc->attach_wake_lock);
+			TCPC_INFO("__pm_stay_awake=1\r\n");
+			__pm_stay_awake(&tcpc->attach_wake_lock);
 		} else {
-			TCPC_INFO("wake_lock=0\r\n");
-			wake_unlock(&tcpc->attach_wake_lock);
+			TCPC_INFO("__pm_stay_awake=0\r\n");
+			__pm_relax(&tcpc->attach_wake_lock);
 		}
 	}
 
@@ -418,12 +418,12 @@ static inline int tcpci_set_wake_lock_pd(
 		wake_lock_pd--;
 
 	if (wake_lock_pd == 0)
-		wake_lock_timeout(&tcpc->dettach_temp_wake_lock, 5 * HZ);
+		__pm_wakeup_event(&tcpc->dettach_temp_wake_lock, 5 * HZ);
 
 	tcpci_set_wake_lock(tcpc, wake_lock_pd, tcpc->wake_lock_user);
 
 	if (wake_lock_pd == 1)
-		wake_unlock(&tcpc->dettach_temp_wake_lock);
+		__pm_relax(&tcpc->dettach_temp_wake_lock);
 
 	tcpc->wake_lock_pd = wake_lock_pd;
 	mutex_unlock(&tcpc->access_lock);

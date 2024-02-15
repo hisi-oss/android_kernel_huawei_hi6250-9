@@ -1,7 +1,6 @@
 #ifndef __HI6XXX_MBHC_H__
 #define __HI6XXX_MBHC_H__
 
-#include <linux/wakelock.h>
 #include <linux/switch.h>
 #include <sound/soc.h>
 
@@ -108,7 +107,7 @@ struct hi6xxx_mbhc_priv {
 	struct mutex hkadc_mutex;
 	struct mutex plug_mutex;
 	struct mutex hs_micbias_mutex;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	unsigned int hs_micbias_dapm;
 	bool hs_micbias_mbhc;
 

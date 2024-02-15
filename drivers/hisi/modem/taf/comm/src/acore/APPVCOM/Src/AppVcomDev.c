@@ -452,7 +452,7 @@ VOS_INT __init APP_VCOM_Init(VOS_VOID)
         TAF_MEM_SET_S(pstVcomDevp->acWakeLockName, sizeof(pstVcomDevp->acWakeLockName), 0x00, APP_VCOM_RD_WAKE_LOCK_NAME_LEN);
         snprintf(pstVcomDevp->acWakeLockName, APP_VCOM_RD_WAKE_LOCK_NAME_LEN, "appvcom%d_rd_wake", ucIndex);
         pstVcomDevp->acWakeLockName[APP_VCOM_RD_WAKE_LOCK_NAME_LEN - 1] = '\0';
-        wake_lock_init(&pstVcomDevp->stRdWakeLock, WAKE_LOCK_SUSPEND, pstVcomDevp->acWakeLockName);
+        wakeup_source_init(&pstVcomDevp->stRdWakeLock, pstVcomDevp->acWakeLockName);
 
         mutex_init(&pstVcomDevp->stMutex);
 
@@ -533,7 +533,7 @@ int APP_VCOM_Release(
 
     pstVcomCtx->pstAppVcomDevEntity->ulIsDeviceOpen = VOS_FALSE;
     /* lint -e455 */
-    wake_unlock(&pstVcomCtx->pstAppVcomDevEntity->stRdWakeLock);
+    __pm_relax(&pstVcomCtx->pstAppVcomDevEntity->stRdWakeLock);
     /* lint +e455 */
 
     return VOS_OK;
@@ -700,7 +700,7 @@ ssize_t APP_VCOM_Read(
     {
         APP_VCOM_TRACE_NORM(ucIndex, "APP_VCOM_Send: read all data. ");
         /* lint -e455 */
-        wake_unlock(&pstVcomDev->stRdWakeLock);
+        __pm_relax(&pstVcomDev->stRdWakeLock);
         /* lint +e455 */
     }
 
@@ -975,7 +975,7 @@ VOS_UINT32  APP_VCOM_Send (
     APP_VCOM_TRACE_INFO(enDevIndex, "APP_VCOM_Send, IsDeviceOpen: %d. ", pstVcomDev->ulIsDeviceOpen);
     if (VOS_TRUE == pstVcomDev->ulIsDeviceOpen)
     {
-        wake_lock_timeout(&pstVcomDev->stRdWakeLock, (VOS_LONG)msecs_to_jiffies(APP_VCOM_READ_WAKE_LOCK_LEN));
+        __pm_wakeup_event(&pstVcomDev->stRdWakeLock, (VOS_LONG)msecs_to_jiffies(APP_VCOM_READ_WAKE_LOCK_LEN));
     }
 
     /* ?????????? */

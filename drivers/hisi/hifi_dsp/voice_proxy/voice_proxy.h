@@ -29,7 +29,6 @@
 #include <linux/semaphore.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
-#include <linux/wakelock.h>
 #include <linux/errno.h>
 #include <linux/unistd.h>
 #include <linux/delay.h>

@@ -116,7 +116,7 @@ struct fp_data
 	struct platform_device* pf_dev;
 	unsigned long finger_num;
 	unsigned int nav_stat;
-	struct wake_lock ttw_wl;
+	struct wakeup_source ttw_wl;
 	int irq_gpio;
 	int cs0_gpio;//UG
 	int cs1_gpio;//UD

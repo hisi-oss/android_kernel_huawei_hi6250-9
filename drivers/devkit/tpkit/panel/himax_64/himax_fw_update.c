@@ -153,7 +153,7 @@ static void  firmware_update(const struct firmware *fw)
 	}
 	if (check_need_firmware_upgrade(fw))
 	{
-			wake_lock(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
+			__pm_stay_awake(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
 			TS_LOG_INFO("himax flash write start");
 			retval = hx_nc_fts_ctpm_fw_upgrade_with_fs((unsigned char*)fw->data,fullFileLength,true);
 			if( retval == 0 )
@@ -171,7 +171,7 @@ static void  firmware_update(const struct firmware *fw)
 				TS_LOG_INFO("himax upgraded IMAGE CFG_VER=%x.\n", (fw->data[NC_CFG_VER_MAJ_FLASH_ADDR]<<8 | fw->data[NC_CFG_VER_MIN_FLASH_ADDR]));
 
 			}
-			wake_unlock(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
+			__pm_relax(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
 			TS_LOG_INFO("himax i_update function end ");
 	}
 	else

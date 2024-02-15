@@ -29,7 +29,6 @@
 #include <linux/hw_power_monitor.h>
 #endif
 #include <linux/console.h>
-#include <linux/wakelock.h>
 #include <soc_crgperiph_interface.h>
 #include <soc_acpu_baseaddr_interface.h>
 #include <soc_uart_interface.h>
@@ -177,7 +176,7 @@ static unsigned g_usavedcfg;
 static int g_suspended;
 extern int get_console_index(void);
 
-static struct wake_lock lowpm_wake_lock;
+static struct wakeup_source lowpm_wake_lock;
 
 
 #define BUFFER_LENGTH		40
@@ -733,9 +732,9 @@ void pm_status_show(struct seq_file *s)
 void set_wakelock(int iflag)
 {
 	if ((1 == iflag) && (0 == wake_lock_active(&lowpm_wake_lock)))
-		wake_lock(&lowpm_wake_lock);
+		__pm_stay_awake(&lowpm_wake_lock);
 	else if ((0 == iflag) && (0 != wake_lock_active(&lowpm_wake_lock)))
-		wake_unlock(&lowpm_wake_lock); //lint !e455
+		__pm_relax(&lowpm_wake_lock); //lint !e455
 } //lint !e454 !e456
 
 #define GPIO_DIR(x)		((x) + 0x400)
@@ -1748,7 +1747,7 @@ static int lowpm_func_probe(struct platform_device *pdev)
 		goto err;
 	}
 
-	wake_lock_init(&lowpm_wake_lock, WAKE_LOCK_SUSPEND, "lowpm_func");
+	wakeup_source_init(&lowpm_wake_lock, "lowpm_func");
 
 
 

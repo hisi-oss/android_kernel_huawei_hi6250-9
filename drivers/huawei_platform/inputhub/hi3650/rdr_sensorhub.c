@@ -15,7 +15,6 @@
 #include <huawei_platform/log/hw_log.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
-#include <linux/wakelock.h>
 #include <linux/notifier.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
@@ -36,7 +35,7 @@ static struct semaphore rdr_exce_sem;
 static void __iomem* sysctrl_base;
 static void __iomem* watchdog_base;
 static unsigned int* dump_vir_addr;
-static struct wake_lock rdr_wl;
+static struct wakeup_source rdr_wl;
 struct completion sensorhub_rdr_completion;
 static int nmi_reg;
 
@@ -391,7 +390,7 @@ static irqreturn_t watchdog_handler(int irq, void* data)
 
 	hwlog_warn("%s start!\n", __func__);
 	peri_used_request();
-	wake_lock(&rdr_wl);
+	__pm_stay_awake(&rdr_wl);
 
 	/*release exception sem*/
 	up(&rdr_exce_sem);
@@ -794,7 +793,7 @@ static int rdr_sh_thread(void* arg)
         }
 
         complete_all(&sensorhub_rdr_completion);
-        wake_unlock(&rdr_wl);
+        __pm_relax(&rdr_wl);
 	peri_used_release();
     }
 
@@ -987,7 +986,7 @@ int rdr_sensorhub_init(void)
         hwlog_err("%s sensorhub panic register failed !\n", __func__);
     }
 
-    wake_lock_init(&rdr_wl, WAKE_LOCK_SUSPEND, "rdr_sensorhub");
+    wakeup_source_init(&rdr_wl, "rdr_sensorhub");
     init_completion(&sensorhub_rdr_completion);
 
     return ret;

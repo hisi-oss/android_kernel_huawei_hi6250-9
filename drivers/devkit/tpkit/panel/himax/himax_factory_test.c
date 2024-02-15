@@ -1578,7 +1578,7 @@ int hx852xf_factory_start(struct himax_ts_data *ts,struct ts_rawdata_info *info_
 
 	TS_LOG_INFO("himax_gold_self_test enter \n");
 
-	wake_lock(&g_himax_ts_data->ts_flash_wake_lock);
+	__pm_stay_awake(&g_himax_ts_data->ts_flash_wake_lock);
 
 	retval = himax_alloc_Rawmem();
 	if( retval != 0 )
@@ -1662,7 +1662,7 @@ int hx852xf_factory_start(struct himax_ts_data *ts,struct ts_rawdata_info *info_
 
 err_alloc:
 	himax_HW_reset(HX_LOADCONFIG_EN,HX_INT_DISABLE);
-	wake_unlock(&g_himax_ts_data->ts_flash_wake_lock);
+	__pm_relax(&g_himax_ts_data->ts_flash_wake_lock);
 out:
 	if(fac_dump_buffer) {
 		kfree(fac_dump_buffer);
@@ -2284,7 +2284,7 @@ int hx852xes_factory_start(struct himax_ts_data *ts,struct ts_rawdata_info *info
 	atomic_set(&hmx_mmi_test_status, 1);
 	TS_LOG_INFO("himax_self_test enter \n");
 
-	wake_lock(&g_himax_ts_data->ts_flash_wake_lock);
+	__pm_stay_awake(&g_himax_ts_data->ts_flash_wake_lock);
 
 	retval = himax_alloc_Rawmem();
 	if( retval != 0 )
@@ -2353,7 +2353,7 @@ err_alloc_p2p_test:
 	timer_end = jiffies;
 	TS_LOG_INFO("%s: self test time:%d\n", __func__, jiffies_to_msecs(timer_end-timer_start));
 err_alloc:
-	wake_unlock(&g_himax_ts_data->ts_flash_wake_lock);
+	__pm_relax(&g_himax_ts_data->ts_flash_wake_lock);
 	atomic_set(&hmx_mmi_test_status, 0);
 
 	return retval;

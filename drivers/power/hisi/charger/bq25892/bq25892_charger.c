@@ -19,7 +19,6 @@
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 #include <linux/i2c.h>
-#include <linux/wakelock.h>
 #include <linux/usb/otg.h>
 #include <linux/io.h>
 #include <linux/gpio.h>

@@ -123,8 +123,8 @@ s32 reset_prepare(enum MODEM_ACTION action)
 
 	g_reset_debug.main_stage = 0;
 
-	wake_lock(&(g_modem_reset_ctrl.wake_lock));
-	reset_print_debug("(%d) wake_lock\n", ++g_reset_debug.main_stage);
+	__pm_stay_awake(&(g_modem_reset_ctrl.__pm_stay_awake));
+	reset_print_debug("(%d) __pm_stay_awake\n", ++g_reset_debug.main_stage);
 
 	spin_lock_irqsave(&g_modem_reset_ctrl.action_lock, flags);
 	g_modem_reset_ctrl.modem_action = action;
@@ -618,7 +618,7 @@ int modem_reset_task(void *arg)
 		}
 
 		osl_sem_up(&(g_modem_reset_ctrl.action_sem));
-		wake_unlock(&(g_modem_reset_ctrl.wake_lock));/*lint !e455 */
+		__pm_relax(&(g_modem_reset_ctrl.__pm_stay_awake));/*lint !e455 */
 
 		g_modem_reset_ctrl.exec_time = get_timer_slice_delta(g_modem_reset_ctrl.exec_time, bsp_get_slice_value());
 		reset_print_debug("execute done, elapse time %d\n", g_modem_reset_ctrl.exec_time);
@@ -959,7 +959,7 @@ int __init bsp_reset_init(void)
 	osl_sem_init(0, &g_modem_reset_ctrl.wait_ccore_reset_ok_sem);
 	osl_sem_init(0, &g_modem_reset_ctrl.wait_modem_master_in_idle_sem);
 
-	wake_lock_init(&g_modem_reset_ctrl.wake_lock, WAKE_LOCK_SUSPEND, "modem_reset wake");
+	wakeup_source_init(&g_modem_reset_ctrl.__pm_stay_awake, "modem_reset wake");
 	spin_lock_init(&g_modem_reset_ctrl.action_lock);
 
     g_modem_reset_ctrl.task = kthread_run(modem_reset_task,  NULL, "modem_reset");

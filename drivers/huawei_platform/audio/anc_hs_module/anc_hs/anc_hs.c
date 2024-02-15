@@ -22,7 +22,6 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
-#include <linux/wakelock.h>
 #include <linux/miscdevice.h>
 #include <linux/regulator/consumer.h>
 #include <linux/workqueue.h>
@@ -130,7 +129,7 @@ struct anc_hs_data {
 
 	struct mutex btn_mutex;
 	struct mutex charge_lock;/* charge status protect lock */
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 
 	int registered;          /* anc hs regester flag */
 	struct anc_hs_dev *dev;     /* anc hs dev */
@@ -892,7 +891,7 @@ static void anc_hs_btn_judge(struct work_struct *work)
 	hwlog_info("%s(%u):deal with button irq event!\n", __func__, __LINE__);
 
 	/* should get wake lock before codec power lock which may be blocked*/
-	wake_lock(&pdata->wake_lock);
+	__pm_stay_awake(&pdata->wake_lock);
 
 	/* enable irq first */
 	anc_hs_enable_irq();
@@ -927,7 +926,7 @@ static void anc_hs_btn_judge(struct work_struct *work)
 	}
 
 	mutex_unlock(&pdata->btn_mutex);
-	wake_unlock(&pdata->wake_lock);
+	__pm_relax(&pdata->wake_lock);
 
 	return;
 }
@@ -945,7 +944,7 @@ static void anc_hs_btn_judge(struct work_struct *work)
 static irqreturn_t anc_hs_btn_handler(int irq, void *data)
 {
 	/* make sure delay_work to be scheduled*/
-	wake_lock_timeout(&pdata->wake_lock, 50);
+	__pm_wakeup_event(&pdata->wake_lock, 50);
 
 	anc_hs_disable_irq();
 
@@ -1295,7 +1294,7 @@ static int anc_hs_probe(struct platform_device *pdev)
 
 	mutex_init(&pdata->charge_lock);
 	mutex_init(&pdata->btn_mutex);
-	wake_lock_init(&pdata->wake_lock, WAKE_LOCK_SUSPEND, "anc_hs");
+	wakeup_source_init(&pdata->wake_lock, "anc_hs");
 
 	/* init all values */
 	pdata->anc_hs_mode = ANC_HS_CHARGE_OFF;

@@ -245,7 +245,7 @@ typedef enum {
 
 #define DOUBLE_CLICK_WAKEUP	15
 //const uint16_t gesture_key_array = KEY_POWER;
-//static struct wake_lock gestrue_wakelock;
+//static struct wakeup_source gestrue_wakelock;
 #define EVENT_MAP_HOST_CMD                    0x50
 #define IS_APP_ENABLE_GESTURE(x)  ((u32)(1<<x))
 

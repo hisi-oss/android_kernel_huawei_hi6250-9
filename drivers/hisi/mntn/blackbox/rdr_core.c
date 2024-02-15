@@ -19,7 +19,6 @@
 #include <linux/delay.h>
 #include <linux/hardirq.h>
 #include <linux/syscalls.h>
-#include <linux/wakelock.h>
 #include <linux/reboot.h>
 #include <linux/export.h>
 #include <linux/version.h>
@@ -45,7 +44,7 @@
 static struct semaphore rdr_sem;
 static LIST_HEAD(g_rdr_syserr_list);
 static DEFINE_SPINLOCK(g_rdr_syserr_list_lock);
-static struct wake_lock blackbox_wl;
+static struct wakeup_source blackbox_wl;
 
 void rdr_register_system_error(u32 modid, u32 arg1, u32 arg2)
 {
@@ -319,7 +318,7 @@ void rdr_syserr_process(struct rdr_syserr_param_s *p)
 
 	BB_PRINT_START();
 
-	wake_lock(&blackbox_wl);	/*make sure that the task can not be interrupted by suspend. */
+	__pm_stay_awake(&blackbox_wl);	/*make sure that the task can not be interrupted by suspend. */
 	rdr_field_baseinfo_reinit();
 	rdr_save_args(p->modid, p->arg1, p->arg2);
 	p_exce_info = rdr_get_exception_info(mod_id);
@@ -335,7 +334,7 @@ void rdr_syserr_process(struct rdr_syserr_param_s *p)
 
 	if (p_exce_info == NULL) {
 		rdr_save_history_log_for_undef_exception(p);
-		wake_unlock(&blackbox_wl);
+		__pm_relax(&blackbox_wl);
 		BB_PRINT_ERR("get exception info faild.  return.\n");
 		return;
 	}
@@ -377,7 +376,7 @@ void rdr_syserr_process(struct rdr_syserr_param_s *p)
 	rdr_notify_module_reset(mod_id, p_exce_info);
 	BB_PRINT_PN("rdr_notify_module_reset: done.\n");
 
-	wake_unlock(&blackbox_wl);
+	__pm_relax(&blackbox_wl);
 	BB_PRINT_END();
 	return;
 }
@@ -551,11 +550,11 @@ static s32 __init rdr_init(void)
 		return -1;
 	}
 
-	wake_lock_init(&blackbox_wl, WAKE_LOCK_SUSPEND, "blackbox");
+	wakeup_source_init(&blackbox_wl, "blackbox");
 	rdr_main = kthread_run(rdr_main_thread_body, NULL, "bbox_main");
 	if (!rdr_main) {
 		BB_PRINT_ERR("create thread rdr_main_thread faild.\n");
-		wake_lock_destroy(&blackbox_wl);
+		wakeup_source_trash(&blackbox_wl);
 		return -1;
 	}
 
@@ -563,7 +562,7 @@ static s32 __init rdr_init(void)
 	if (sched_setscheduler(rdr_main, SCHED_FIFO, &param)) {
 		BB_PRINT_ERR("sched_setscheduler rdr_bootcheck_thread faild.\n");
 		kthread_stop(rdr_main);
-		wake_lock_destroy(&blackbox_wl);
+		wakeup_source_trash(&blackbox_wl);
 		return -1;
 	}
 	rdr_bootcheck =
@@ -571,13 +570,13 @@ static s32 __init rdr_init(void)
 	if (!rdr_bootcheck) {
 		BB_PRINT_ERR("create thread rdr_bootcheck_thread faild.\n");
 		kthread_stop(rdr_main);
-		wake_lock_destroy(&blackbox_wl);
+		wakeup_source_trash(&blackbox_wl);
 		return -1;
 	}
 	if (!kthread_run(rdr_dump_init, NULL, "bbox_dump_init")) {
 		BB_PRINT_ERR("create thread rdr_dump_init faild.\n");
 		kthread_stop(rdr_main);
-		wake_lock_destroy(&blackbox_wl);
+		wakeup_source_trash(&blackbox_wl);
 		return -1;
 	}
 

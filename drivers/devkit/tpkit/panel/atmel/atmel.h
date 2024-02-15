@@ -574,7 +574,7 @@ struct mxt_data {
 	struct ts_kit_device_data *atmel_chip_data;
 	struct mxt_refs_delta_data refs_delta_data;
 	struct ts_fingers *ts_cache;
-	struct wake_lock ts_flash_wake_lock;
+	struct wakeup_source ts_flash_wake_lock;
 
 	struct mxt_platform_data *pdata;
 

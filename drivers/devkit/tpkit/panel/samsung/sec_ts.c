@@ -2239,7 +2239,7 @@ static int sec_ts_init_chip(void)
 	ts->flip_enable = false;
 	ts->lowpower_mode = false;
 
-	wake_lock_init(&ts->wakelock, WAKE_LOCK_SUSPEND, "tsp_wakelock");
+	wakeup_source_init(&ts->wakelock, "tsp_wakelock");
 	init_completion(&ts->resume_done);
 
 #if defined (CONFIG_TEE_TUI)

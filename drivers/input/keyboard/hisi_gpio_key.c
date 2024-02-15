@@ -38,7 +38,6 @@
 #include <linux/of_gpio.h>
 #include <linux/regulator/consumer.h>
 #include <linux/pinctrl/consumer.h>
-#include <linux/wakelock.h>
 #include <asm/irq.h>
 #include <linux/uaccess.h>
 #include <linux/proc_fs.h>
@@ -67,8 +66,8 @@
 extern int hisi_pmic_vibrator_haptics_set_type(int type);
 #endif
 
-static struct wake_lock volume_up_key_lock;
-static struct wake_lock volume_down_key_lock;
+static struct wakeup_source volume_up_key_lock;
+static struct wakeup_source volume_down_key_lock;
 static int support_smart_key = 0;
 static int smart_key_vibrate = 0;
 
@@ -130,10 +129,10 @@ struct hisi_gpio_key {
 };
 
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_HI6XXX
-static struct wake_lock back_key_lock;
+static struct wakeup_source back_key_lock;
 #endif
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_SMART_KEY
-static struct wake_lock smart_key_lock;
+static struct wakeup_source smart_key_lock;
 #endif
 
 #if defined (CONFIG_HUAWEI_DSM)
@@ -241,7 +240,7 @@ static void hisi_gpio_keyup_work(struct work_struct *work)
 #endif
 
 	if (keyup_value == GPIO_HIGH_VOLTAGE)
-		wake_unlock(&volume_up_key_lock);/*lint !e455*/
+		__pm_relax(&volume_up_key_lock);/*lint !e455*/
 
 	return;
 }
@@ -291,7 +290,7 @@ static void hisi_gpio_keydown_work(struct work_struct *work)
 #endif
 
 	if (keydown_value == GPIO_HIGH_VOLTAGE)
-		wake_unlock(&volume_down_key_lock);/*lint !e455*/
+		__pm_relax(&volume_down_key_lock);/*lint !e455*/
 
 	return;
 }
@@ -321,7 +320,7 @@ static void hisi_gpio_keyback_work(struct work_struct *work)
 	input_sync(gpio_key->input_dev);
 
 	if (keyback_value == GPIO_HIGH_VOLTAGE)
-		wake_unlock(&back_key_lock);
+		__pm_relax(&back_key_lock);
 
 	return;
 }
@@ -357,7 +356,7 @@ static void hisi_gpio_keysmart_work(struct work_struct *work)
 	input_sync(gpio_key->input_dev);
 
 	if (keysmart_value == GPIO_HIGH_VOLTAGE)
-		wake_unlock(&smart_key_lock);
+		__pm_relax(&smart_key_lock);
 
 	return;
 }
@@ -371,7 +370,7 @@ static void gpio_keyup_timer(unsigned long data)
 	keyup_value = gpio_get_value((unsigned int)gpio_key->gpio_up);
         /*judge key is pressed or released.*/
         if (keyup_value == GPIO_LOW_VOLTAGE){
-                wake_lock(&volume_up_key_lock);
+                __pm_stay_awake(&volume_up_key_lock);
 
 #if defined (CONFIG_HUAWEI_DSM)
 		if ((jiffies - volume_up_last_press_time) < msecs_to_jiffies(PRESS_KEY_INTERVAL)) {
@@ -396,7 +395,7 @@ static void gpio_keydown_timer(unsigned long data)
         keydown_value = gpio_get_value((unsigned int)gpio_key->gpio_down);
         /*judge key is pressed or released.*/
         if (keydown_value == GPIO_LOW_VOLTAGE){
-                wake_lock(&volume_down_key_lock);
+                __pm_stay_awake(&volume_down_key_lock);
 
 #if defined (CONFIG_HUAWEI_DSM)
             if ((jiffies - volume_down_last_press_time) < msecs_to_jiffies(PRESS_KEY_INTERVAL)) {
@@ -423,7 +422,7 @@ static void gpio_keyback_timer(unsigned long data)
 	keyback_value = gpio_get_value((unsigned int)gpio_key->gpio_back);
         /*judge key is pressed or released.*/
         if (keyback_value == GPIO_LOW_VOLTAGE)
-                wake_lock(&back_key_lock);
+                __pm_stay_awake(&back_key_lock);
 
 	schedule_delayed_work(&(gpio_key->gpio_keyback_work), 0);
 
@@ -440,7 +439,7 @@ static void gpio_keysmart_timer(unsigned long data)
 	keysmart_value = gpio_get_value((unsigned int)gpio_key->gpio_smart);
         /*judge key is pressed or released.*/
         if (keysmart_value == GPIO_LOW_VOLTAGE)
-                wake_lock(&smart_key_lock);
+                __pm_stay_awake(&smart_key_lock);
 
 	schedule_delayed_work(&(gpio_key->gpio_keysmart_work), 0);
 
@@ -508,7 +507,7 @@ static irqreturn_t hisi_gpio_key_irq_handler(int irq, void *dev_id)
 			gpio_key_vol_updown_press_set_zero();
 		}
 		mod_timer(&(gpio_key->key_up_timer), jiffies + msecs_to_jiffies(TIMER_DEBOUNCE));
-		wake_lock_timeout(&volume_up_key_lock, 50);
+		__pm_wakeup_event(&volume_up_key_lock, 50);
 	} else if (irq == gpio_key->volume_down_irq) {
 		key_event = gpio_get_value_cansleep((unsigned int)gpio_key->gpio_down);
 		if (0 == key_event) {
@@ -516,17 +515,17 @@ static irqreturn_t hisi_gpio_key_irq_handler(int irq, void *dev_id)
 		} else {
 			gpio_key_vol_updown_press_set_zero();
 		}
-		wake_lock_timeout(&volume_down_key_lock, 50);
+		__pm_wakeup_event(&volume_down_key_lock, 50);
 		mod_timer(&(gpio_key->key_down_timer), jiffies + msecs_to_jiffies(TIMER_DEBOUNCE));
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_HI6XXX
 	} else if (irq == gpio_key->key_back_irq) {
 		mod_timer(&(gpio_key->key_back_timer), jiffies + msecs_to_jiffies(TIMER_DEBOUNCE));
-		wake_lock_timeout(&back_key_lock, 50);
+		__pm_wakeup_event(&back_key_lock, 50);
 #endif
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_SMART_KEY
 	} else if (support_smart_key && irq == gpio_key->key_smart_irq) {
 		mod_timer(&(gpio_key->key_smart_timer), jiffies + msecs_to_jiffies(TIMER_DEBOUNCE));
-		wake_lock_timeout(&smart_key_lock, 50);
+		__pm_wakeup_event(&smart_key_lock, 50);
 #endif
 	} else {
 		printk(KERN_ERR "[gpiokey] [%s]invalid irq %d!\n", __FUNCTION__, irq);
@@ -659,16 +658,16 @@ static int hisi_gpio_key_probe(struct platform_device* pdev)
 	/*initial work before we use it.*/
 	INIT_DELAYED_WORK(&(gpio_key->gpio_keyup_work), hisi_gpio_keyup_work);
 	INIT_DELAYED_WORK(&(gpio_key->gpio_keydown_work), hisi_gpio_keydown_work);
-	wake_lock_init(&volume_down_key_lock, WAKE_LOCK_SUSPEND, "key_down_wake_lock");
-	wake_lock_init(&volume_up_key_lock, WAKE_LOCK_SUSPEND, "key_up_wake_lock");
+	wakeup_source_init(&volume_down_key_lock, "key_down_wake_lock");
+	wakeup_source_init(&volume_up_key_lock, "key_up_wake_lock");
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_HI6XXX
 	INIT_DELAYED_WORK(&(gpio_key->gpio_keyback_work), hisi_gpio_keyback_work);
-	wake_lock_init(&back_key_lock, WAKE_LOCK_SUSPEND, "key_back_wake_lock");
+	wakeup_source_init(&back_key_lock, "key_back_wake_lock");
 #endif
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_SMART_KEY
 	if (support_smart_key) {
 		INIT_DELAYED_WORK((struct delayed_work *)(uintptr_t)(&(gpio_key->gpio_keysmart_work)), hisi_gpio_keysmart_work);
-		wake_lock_init(&smart_key_lock, WAKE_LOCK_SUSPEND, "key_smart_wake_lock");
+		wakeup_source_init(&smart_key_lock, "key_smart_wake_lock");
 	}
 #endif
 
@@ -925,14 +924,14 @@ err_gpio_smart_req:
 #endif
 err_get_gpio:
 	input_free_device(input_dev);
-	wake_lock_destroy(&volume_down_key_lock);
-	wake_lock_destroy(&volume_up_key_lock);
+	wakeup_source_trash(&volume_down_key_lock);
+	wakeup_source_trash(&volume_up_key_lock);
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_HI6XXX
-	wake_lock_destroy(&back_key_lock);
+	wakeup_source_trash(&back_key_lock);
 #endif
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_SMART_KEY
 	if (support_smart_key) {
-		wake_lock_destroy(&smart_key_lock);
+		wakeup_source_trash(&smart_key_lock);
 	}
 #endif
 	pr_info(KERN_ERR "[gpiokey]K3v3 gpio key probe failed! ret = %d.\n", err);
@@ -955,20 +954,20 @@ static int hisi_gpio_key_remove(struct platform_device* pdev)
 	devm_pinctrl_put(gpio_key->pctrl);
 	cancel_delayed_work(&(gpio_key->gpio_keyup_work));
 	cancel_delayed_work(&(gpio_key->gpio_keydown_work));
-	wake_lock_destroy(&volume_down_key_lock);
-	wake_lock_destroy(&volume_up_key_lock);
+	wakeup_source_trash(&volume_down_key_lock);
+	wakeup_source_trash(&volume_up_key_lock);
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_HI6XXX
 	free_irq(gpio_key->key_back_irq, gpio_key);
 	gpio_free((unsigned int)gpio_key->gpio_back);
 	cancel_delayed_work(&(gpio_key->gpio_keyback_work));
-	wake_lock_destroy(&back_key_lock);
+	wakeup_source_trash(&back_key_lock);
 #endif
 #ifdef CONFIG_HISI_GPIO_KEY_SUPPORT_SMART_KEY
 	if (support_smart_key) {
 		free_irq(gpio_key->key_smart_irq, gpio_key);
 		gpio_free((unsigned int)gpio_key->gpio_smart);
 		cancel_delayed_work(&(gpio_key->gpio_keysmart_work));
-		wake_lock_destroy(&smart_key_lock);
+		wakeup_source_trash(&smart_key_lock);
 	}
 #endif
 

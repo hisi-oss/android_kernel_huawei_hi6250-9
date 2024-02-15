@@ -36,7 +36,6 @@
 #include <linux/spinlock.h>
 #include <linux/reboot.h>
 #include <linux/clk.h>
-#include <linux/wakelock.h>
 #include <linux/of.h>
 #include <linux/of_platform.h>
 #include <linux/of_device.h>
@@ -62,7 +61,7 @@ HWLOG_REGIST();
 
 /*lint -save -e528 -e529*/
 static bool ven_felica_status;
-static struct wake_lock wlock_read;
+static struct wakeup_source wlock_read;
 static int firmware_update;
 static int nfc_switch_state;
 static int nfc_at_result;
@@ -381,13 +380,13 @@ static void get_wake_lock_timeout(void)
 	int ret = -1;
 
 	memset(wake_lock_str, 0, MAX_WAKE_LOCK_TIMEOUT_SIZE);
-	ret = nfc_get_dts_config_string("wake_lock_timeout", "wake_lock_timeout",
+	ret = nfc_get_dts_config_string("__pm_wakeup_event", "__pm_wakeup_event",
 	wake_lock_str, sizeof(wake_lock_str));
 
 	if (ret != 0) {
 		memset(wake_lock_str, 0, MAX_WAKE_LOCK_TIMEOUT_SIZE);
 		g_wake_lock_timeout = WAKE_LOCK_TIMEOUT_DISABLE;
-		hwlog_err("%s: can't find wake_lock_timeout\n", __func__);
+		hwlog_err("%s: can't find __pm_wakeup_event\n", __func__);
 		return;
 	} else {
 		if (!strncasecmp(wake_lock_str, "ok", strlen("ok"))) {
@@ -783,9 +782,9 @@ static irqreturn_t pn547_dev_irq_handler(int irq, void *dev_id)
 
 	/*set a wakelock to avoid entering into suspend */
 	if (WAKE_LOCK_TIMEOUT_ENALBE == g_wake_lock_timeout) {
-		wake_lock_timeout(&wlock_read, 5 * HZ);
+		__pm_wakeup_event(&wlock_read, 5 * HZ);
 	} else {
-		wake_lock_timeout(&wlock_read, 1 * HZ);
+		__pm_wakeup_event(&wlock_read, 1 * HZ);
 	}
 
 	/* Wake up waiting readers */
@@ -2383,7 +2382,7 @@ static int pn547_probe(struct i2c_client *client,
 
 	mutex_init(&pn547_dev->irq_mutex_lock);
 	/* Initialize wakelock*/
-	wake_lock_init(&wlock_read, WAKE_LOCK_SUSPEND, "nfc_read");
+	wakeup_source_init(&wlock_read, "nfc_read");
 	/*register pn544 char device*/
 	pn547_dev->pn547_device.minor = MISC_DYNAMIC_MINOR;
 	pn547_dev->pn547_device.name = "pn544";
@@ -2459,7 +2458,7 @@ err_request_irq_failed:
 	gpio_free(pn547_dev->irq_gpio);
 err_misc_register:
 	misc_deregister(&pn547_dev->pn547_device);
-	wake_lock_destroy(&wlock_read);
+	wakeup_source_trash(&wlock_read);
 	mutex_destroy(&pn547_dev->read_mutex);
 err_check_pn547:
 	ret = pn547_bulk_disable(pn547_dev);
@@ -2506,7 +2505,7 @@ static int pn547_remove(struct i2c_client *client)
 	}
 	free_irq(client->irq, pn547_dev);
 	misc_deregister(&pn547_dev->pn547_device);
-	wake_lock_destroy(&wlock_read);
+	wakeup_source_trash(&wlock_read);
 	mutex_destroy(&pn547_dev->read_mutex);
 	gpio_free(pn547_dev->irq_gpio);
 	gpio_free(pn547_dev->firm_gpio);

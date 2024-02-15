@@ -713,7 +713,7 @@ VOS_UINT32 ADS_UL_WakeLockTimeout(VOS_VOID)
 
     if (0 != pstIpfCntxt->ulRxWakeLockTimeout)
     {
-        wake_lock_timeout(&(pstIpfCntxt->stRxWakeLock),
+        __pm_wakeup_event(&(pstIpfCntxt->stRxWakeLock),
                           (VOS_LONG)msecs_to_jiffies(pstIpfCntxt->ulRxWakeLockTimeout));
     }
 
@@ -734,7 +734,7 @@ VOS_UINT32 ADS_UL_WakeLock(VOS_VOID)
         return 0;
     }
 
-    wake_lock(&(pstIpfCntxt->stUlBdWakeLock));
+    __pm_stay_awake(&(pstIpfCntxt->stUlBdWakeLock));
     pstIpfCntxt->ulUlBdWakeLockCnt++;
 
     ulRet = pstIpfCntxt->ulUlBdWakeLockCnt;
@@ -755,7 +755,7 @@ VOS_UINT32 ADS_UL_WakeUnLock(VOS_VOID)
 
     ADS_UL_WakeLockTimeout();
 
-    wake_unlock(&(pstIpfCntxt->stUlBdWakeLock));
+    __pm_relax(&(pstIpfCntxt->stUlBdWakeLock));
     pstIpfCntxt->ulUlBdWakeLockCnt--;
 
     ulRet = pstIpfCntxt->ulUlBdWakeLockCnt;
@@ -787,7 +787,7 @@ VOS_UINT32 ADS_DL_WakeLockTimeout(VOS_VOID)
 
     if (0 != pstIpfCntxt->ulTxWakeLockTimeout)
     {
-        wake_lock_timeout(&(pstIpfCntxt->stTxWakeLock),
+        __pm_wakeup_event(&(pstIpfCntxt->stTxWakeLock),
                           (VOS_LONG)msecs_to_jiffies(pstIpfCntxt->ulTxWakeLockTimeout));
     }
 
@@ -808,7 +808,7 @@ VOS_UINT32 ADS_DL_WakeLock(VOS_VOID)
         return 0;
     }
 
-    wake_lock(&(pstIpfCntxt->stDlRdWakeLock));
+    __pm_stay_awake(&(pstIpfCntxt->stDlRdWakeLock));
     pstIpfCntxt->ulDlRdWakeLockCnt++;
 
     ulRet = pstIpfCntxt->ulDlRdWakeLockCnt;
@@ -829,7 +829,7 @@ VOS_UINT32 ADS_DL_WakeUnLock(VOS_VOID)
 
     ADS_DL_WakeLockTimeout();
 
-    wake_unlock(&(pstIpfCntxt->stDlRdWakeLock));
+    __pm_relax(&(pstIpfCntxt->stDlRdWakeLock));
     pstIpfCntxt->ulDlRdWakeLockCnt--;
 
     ulRet = pstIpfCntxt->ulDlRdWakeLockCnt;
@@ -1343,11 +1343,11 @@ VOS_VOID ADS_InitIpfCtx(VOS_VOID)
     g_stAdsCtx.stAdsIpfCtx.stDev.dma_mask = &g_ullAdsDmaMask;
 #endif
 
-    wake_lock_init(&g_stAdsCtx.stAdsIpfCtx.stUlBdWakeLock, WAKE_LOCK_SUSPEND, "ipf_bd_wake");
-    wake_lock_init(&g_stAdsCtx.stAdsIpfCtx.stDlRdWakeLock, WAKE_LOCK_SUSPEND, "ipf_rd_wake");
+    wakeup_source_init(&g_stAdsCtx.stAdsIpfCtx.stUlBdWakeLock, "ipf_bd_wake");
+    wakeup_source_init(&g_stAdsCtx.stAdsIpfCtx.stDlRdWakeLock, "ipf_rd_wake");
 
-    wake_lock_init(&g_stAdsCtx.stAdsIpfCtx.stRxWakeLock, WAKE_LOCK_SUSPEND, "ads_rx_wake");
-    wake_lock_init(&g_stAdsCtx.stAdsIpfCtx.stTxWakeLock, WAKE_LOCK_SUSPEND, "ads_tx_wake");
+    wakeup_source_init(&g_stAdsCtx.stAdsIpfCtx.stRxWakeLock, "ads_rx_wake");
+    wakeup_source_init(&g_stAdsCtx.stAdsIpfCtx.stTxWakeLock, "ads_tx_wake");
 
     g_stAdsCtx.stAdsIpfCtx.ulWakeLockEnable         = VOS_FALSE;
 

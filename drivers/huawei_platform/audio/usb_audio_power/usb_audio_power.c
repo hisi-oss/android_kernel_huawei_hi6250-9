@@ -13,7 +13,6 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
-#include <linux/wakelock.h>
 #include <linux/miscdevice.h>
 #include <linux/regulator/consumer.h>
 #include <linux/workqueue.h>
@@ -103,7 +102,7 @@ struct usb_audio_power_data {
 	bool audio_buckboost_enable;
 
 	struct mutex vboost_ctrl_lock;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 #ifdef CONFIG_SUPERSWITCH_FSC
 	struct workqueue_struct* superswitch_vout_switch_delay_wq;
 	struct delayed_work superswitch_vout_switch_delay_work;

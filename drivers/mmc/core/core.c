@@ -3144,7 +3144,7 @@ void mmc_rescan(struct work_struct *work)
 	 *but we use the code of the patch b485d959244fa which update in
 	 *Sep 7 2011.
 	 */
-	wake_lock(&host->detect_wake_lock);
+	__pm_stay_awake(&host->detect_wake_lock);
 
 	if (host->rescan_disable)
 		goto out;
@@ -3252,11 +3252,11 @@ void mmc_rescan(struct work_struct *work)
 #endif
  out:
 	if (extend_wakelock)
-		wake_lock_timeout(&host->detect_wake_lock, HZ / 2);
+		__pm_wakeup_event(&host->detect_wake_lock, HZ / 2);
 	else
-		wake_unlock(&host->detect_wake_lock);
+		__pm_relax(&host->detect_wake_lock);
 	if (host->caps & MMC_CAP_NEEDS_POLL) {/*lint !e456*/
-		wake_lock(&host->detect_wake_lock);
+		__pm_stay_awake(&host->detect_wake_lock);
 		mmc_schedule_delayed_work(&host->detect, HZ);
 	}
 }/*lint !e454*//*lint !e456*/
@@ -3289,7 +3289,7 @@ void mmc_stop_host(struct mmc_host *host)
 	/* HISI do not use slot gpio */
 	host->rescan_disable = 1;
 	if (cancel_delayed_work_sync(&host->detect))
-		wake_unlock(&host->detect_wake_lock);/*lint !e455*/
+		__pm_relax(&host->detect_wake_lock);/*lint !e455*/
 
 	/* clear pm flags now and let card drivers set them as needed */
 	host->pm_flags = 0;
@@ -3410,7 +3410,7 @@ static int mmc_pm_notify(struct notifier_block *notify_block,
 		host->rescan_disable = 1;
 		spin_unlock_irqrestore(&host->lock, flags);
 		if (cancel_delayed_work_sync(&host->detect))
-			wake_unlock(&host->detect_wake_lock);/*lint !e455*/
+			__pm_relax(&host->detect_wake_lock);/*lint !e455*/
 /*make sure we cancel the detect change work before suspend*/
 #ifdef CONFIG_MMC_BLOCK_DEFERRED_RESUME
 		if (mmc_bus_needs_resume(host)) {

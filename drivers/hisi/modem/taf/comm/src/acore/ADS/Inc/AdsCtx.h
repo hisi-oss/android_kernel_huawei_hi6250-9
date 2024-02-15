@@ -71,7 +71,6 @@
 
 #if (VOS_OS_VER == VOS_LINUX)
 #include <asm/dma-mapping.h>
-#include <linux/wakelock.h>
 #if (defined(CONFIG_BALONG_SPE))
 #include <linux/spe/spe_interface.h>
 #include "mdrv_spe_wport.h"
@@ -663,11 +662,11 @@ typedef struct
 
     VOS_UINT32                          ulWakeLockEnable;                       /* wake lock ???????? */
 
-    struct wake_lock                    stUlBdWakeLock;                         /* wake lock BD */
-    struct wake_lock                    stDlRdWakeLock;                         /* wake lock RD */
+    struct wakeup_source                    stUlBdWakeLock;                         /* wake lock BD */
+    struct wakeup_source                    stDlRdWakeLock;                         /* wake lock RD */
 
-    struct wake_lock                    stRxWakeLock;                           /* wake lock RX */
-    struct wake_lock                    stTxWakeLock;                           /* wake lock TX */
+    struct wakeup_source                    stRxWakeLock;                           /* wake lock RX */
+    struct wakeup_source                    stTxWakeLock;                           /* wake lock TX */
 
     VOS_UINT32                          ulUlBdWakeLockCnt;                      /* wake lock BD ???? */
     VOS_UINT32                          ulDlRdWakeLockCnt;                      /* wake lock BD ???? */

@@ -30,7 +30,6 @@
 #include <linux/fs.h>
 #include <linux/dma-mapping.h>
 #include <linux/input.h>
-#include <linux/wakelock.h>
 #include <linux/clk.h>
 #include <linux/hwspinlock.h>
 #include <linux/semaphore.h>
@@ -209,7 +208,7 @@ struct soundtrigger_dma_drv_info {
 	struct workqueue_struct 		*soundtrigger_delay_close_dma_wq;
 	struct delayed_work 			soundtrigger_delay_close_dma_timeout_work;	/* delay work of close dma when timeout */
 
-	struct wake_lock st_wake_lock;
+	struct wakeup_source st_wake_lock;
 	struct mutex ioctl_mutex;
 };
 
@@ -768,7 +767,7 @@ static int32_t dma_start(struct st_fast_status * fast_status)
 	}
 	dma_drv_info->is_slimbus_enable = 1;
 
-	wake_lock(&dma_drv_info->st_wake_lock);
+	__pm_stay_awake(&dma_drv_info->st_wake_lock);
 
 	if (!queue_delayed_work(dma_drv_info->soundtrigger_delay_close_dma_wq,
 				&dma_drv_info->soundtrigger_delay_close_dma_timeout_work, msecs_to_jiffies(TIMEOUT_CLOSE_DMA_MS))) {
@@ -976,7 +975,7 @@ static int32_t dma_close(void)
 	Static_RingBuffer_DeInit();
 
 	if (wake_lock_active(&dma_drv_info->st_wake_lock))
-		wake_unlock(&dma_drv_info->st_wake_lock);/*lint !e455*/
+		__pm_relax(&dma_drv_info->st_wake_lock);/*lint !e455*/
 
 	logi("soundtrigger_dma close aspclk:%d, ++\n", clk_get_enable_count(dma_drv_info->asp_subsys_clk));
 
@@ -987,7 +986,7 @@ static int32_t dma_close(void)
 	return 0;
 err_exit:
 	if (wake_lock_active(&dma_drv_info->st_wake_lock))
-		wake_unlock(&dma_drv_info->st_wake_lock);/*lint !e455*/
+		__pm_relax(&dma_drv_info->st_wake_lock);/*lint !e455*/
 null_exit:
 	logw( "dma close fail, err:[%d].\n", err);
 	return err;
@@ -1719,7 +1718,7 @@ static int32_t soundtrigger_dma_drv_probe (struct platform_device *pdev)
 	dma_drv_info->dma_alloc_flag = 0;
 	dma_drv_info->is_dma_enable = 0;
 	dma_drv_info->is_slimbus_enable = 0;
-	wake_lock_init(&dma_drv_info->st_wake_lock, WAKE_LOCK_SUSPEND, "hisi-64xx-soundtrigger");
+	wakeup_source_init(&dma_drv_info->st_wake_lock, "hisi-64xx-soundtrigger");
 	platform_set_drvdata(pdev, dma_drv_info);
 	mutex_init(&dma_drv_info->ioctl_mutex);
 	spin_lock_init(&dma_drv_info->lock);
@@ -1767,7 +1766,7 @@ static int32_t soundtrigger_dma_drv_remove(struct platform_device *pdev)
 
 	dma_drv_info->dma_alloc_flag = 0;
 
-	wake_lock_destroy(&g_dma_drv_info->st_wake_lock);
+	wakeup_source_trash(&g_dma_drv_info->st_wake_lock);
 	mutex_destroy(&g_dma_drv_info->ioctl_mutex);
 
 	misc_deregister(&soundtrigger_dma_drv_device);

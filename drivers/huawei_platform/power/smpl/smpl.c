@@ -13,7 +13,6 @@
 #include <linux/of.h>
 #include <linux/platform_device.h>
 #include <huawei_platform/log/hw_log.h>
-#include <linux/wakelock.h>
 #include <linux/mfd/hisi_pmic_mntn.h>
 #include <linux/hisi/usb/hisi_usb.h>
 #ifdef CONFIG_HISI_BCI_BATTERY
@@ -35,7 +34,7 @@ struct smpl_device_info {
     struct notifier_block usb_nb;
     struct work_struct config_abs_pd_work;
     atomic_t in_charging;
-    struct wake_lock abs_pd_wakelock;
+    struct wakeup_source abs_pd_wakelock;
 };
 
 static struct smpl_device_info* g_smpl_devinfo = NULL;
@@ -89,7 +88,7 @@ static int lock_abs_pd_wakelock(void)
 {
     if( g_smpl_devinfo )
     {
-        wake_lock(&g_smpl_devinfo->abs_pd_wakelock);
+        __pm_stay_awake(&g_smpl_devinfo->abs_pd_wakelock);
     }
     return 0;
 }
@@ -98,7 +97,7 @@ static int unlock_abs_pd_wakelock(void)
 {
     if( g_smpl_devinfo )
     {
-        wake_unlock(&g_smpl_devinfo->abs_pd_wakelock);
+        __pm_relax(&g_smpl_devinfo->abs_pd_wakelock);
     }
     return 0;
 }
@@ -201,13 +200,13 @@ static int smpl_probe(struct platform_device *pdev)
     INIT_WORK(&di->config_abs_pd_work, config_pwroff_abs_pd_work);
     g_smpl_devinfo = di;
 
-    wake_lock_init(&di->abs_pd_wakelock, WAKE_LOCK_SUSPEND, "abs_pd_wakelock");
+    wakeup_source_init(&di->abs_pd_wakelock, "abs_pd_wakelock");
 
     di->usb_nb.notifier_call = charge_usb_notifier_call;
     ret = hisi_charger_type_notifier_register(&di->usb_nb);
     if (ret < 0)
     {
-		wake_lock_destroy(&di->abs_pd_wakelock);
+		wakeup_source_trash(&di->abs_pd_wakelock);
         g_smpl_devinfo = NULL;
         hwlog_err("%s %d hisi_charger_type_notifier_register failed.\n", __func__, __LINE__);
         kfree(di);
@@ -239,7 +238,7 @@ static int smpl_remove(struct platform_device *pdev)
         goto out;
     }
 
-	wake_lock_destroy(&g_smpl_devinfo->abs_pd_wakelock);
+	wakeup_source_trash(&g_smpl_devinfo->abs_pd_wakelock);
 
     ret = hisi_charger_type_notifier_unregister(&g_smpl_devinfo->usb_nb);
     if( ret )

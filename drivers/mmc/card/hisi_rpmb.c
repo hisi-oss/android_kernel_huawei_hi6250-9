@@ -30,7 +30,6 @@
 #include <linux/printk.h>
 #include <linux/dma-mapping.h>
 #include <linux/device.h>
-#include <linux/wakelock.h>
 #include <linux/compiler.h>
 #include <global_ddr_map.h>
 #include <linux/time.h>
@@ -88,7 +87,7 @@ struct hisi_rpmb {
 	struct task_struct * rpmb_task;
 	int wake_up_condition;
 	wait_queue_head_t wait;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	enum rpmb_version dev_ver;
 };
 extern long
@@ -749,7 +748,7 @@ static void rpmb_work_routine(void)
 	#ifdef CONFIG_HISI_RPMB_TIME_DEBUG
 	g_work_queue_start = hisi_getcurtime();
 	#endif
-	wake_lock_timeout(&hisi_rpmb.wake_lock, (long)2 * HZ);
+	__pm_wakeup_event(&hisi_rpmb.__pm_stay_awake, (long)2 * HZ);
 	if (BOOT_DEVICE_EMMC == rpmb_support_device)
 		result = mmc_rpmb_work(request);
 	else
@@ -772,7 +771,7 @@ static void rpmb_work_routine(void)
 			request->info.current_rqst.blks, ret);
 		print_frame_buf("frame failed", (void *)&request->error_frame, 512, 16);
 	}
-	/*wake_unlock(&hisi_rpmb.wake_lock);*/
+	/*__pm_relax(&hisi_rpmb.__pm_stay_awake);*/
 }
 
 /*
@@ -1953,7 +1952,7 @@ static int __init hisi_rpmb_init(void)
 		return -1;
 	else
 		rpmb_device_init_status = RPMB_DEVICE_IS_READY;
-	wake_lock_init(&hisi_rpmb.wake_lock, WAKE_LOCK_SUSPEND,"hisi-rpmb-wakelock");
+	wakeup_source_init(&hisi_rpmb.__pm_stay_awake,"hisi-rpmb-wakelock");
 
 	#ifdef CONFIG_HISI_RPMB_TIME_DEBUG
 	hisi_rpmb_time_stamp_debugfs_init();

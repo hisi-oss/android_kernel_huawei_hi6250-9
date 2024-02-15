@@ -461,7 +461,7 @@ int dwc_otg_hcd_urb_enqueue(dwc_otg_hcd_t *hcd,
 	struct lm_device *lm_dev;
 	lm_dev = hcd->otg_dev->os_dep.lmdev;
 	/* update timer expires, for OTG host sleep, 2012-04-24 */
-	/* wake_lock_timeout(&lm_dev->hiusb_info->host_wakelock, HOST_WAKELOCK_TIMEOUT); */
+	/* __pm_wakeup_event(&lm_dev->hiusb_info->host_wakelock, HOST_WAKELOCK_TIMEOUT); */
 
 	if (!hcd->flags.b.port_connect_status) {
 		/* No longer connected. */

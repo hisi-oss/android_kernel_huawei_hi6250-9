@@ -16,7 +16,6 @@
 #include <linux/delay.h>
 #include <linux/freezer.h>
 #include <linux/completion.h>
-#include <linux/wakelock.h>
 #include <linux/wait.h>
 #include <linux/spinlock.h>
 #include <linux/version.h>
@@ -123,7 +122,7 @@ struct mb_mutex
 /*****************************************************************************
   2 全局变量定义
 *****************************************************************************/
-static struct wake_lock mb_lpwr_lock; /*防止在唤醒后，处理邮件过程中进入睡眠*/
+static struct wakeup_source mb_lpwr_lock; /*防止在唤醒后，处理邮件过程中进入睡眠*/
 
 static bool is_usb_suspend = false; /*防止在唤醒后，处理邮件过程中进入睡眠*/
 
@@ -212,7 +211,7 @@ MAILBOX_LOCAL void mailbox_receive_process(unsigned long data)
         work = work->next;
     }
     if (wake_lock_active(&mb_lpwr_lock)) {
-        wake_unlock(&mb_lpwr_lock);/*lint !e455*/
+        __pm_relax(&mb_lpwr_lock);/*lint !e455*/
     }
 }
 
@@ -245,7 +244,7 @@ MAILBOX_EXTERN int mailbox_init_platform(void)
     unsigned int            proc_id;
     struct task_struct *task = MAILBOX_NULL;
 
-    wake_lock_init(&mb_lpwr_lock, WAKE_LOCK_SUSPEND, "mailbox_low_power_wake_lock");
+    wakeup_source_init(&mb_lpwr_lock, "mailbox_low_power_wake_lock");
 
     /*创建平台任务中断信号量部分*/
     while(count) {
@@ -294,9 +293,9 @@ MAILBOX_LOCAL int mailbox_ipc_process(
             mailbox_record_sche_send(local_work->mb_priv);
 
             /* usb driver may use mailbox in suspend context
-             * wake_lock will make suspend flow aborted */
+             * __pm_stay_awake will make suspend flow aborted */
             if(!is_usb_suspend)
-                wake_lock(&mb_lpwr_lock);
+                __pm_stay_awake(&mb_lpwr_lock);
 
             if ((proc_id > MAILBOX_RECV_TASK_START) /*lint !e456 */
                 && (proc_id < MAILBOX_RECV_TASK_END)) {

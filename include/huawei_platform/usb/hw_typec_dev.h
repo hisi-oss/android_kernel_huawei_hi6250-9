@@ -4,7 +4,6 @@
 #define __HW_TYPEC_DEV_H__
 
 #include <linux/device.h>
-#include <linux/wakelock.h>
 
 /* type-c protocol current when charging other devices */
 enum typec_output_current{
@@ -92,7 +91,7 @@ struct typec_device_info{
     struct work_struct g_intb_work;
     struct typec_device_status dev_st;
     struct mutex typec_lock;
-    struct wake_lock wake_lock;
+    struct wakeup_source wake_lock;
     bool sink_attached;
 
 #ifdef CONFIG_DUAL_ROLE_USB_INTF

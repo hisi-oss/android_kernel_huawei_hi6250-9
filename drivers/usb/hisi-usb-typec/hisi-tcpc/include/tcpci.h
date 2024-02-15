@@ -21,7 +21,6 @@
 #include <linux/device.h>
 #include <linux/hrtimer.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 #include <linux/err.h>
 #include <linux/cpu.h>
 #include <linux/delay.h>

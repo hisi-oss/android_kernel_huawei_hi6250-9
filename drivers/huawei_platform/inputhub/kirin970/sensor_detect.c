@@ -18,7 +18,6 @@
 #include <linux/types.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
-#include <linux/wakelock.h>
 #include "contexthub_route.h"
 #include "contexthub_boot.h"
 #include "protocol.h"
@@ -43,7 +42,7 @@
 #define ADAPT_SENSOR_LIST_NUM           20
 
 static struct sensor_redetect_state s_redetect_state ;
-static struct wake_lock sensor_rd;
+static struct wakeup_source sensor_rd;
 static struct work_struct redetect_work;
 static const char *str_soft_para = "softiron_parameter";
 static char buf[MAX_PKT_LENGTH] = { 0 };
@@ -3297,7 +3296,7 @@ int sensor_set_fw_load(void)
 }
 static void redetect_sensor_work_handler(struct work_struct *wk)
 {
-	wake_lock(&sensor_rd);
+	__pm_stay_awake(&sensor_rd);
 	redetect_failed_sensors(REDETECT_LATER);
 
 	if(s_redetect_state.need_recovery == 1){
@@ -3307,7 +3306,7 @@ static void redetect_sensor_work_handler(struct work_struct *wk)
 	}else{
 		hwlog_info("%s: no sensor redetect success\n",__func__);
 	}
-	wake_unlock(&sensor_rd);
+	__pm_relax(&sensor_rd);
 }
 
 void sensor_redetect_enter(void)
@@ -3329,6 +3328,6 @@ void sensor_redetect_enter(void)
 void sensor_redetect_init(void)
 {
 	memset(&s_redetect_state,0,sizeof(s_redetect_state));
-	wake_lock_init(&sensor_rd, WAKE_LOCK_SUSPEND, "sensorhub_redetect");
+	wakeup_source_init(&sensor_rd, "sensorhub_redetect");
 	INIT_WORK(&redetect_work, redetect_sensor_work_handler);
 }

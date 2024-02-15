@@ -19,7 +19,6 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
-#include <linux/wakelock.h>
 /*lint -save -e* */
 #include <linux/workqueue.h>
 /*lint -restore*/
@@ -44,7 +43,7 @@ struct invert_hs_data {
 	int gpio_mic_gnd;         /* switch chip control gpio*/
 	int gpio_type;
 	struct mutex invert_hs_lock;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	struct workqueue_struct* anc_hs_invert_ctl_delay_wq;
 	struct delayed_work anc_hs_invert_ctl_delay_work;
 };
@@ -74,13 +73,13 @@ static inline void invert_hs_gpio_set_value(int gpio, int value)
 /*lint -save -e* */
 static void anc_hs_invert_ctl_work(struct work_struct* work)
 {
-	wake_lock(&pdata->wake_lock);
+	__pm_stay_awake(&pdata->wake_lock);
 	mutex_lock(&pdata->invert_hs_lock);
 
 	invert_hs_gpio_set_value(pdata->gpio_mic_gnd, INVERT_HS_MIC_GND_CONNECT);
 
 	mutex_unlock(&pdata->invert_hs_lock);
-	wake_unlock(&pdata->wake_lock);
+	__pm_relax(&pdata->wake_lock);
 }
 /*lint -restore*/
 
@@ -97,20 +96,20 @@ int invert_hs_control(int connect)
 		return -ENODEV;
 	}
 
-	wake_lock_timeout(&pdata->wake_lock, msecs_to_jiffies(1000));
+	__pm_wakeup_event(&pdata->wake_lock, msecs_to_jiffies(1000));
 
 	switch(connect) {
 		case INVERT_HS_MIC_GND_DISCONNECT:
 			cancel_delayed_work(&pdata->anc_hs_invert_ctl_delay_work);
 			flush_workqueue(pdata->anc_hs_invert_ctl_delay_wq);
 
-			wake_lock(&pdata->wake_lock);
+			__pm_stay_awake(&pdata->wake_lock);
 			mutex_lock(&pdata->invert_hs_lock);
 
 			invert_hs_gpio_set_value(pdata->gpio_mic_gnd, INVERT_HS_MIC_GND_DISCONNECT);
 
 			mutex_unlock(&pdata->invert_hs_lock);
-			wake_unlock(&pdata->wake_lock);
+			__pm_relax(&pdata->wake_lock);
 
 			hwlog_info("invert_hs_control: disconnect MIC and GND.");
 			break;
@@ -169,7 +168,7 @@ static int invert_hs_probe(struct platform_device *pdev)
 	}
 
 	mutex_init(&pdata->invert_hs_lock);
-	wake_lock_init(&pdata->wake_lock, WAKE_LOCK_SUSPEND, "invert_hs_wakelock");
+	wakeup_source_init(&pdata->wake_lock, "invert_hs_wakelock");
 
 	pdata->anc_hs_invert_ctl_delay_wq =
 		create_singlethread_workqueue("anc_hs_invert_ctl_delay_wq");

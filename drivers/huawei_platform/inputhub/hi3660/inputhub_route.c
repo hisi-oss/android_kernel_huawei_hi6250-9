@@ -38,7 +38,6 @@
 #include <linux/timer.h>
 #include <linux/rtc.h>
 #include <huawei_platform/log/log_exception.h>
-#include <linux/wakelock.h>
 #include <linux/hisi/hisi_syscounter.h>
 #include <linux/time64.h>
 
@@ -96,7 +95,7 @@ static struct type_record type_record;
 
 sys_status_t iom3_sr_status = ST_WAKEUP;
 
-static struct wake_lock wlock;
+static struct wakeup_source wlock;
 int iom3_timeout = 2000;
 
 static struct mutex mutex_write_cmd;
@@ -2389,7 +2388,7 @@ static void iom7_charging_event_handle(struct work_struct *work)
 
 	charge_event = (enum charge_status_event)iom7_charging->event;
 	if (charge_event == VCHRG_THERMAL_POWER_OFF) {
-		wake_lock_timeout(&wlock, 15 * HZ);
+		__pm_wakeup_event(&wlock, 15 * HZ);
 		return;
 	}
 
@@ -2683,7 +2682,7 @@ void inputhub_process_sensor_report(const pkt_header_t* head)
 
         if (TAG_STEP_COUNTER == head->tag)  	/*extend step counter date*/
         {
-            wake_lock_timeout(&wlock, HZ);
+            __pm_wakeup_event(&wlock, HZ);
             hwlog_info("Kernel get pedometer event!\n");
             step_counter_data_process((pkt_step_counter_data_req_t
                                        *) head);
@@ -2747,13 +2746,13 @@ void inputhub_process_sensor_report(const pkt_header_t* head)
 
         if (head->tag == TAG_TILT_DETECTOR )//&& sensor_event->xyz[0].x != 0)  	/*recieve proximity far*/
         {
-            wake_lock_timeout(&wlock, HZ);
+            __pm_wakeup_event(&wlock, HZ);
             hwlog_info("Kernel get TILT_DETECTOR event!=%d\n",
                        sensor_event->xyz[0].x);
         }
         if (head->tag == TAG_PS && sensor_event->xyz[0].x != 0)  	/*recieve proximity far*/
         {
-            wake_lock_timeout(&wlock, HZ);
+            __pm_wakeup_event(&wlock, HZ);
             hwlog_info("Kernel get far event!pdata=%d\n",
                        sensor_event->xyz[0].y);
             ps_value = sensor_event->xyz[0].x;
@@ -2795,7 +2794,7 @@ void inputhub_process_sensor_report(const pkt_header_t* head)
 
         if (head->tag == TAG_PHONECALL)  	/*recieve phonecall event*/
         {
-            wake_lock_timeout(&wlock, HZ);
+            __pm_wakeup_event(&wlock, HZ);
             hwlog_info("Kernel get phonecall event! %d %d %d\n",
                        sensor_event->xyz[0].x,
                        sensor_event->xyz[0].y,
@@ -2908,7 +2907,7 @@ int inputhub_route_recv_mcu_data(const char *buf, unsigned int length)
 
     if (is_fingerprint_data_report(head))
     {
-        wake_lock_timeout(&wlock, 2 * HZ);
+        __pm_wakeup_event(&wlock, 2 * HZ);
         int32_t fingerprint_data = fingerprint_data_upload->data;
         hwlog_info("fingerprint: %s: tag = %d, data:%d\n", __func__, head->tag, fingerprint_data_upload->data);
         return inputhub_route_write(ROUTE_FHB_PORT, &fingerprint_data, sizeof(fingerprint_data));
@@ -3011,7 +3010,7 @@ int inputhub_route_recv_mcu_data(const char *buf, unsigned int length)
 
         if ((((int)motion_data[0]) == MOTIONHUB_TYPE_TAKE_OFF) || (((int)motion_data[0]) == MOTIONHUB_TYPE_PICKUP))
         {
-            wake_lock_timeout(&wlock, HZ);
+            __pm_wakeup_event(&wlock, HZ);
             hwlog_err("%s weaklock HZ motiontype = %d \n", __func__,
                       motion_data[0]);
         }
@@ -3606,7 +3605,7 @@ static void init_locks(void)
 	spin_lock_init(&type_record.lock_spin);
 	spin_lock_init(&ref_cnt_lock);
 	/* Initialize wakelock */
-	wake_lock_init(&wlock, WAKE_LOCK_SUSPEND, "sensorhub");
+	wakeup_source_init(&wlock, "sensorhub");
 }
 
 int inputhub_route_init(void)
@@ -3643,7 +3642,7 @@ void inputhub_route_exit(void)
 {
 	/*close all ports*/
 	close_all_ports();
-	wake_lock_destroy(&wlock);
+	wakeup_source_trash(&wlock);
 }
 
 EXPORT_SYMBOL_GPL(inputhub_route_exit);

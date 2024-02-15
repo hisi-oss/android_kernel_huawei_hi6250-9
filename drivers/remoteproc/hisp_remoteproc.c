@@ -26,7 +26,6 @@
 #include <linux/hisi/hisi_mailbox_dev.h>
 #include <linux/delay.h>
 #include <linux/kfifo.h>
-#include <linux/wakelock.h>
 #include <linux/mutex.h>
 #include <linux/regulator/consumer.h>
 #include <linux/scatterlist.h>
@@ -219,9 +218,9 @@ struct rproc_boot_device {
     int loadbin;
 	int rpmsg_status;
     int ispcpu_status;
-    struct wake_lock ispcpu_wakelock;
+    struct wakeup_source ispcpu_wakelock;
     struct mutex ispcpu_mutex;
-    struct wake_lock jpeg_wakelock;
+    struct wakeup_source jpeg_wakelock;
     struct mutex jpeg_mutex;
     struct mutex sharedbuf_mutex;
     struct mutex rpmsg_ready_mutex;
@@ -2783,7 +2782,7 @@ static int isp_device_disable(void)
         RPROC_ERR("Failed : ispcpu power down fail.%d, dev->case_type.%d\n", ret, dev->case_type);
     mutex_lock(&dev->ispcpu_mutex);
     if (wake_lock_active(&dev->ispcpu_wakelock)) {
-        wake_unlock(&dev->ispcpu_wakelock);
+        __pm_relax(&dev->ispcpu_wakelock);
         RPROC_INFO("ispcpu power up wake unlock.\n");
     }
     mutex_unlock(&dev->ispcpu_mutex);/*lint !e456 */
@@ -2837,7 +2836,7 @@ static int isp_device_enable(void)
     last_boot_state = 0;
     mutex_lock(&dev->ispcpu_mutex);
     if (!wake_lock_active(&dev->ispcpu_wakelock)) {
-        wake_lock(&dev->ispcpu_wakelock);
+        __pm_stay_awake(&dev->ispcpu_wakelock);
         RPROC_INFO("ispcpu power up wake lock.\n");
     }
     mutex_unlock(&dev->ispcpu_mutex);/*lint !e456 */
@@ -2868,7 +2867,7 @@ static int isp_device_enable(void)
         RPROC_ERR("Failed : ispcpu power up fail.%d, dev->case_type.%d\n", ret, dev->case_type);
         mutex_lock(&dev->ispcpu_mutex);
         if (wake_lock_active(&dev->ispcpu_wakelock)) {
-            wake_unlock(&dev->ispcpu_wakelock);
+            __pm_relax(&dev->ispcpu_wakelock);
             RPROC_INFO("ispcpu power up wake unlock.\n");
         }
         mutex_unlock(&dev->ispcpu_mutex);/*lint !e456 */
@@ -3639,7 +3638,7 @@ int hisp_jpeg_powerup(void)
 
     mutex_lock(&dev->jpeg_mutex);
     if (!wake_lock_active(&dev->jpeg_wakelock)) {
-        wake_lock(&dev->jpeg_wakelock);
+        __pm_stay_awake(&dev->jpeg_wakelock);
         RPROC_INFO("jpeg power up wake lock.\n");
     }
     mutex_unlock(&dev->jpeg_mutex);/*lint !e456 */
@@ -3658,7 +3657,7 @@ int hisp_jpeg_powerup(void)
     RPROC_ERR("Failed : jpeg power up fail.%d, case_type.%d\n", ret, dev->case_type);
     mutex_lock(&dev->jpeg_mutex);
     if (wake_lock_active(&dev->jpeg_wakelock)) {
-        wake_unlock(&dev->jpeg_wakelock);
+        __pm_relax(&dev->jpeg_wakelock);
         RPROC_INFO("jpeg power up wake unlock.\n");
     }
     mutex_unlock(&dev->jpeg_mutex);/*lint !e456 */
@@ -3692,7 +3691,7 @@ int hisp_jpeg_powerdn(void)
     }
     mutex_lock(&dev->jpeg_mutex);
     if (wake_lock_active(&dev->jpeg_wakelock)) {
-        wake_unlock(&dev->jpeg_wakelock);
+        __pm_relax(&dev->jpeg_wakelock);
         RPROC_INFO("jpeg power up wake unlock.\n");
     }
     mutex_unlock(&dev->jpeg_mutex);/*lint !e456 */
@@ -4255,8 +4254,8 @@ static int hisi_rproc_probe(struct platform_device *pdev)
     rproc_dev->rsctable_vaddr = NULL;
     memset(&rproc_dev->hisi_isp_clk,0,sizeof(struct hisi_isp_clk_dump_s));/* unsafe_function_ignore: memset */
     mutex_init(&rproc_dev->sharedbuf_mutex);
-    wake_lock_init(&rproc_dev->jpeg_wakelock, WAKE_LOCK_SUSPEND, "jpeg_wakelock");
-    wake_lock_init(&rproc_dev->ispcpu_wakelock, WAKE_LOCK_SUSPEND, "ispcpu_wakelock");
+    wakeup_source_init(&rproc_dev->jpeg_wakelock, "jpeg_wakelock");
+    wakeup_source_init(&rproc_dev->ispcpu_wakelock, "ispcpu_wakelock");
     mutex_init(&rproc_dev->jpeg_mutex);
     mutex_init(&rproc_dev->ispcpu_mutex);
     mutex_init(&rproc_dev->rpmsg_ready_mutex);
@@ -4409,8 +4408,8 @@ static int hisi_rproc_probe(struct platform_device *pdev)
 
 free_hisi_rproc:
     rproc_put(hisi_rproc);
-    wake_lock_destroy(&rproc_dev->jpeg_wakelock);
-    wake_lock_destroy(&rproc_dev->ispcpu_wakelock);
+    wakeup_source_trash(&rproc_dev->jpeg_wakelock);
+    wakeup_source_trash(&rproc_dev->ispcpu_wakelock);
     mutex_destroy(&rproc_dev->jpeg_mutex);
     mutex_destroy(&rproc_dev->ispcpu_mutex);
     mutex_destroy(&rproc_dev->rpmsg_ready_mutex);
@@ -4448,8 +4447,8 @@ static int hisi_rproc_remove(struct platform_device *pdev)
 
 	kfifo_free(&isp_rx_mbox->rpmsg_rx_fifo);
 	kfree(isp_rx_mbox);
-    wake_lock_destroy(&rproc_dev->jpeg_wakelock);
-    wake_lock_destroy(&rproc_dev->ispcpu_wakelock);
+    wakeup_source_trash(&rproc_dev->jpeg_wakelock);
+    wakeup_source_trash(&rproc_dev->ispcpu_wakelock);
     mutex_destroy(&rproc_dev->jpeg_mutex);
     mutex_destroy(&rproc_dev->ispcpu_mutex);
     mutex_destroy(&rproc_dev->sharedbuf_mutex);

@@ -5,7 +5,6 @@
 #include <linux/completion.h>
 #include <linux/timer.h>
 #include <linux/fs.h>
-#include <linux/wakelock.h>
 #include <linux/notifier.h>
 #include <linux/usb/hifi-usb-mailbox.h>
 
@@ -46,7 +45,7 @@ struct hifi_usb_proxy {
 	struct urb_buffers 		urb_bufs;
 	struct list_head		complete_urb_list;
 	struct timer_list 		confirm_udev_timer;
-	struct wake_lock 		hifi_usb_wake_lock;
+	struct wakeup_source 		hifi_usb_wake_lock;
 
 	spinlock_t			lock; /* for complete_urb_list */
 

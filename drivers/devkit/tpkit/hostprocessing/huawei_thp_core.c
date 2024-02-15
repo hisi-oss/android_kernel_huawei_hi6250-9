@@ -1696,7 +1696,7 @@ static irqreturn_t thp_irq_thread(int irq, void *dev_id)
 		if ((cd->easy_wakeup_info.sleep_mode == TS_GESTURE_MODE) &&
 			cd->support_gesture_mode  &&
 			(cd->work_status == SUSPEND_DONE)) {
-			wake_lock_timeout(&cd->thp_wake_lock, HZ);
+			__pm_wakeup_event(&cd->thp_wake_lock, HZ);
 			disable_irq_nosync(cd->irq);
 			THP_LOG_INFO("[%s] TS_GESTURE_MODE ->comming \n",__func__);
 			rc = cd->thp_dev->ops->chip_gesture_report(cd->thp_dev, &gesture_wakeup_value);
@@ -2203,7 +2203,7 @@ static int thp_core_init(struct thp_core_data *cd)
 	mutex_init(&cd->irq_mutex);
 	mutex_init(&cd->thp_mutex);
 	mutex_init(&cd->status_mutex);
-	wake_lock_init(&cd->thp_wake_lock, WAKE_LOCK_SUSPEND, "thp_wake_lock");
+	wakeup_source_init(&cd->thp_wake_lock, "thp_wake_lock");
 	if (cd->support_gesture_mode)
 		mutex_init(&cd->thp_wrong_touch_lock);
 
@@ -2311,7 +2311,7 @@ err_register_fb_notify:
 	mutex_destroy(&cd->mutex_frame);
 	mutex_destroy(&cd->irq_mutex);
 	mutex_destroy(&cd->thp_mutex);
-	wake_lock_destroy(&cd->thp_wake_lock);
+	wakeup_source_trash(&cd->thp_wake_lock);
 	if (cd->support_gesture_mode)
 		mutex_destroy(&cd->thp_wrong_touch_lock);
 	return rc;

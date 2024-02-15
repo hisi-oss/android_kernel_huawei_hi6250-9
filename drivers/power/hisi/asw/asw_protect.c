@@ -39,7 +39,7 @@ HWLOG_REGIST();
 static u32 g_asw_protect_support;
 static int g_asw_iin_limit;
 static int g_is_nv_need_save = 1;
-static struct wake_lock asw_lock;
+static struct wakeup_source asw_lock;
 
 int asw_get_iin_limit(void)
 {
@@ -54,7 +54,7 @@ void asw_set_iin_limit(int value)
 static void asw_protect_wake_lock(void)
 {
 	if (!wake_lock_active(&asw_lock)) {
-		wake_lock(&asw_lock);
+		__pm_stay_awake(&asw_lock);
 		hwlog_info("asw_protect_wake_lock\n");
 	}
 }
@@ -62,7 +62,7 @@ static void asw_protect_wake_lock(void)
 static void asw_protect_wake_unlock(void)
 {
 	if (wake_lock_active(&asw_lock)) {
-		wake_unlock(&asw_lock);
+		__pm_relax(&asw_lock);
 		hwlog_info("asw_protect_wake_unlock\n");
 	}
 }
@@ -874,7 +874,7 @@ void asw_protect_check(struct smartstar_coul_device *di)
 		return;
 	}
 
-	wake_lock_init(&asw_lock, WAKE_LOCK_SUSPEND, "asw_wakelock");
+	wakeup_source_init(&asw_lock, "asw_wakelock");
 	INIT_DELAYED_WORK(&di->asw_protect_do_delayed_work,
 		asw_protect_do_work);
 
@@ -927,6 +927,6 @@ void asw_protect_exit(struct smartstar_coul_device *di)
 		return;
 	}
 
-	wake_lock_destroy(&asw_lock);
+	wakeup_source_trash(&asw_lock);
 	cancel_delayed_work(&di->asw_protect_do_delayed_work);
 }

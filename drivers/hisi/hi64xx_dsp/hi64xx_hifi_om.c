@@ -16,7 +16,6 @@
 #include <linux/kthread.h>
 #include <linux/semaphore.h>
 #include <linux/sched/rt.h>
-#include <linux/wakelock.h>
 #include <linux/fs.h>
 #include <linux/syscalls.h>
 #include <linux/kernel.h>
@@ -159,7 +158,7 @@ struct hook_runtime {
 	unsigned short channel;                     /* dma channel number */
 	struct semaphore hook_proc_sema;
 	struct semaphore hook_stop_sema;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	struct task_struct *kthread;
 	unsigned int kthread_should_stop;
 	unsigned int verify_state;
@@ -843,7 +842,7 @@ static int _left_data_parse_thread(void *p)
 			continue;
 		}
 
-		wake_lock(&runtime->wake_lock);
+		__pm_stay_awake(&runtime->wake_lock);
 
 		_add_data_to_list(runtime);
 
@@ -852,7 +851,7 @@ static int _left_data_parse_thread(void *p)
 		if (runtime->cookie != _get_idle_buffer_id(runtime))
 			HI64XX_DSP_WARNING("dma buffer is changed.\n");
 
-		wake_unlock(&runtime->wake_lock);
+		__pm_relax(&runtime->wake_lock);
 
 		up(&runtime->hook_stop_sema);
 
@@ -890,7 +889,7 @@ static int _right_data_parse_thread(void *p)
 			continue;
 		}
 
-		wake_lock(&runtime->wake_lock);
+		__pm_stay_awake(&runtime->wake_lock);
 
 		_add_data_to_list(runtime);
 
@@ -899,7 +898,7 @@ static int _right_data_parse_thread(void *p)
 		if (runtime->cookie != _get_idle_buffer_id(runtime))
 			HI64XX_DSP_WARNING("dma buffer is changed.\n");
 
-		wake_unlock(&runtime->wake_lock);
+		__pm_relax(&runtime->wake_lock);
 
 		up(&runtime->hook_stop_sema);
 	}
@@ -1115,8 +1114,8 @@ int hi64xx_hifi_om_init(struct hi64xx_irq *irqmgr, unsigned int codec_type)
 		INIT_LIST_HEAD(&priv->runtime[i].info_list.node);
 		INIT_LIST_HEAD(&priv->runtime[i].data_list.node);
 
-		wake_lock_init(&priv->runtime[i].wake_lock,
-					WAKE_LOCK_SUSPEND, "hi64xx_hifi_om");
+		wakeup_source_init(&priv->runtime[i].wake_lock,
+					 "hi64xx_hifi_om");
 
 		sema_init(&priv->runtime[i].hook_proc_sema, 0);
 
@@ -1183,7 +1182,7 @@ void hi64xx_hifi_om_deinit(void)
 			kthread_stop(priv->runtime[i].kthread);
 		}
 
-		wake_lock_destroy(&priv->runtime[i].wake_lock);
+		wakeup_source_trash(&priv->runtime[i].wake_lock);
 	}
 
 	kfree(priv);

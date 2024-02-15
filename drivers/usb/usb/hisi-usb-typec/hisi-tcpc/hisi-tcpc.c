@@ -23,7 +23,6 @@
 #include <linux/interrupt.h>
 #include <linux/irq.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 #include <linux/platform_device.h>
 #include <linux/semaphore.h>
 #include <linux/pm_runtime.h>
@@ -55,7 +54,7 @@ struct hisi_tcpc_chip {
 	struct kthread_worker irq_worker;
 	struct kthread_work irq_work;
 	struct task_struct *irq_worker_task;
-	struct wake_lock irq_wakelock;
+	struct wakeup_source irq_wakelock;
 
 	atomic_t poll_count;
 	struct delayed_work	poll_work;
@@ -1040,7 +1039,7 @@ static void hisi_tcpc_irq_work_handler(struct kthread_work *work)
 	up(&chip->suspend_lock);
 
 	if (wake_lock_active(&chip->irq_wakelock))
-		wake_unlock(&chip->irq_wakelock); /*lint !e455*/
+		__pm_relax(&chip->irq_wakelock); /*lint !e455*/
 
 	D("-\n");
 }
@@ -1052,7 +1051,7 @@ static irqreturn_t hisi_tcpc_intr_handler(int irq, void *data)
 	D("\n");
 
 	if (!wake_lock_active(&chip->irq_wakelock))
-		wake_lock(&chip->irq_wakelock);
+		__pm_stay_awake(&chip->irq_wakelock);
 
 	kthread_queue_work(&chip->irq_worker, &chip->irq_work); /*lint !e456*/
 
@@ -1081,7 +1080,7 @@ void hisi_tcpc_vbus_irq_handler(void *data, int vbus_status)
 
 	if (!chip->vbus_detect) {
 		if (!wake_lock_active(&chip->irq_wakelock))
-			wake_lock(&chip->irq_wakelock);
+			__pm_stay_awake(&chip->irq_wakelock);
 
 		D("vbus detect disabled, queue tcpc irq work!\n");
 		kthread_queue_work(&chip->irq_worker, &chip->irq_work);
@@ -1153,7 +1152,7 @@ static int hisi_tcpc_init_alert(struct tcpc_device *tcpc)
 
 	sched_setscheduler(chip->irq_worker_task, SCHED_FIFO, &param);
 	kthread_init_work(&chip->irq_work, hisi_tcpc_irq_work_handler);
-	wake_lock_init(&chip->irq_wakelock, WAKE_LOCK_SUSPEND, "hisi_tcpc_irq_wakelock");
+	wakeup_source_init(&chip->irq_wakelock, "hisi_tcpc_irq_wakelock");
 
 	/*
 	 * Request irq.

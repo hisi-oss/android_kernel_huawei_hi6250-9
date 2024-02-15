@@ -23,7 +23,6 @@
 #include <linux/spi/spi.h>
 #include <linux/input.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 
 #define THP_UNBLOCK		(5)
 #define THP_TIMEOUT		(6)
@@ -419,7 +418,7 @@ struct thp_core_data {
 	struct mutex spi_mutex;
 	struct mutex status_mutex;
 	struct hwspinlock *hwspin_lock;
-	struct wake_lock thp_wake_lock;
+	struct wakeup_source thp_wake_lock;
 	struct thp_power_supply thp_powers[THP_POWER_ID_MAX];
 	int project_in_tp;
 	char *project_id_dummy;

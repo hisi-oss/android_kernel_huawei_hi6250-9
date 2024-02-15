@@ -362,10 +362,10 @@ int hisi_tcpci_set_wake_lock(struct tcpc_device *tcpc, bool pd_lock, bool user_l
 	if (new_lock != ori_lock) {
 		if (new_lock) {
 			D("lock attach_wake_lock\n");
-			wake_lock(&tcpc->attach_wake_lock);
+			__pm_stay_awake(&tcpc->attach_wake_lock);
 		} else {
 			D("unlock attach_wake_lock\n");
-			wake_unlock(&tcpc->attach_wake_lock); /*lint !e455 */
+			__pm_relax(&tcpc->attach_wake_lock); /*lint !e455 */
 		}
 	} /*lint !e456 */
 
@@ -387,12 +387,12 @@ static inline int tcpci_set_wake_lock_pd(struct tcpc_device *tcpc, bool pd_lock)
 		wake_lock_pd--;
 
 	if (wake_lock_pd == 0)
-		wake_lock_timeout(&tcpc->dettach_temp_wake_lock, 5 * HZ);
+		__pm_wakeup_event(&tcpc->dettach_temp_wake_lock, 5 * HZ);
 
 	hisi_tcpci_set_wake_lock(tcpc, wake_lock_pd, tcpc->wake_lock_user);
 
 	if (wake_lock_pd == 1)
-		wake_unlock(&tcpc->dettach_temp_wake_lock);
+		__pm_relax(&tcpc->dettach_temp_wake_lock);
 
 	tcpc->wake_lock_pd = wake_lock_pd; /*lint !e456 */
 	mutex_unlock(&tcpc->access_lock);

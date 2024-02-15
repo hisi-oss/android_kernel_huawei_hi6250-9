@@ -14,7 +14,6 @@
 #include <linux/kthread.h>
 #include <linux/version.h>
 #include <linux/delay.h>
-#include <linux/wakelock.h>
 #include <asm/cacheflush.h>
 #include "protocol.h"
 #include "contexthub_route.h"
@@ -42,7 +41,7 @@ uint32_t g_dump_region_list[DL_BOTTOM][DE_BOTTOM] = {{0,}, };
 static struct workqueue_struct* iom3_rec_wq;
 static struct delayed_work iom3_rec_work;
 static struct completion iom3_rec_done;
-static struct wake_lock iom3_rec_wl;
+static struct wakeup_source iom3_rec_wl;
 static void __iomem* iomcu_cfg_base;
 static struct mutex mutex_recovery_cmd;
 static u64 current_sh_core_id = RDR_IOM3;	/*const*/
@@ -51,7 +50,7 @@ static struct semaphore rdr_exce_sem;
 static void __iomem* sysctrl_base;
 static void __iomem* watchdog_base;
 static unsigned int* dump_vir_addr;
-static struct wake_lock rdr_wl;
+static struct wakeup_source rdr_wl;
 static int nmi_reg;
 static char g_dump_dir[PATH_MAXLEN] = SH_DMP_DIR;
 static char g_dump_fs[PATH_MAXLEN] = SH_DMP_FS;
@@ -358,7 +357,7 @@ static irqreturn_t watchdog_handler(int irq, void* data)
 	wdt_stop();
 	hwlog_warn("%s start!\n", __func__);
 	peri_used_request();
-	wake_lock(&rdr_wl);
+	__pm_stay_awake(&rdr_wl);
 	/*release exception sem*/
 	up(&rdr_exce_sem);
 	return IRQ_HANDLED;
@@ -687,7 +686,7 @@ static int rdr_sh_thread(void* arg)
 	        }
 	        hwlog_warn(" ===========dump sensorhub log end==========\n");
 	    }
-	    wake_unlock(&rdr_wl);
+	    __pm_relax(&rdr_wl);
 	    peri_used_release();
 	    complete_all(&sensorhub_rdr_completion);
 	}
@@ -1022,7 +1021,7 @@ static void iom3_recovery_work(struct work_struct* work)
 	u32 tx_buffer;
 
 	hwlog_err("%s enter\n", __func__);
-	wake_lock(&iom3_rec_wl);
+	__pm_stay_awake(&iom3_rec_wl);
 	peri_used_request();
 	wait_for_completion(&sensorhub_rdr_completion);
 
@@ -1033,7 +1032,7 @@ recovery_iom3:
 		blocking_notifier_call_chain(&iom3_recovery_notifier_list, IOM3_RECOVERY_FAILED, NULL);
 		atomic_set(&iom3_rec_state, IOM3_RECOVERY_IDLE);
 		peri_used_release();
-		wake_unlock(&iom3_rec_wl);
+		__pm_relax(&iom3_rec_wl);
 		hwlog_err("%s exit\n", __func__);
 		return;
 	}
@@ -1092,7 +1091,7 @@ recovery_iom3:
 	blocking_notifier_call_chain(&iom3_recovery_notifier_list, IOM3_RECOVERY_3RD_DOING, NULL);	/*recovery pdr*/
 	hwlog_err("%s pdr recovery\n", __func__);
 	atomic_set(&iom3_rec_state, IOM3_RECOVERY_IDLE);
-	wake_unlock(&iom3_rec_wl);
+	__pm_relax(&iom3_rec_wl);
 	hwlog_err("%s finish recovery\n", __func__);
 	blocking_notifier_call_chain(&iom3_recovery_notifier_list, IOM3_RECOVERY_IDLE, NULL);
 	hwlog_err("%s exit\n", __func__);
@@ -1109,7 +1108,7 @@ int iom3_need_recovery(int modid, exp_source_t f)
 
 	if (old_state == IOM3_RECOVERY_IDLE)  	/*prev state is IDLE start recovery progress*/
 	{
-		wake_lock_timeout(&iom3_rec_wl, 10 * HZ);
+		__pm_wakeup_event(&iom3_rec_wl, 10 * HZ);
 		blocking_notifier_call_chain(&iom3_recovery_notifier_list, IOM3_RECOVERY_START, NULL);
 
 		if (f > SH_FAULT_INTERNELFAULT)
@@ -1144,7 +1143,7 @@ int iom3_need_recovery(int modid, exp_source_t f)
 	}
 	else if ( f == SH_FAULT_INTERNELFAULT && completion_done(&sensorhub_rdr_completion))
 	{
-		wake_unlock(&rdr_wl);
+		__pm_relax(&rdr_wl);
 		peri_used_release();
 	}
 	return ret;
@@ -1254,7 +1253,7 @@ static int rdr_sensorhub_init(void)
 	if (atomic_notifier_chain_register(&panic_notifier_list, &sensorhub_panic_block)) {
 		hwlog_err("%s sensorhub panic register failed !\n", __func__);
 	}
-	wake_lock_init(&rdr_wl, WAKE_LOCK_SUSPEND, "rdr_sensorhub");
+	wakeup_source_init(&rdr_wl, "rdr_sensorhub");
 	init_completion(&sensorhub_rdr_completion);
 	return ret;
 }
@@ -1279,7 +1278,7 @@ int recovery_init(void)
 
 	INIT_DELAYED_WORK(&iom3_rec_work, iom3_recovery_work);
 	init_completion(&iom3_rec_done);
-	wake_lock_init(&iom3_rec_wl, WAKE_LOCK_SUSPEND, "iom3_rec_wl");
+	wakeup_source_init(&iom3_rec_wl, "iom3_rec_wl");
 
 	init_waitqueue_head(&iom3_rec_waitq);
 	register_iom3_recovery_notifier(&recovery_notify);

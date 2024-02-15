@@ -22,7 +22,6 @@
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
 #include <linux/of_irq.h>
-#include <linux/wakelock.h>
 #include <linux/mutex.h>
 #include <linux/clk.h>
 #include <linux/irq.h>
@@ -54,7 +53,7 @@ struct hi64xx_irq_platform_data {
 	/* mutex for sr */
 	struct mutex sr_lock;
 	/* wake lock for irq thread handler */
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	/* used to mask sub irqs */
 	u8 irq_mask[HI64XX_MAX_IRQ_REGS_NUM];
 	/* used to clear sub irqs */
@@ -82,7 +81,7 @@ static irqreturn_t hi64xx_irq_handler(int irq, void *data)
 		return IRQ_NONE;
 	}
 
-	wake_lock(&hi64xx_irq->wake_lock);
+	__pm_stay_awake(&hi64xx_irq->wake_lock);
 	disable_irq_nosync(irq);
 
 	return IRQ_WAKE_THREAD;/*lint !e454*/
@@ -126,7 +125,7 @@ static irqreturn_t hi64xx_irq_handler_thread(int irq, void *data)
 
 	mutex_unlock(&hi64xx_irq->sr_lock);
 	enable_irq(irq);
-	wake_unlock(&hi64xx_irq->wake_lock);/*lint !e455*/
+	__pm_relax(&hi64xx_irq->wake_lock);/*lint !e455*/
 
 	return IRQ_HANDLED;
 }
@@ -457,7 +456,7 @@ static int hi64xx_irq_probe(struct platform_device *pdev)
 	mutex_init(&data->irq_lock);
 	mutex_init(&data->sr_lock);
 	mutex_init(&data->handler_mutex);
-	wake_lock_init(&data->wake_lock, WAKE_LOCK_SUSPEND, "hi64xx-irq");
+	wakeup_source_init(&data->wake_lock, "hi64xx-irq");
 
 	data->hi64xx_irq.dev = dev;
 
@@ -485,7 +484,7 @@ static int hi64xx_irq_remove(struct platform_device *pdev)
 
 	free_irq(data->irq_id, data);
 
-	wake_lock_destroy(&data->wake_lock);
+	wakeup_source_trash(&data->wake_lock);
 	mutex_destroy(&data->handler_mutex);
 	mutex_destroy(&data->irq_lock);
 	mutex_destroy(&data->sr_lock);

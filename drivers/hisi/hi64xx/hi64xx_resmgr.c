@@ -15,7 +15,6 @@
 #include <linux/wait.h>
 #include <linux/kthread.h>
 #include <linux/notifier.h>
-#include <linux/wakelock.h>
 #include <dsm_audio/dsm_audio.h>
 
 #include <linux/hisi/hi64xx/hi64xx_resmgr.h>
@@ -54,7 +53,7 @@ struct hi64xx_resmgr_priv {
 	wait_queue_head_t pll_rel_wq;
 	enum pll_rel_state pll_wait_rel[PLL_MAX];
 	struct task_struct *pll_rel_thrd;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 
 	struct blocking_notifier_head notifier;
 
@@ -477,7 +476,7 @@ static int _pll_delayed_release_thread(void *data)
 		}
 		spin_unlock(&priv->pll_rel_wq.lock);
 
-		wake_lock(&priv->wake_lock);
+		__pm_stay_awake(&priv->wake_lock);
 		while (pending && !kthread_should_stop()) {
 			msleep(200);
 			pending = false;
@@ -500,7 +499,7 @@ static int _pll_delayed_release_thread(void *data)
 				}
 			}
 		}
-		wake_unlock(&priv->wake_lock);
+		__pm_relax(&priv->wake_lock);
 	}
 
 	return 0;
@@ -535,7 +534,7 @@ int hi64xx_resmgr_init(struct snd_soc_codec *codec,
 	mutex_init(&priv->ibias_mutex);
 	mutex_init(&priv->supply_mutex);
 
-	wake_lock_init(&priv->wake_lock, WAKE_LOCK_SUSPEND, "hi64xx-resmgr");
+	wakeup_source_init(&priv->wake_lock, "hi64xx-resmgr");
 
 	BLOCKING_INIT_NOTIFIER_HEAD(&priv->notifier);
 
@@ -558,7 +557,7 @@ error_exit:
 	mutex_destroy(&priv->micbias_mutex);
 	mutex_destroy(&priv->ibias_mutex);
 	mutex_destroy(&priv->supply_mutex);
-	wake_lock_destroy(&priv->wake_lock);
+	wakeup_source_trash(&priv->wake_lock);
 
 	kfree(priv);
 	return ret;
@@ -580,7 +579,7 @@ void hi64xx_resmgr_deinit(struct hi64xx_resmgr *resmgr)
 	mutex_destroy(&priv->micbias_mutex);
 	mutex_destroy(&priv->ibias_mutex);
 	mutex_destroy(&priv->supply_mutex);
-	wake_lock_destroy(&priv->wake_lock);
+	wakeup_source_trash(&priv->wake_lock);
 
 	kfree(priv);
 }

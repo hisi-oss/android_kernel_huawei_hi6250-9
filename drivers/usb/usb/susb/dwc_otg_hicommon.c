@@ -3,7 +3,6 @@
 #include <linux/interrupt.h>
 #include <linux/spinlock.h>
 #include <linux/mutex.h>
-#include <linux/wakelock.h>
 #include <linux/platform_device.h>
 #include <linux/of.h>
 #include <linux/of_irq.h>
@@ -1677,7 +1676,7 @@ void dwc_otg_hicommon_wake_lock(void)
 {
 	if (!wake_lock_active(&otg_dev_p->wake_lock)) {
 		usb_dbg("usb otg wake lock\n");
-		wake_lock(&otg_dev_p->wake_lock);
+		__pm_stay_awake(&otg_dev_p->wake_lock);
 	}
 }
 
@@ -1685,7 +1684,7 @@ void dwc_otg_hicommon_wake_unlock(void)
 {
 	if (wake_lock_active(&otg_dev_p->wake_lock)) {
 		usb_dbg("usb otg wake unlock\n");
-		wake_unlock(&otg_dev_p->wake_lock);
+		__pm_relax(&otg_dev_p->wake_lock);
 	}
 }
 
@@ -1822,7 +1821,7 @@ int dwc_otg_hicommon_probe(struct otg_dev *dev_p)
 	}
 
 	INIT_WORK(&dev_p->event_work, event_work);
-	wake_lock_init(&dev_p->wake_lock, WAKE_LOCK_SUSPEND, "usb_wake_lock");
+	wakeup_source_init(&dev_p->wake_lock, "usb_wake_lock");
 	spin_lock_init(&dev_p->event_lock);
 	mutex_init(&dev_p->lock);
 	BLOCKING_INIT_NOTIFIER_HEAD(&dev_p->charger_type_notifier);

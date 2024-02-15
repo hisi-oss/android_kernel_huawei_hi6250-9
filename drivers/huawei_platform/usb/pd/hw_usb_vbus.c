@@ -50,7 +50,7 @@ static int g_connected;
 static int g_pmic_vbus_enable;
 
 static int g_typec_complete_type = NOT_COMPLETE;
-static struct wake_lock hwusb_lock;
+static struct wakeup_source hwusb_lock;
 extern struct mutex typec_state_lock;
 extern struct mutex typec_wait_lock;
 extern int g_cur_usb_event;
@@ -81,14 +81,14 @@ int pmic_vbus_irq_is_enabled(void)
 static void hwusb_wake_lock(void)
 {
 	if (!wake_lock_active(&hwusb_lock)) {
-		wake_lock(&hwusb_lock);
+		__pm_stay_awake(&hwusb_lock);
 		hwlog_info("hwusb wake lock\n");
 	}
 }
 static void hwusb_wake_unlock(void)
 {
 	if (wake_lock_active(&hwusb_lock)) {
-		wake_unlock(&hwusb_lock);
+		__pm_relax(&hwusb_lock);
 		hwlog_info("hwusb wake unlock\n");
 	}
 }
@@ -609,7 +609,7 @@ static int hisi_usb_vbus_probe(struct platform_device *pdev)
 		pmic_vbus_attach_enable = 1;
 	}
 	hwlog_info("pmic_vbus_attach_enable = %d\n", pmic_vbus_attach_enable);
-	wake_lock_init(&hwusb_lock, WAKE_LOCK_SUSPEND, "hwusb_wakelock");
+	wakeup_source_init(&hwusb_lock, "hwusb_wakelock");
 
 	ret = of_property_read_u32(np, "pmic_vbus_enable", &g_pmic_vbus_enable);
 	if (ret) {
@@ -621,13 +621,13 @@ static int hisi_usb_vbus_probe(struct platform_device *pdev)
 	hw_vbus_connect_irq = hisi_get_pmic_irq_byname(VBUS_CONNECT);
 	if (0 == hw_vbus_connect_irq) {
 		hwlog_err("failed to get connect irq\n");
-		wake_lock_destroy(&hwusb_lock);
+		wakeup_source_trash(&hwusb_lock);
 		return -ENOENT;
 	}
 	hw_vbus_disconnect_irq = hisi_get_pmic_irq_byname(VBUS_DISCONNECT);
 	if (0 == hw_vbus_disconnect_irq) {
 		hwlog_err("failed to get disconnect irq\n");
-		wake_lock_destroy(&hwusb_lock);
+		wakeup_source_trash(&hwusb_lock);
 		return -ENOENT;
 	}
 
@@ -639,7 +639,7 @@ static int hisi_usb_vbus_probe(struct platform_device *pdev)
 		"hiusb_in_interrupt", pdev);
 	if (ret) {
 		hwlog_err("request charger connect irq failed, irq: %d!\n", hw_vbus_connect_irq);
-		wake_lock_destroy(&hwusb_lock);
+		wakeup_source_trash(&hwusb_lock);
 		return ret;
 	}
 
@@ -682,7 +682,7 @@ static int hisi_usb_vbus_remove(struct platform_device *pdev)
 {
 	free_irq(hw_vbus_connect_irq, pdev);
 	free_irq(hw_vbus_disconnect_irq, pdev);
-	wake_lock_destroy(&hwusb_lock);
+	wakeup_source_trash(&hwusb_lock);
 	return 0;
 }
 

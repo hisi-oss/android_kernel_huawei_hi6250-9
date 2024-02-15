@@ -30,7 +30,6 @@
 #include <linux/workqueue.h>
 #include <linux/cdev.h>
 #include <linux/switch.h>
-#include <linux/wakelock.h>
 #include <linux/mfd/hisi_pmic.h>
 #include <linux/hisi-spmi.h>
 #include <linux/of_hisi_spmi.h>
@@ -225,7 +224,7 @@ struct hisi_pmic_vibrator_dev {
 	struct cdev cdev;
 	struct switch_dev sw_dev;
 	struct mutex lock;
-	struct wake_lock wakelock;
+	struct wakeup_source wakelock;
 	dev_t version;
 	struct hisi_pmic_vibrator_haptics_lib *haptics_lib;
 	struct hisi_pmic_vibrator_irq lra_irq[HISI_PMIC_VIBRATOR_IRQ_COUNTS];
@@ -1148,7 +1147,7 @@ static s32 hisi_pmic_vibrator_remove(struct spmi_device *pdev)
 #endif
 	hisi_pmic_vibrator_haptics_remove(vdev);
 	mutex_destroy(&vdev->lock);
-	wake_lock_destroy(&vdev->wakelock);
+	wakeup_source_trash(&vdev->wakelock);
 	dev_set_drvdata(&pdev->dev, NULL);
 
 	return 0;

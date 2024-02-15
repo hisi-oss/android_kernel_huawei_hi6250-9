@@ -1639,7 +1639,7 @@ struct hi6555c_priv {
 	bool have_dapm;
 	bool asp_pd;
 	int asp_use_count;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	struct clk *codec_clk;
 	/* work queue for headset */
 	struct workqueue_struct *hs_pi_dwq; /* headset plugin delayed work queue */

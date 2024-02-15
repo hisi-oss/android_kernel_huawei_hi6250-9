@@ -20,7 +20,6 @@
 #include <linux/ioctl.h>
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
-#include <linux/wakelock.h>
 #include <linux/of_irq.h>
 #include <linux/of_gpio.h>
 #include <linux/uaccess.h>
@@ -73,7 +72,7 @@ struct usb_ana_hs_isl54405_data {
     int gpio_mic_switch;
     int gpio_usb_hs_switch;
     int registed;  //usb analog headset dev register flag
-    struct wake_lock wake_lock;
+    struct wakeup_source wake_lock;
     struct mutex mutex;
     struct workqueue_struct *analog_hs_plugin_delay_wq;
     struct delayed_work analog_hs_plugin_delay_work;
@@ -113,7 +112,7 @@ static void usb_analog_hs_plugin_work(struct work_struct *work)
 
     IN_FUNCTION;
 
-    wake_lock(&g_pdata_isl54405->wake_lock);
+    __pm_stay_awake(&g_pdata_isl54405->wake_lock);
     g_pdata_isl54405->codec_ops_dev->ops.plug_in_detect(g_pdata_isl54405->private_data);
     mutex_lock(&g_pdata_isl54405->mutex);
     g_pdata_isl54405->usb_analog_hs_in = USB_ANA_HS_PLUG_IN;
@@ -125,7 +124,7 @@ static void usb_analog_hs_plugin_work(struct work_struct *work)
         usb_analog_hs_gpio_set_value(g_pdata_isl54405->gpio_usb_hs_switch, 0);
 
     mutex_unlock(&g_pdata_isl54405->mutex);
-    wake_unlock(&g_pdata_isl54405->wake_lock);
+    __pm_relax(&g_pdata_isl54405->wake_lock);
 
     OUT_FUNCTION;
 }
@@ -134,7 +133,7 @@ static void usb_analog_hs_plugout_work(struct work_struct *work)
 {
     IN_FUNCTION;
 
-    wake_lock(&g_pdata_isl54405->wake_lock);
+    __pm_stay_awake(&g_pdata_isl54405->wake_lock);
     if (g_pdata_isl54405->usb_analog_hs_in == USB_ANA_HS_PLUG_IN) {
         logi("usb analog hs plug out act!\n");
         g_pdata_isl54405->codec_ops_dev->ops.plug_out_detect(g_pdata_isl54405->private_data);
@@ -143,7 +142,7 @@ static void usb_analog_hs_plugout_work(struct work_struct *work)
         usb_analog_hs_gpio_set_value(g_pdata_isl54405->gpio_usb_hs_switch, 1);
         mutex_unlock(&g_pdata_isl54405->mutex);
     }
-    wake_unlock(&g_pdata_isl54405->wake_lock);
+    __pm_relax(&g_pdata_isl54405->wake_lock);
 
     OUT_FUNCTION;
 }
@@ -246,7 +245,7 @@ void usb_ana_hs_isl54405_plug_in_out_handle(int hs_state)
     logi("hs_state is %d[%s]\n",hs_state,
         (hs_state == USB_ANA_HS_PLUG_IN)?"PLUG_IN":"PLUG_OUT");
 
-    wake_lock_timeout(&g_pdata_isl54405->wake_lock, msecs_to_jiffies(1000));
+    __pm_wakeup_event(&g_pdata_isl54405->wake_lock, msecs_to_jiffies(1000));
 
     if(hs_state == USB_ANA_HS_PLUG_IN) {
         queue_delayed_work(g_pdata_isl54405->analog_hs_plugin_delay_wq,
@@ -527,7 +526,7 @@ static int usb_ana_hs_isl54405_probe(struct platform_device *pdev)
         goto isl54405_err_out;
     }
 
-    wake_lock_init(&g_pdata_isl54405->wake_lock, WAKE_LOCK_SUSPEND, "usb_analog_hs");
+    wakeup_source_init(&g_pdata_isl54405->wake_lock, "usb_analog_hs");
     mutex_init(&g_pdata_isl54405->mutex);
 
     /* load dts config for board difference */

@@ -73,7 +73,7 @@
 
 #define MEMBLOCK	2048		/* Block size used for downloading of dongle image */
 #define MAX_NVRAMBUF_SIZE	6144	/* max nvram buf size */
-#define MAX_WKLK_IDLE_CHECK	3	/* times wake_lock checked before deciding not to suspend */
+#define MAX_WKLK_IDLE_CHECK	3	/* times __pm_stay_awake checked before deciding not to suspend */
 
 
 #define ARMCR4REG_BANKIDX	(0x40/sizeof(uint32))

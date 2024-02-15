@@ -373,7 +373,7 @@ VOS_UINT32 diag_ServiceProc(MSP_SERVICE_HEAD_STRU *pData)
         diag_PTR(EN_DIAG_PTR_SERVICE_1);
 
         /* ???????????????????? */
-        wake_lock(&diag_wakelock);
+        __pm_stay_awake(&diag_wakelock);
         if(pHeader->stService.ff1b)
         {
             /* ???????????????????????????????? */
@@ -383,7 +383,7 @@ VOS_UINT32 diag_ServiceProc(MSP_SERVICE_HEAD_STRU *pData)
             {
                 diag_SrvcCreatePkt(pHeader);
                 (VOS_VOID)diag_SrvcSavePkt(pHeader);
-                wake_unlock(&diag_wakelock);
+                __pm_relax(&diag_wakelock);
                 return VOS_OK;
             }
             else if(pHeader->stService.eof1b)
@@ -393,7 +393,7 @@ VOS_UINT32 diag_ServiceProc(MSP_SERVICE_HEAD_STRU *pData)
             else
             {
                 (VOS_VOID)diag_SrvcSavePkt(pHeader);
-                wake_unlock(&diag_wakelock);
+                __pm_relax(&diag_wakelock);
                 return VOS_OK;
             }
         }
@@ -423,7 +423,7 @@ VOS_UINT32 diag_ServiceProc(MSP_SERVICE_HEAD_STRU *pData)
         }
 
         /* ?????????????????? */
-        wake_unlock(&diag_wakelock);
+        __pm_relax(&diag_wakelock);
     }
     else
     {

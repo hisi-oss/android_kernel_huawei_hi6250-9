@@ -444,7 +444,7 @@ void icc_task_shared_func(void const *obj)
 				handle_channel_recv(channel);
 			}
 		}
-		icc_wake_unlock(&g_icc_ctrl.wake_lock);
+		icc_wake_unlock(&g_icc_ctrl.__pm_stay_awake);
 		osl_sem_down(&g_icc_ctrl.shared_task_sem);
 	}
 	return ; /*lint !e527 */
@@ -487,7 +487,7 @@ void icc_ipc_isr(u32 data)
 	}
 	else if(channel_id == ICC_SHAREDTASK_SHAREDIPC_IDX)
 	{
-		icc_wake_lock(&g_icc_ctrl.wake_lock);
+		icc_wake_lock(&g_icc_ctrl.__pm_stay_awake);
 		osl_sem_up(&g_icc_ctrl.shared_task_sem);
 	}
 	else
@@ -833,7 +833,7 @@ s32 bsp_icc_init(void)
 		goto icc_channels_init_err; /*lint !e801 */
 	}
 
-	icc_wake_lock_init(&g_icc_ctrl.wake_lock, WAKE_LOCK_SUSPEND, "icc_wake");
+	icc_wake_lock_init(&g_icc_ctrl.__pm_stay_awake, "icc_wake");
 
 	ret = icc_debug_init(ICC_STATIC_CHN_ID_MAX);
 	if(ICC_OK != ret)
@@ -1002,7 +1002,7 @@ s32 bsp_icc_dynamic_event_register(u32 destcore, struct icc_dynamic_para *parame
 	vector->write_cb = NULL;
 	vector->write_context = NULL;
 
-	icc_wake_lock(&g_icc_ctrl.wake_lock);
+	icc_wake_lock(&g_icc_ctrl.__pm_stay_awake);
 	osl_sem_up(&g_icc_ctrl.shared_task_sem);
 
 	if(0xff != destcore)
@@ -1090,7 +1090,7 @@ s32 bsp_icc_event_register(u32 channel_id, read_cb_func read_cb,   void *read_co
 	vector->write_cb = write_cb;
 	vector->write_context = write_context;
 	
-	icc_wake_lock(&g_icc_ctrl.wake_lock);
+	icc_wake_lock(&g_icc_ctrl.__pm_stay_awake);
 	osl_sem_up(&g_icc_ctrl.shared_task_sem);
 
 	return ICC_OK;

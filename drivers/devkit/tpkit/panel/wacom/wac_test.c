@@ -963,7 +963,7 @@ int wacom_fac_test(struct ts_rawdata_info *info, struct ts_cmd_node *out_cmd)
 		TS_LOG_ERR("%s, param invalid\n", __func__);
 		return -EINVAL;
 	}
-	wake_lock(&wac_data->ts_wake_lock);
+	__pm_stay_awake(&wac_data->ts_wake_lock);
 	ret = wacom_request_memory();
 	if(ret != NO_ERR) {
 		TS_LOG_ERR("%s, request memory fail\n", __func__);
@@ -1125,7 +1125,7 @@ out:
 	TS_LOG_INFO("%s, result_length = %d\n", __func__, result_length);
 	strncat(info->result, extra_info, valid_len);
 	wacom_free_memory();
-	wake_unlock(&wac_data->ts_wake_lock);
+	__pm_relax(&wac_data->ts_wake_lock);
 
 	TS_LOG_INFO("%s, %s\n", __func__, info->result);
 	return ret;

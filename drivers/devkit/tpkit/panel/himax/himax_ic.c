@@ -1806,8 +1806,8 @@ static int himax_irq_bottom_half(struct ts_cmd_node *in_cmd,struct ts_cmd_node *
 
 	if(atomic_read(&g_himax_ts_data->suspend_mode) && g_himax_ts_data->tskit_himax_data->ts_platform_data->chip_data->easy_wakeup_info.sleep_mode)
 	{
-	  	/*increase wake_lock time to avoid system suspend.*/
-		wake_lock_timeout(&g_himax_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock, TS_WAKE_LOCK_TIMEOUT);
+	  	/*increase __pm_stay_awake time to avoid system suspend.*/
+		__pm_wakeup_event(&g_himax_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock, TS_WAKE_LOCK_TIMEOUT);
 		msleep(HX_SLEEP_200MS);
 		retval = i2c_himax_read( HX_REG_EVENT_STACK, buf, GEST_PT_MAX_NUM, sizeof(buf), DEFAULT_RETRY_CNT);//diad cmd not 0, need to read 128.
 		if(retval < 0)
@@ -2451,7 +2451,7 @@ static int himax_chip_detect(struct ts_kit_platform_data *platform_data)
 
 	calculate_point_number();
 
-	wake_lock_init(&ts->ts_flash_wake_lock, WAKE_LOCK_SUSPEND, HIMAX_VENDER_NAME);
+	wakeup_source_init(&ts->ts_flash_wake_lock, HIMAX_VENDER_NAME);
 
 #ifdef HX_TP_SYS_DIAG
 	setXChannel(HX_RX_NUM); // X channel
@@ -2521,7 +2521,7 @@ err_create_chip_monitor_wq_failed:
 	//freeMutualBuffer();
 err_setchannel_failed:
 #endif
-wake_lock_destroy(&ts->ts_flash_wake_lock);
+wakeup_source_trash(&ts->ts_flash_wake_lock);
 err_detect_failed:
 
 #ifdef  HX_TP_SYS_FLASH_DUMP
@@ -3083,7 +3083,7 @@ static void __exit himax_module_exit(void)
 		kfree(g_himax_ts_data->tskit_himax_data);
 		g_himax_ts_data->tskit_himax_data = NULL;
 	}
-	wake_lock_destroy(&g_himax_ts_data->ts_flash_wake_lock);
+	wakeup_source_trash(&g_himax_ts_data->ts_flash_wake_lock);
 
 	if (g_himax_ts_data){
 		kfree(g_himax_ts_data);

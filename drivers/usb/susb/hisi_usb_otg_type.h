@@ -1,6 +1,5 @@
 #ifndef HISI_USB_OTG_TYPE_H
 #define HISI_USB_OTG_TYPE_H
-#include <linux/wakelock.h>
 #include <linux/notifier.h>
 #include <linux/hisi/usb/hisi_usb.h>
 #include <linux/regulator/consumer.h>
@@ -366,7 +365,7 @@ struct otg_dev {
 	struct lm_device    *lm_dev;
 	struct platform_device *pdev;
 	struct work_struct event_work;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	struct mutex lock;
 	spinlock_t event_lock;
 

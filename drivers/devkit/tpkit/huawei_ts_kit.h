@@ -22,7 +22,6 @@
 #include <linux/debugfs.h>
 #include <linux/platform_device.h>
 #include <huawei_platform/log/hw_log.h>
-#include <linux/wakelock.h>
 #include <linux/semaphore.h>
 
 
@@ -1270,7 +1269,7 @@ struct ts_kit_platform_data
     struct ts_feature_info feature_info;
     struct ts_chip_info_param chip_info;
     struct ts_cmd_queue queue;
-    struct wake_lock ts_wake_lock;
+    struct wakeup_source ts_wake_lock;
 	struct ts_cmd_queue no_int_queue;
     struct timer_list watchdog_timer;
     struct work_struct watchdog_work;

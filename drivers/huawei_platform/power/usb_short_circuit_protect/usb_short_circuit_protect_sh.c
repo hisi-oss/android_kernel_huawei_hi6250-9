@@ -17,7 +17,6 @@
 #include <linux/platform_device.h>
 #include <huawei_platform/log/hw_log.h>
 #include <linux/notifier.h>
-#include <linux/wakelock.h>
 #include <linux/hisi/usb/hisi_usb.h>
 #include <linux/timer.h>
 #include <linux/hrtimer.h>

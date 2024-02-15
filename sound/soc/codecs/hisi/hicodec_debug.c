@@ -10,7 +10,6 @@
 
 #include <linux/kernel.h>
 #include <linux/switch.h>
-#include <linux/wakelock.h>
 #include <linux/delay.h>
 #include <linux/vmalloc.h>
 #include <linux/proc_fs.h>

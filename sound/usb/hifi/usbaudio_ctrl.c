@@ -38,7 +38,6 @@
 #include <linux/hisi/usb/hisi_usb.h>
 #include <huawei_platform/audio/usb_audio_power.h>
 #include <huawei_platform/audio/usb_audio_power_v600.h>
-#include <linux/wakelock.h>
 
 #include "usbaudio.h"
 #include "card.h"

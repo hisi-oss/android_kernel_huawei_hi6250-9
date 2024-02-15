@@ -31,7 +31,6 @@
 #include <linux/rtc.h>
 #include <linux/syscalls.h>
 #include <linux/semaphore.h>
-#include <linux/wakelock.h>
 #ifdef CONFIG_HUAWEI_CHARGER
 #include <huawei_platform/power/huawei_charger.h>
 #else

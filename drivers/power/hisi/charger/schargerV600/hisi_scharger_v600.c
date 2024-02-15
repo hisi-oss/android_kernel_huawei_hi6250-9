@@ -8,7 +8,6 @@
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 #include <linux/i2c.h>
-#include <linux/wakelock.h>
 #include <linux/usb/otg.h>
 #include <linux/io.h>
 #include <linux/gpio.h>
@@ -1092,7 +1091,7 @@ static int hi6526_get_adc_value(u32 chan, u32 * data)
 		mutex_unlock(&di->adc_conv_lock);
 		return 0;
 	}
-	wake_lock(&di->hi6526_wake_lock);
+	__pm_stay_awake(&di->hi6526_wake_lock);
         hi6526_read_mask(LVC_CHG_MODE_REG, LVC_CHG_MODE_MASK,LVC_CHG_MODE_SHIFT, &lvc_mode);
         hi6526_read_mask(SC_CHG_MODE_REG, SC_CHG_MODE_MASK,SC_CHG_MODE_SHIFT, &sc_mode);
 
@@ -1111,7 +1110,7 @@ static int hi6526_get_adc_value(u32 chan, u32 * data)
                 if((chan == CHG_ADC_CH_VBUS || chan == CHG_ADC_CH_VUSB) && lvc_mode) {
                         *data = *data * 4 /10 + 1500;
                 }
-		wake_unlock(&di->hi6526_wake_lock);
+		__pm_relax(&di->hi6526_wake_lock);
 		mutex_unlock(&di->adc_conv_lock);
                 return 0;
         }
@@ -1127,7 +1126,7 @@ static int hi6526_get_adc_value(u32 chan, u32 * data)
         if (ret) {
                 SCHARGER_ERR("set covn fail! ret =%d \n", ret);
                 hi6526_adc_enable(CHG_ADC_DIS);
-		wake_unlock(&di->hi6526_wake_lock);
+		__pm_relax(&di->hi6526_wake_lock);
 		mutex_unlock(&di->adc_conv_lock);
                 return -1;
         }
@@ -1148,7 +1147,7 @@ static int hi6526_get_adc_value(u32 chan, u32 * data)
         if (10 == i) {
                 SCHARGER_ERR("Wait for ADC CONV timeout! \n");
                 hi6526_adc_enable(CHG_ADC_DIS);
-		wake_unlock(&di->hi6526_wake_lock);
+		__pm_relax(&di->hi6526_wake_lock);
 		mutex_unlock(&di->adc_conv_lock);
                 return -1;
         }
@@ -1162,11 +1161,11 @@ static int hi6526_get_adc_value(u32 chan, u32 * data)
                 SCHARGER_ERR("[%s]get ibus_ref_data fail,ret:%d\n", __func__,
                 	     ret);
                 hi6526_adc_enable(CHG_ADC_DIS);
-		wake_unlock(&di->hi6526_wake_lock);
+		__pm_relax(&di->hi6526_wake_lock);
 		mutex_unlock(&di->adc_conv_lock);
                 return -1;
         }
-	wake_unlock(&di->hi6526_wake_lock);
+	__pm_relax(&di->hi6526_wake_lock);
 	mutex_unlock(&di->adc_conv_lock);
         return 0;
 }
@@ -5872,7 +5871,7 @@ static int hi6526_probe(struct i2c_client *client,/*lint !e64*/
         INIT_DELAYED_WORK(&di->reverbst_work, hi6526_reverbst_delay_work);
         INIT_DELAYED_WORK(&di->dc_ucp_work, hi6526_dc_ucp_delay_work);
         INIT_DELAYED_WORK(&di->dbg_work, hi6526_dbg_work);
-	wake_lock_init(&di->hi6526_wake_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&di->hi6526_wake_lock,
 		"hi6526_adc_wakelock");
 
 	ret = hi6526_irq_init(di, np);

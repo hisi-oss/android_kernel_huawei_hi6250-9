@@ -17,7 +17,6 @@
 #include <linux/device.h>
 #include <linux/uaccess.h>
 #include <linux/platform_device.h>
-#include <linux/wakelock.h>
 #include <linux/hisi/hw_cmdline_parse.h>
 #include <media/huawei/hw_extern_pmic.h>
 #include <linux/slab.h>
@@ -651,7 +650,7 @@ int tui_fp_notify(void)
     smp_rmb();
 
     if (fingerprint->wakeup_enabled) {
-        wake_lock_timeout(&fingerprint->ttw_wl, msecs_to_jiffies(FPC_TTW_HOLD_TIME));
+        __pm_wakeup_event(&fingerprint->ttw_wl, msecs_to_jiffies(FPC_TTW_HOLD_TIME));
     }
 
     sysfs_notify(&fingerprint->pf_dev->dev.kobj, NULL, dev_attr_irq.attr.name);
@@ -798,7 +797,7 @@ static irqreturn_t fingerprint_irq_handler(int irq, void* handle)
 
     if (fingerprint->wakeup_enabled)
     {
-        wake_lock_timeout(&fingerprint->ttw_wl, msecs_to_jiffies(FPC_TTW_HOLD_TIME));
+        __pm_wakeup_event(&fingerprint->ttw_wl, msecs_to_jiffies(FPC_TTW_HOLD_TIME));
     }
 
     if (FP_IRQ_SCHEME_ONE == fingerprint->irq_custom_scheme)
@@ -1296,7 +1295,7 @@ static long fingerprint_ioctl(struct file* file, unsigned int cmd, unsigned long
 			fp_ready_flg  = 1;
 			if (wake_lock_active(&fingerprint->ttw_wl))
 			{
-				wake_unlock(&fingerprint->ttw_wl);
+				__pm_relax(&fingerprint->ttw_wl);
 			}
 			if (true == fingerprint->irq_enabled)
 			{
@@ -2107,7 +2106,7 @@ static int fingerprint_probe(struct platform_device* pdev)
     }
 
     device_init_wakeup(dev, 1);
-    wake_lock_init(&fingerprint->ttw_wl, WAKE_LOCK_SUSPEND, "fpc_ttw_wl");
+    wakeup_source_init(&fingerprint->ttw_wl, "fpc_ttw_wl");
 
     init_waitqueue_head(&fingerprint->hbm_queue);
     mutex_init(&fingerprint->lock);
@@ -2181,7 +2180,7 @@ static int fingerprint_remove(struct platform_device* pdev)
     unregister_chrdev_region(fingerprint->devno, 1);
     input_free_device(fingerprint->input_dev);
     mutex_destroy(&fingerprint->lock);
-    wake_lock_destroy(&fingerprint->ttw_wl);
+    wakeup_source_trash(&fingerprint->ttw_wl);
     hwlog_info("%s\n", __func__);
     return 0;
 }

@@ -210,7 +210,7 @@ typedef struct log_conn_event {
  * and thus should be stored in their own ring/file so as not to clobber connectivity events
  */
 
-typedef struct wake_lock_event {
+typedef struct wakeup_source_event {
     uint32 status; /* 0 taken, 1 released */
     uint32 reason; /* reason why this wake lock is taken */
     char name[0]; /* null terminated */

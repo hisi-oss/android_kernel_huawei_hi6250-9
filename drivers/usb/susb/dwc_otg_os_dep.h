@@ -29,7 +29,6 @@
 #include <linux/pci.h>
 #include <linux/io.h>
 #include <linux/version.h>
-#include <linux/wakelock.h>
 #include <linux/platform_device.h>
 #include <asm/cacheflush.h>
 

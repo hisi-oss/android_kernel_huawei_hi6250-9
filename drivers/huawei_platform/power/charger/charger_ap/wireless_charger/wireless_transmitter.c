@@ -25,7 +25,7 @@
 #define HWLOG_TAG wireless_tx
 HWLOG_REGIST();
 
-static struct wake_lock wireless_tx_wakelock;
+static struct wakeup_source wireless_tx_wakelock;
 static struct wireless_tx_device_info *g_wireless_tx_di;
 static struct wireless_tx_device_ops *g_wireless_tx_ops;
 static enum wireless_tx_stage tx_stage = WL_TX_STAGE_DEFAULT;
@@ -145,14 +145,14 @@ bool wltx_need_disable_wired_dc(void)
 static void wireless_tx_wake_lock(void)
 {
 	if (!wake_lock_active(&wireless_tx_wakelock)) {
-		wake_lock(&wireless_tx_wakelock);
+		__pm_stay_awake(&wireless_tx_wakelock);
 		hwlog_info("wireless_tx wake lock\n");
 	}
 }
 static void wireless_tx_wake_unlock(void)
 {
 	if (wake_lock_active(&wireless_tx_wakelock)) {
-		wake_unlock(&wireless_tx_wakelock);
+		__pm_relax(&wireless_tx_wakelock);
 		hwlog_info("wireless_tx wake unlock\n");
 	}
 }
@@ -1354,7 +1354,7 @@ static int wireless_tx_remove(struct platform_device *pdev)
 		return 0;
 	}
 
-	wake_lock_destroy(&wireless_tx_wakelock);
+	wakeup_source_trash(&wireless_tx_wakelock);
 
 	hwlog_info("[%s]\n", __func__);
 	return 0;
@@ -1375,7 +1375,7 @@ static int wireless_tx_probe(struct platform_device *pdev)
 	np = di->dev->of_node;
 	di->tx_ops = g_wireless_tx_ops;
 
-	wake_lock_init(&wireless_tx_wakelock, WAKE_LOCK_SUSPEND, "wireless_tx_wakelock");
+	wakeup_source_init(&wireless_tx_wakelock, "wireless_tx_wakelock");
 
 	ret = wireless_tx_ops_check(di);
 	if (ret) {
@@ -1413,7 +1413,7 @@ wireless_tx_fail_2:
 wireless_tx_fail_1:
 	gpio_free(di->gpio_sw);
 wireless_tx_fail_0:
-	wake_lock_destroy(&wireless_tx_wakelock);
+	wakeup_source_trash(&wireless_tx_wakelock);
 	di->tx_ops = NULL;
 	kfree(di);
 	di = NULL;

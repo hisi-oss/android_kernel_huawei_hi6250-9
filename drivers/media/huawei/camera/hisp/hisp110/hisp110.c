@@ -27,7 +27,6 @@
 #include "cam_log.h"
 #include "hisp_intf.h"
 #include "platform/sensor_commom.h"
-#include <linux/wakelock.h>
 #include "trace_hisp.h"
 
 DEFINE_MUTEX(hisi_rpmsg_service_mutex);
@@ -37,7 +36,7 @@ DEFINE_MUTEX(hisp_wake_lock_mutex);
 static struct pm_qos_request qos_request_ddr_down_record;
 static int current_ddr_bandwidth = 0;
 #endif
-static struct wake_lock hisp_power_wakelock;
+static struct wakeup_source hisp_power_wakelock;
 
 extern void hisi_isp_boot_stat_dump(void);
 
@@ -500,7 +499,7 @@ static int hisp110_power_on(hisp_intf_t *i)
 
 	mutex_lock(&hisp_wake_lock_mutex);
 	if (!wake_lock_active(&hisp_power_wakelock)) {
-		wake_lock(&hisp_power_wakelock);
+		__pm_stay_awake(&hisp_power_wakelock);
 		cam_info("%s hisp power on enter, wake lock\n", __func__);
 	}
 	mutex_unlock(&hisp_wake_lock_mutex);
@@ -590,7 +589,7 @@ FAILED_RET:
 
 	mutex_lock(&hisp_wake_lock_mutex);
 	if (wake_lock_active(&hisp_power_wakelock)) {
-		wake_unlock(&hisp_power_wakelock);
+		__pm_relax(&hisp_power_wakelock);
 		cam_info("%s hisp power on failed, wake unlock\n", __func__);
 	}
 	mutex_unlock(&hisp_wake_lock_mutex);
@@ -669,7 +668,7 @@ RET:
 
 	mutex_lock(&hisp_wake_lock_mutex);
 	if (wake_lock_active(&hisp_power_wakelock)) {
-		wake_unlock(&hisp_power_wakelock);
+		__pm_relax(&hisp_power_wakelock);
 		cam_info("%s hisp power off exit, wake unlock\n", __func__);
 	}
 	mutex_unlock(&hisp_wake_lock_mutex);
@@ -1053,7 +1052,7 @@ hisp110_platform_probe(
 	int32_t ret = 0;
 
 	cam_info("%s: enter", __func__);
-	wake_lock_init(&hisp_power_wakelock, WAKE_LOCK_SUSPEND, "hisp_power_wakelock");
+	wakeup_source_init(&hisp_power_wakelock, "hisp_power_wakelock");
 	ret = hisp_get_dt_data(pdev, &s_hisp110.dt);
 	if (ret < 0) {
 		cam_err("%s: get dt failed.", __func__);
@@ -1092,7 +1091,7 @@ hisp110_platform_probe(
 	return 0;
 
 error:
-	wake_lock_destroy(&hisp_power_wakelock);
+	wakeup_source_trash(&hisp_power_wakelock);
 	cam_notice("%s exit with ret = %d\n", __func__, ret);
 	return ret;
 }
@@ -1123,7 +1122,7 @@ hisp110_exit_module(void)
 	unregister_rpmsg_driver(&rpmsg_hisp110_driver);
 	hisp_unregister(s_hisp110.pdev);
     platform_driver_unregister(&s_hisp110_driver);
-	wake_lock_destroy(&hisp_power_wakelock);
+	wakeup_source_trash(&hisp_power_wakelock);
 }
 
 module_init(hisp110_init_module);

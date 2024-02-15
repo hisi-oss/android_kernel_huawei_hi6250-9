@@ -494,7 +494,7 @@ static irqreturn_t ak8789_event_handler(int irq, void *hall_dev)
 		return IRQ_NONE;
 	}
 
-	wake_lock_timeout(&data->wakelock, HZ);
+	__pm_wakeup_event(&data->wakelock, HZ);
 #ifdef HALL_TEST
 	if (irq == h_dev->h_info.irq[0]) {
 		index = 0;
@@ -756,7 +756,7 @@ static int ak8789_probe(struct platform_device *pdev)
 	data->pdev = pdev;
 
 	INIT_LIST_HEAD(&data->head);
-	wake_lock_init(&data->wakelock, WAKE_LOCK_SUSPEND, "hall");
+	wakeup_source_init(&data->wakelock, "hall");
 	spin_lock_init(&data->spinlock);
 	INIT_WORK(&data->inter_work, hall_interrupt_abnormity_work);
 
@@ -889,7 +889,7 @@ free_wq:
 #endif
 	destroy_workqueue(data->hall_wq);
 free_wake_lock:
-	wake_lock_destroy(&data->wakelock);
+	wakeup_source_trash(&data->wakelock);
 
 	return ret;
 }
@@ -918,7 +918,7 @@ static int ak8789_remove(struct platform_device *pdev)
 #endif
 
 	destroy_workqueue(data->hall_wq);
-	wake_lock_destroy(&data->wakelock);
+	wakeup_source_trash(&data->wakelock);
 
 	return 0;
 }

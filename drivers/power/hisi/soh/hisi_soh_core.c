@@ -79,7 +79,7 @@ void max_min_value(const int array[],u32 size, int *min, int *max)
 }
 /**********************************************************
 *  Function:      soh_wake_lock
-*  Description:   apply soh wake_lock
+*  Description:   apply soh __pm_stay_awake
 *  Parameters:    NULL
 *  return value:  NULL
 **********************************************************/
@@ -88,13 +88,13 @@ static void soh_wake_lock(struct hisi_soh_device *di)
     if (!di)
         return ;
     if (!wake_lock_active(&di->soh_wake_lock)) {
-        wake_lock(&di->soh_wake_lock);
+        __pm_stay_awake(&di->soh_wake_lock);
         hisi_soh_info("soh core wake lock!\n");
     }
 }/*lint !e454 !e456*/
 /**********************************************************
 *  Function:      soh_wake_unlock
-*  Description:   release soh wake_lock
+*  Description:   release soh __pm_stay_awake
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
@@ -103,7 +103,7 @@ static void soh_wake_unlock(struct hisi_soh_device *di)
     if (!di)
         return ;
     if (wake_lock_active(&di->soh_wake_lock)) {
-        wake_unlock(&di->soh_wake_lock);/*lint !e455*/
+        __pm_relax(&di->soh_wake_lock);/*lint !e455*/
         hisi_soh_info("soh core wake unlock!\n");
     }
 }
@@ -2815,7 +2815,7 @@ static int soh_probe(struct platform_device *pdev)
 
     platform_set_drvdata(pdev, di);
 
-    wake_lock_init(&di->soh_wake_lock, WAKE_LOCK_SUSPEND, "soh_wakelock");
+    wakeup_source_init(&di->soh_wake_lock, "soh_wakelock");
 
     mutex_init(&di->soh_mutex);
 
@@ -2864,7 +2864,7 @@ soh_fail_2:
 soh_fail_1:
     soh_acr_uninit(di);
 soh_fail_0:
-    wake_lock_destroy(&di->soh_wake_lock);
+    wakeup_source_trash(&di->soh_wake_lock);
     mutex_destroy(&di->soh_mutex);
     platform_set_drvdata(pdev, NULL);
     return ret;
@@ -2889,7 +2889,7 @@ static int  soh_remove(struct platform_device *pdev)
     soh_dcr_uninit(di);
     soh_ovp_uninit(di);
     soh_pd_leak_uninit(di);
-	wake_lock_destroy(&di->soh_wake_lock);
+	wakeup_source_trash(&di->soh_wake_lock);
     mutex_destroy(&di->soh_mutex);
 	platform_set_drvdata(pdev, NULL);
 	devm_kfree(&pdev->dev,di);

@@ -20,7 +20,6 @@
 #include <linux/file.h>
 #include <linux/inetdevice.h>
 #include <linux/of.h>
-#include <linux/wakelock.h>
 #include <linux/fb.h>
 #include <linux/mm.h>
 #include <linux/timer.h>
@@ -55,7 +54,7 @@
 
 static void channel_occupied_timeout(unsigned long data);
 
-static struct wake_lock wl_bastet;
+static struct wakeup_source wl_bastet;
 static bool bastet_cfg_en;
 static DEFINE_TIMER(channel_timer, channel_occupied_timeout, 0, 0);
 
@@ -614,20 +613,20 @@ struct sock *get_sock_by_comm_prop(struct bst_sock_comm_prop *guide)
 
 void bastet_wakelock_acquire(void)
 {
-	wake_lock(&wl_bastet);
+	__pm_stay_awake(&wl_bastet);
 }
 
 void bastet_wakelock_acquire_timeout(long timeout)
 {
 	if (wake_lock_active(&wl_bastet))
-		wake_unlock(&wl_bastet);
+		__pm_relax(&wl_bastet);
 
-	wake_lock_timeout(&wl_bastet, timeout);
+	__pm_wakeup_event(&wl_bastet, timeout);
 }
 
 void bastet_wakelock_release(void)
 {
-	wake_unlock(&wl_bastet);
+	__pm_relax(&wl_bastet);
 }
 
 void ind_hisi_com(void *info, u32 len)
@@ -763,14 +762,14 @@ void bastet_utils_init(void)
 {
 	BASTET_LOGI("bastet feature enabled");
 	bastet_cfg_en = true;
-	wake_lock_init(&wl_bastet, WAKE_LOCK_SUSPEND, BASTET_WAKE_LOCK);
+	wakeup_source_init(&wl_bastet, BASTET_WAKE_LOCK);
 	reg_mss_reset_notify();
 	init_fb_notification();
 }
 
 void bastet_utils_exit(void)
 {
-	wake_lock_destroy(&wl_bastet);
+	wakeup_source_trash(&wl_bastet);
 	unreg_mss_reset_notify();
 	deinit_fb_notification();
 }

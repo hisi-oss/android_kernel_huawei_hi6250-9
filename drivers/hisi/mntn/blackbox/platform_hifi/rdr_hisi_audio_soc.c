@@ -32,7 +32,6 @@
 #include <linux/proc_fs.h>
 #include <linux/sysctl.h>
 #include <linux/uaccess.h>
-#include <linux/wakelock.h>
 #include <linux/of_irq.h>
 #include <linux/version.h>
 #include "rdr_print.h"
@@ -106,7 +105,7 @@ struct rdr_soc_des_s {
 
 	struct semaphore dump_sem;
 	struct semaphore handler_sem;
-	struct wake_lock rdr_wl;
+	struct wakeup_source rdr_wl;
 	struct task_struct *kdump_task;
 	struct task_struct *khandler_task;
 };
@@ -1215,7 +1214,7 @@ void rdr_audio_soc_reset(u32 modid, u32 etype, u64 coreid)
 
 	ret = reset_hifi();
 	if (ret) {
-		wake_unlock(&soc_des.rdr_wl);/*lint !e455*/
+		__pm_relax(&soc_des.rdr_wl);/*lint !e455*/
 		BB_PRINT_ERR("rdr:%s():reset hifi error\n", __func__);
 		return;
 	}
@@ -1224,7 +1223,7 @@ void rdr_audio_soc_reset(u32 modid, u32 etype, u64 coreid)
 	sochifi_watchdog_send_event();
 	hifireset_runcbfun(DRV_RESET_CALLCBFUN_RESET_AFTER);
 
-	wake_unlock(&soc_des.rdr_wl);/*lint !e455*/
+	__pm_relax(&soc_des.rdr_wl);/*lint !e455*/
 
 	BB_PRINT_END();
 
@@ -1238,7 +1237,7 @@ static irqreturn_t soc_wtd_irq_handler(int irq, void *data)
 	writel(DRV_WATCHDOG_CONTROL_DISABLE, soc_des.control_addr);
 	writel(DRV_WATCHDOG_LOCK_NUM, soc_des.lock_addr);
 
-	wake_lock(&soc_des.rdr_wl);
+	__pm_stay_awake(&soc_des.rdr_wl);
 
 	up(&soc_des.handler_sem);
 
@@ -1286,7 +1285,7 @@ int rdr_audio_soc_init(void)
 
 	sema_init(&soc_des.dump_sem, 0);
 	sema_init(&soc_des.handler_sem, 0);
-	wake_lock_init(&soc_des.rdr_wl, WAKE_LOCK_SUSPEND, "rdr_sochifi");
+	wakeup_source_init(&soc_des.rdr_wl, "rdr_sochifi");
 	soc_des.kdump_task = NULL;
 	soc_des.khandler_task = NULL;
 
@@ -1354,7 +1353,7 @@ error:
 		soc_des.khandler_task = NULL;
 	}
 
-	wake_lock_destroy(&soc_des.rdr_wl);
+	wakeup_source_trash(&soc_des.rdr_wl);
 
 	if (NULL != soc_des.lock_addr) {
 		iounmap(soc_des.lock_addr);
@@ -1395,7 +1394,7 @@ void rdr_audio_soc_exit(void)
 		soc_des.khandler_task = NULL;
 	}
 
-	wake_lock_destroy(&soc_des.rdr_wl);
+	wakeup_source_trash(&soc_des.rdr_wl);
 
 	if (NULL != soc_des.lock_addr) {
 		iounmap(soc_des.lock_addr);

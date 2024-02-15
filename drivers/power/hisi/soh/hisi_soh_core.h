@@ -1,7 +1,6 @@
 #ifndef _HISI_SOH_CORE_H_
 #define _HISI_SOH_CORE_H_
 
-#include <linux/wakelock.h>
 #include <linux/power/hisi/soh/hisi_soh_interface.h>
 
 #ifndef MIN
@@ -299,7 +298,7 @@ struct hisi_soh_device {
     struct soh_dcr_device       soh_dcr_dev;
     struct soh_pd_leak_device   soh_pd_leak_dev;
     struct soh_ovp_device       soh_ovp_dev;
-    struct wake_lock            soh_wake_lock;
+    struct wakeup_source            soh_wake_lock;
     struct mutex                soh_mutex;
     struct device               *dev;
 };

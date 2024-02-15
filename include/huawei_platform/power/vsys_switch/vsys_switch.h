@@ -19,7 +19,6 @@
 #ifndef _VSYS_SWITCH_H_
 #define _VSYS_SWITCH_H_
 
-#include <linux/wakelock.h>
 
 #define BUCK_CHNL_ENABLE                (1)
 #define BUCK_CHNL_DISABLE               (0)
@@ -210,7 +209,7 @@ struct vsys_switch_device_info {
 	struct notifier_block sc_event_nb;
 	struct work_struct sc_event_work;
 	struct delayed_work ctrl_work;
-	struct wake_lock wakelock;
+	struct wakeup_source wakelock;
 	struct vsys_buck_device_ops *buck_ops;
 	struct vsys_sc_device_ops *sc_ops;
 	struct vsys_ovp_switch_device_ops *ovp_ops;

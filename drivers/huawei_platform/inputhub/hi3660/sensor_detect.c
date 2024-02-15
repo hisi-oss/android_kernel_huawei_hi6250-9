@@ -27,7 +27,6 @@
 #include <linux/io.h>
 #include <linux/uaccess.h>
 #include <linux/types.h>
-#include <linux/wakelock.h>
 #include <sensor_info.h>
 #include "sensor_sys_info.h"
 #include <sensor_detect.h>
@@ -65,7 +64,7 @@
 int switch_irq;
 
 static struct sensor_redetect_state s_redetect_state ;
-static struct wake_lock sensor_rd;
+static struct wakeup_source sensor_rd;
 static struct work_struct redetect_work;
 static const char *str_soft_para = "softiron_parameter";
 
@@ -3010,7 +3009,7 @@ int motion_set_cfg_data(void)
 
 static void redetect_sensor_work_handler(void)
 {
-	wake_lock(&sensor_rd);
+	__pm_stay_awake(&sensor_rd);
 	init_sensors_cfg_data_from_dts(REDETECT_LATER);
 
 	if(s_redetect_state.need_recovery == 1){
@@ -3020,7 +3019,7 @@ static void redetect_sensor_work_handler(void)
 	}else{
 		hwlog_info("%s: no sensor redetect success\n",__func__);
 	}
-	wake_unlock(&sensor_rd);
+	__pm_relax(&sensor_rd);
 }
 
 void sensor_redetect_enter(void)
@@ -3042,6 +3041,6 @@ void sensor_redetect_enter(void)
 void sensor_redetect_init(void)
 {
 	memset(&s_redetect_state,0,sizeof(s_redetect_state));
-	wake_lock_init(&sensor_rd, WAKE_LOCK_SUSPEND, "sensorhub_redetect");
+	wakeup_source_init(&sensor_rd, "sensorhub_redetect");
 	INIT_WORK(&redetect_work, redetect_sensor_work_handler);
 }

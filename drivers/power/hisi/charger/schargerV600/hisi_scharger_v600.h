@@ -13,7 +13,6 @@
 #include <linux/i2c.h>      /*for struct device_info*/
 #include <linux/device.h>   /*for struct device_info*/
 #include <linux/workqueue.h>    /*for struct evice_info*/
-#include <linux/wakelock.h>
 #include <huawei_platform/usb/switch/switch_ap/switch_chip.h>
 #include <huawei_platform/power/direct_charger.h>
 
@@ -136,7 +135,7 @@ struct hi6526_device_info {
         struct mutex ibias_calc_lock;
         struct nty_data dc_nty_data;
         struct delayed_work dbg_work;
-        struct wake_lock hi6526_wake_lock;
+        struct wakeup_source hi6526_wake_lock;
         struct chip_debug_info dbg_info[INFO_LEN];
         unsigned int hi6526_version;
         unsigned int is_board_type;        /*0:sft 1:udp 2:asic */

@@ -31,7 +31,6 @@
 #include <linux/slab.h>
 #include <linux/regulator/consumer.h>
 #include <linux/platform_device.h>
-#include <linux/wakelock.h>
 #include <asm/irq.h>
 #include <linux/hisi/util.h>
 #include <linux/kthread.h>
@@ -98,7 +97,7 @@ bool power_key_ps; /*default value is false*/
 struct hisi_powerkey_info {
 	struct input_dev *idev;
 	int irq[6];
-	struct wake_lock pwr_wake_lock;
+	struct wakeup_source pwr_wake_lock;
 };
 
 static struct semaphore long_presspowerkey_happen_sem;
@@ -155,7 +154,7 @@ static irqreturn_t hisi_powerkey_handler(int irq, void *data)
 {
 	struct hisi_powerkey_info *info = (struct hisi_powerkey_info *)data;
 
-	wake_lock_timeout(&info->pwr_wake_lock, HZ);
+	__pm_wakeup_event(&info->pwr_wake_lock, HZ);
 
 	if (info->irq[0] == irq) {
 		power_key_ps = true;
@@ -282,7 +281,7 @@ static int hisi_powerkey_probe(struct platform_device *pdev)
 	__set_bit(KEY_F23, info->idev->keybit);
 #endif
 
-	wake_lock_init(&info->pwr_wake_lock, WAKE_LOCK_SUSPEND, "android-pwr");
+	wakeup_source_init(&info->pwr_wake_lock, "android-pwr");
 
 #if defined (CONFIG_HUAWEI_DSM)
 	/* initialize the statistic variable */
@@ -436,7 +435,7 @@ static int hisi_powerkey_probe(struct platform_device *pdev)
 
 input_err:
 unregister_err:
-	wake_lock_destroy(&info->pwr_wake_lock);
+	wakeup_source_trash(&info->pwr_wake_lock);
 	input_free_device(info->idev);
 
 	return ret;
@@ -446,7 +445,7 @@ static int hisi_powerkey_remove(struct platform_device *pdev)
 {
 	struct hisi_powerkey_info *info = platform_get_drvdata(pdev);
 	if (NULL != info) {
-		wake_lock_destroy(&info->pwr_wake_lock);
+		wakeup_source_trash(&info->pwr_wake_lock);
 		input_free_device(info->idev);
 		input_unregister_device(info->idev);
 	}

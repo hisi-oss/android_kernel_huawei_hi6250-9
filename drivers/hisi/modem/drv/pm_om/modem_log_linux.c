@@ -53,7 +53,6 @@
 #include <linux/fs.h>
 #include <linux/miscdevice.h>
 #include <linux/suspend.h>
-#include <linux/wakelock.h>
 #include <linux/uaccess.h>
 #include <linux/poll.h>
 
@@ -88,7 +87,7 @@ struct logger_log {
 
 struct modem_log
 {
-	struct wake_lock  wake_lock;
+	struct wakeup_source  __pm_stay_awake;
 	struct notifier_block pm_notify;
 	u32 init_flag;
 };
@@ -244,7 +243,7 @@ skip_read:
 			break;
 		}
 
-		wake_unlock(&g_modem_log.wake_lock); /*lint !e455*/
+		__pm_relax(&g_modem_log.__pm_stay_awake); /*lint !e455*/
 		schedule();
 		modem_log_pr_debug("give up cpu in modem_log_read\n");
 	}
@@ -350,7 +349,7 @@ static int modem_log_release(struct inode *inode, struct file *file)
 	}
 	mutex_unlock(&log->mutex);
 
-	wake_unlock(&g_modem_log.wake_lock); /*lint !e455*/
+	__pm_relax(&g_modem_log.__pm_stay_awake); /*lint !e455*/
 
 	modem_log_pr_debug("%s entry\n", __func__);
 	return 0;
@@ -374,7 +373,7 @@ void modem_log_wakeup_all(void)
     {
 		if (log->usr_info->mem && log->usr_info->mem->read != log->usr_info->mem->write)
 		{
-			wake_lock_timeout(&g_modem_log.wake_lock,(long)(HZ));
+			__pm_wakeup_event(&g_modem_log.__pm_stay_awake,(long)(HZ));
 			if((&log->wq)!=NULL)
 			{
 			wake_up_interruptible(&log->wq);
@@ -409,7 +408,7 @@ s32 modem_log_notify(struct notifier_block *notify_block, unsigned long mode, vo
 	    {
 			if ((log->usr_info->mem) && (log->usr_info->mem->read != log->usr_info->mem->write) && (log->usr_info->mem->app_is_active))
 			{
-				wake_lock_timeout(&g_modem_log.wake_lock,(long)(HZ));
+				__pm_wakeup_event(&g_modem_log.__pm_stay_awake,(long)(HZ));
 				if((&log->wq)!=NULL)
 				{
 				wake_up_interruptible(&log->wq);
@@ -511,7 +510,7 @@ void bsp_modem_log_fwrite_trigger(struct log_usr_info *usr_info)
 	/* if reader is not ready, no need to wakeup waitqueue */
 	if (usr_info->mem && usr_info->mem->app_is_active)  /*lint !e456*/
 	{
-		wake_lock(&g_modem_log.wake_lock); /*lint !e454*/
+		__pm_stay_awake(&g_modem_log.__pm_stay_awake); /*lint !e454*/
 		if((&log->wq)!=NULL)
 		{
 		wake_up_interruptible(&log->wq);
@@ -533,7 +532,7 @@ void modem_log_fwrite_trigger_force(void)
  */
 static int __init modem_log_init(void)
 {
-	wake_lock_init(&g_modem_log.wake_lock, WAKE_LOCK_SUSPEND, "modem_log_wake");
+	wakeup_source_init(&g_modem_log.__pm_stay_awake, "modem_log_wake");
 
 	g_modem_log.pm_notify.notifier_call = modem_log_notify;
 	register_pm_notifier(&g_modem_log.pm_notify);

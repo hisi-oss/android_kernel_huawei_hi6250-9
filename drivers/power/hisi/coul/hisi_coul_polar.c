@@ -20,7 +20,6 @@
 #include <linux/mod_devicetable.h>
 #include <linux/init.h>
 #include <linux/interrupt.h>
-#include <linux/wakelock.h>
 #include <linux/kern_levels.h>
 #include <huawei_platform/log/hw_log.h>
 #include <linux/hisi/rdr_hisi_ap_ringbuffer.h>

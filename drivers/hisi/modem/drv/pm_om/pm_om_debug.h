@@ -53,7 +53,6 @@
 extern "C"
 {
 #endif
-#include <linux/wakelock.h>
 #include <linux/notifier.h>
 #include <bsp_pm_om.h>
 
@@ -76,7 +75,7 @@ struct pm_om_debug
 	struct notifier_block pm;
 	char   *cdrx_dump_addr;
 	char   *cdrx_dump_corepm_addr;
-	struct wake_lock wakelock_debug;
+	struct wakeup_source wakelock_debug;
 };
 
 int pm_om_debug_init(void);

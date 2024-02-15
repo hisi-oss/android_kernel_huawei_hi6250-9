@@ -16,7 +16,6 @@
 #include <linux/init.h>
 #include <linux/delay.h>
 #include <linux/wait.h>
-#include <linux/wakelock.h>
 #include <linux/semaphore.h>
 #include <linux/sched/rt.h>
 #include <linux/kthread.h>

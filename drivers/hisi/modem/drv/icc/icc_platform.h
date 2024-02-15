@@ -60,7 +60,6 @@ extern "C" {
 #include <linux/suspend.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
-#include <linux/wakelock.h>
 #include <asm/barrier.h>
 #include <osl_common.h>
 #include <osl_sem.h>
@@ -135,14 +134,14 @@ struct icc_control
 	u32                      sleep_flag;
 	struct icc_channel       *channels[ICC_CHN_ID_MAX]; /* icc_channel???????????????? */
 	u32                      channel_size;              /* ?????????????????? */
-	struct     wake_lock     wake_lock;
+	struct     __pm_stay_awake     __pm_stay_awake;
 	struct notifier_block    pm_notify;
 };
 
 void icc_system_error(u32 mod_id, u32 arg1, u32 arg2, char *data, u32 length);
-void icc_wake_lock_init(struct wake_lock *lock, int lock_id, const char *name);
-void icc_wake_lock(struct wake_lock *lock);
-void icc_wake_unlock(struct wake_lock *lock);
+void icc_wake_lock_init(struct wakeup_source *lock, int lock_id, const char *name);
+void icc_wake_lock(struct wakeup_source *lock);
+void icc_wake_unlock(struct wakeup_source *lock);
 void bsp_icc_channel_uninit(u32 real_channel_id);
 int icc_pm_init(void);
 int icc_ccore_is_reseting(u32 cpuid);

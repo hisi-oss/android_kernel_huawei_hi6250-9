@@ -990,7 +990,7 @@ int sec_ts_run_self_test(struct sec_ts_data *ts, struct ts_rawdata_info *info)
 		return -ENOMEM;
 	}
 	if(ts->ic_name == S6SY761X) {
-		wake_lock(&ts->wakelock);//add wakelock ,avoid i2c suspend
+		__pm_stay_awake(&ts->wakelock);//add wakelock ,avoid i2c suspend
 	}
 	raw_count = ts->tx_count * ts->rx_count;
 	memset(info->result, 0, sizeof(info->result));
@@ -1069,7 +1069,7 @@ int sec_ts_run_self_test(struct sec_ts_data *ts, struct ts_rawdata_info *info)
 
 err_exit:
 	if(ts->ic_name == S6SY761X) {
-		wake_unlock(&ts->wakelock);//add wakelock ,avoid i2c suspend
+		__pm_relax(&ts->wakelock);//add wakelock ,avoid i2c suspend
 	}
 	snprintf(result_buff, SEC_CMD_STR_LEN,
 		"[%d,%d,%d],[%d,%d,%d],[%d,%d,%d],[%d,%d,%d];",

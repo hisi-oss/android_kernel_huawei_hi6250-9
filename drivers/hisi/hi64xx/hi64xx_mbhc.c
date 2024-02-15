@@ -65,8 +65,8 @@ struct hi64xx_mbhc_priv {
 	struct hi64xx_resmgr *resmgr;
 	struct hi64xx_irq *irqmgr;
 	struct miscdevice miscdev;
-	struct wake_lock wake_lock;
-	struct wake_lock micbias_wake_lock;
+	struct wakeup_source wake_lock;
+	struct wakeup_source micbias_wake_lock;
 	struct mutex plug_mutex;
 	struct mutex status_mutex;
 	struct mutex saradc_mutex;
@@ -160,7 +160,7 @@ static void hi64xx_hs_micbias_enable(struct hi64xx_mbhc_priv *priv, bool enable)
 		hi64xx_resmgr_request_micbias(priv->resmgr);
 	} else {
 		/* hs micbias pd */
-		wake_lock_timeout(&priv->micbias_wake_lock, msecs_to_jiffies(3500));
+		__pm_wakeup_event(&priv->micbias_wake_lock, msecs_to_jiffies(3500));
 		ret = mod_delayed_work(priv->micbias_delay_wq,
 			&priv->micbias_delay_work,
 			msecs_to_jiffies(3000));
@@ -392,7 +392,7 @@ void hi64xx_plug_in_detect(struct hi64xx_mbhc_priv *priv)
 	if (!check_headset_pluged_in(priv))
 		return;
 
-	wake_lock(&priv->wake_lock);
+	__pm_stay_awake(&priv->wake_lock);
 	mutex_lock(&priv->plug_mutex);
 
 	pr_debug("%s(%u) : in", __FUNCTION__,__LINE__);
@@ -483,7 +483,7 @@ void hi64xx_plug_in_detect(struct hi64xx_mbhc_priv *priv)
 
 exit:
 	mutex_unlock(&priv->plug_mutex);
-	wake_unlock(&priv->wake_lock);
+	__pm_relax(&priv->wake_lock);
 	return;
 }
 
@@ -496,7 +496,7 @@ void hi64xx_btn_down(struct hi64xx_mbhc_priv *priv)
 		return;
 	}
 
-	wake_lock(&priv->wake_lock);
+	__pm_stay_awake(&priv->wake_lock);
 
 	if (HISI_JACK_HEADSET == priv->hs_status) {
 		/* micbias on */
@@ -562,7 +562,7 @@ VOICE_ASSISTANT_KEY:
 	}
 
 end:
-	wake_unlock(&priv->wake_lock);
+	__pm_relax(&priv->wake_lock);
 
 	return;
 }
@@ -768,7 +768,7 @@ static irqreturn_t hi64xx_btnup_eco_handler(int irq, void *data)
 		return IRQ_HANDLED;
 	}
 
-	wake_lock_timeout(&priv->wake_lock, 100);
+	__pm_wakeup_event(&priv->wake_lock, 100);
 
 	if (HISI_JACK_INVERT == priv->hs_status) {
 		pr_err("%s: further detect\n", __FUNCTION__);
@@ -1167,8 +1167,8 @@ int hi64xx_mbhc_init(struct snd_soc_codec *codec,
 		pr_err("%s : error registering switch device %d\n", __FUNCTION__, ret);
 		goto err_exit;
 	}
-	wake_lock_init(&priv->wake_lock, WAKE_LOCK_SUSPEND, "hisi-64xx-mbhc");
-	wake_lock_init(&priv->micbias_wake_lock, WAKE_LOCK_SUSPEND, "hisi-64xx-mbhc-micbias");
+	wakeup_source_init(&priv->wake_lock, "hisi-64xx-mbhc");
+	wakeup_source_init(&priv->micbias_wake_lock, "hisi-64xx-mbhc-micbias");
 	mutex_init(&priv->plug_mutex);
 	mutex_init(&priv->status_mutex);
 	mutex_init(&priv->saradc_mutex);
@@ -1284,8 +1284,8 @@ jack_exit:
 		priv->micbias_delay_wq = NULL;
 	}
 mic_delay_wq_exit:
-	wake_lock_destroy(&priv->wake_lock);
-	wake_lock_destroy(&priv->micbias_wake_lock);
+	wakeup_source_trash(&priv->wake_lock);
+	wakeup_source_trash(&priv->micbias_wake_lock);
 	mutex_destroy(&priv->plug_mutex);
 	mutex_destroy(&priv->status_mutex);
 	mutex_destroy(&priv->saradc_mutex);
@@ -1311,8 +1311,8 @@ void hi64xx_mbhc_deinit(struct hi64xx_mbhc *mbhc)
 		hi64xx_irq_free_irq(priv->irqmgr, IRQ_BTNUP_COMP1, priv);
 	}
 
-	wake_lock_destroy(&priv->wake_lock);
-	wake_lock_destroy(&priv->micbias_wake_lock);
+	wakeup_source_trash(&priv->wake_lock);
+	wakeup_source_trash(&priv->micbias_wake_lock);
 	mutex_destroy(&priv->plug_mutex);
 	mutex_destroy(&priv->status_mutex);
 	mutex_destroy(&priv->saradc_mutex);

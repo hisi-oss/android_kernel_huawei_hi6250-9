@@ -1303,7 +1303,7 @@ int wacom_fw_update(char *file_name)
 
 	dev = &wac_data->wacom_dev->dev;
 
-	wake_lock(&wac_data->ts_wake_lock);
+	__pm_stay_awake(&wac_data->ts_wake_lock);
 
 	// Construct the firmware name with project_code, name, lcd, tppind id...  //firmware name is like:cameron_W9015_CAME58000_ofilm_inx.hex
 	snprintf(fw_file_full_name, sizeof(fw_file_full_name), "ts/%s.hex",file_name);
@@ -1312,7 +1312,7 @@ int wacom_fw_update(char *file_name)
 	if (request_firmware(&fw_entry, fw_file_full_name, dev) != 0) {
 		TS_LOG_ERR("cannot load firmware file %s \n", fw_file_full_name);
 		ret = NO_ERR;
-		wake_unlock(&wac_data->ts_wake_lock);
+		__pm_relax(&wac_data->ts_wake_lock);
 		return ret;
 	}
 
@@ -1321,7 +1321,7 @@ int wacom_fw_update(char *file_name)
 		TS_LOG_ERR("wacom_fw_update fail:  %d \n", ret);
 	}
 
-	wake_unlock(&wac_data->ts_wake_lock);
+	__pm_relax(&wac_data->ts_wake_lock);
 
 	release_firmware(fw_entry);
 

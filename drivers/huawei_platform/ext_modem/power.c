@@ -23,7 +23,6 @@
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 #include <linux/irq.h>
-#include <linux/wakelock.h>
 #include <linux/delay.h>
 #include <linux/gpio.h>
 #include <linux/sched.h>
@@ -137,7 +136,7 @@ struct viatel_modem_data {
 	struct fasync_struct *fasync;
 	struct raw_notifier_head ntf;
 	struct notifier_block rst_ntf;
-	struct wake_lock wlock;
+	struct wakeup_source wlock;
 	struct work_struct work;
 	struct work_struct via_uevent_work;
 	char *envp[QUEUE_NUM][2];
@@ -356,9 +355,9 @@ void via_monitor_uevent_notify(int event)
 	}
 	/*rild received "VPUP", then set modem ready, now via cbp is bringup, so we release wake lock.*/
 	if (MODEM_STATE_READY == event) {
-		wake_unlock(&vmdata->wlock);
+		__pm_relax(&vmdata->wlock);
 		hwlog_info
-		    ("%s:%d wake_unlock(&vmdata->wlock) when received MODEM_STATE_READY event\n",
+		    ("%s:%d __pm_relax(&vmdata->wlock) when received MODEM_STATE_READY event\n",
 		     __func__, __LINE__);
 	}
 
@@ -394,7 +393,7 @@ static DEFINE_RAW_SPINLOCK(rslock);
 
 void oem_reset_modem(void)
 {
-	wake_lock_timeout(&vmdata->wlock, MDM_RST_LOCK_TIME * HZ);
+	__pm_wakeup_event(&vmdata->wlock, MDM_RST_LOCK_TIME * HZ);
 	oem_gpio_direction_output(cbp_rst_gpio, 1);
 	mdelay(MDM_RST_HOLD_DELAY);
 	oem_gpio_direction_output(cbp_rst_gpio, 0);
@@ -602,7 +601,7 @@ static irqreturn_t modem_reset_indication_irq(int irq, void *data)
 				     __func__, __LINE__);
 				return IRQ_HANDLED;
 			}
-			wake_lock_timeout(&vmdata->wlock,
+			__pm_wakeup_event(&vmdata->wlock,
 					  MDM_RST_LOCK_TIME * HZ);
 			modem_notify_event(MDM_EVT_NOTIFY_RESET_ON);
 			via_modem_state = MODEM_STATE_POWER;
@@ -663,7 +662,7 @@ static int modem_data_init(struct viatel_modem_data *d)
 
 	d->ntf_flags = 0;
 	RAW_INIT_NOTIFIER_HEAD(&d->ntf);
-	wake_lock_init(&d->wlock, WAKE_LOCK_SUSPEND, "cbp_rst");
+	wakeup_source_init(&d->wlock, "cbp_rst");
 	spin_lock_init(&d->lock);
 	INIT_WORK(&d->work, modem_notify_task);
 	INIT_WORK(&d->via_uevent_work, via_uevent_work_func);
@@ -730,11 +729,11 @@ static ssize_t modem_boot_set(struct device *pdev,
 		break;
 	case MODEM_CTRL_WAKE_LOCK:
 		hwlog_info("hold on wakelock.\n");
-		wake_lock(&vmdata->wlock);
+		__pm_stay_awake(&vmdata->wlock);
 		break;
 	case MODEM_CTRL_WAKE_LOCK_RELEASE:
 		hwlog_info("release wakelock.\n");
-		wake_unlock(&vmdata->wlock);
+		__pm_relax(&vmdata->wlock);
 		break;
 	default:
 		hwlog_info("default: do nothing!\n");
@@ -1159,7 +1158,7 @@ static int modem_boot_remove(struct platform_device *pdev)
 	}
 
 	if (vmdata) {
-		wake_lock_destroy(&vmdata->wlock);
+		wakeup_source_trash(&vmdata->wlock);
 	}
 	hwlog_info("%s %d: Exit.\n", __func__, __LINE__);
 	return 0;

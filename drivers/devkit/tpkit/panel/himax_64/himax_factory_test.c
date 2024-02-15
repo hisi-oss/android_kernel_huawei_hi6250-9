@@ -1829,7 +1829,7 @@ int himax_nc_factory_start(struct himax_ts_data *ts,struct ts_rawdata_info *info
 
 	TS_LOG_DEBUG("himax_self_test enter \n");
 
-	wake_lock(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
+	__pm_stay_awake(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
 
 	retval = himax_alloc_Rawmem();
 	if( retval != 0 )
@@ -1887,7 +1887,7 @@ int himax_nc_factory_start(struct himax_ts_data *ts,struct ts_rawdata_info *info
 	himax_nc_HW_reset(HX_LOADCONFIG_EN,HX_INT_DISABLE);
 
 err_alloc_rawmem:
-    wake_unlock(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
+    __pm_relax(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock);
     atomic_set(&hmx_nc_mmi_test_status, 0);
 
 err_atomic_read:

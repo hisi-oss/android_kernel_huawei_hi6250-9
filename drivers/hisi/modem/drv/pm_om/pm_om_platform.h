@@ -57,7 +57,6 @@ extern "C"
 #include <linux/types.h>
 #include <linux/string.h>
 #include <linux/semaphore.h>
-#include <linux/wakelock.h>
 #include <linux/miscdevice.h>
 #include <linux/suspend.h>
 #include <bsp_dump.h>

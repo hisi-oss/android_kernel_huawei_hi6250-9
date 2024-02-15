@@ -378,11 +378,11 @@ static int pd_dpm_wake_lock_call(struct notifier_block *dpm_nb, unsigned long ev
 	switch (event) {
 	case PD_WAKE_LOCK:
 		pr_info("%s=en\r\n", __func__);
-		wake_lock(&tcpc->attach_wake_lock);
+		__pm_stay_awake(&tcpc->attach_wake_lock);
 		break;
 	case PD_WAKE_UNLOCK:
 		pr_info("%s=dis\r\n", __func__);
-		wake_unlock(&tcpc->attach_wake_lock);
+		__pm_relax(&tcpc->attach_wake_lock);
 		break;
 	default:
 		pr_info("%s unknown event (%ld)\n", __func__, event);
@@ -435,9 +435,9 @@ struct tcpc_device *tcpc_device_register(struct device *parent,
 
 	/* If system support "WAKE_LOCK_IDLE",
 	 * please use it instead of "WAKE_LOCK_SUSPEND" */
-	wake_lock_init(&tcpc->attach_wake_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&tcpc->attach_wake_lock,
 		"tcpc_attach_wakelock");
-	wake_lock_init(&tcpc->dettach_temp_wake_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&tcpc->dettach_temp_wake_lock,
 		"tcpc_detach_wakelock");
 
 	tcpc->dpm_nb.notifier_call = pd_dpm_wake_lock_call;
@@ -583,8 +583,8 @@ void tcpc_device_unregister(struct device *dev, struct tcpc_device *tcpc)
 
 	tcpc_typec_deinit(tcpc);
 
-	wake_lock_destroy(&tcpc->dettach_temp_wake_lock);
-	wake_lock_destroy(&tcpc->attach_wake_lock);
+	wakeup_source_trash(&tcpc->dettach_temp_wake_lock);
+	wakeup_source_trash(&tcpc->attach_wake_lock);
 
 #ifdef CONFIG_DUAL_ROLE_USB_INTF
 	devm_dual_role_instance_unregister(&tcpc->dev, tcpc->dr_usb);

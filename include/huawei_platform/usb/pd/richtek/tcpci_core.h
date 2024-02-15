@@ -18,7 +18,6 @@
 #include <linux/device.h>
 #include <linux/hrtimer.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 #include <linux/notifier.h>
 #include <linux/semaphore.h>
 
@@ -226,8 +225,8 @@ struct tcpc_device {
 	struct device dev;
 	bool wake_lock_user;
 	uint8_t wake_lock_pd;
-	struct wake_lock attach_wake_lock;
-	struct wake_lock dettach_temp_wake_lock;
+	struct wakeup_source attach_wake_lock;
+	struct wakeup_source dettach_temp_wake_lock;
 
 	/* For tcpc timer & event */
 	uint32_t timer_handle_index;

@@ -46,7 +46,6 @@
 #include <asm/uaccess.h>
 #include <asm/unaligned.h>
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) && defined(CONFIG_HAS_WAKELOCK)
-#include <linux/wakelock.h>
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) && defined (CONFIG_HAS_WAKELOCK) */
 /* The kernel threading is sdio-specific */
 struct task_struct;
@@ -861,7 +860,7 @@ inline static void MUTEX_UNLOCK_SOFTAP_SET(dhd_pub_t * dhdp)
 	} while (0)
 #define DHD_OS_WAKE_UNLOCK(pub) \
 	do { \
-		PRINT_CALL_INFO("call wake_unlock"); \
+		PRINT_CALL_INFO("call __pm_relax"); \
 		dhd_os_wake_unlock(pub); \
 	} while (0)
 #define DHD_EVENT_WAKE_LOCK(pub) \
@@ -876,7 +875,7 @@ inline static void MUTEX_UNLOCK_SOFTAP_SET(dhd_pub_t * dhdp)
 	} while (0)
 #define DHD_OS_WAKE_LOCK_TIMEOUT(pub) \
 	do { \
-		PRINT_CALL_INFO("call wake_lock_timeout"); \
+		PRINT_CALL_INFO("call __pm_wakeup_event"); \
 		dhd_os_wake_lock_timeout(pub); \
 	} while (0)
 #define DHD_OS_WAKE_LOCK_RX_TIMEOUT_ENABLE(pub, val) \
@@ -906,12 +905,12 @@ inline static void MUTEX_UNLOCK_SOFTAP_SET(dhd_pub_t * dhdp)
 	} while (0)
 #define DHD_OS_WAKE_LOCK_INIT(dhd) \
 	do { \
-		PRINT_CALL_INFO("call wake_lock_init"); \
+		PRINT_CALL_INFO("call wakeup_source_init"); \
 		dhd_os_wake_lock_init(dhd); \
 	} while (0)
 #define DHD_OS_WAKE_LOCK_DESTROY(dhd) \
 	do { \
-		PRINT_CALL_INFO("call wake_lock_destroy"); \
+		PRINT_CALL_INFO("call wakeup_source_trash"); \
 		dhd_os_wake_lock_destroy(dhd); \
 	} while (0)
 #endif

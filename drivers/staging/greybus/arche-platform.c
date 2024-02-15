@@ -57,7 +57,7 @@ struct arche_platform_drvdata {
 
 	enum svc_wakedetect_state wake_detect_state;
 	int wake_detect_irq;
-	spinlock_t wake_lock;			/* Protect wake_detect_state */
+	spinlock_t __pm_stay_awake;			/* Protect wake_detect_state */
 	struct mutex platform_state_mutex;	/* Protect state */
 	wait_queue_head_t wq;			/* WQ for arche_pdata->state */
 	unsigned long wake_detect_start;

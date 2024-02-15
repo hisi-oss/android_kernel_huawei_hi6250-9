@@ -32,7 +32,7 @@
 HWLOG_REGIST();
 
 static struct idtp9221_device_info *g_idtp9221_di;
-static struct wake_lock g_idtp9221_wakelock;
+static struct wakeup_source g_idtp9221_wakelock;
 static int g_support_idt_wlc;
 static int g_support_st_wlc;
 static int g_i2c_fail_cnt;
@@ -242,14 +242,14 @@ static int idtp9221_write_word_mask(u16 reg, u16 MASK, u16 SHIFT, u16 data)
 static void idtp9221_wake_lock(void)
 {
 	if (!wake_lock_active(&g_idtp9221_wakelock)) {
-		wake_lock(&g_idtp9221_wakelock);
+		__pm_stay_awake(&g_idtp9221_wakelock);
 		hwlog_info("idtp9221 wake lock\n");
 	}
 }
 static void idtp9221_wake_unlock(void)
 {
 	if (wake_lock_active(&g_idtp9221_wakelock)) {
-		wake_unlock(&g_idtp9221_wakelock);
+		__pm_relax(&g_idtp9221_wakelock);
 		hwlog_info("idtp9221 wake unlock\n");
 	}
 }
@@ -3996,7 +3996,7 @@ static int idtp9221_probe(struct i2c_client *client, const struct i2c_device_id 
 		goto idt9221_fail_1;
 
 	ops = &idtp9221_ops;
-	wake_lock_init(&g_idtp9221_wakelock, WAKE_LOCK_SUSPEND, "idtp9221_wakelock");
+	wakeup_source_init(&g_idtp9221_wakelock, "idtp9221_wakelock");
 	mutex_init(&di->mutex_irq);
 	ret = wireless_charge_ops_register(ops);
 	if (ret) {
@@ -4021,7 +4021,7 @@ static int idtp9221_probe(struct i2c_client *client, const struct i2c_device_id 
 	return 0;
 
 idt9221_fail_2:
-	wake_lock_destroy(&g_idtp9221_wakelock);
+	wakeup_source_trash(&g_idtp9221_wakelock);
 	free_irq(di->irq_int, di);
 idt9221_fail_1:
 	gpio_free(di->gpio_en);

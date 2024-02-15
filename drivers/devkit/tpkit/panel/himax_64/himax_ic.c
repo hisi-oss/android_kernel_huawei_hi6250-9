@@ -1386,8 +1386,8 @@ static int himax_irq_bottom_half(struct ts_cmd_node *in_cmd,struct ts_cmd_node *
 
 	 if(atomic_read(&g_himax_nc_ts_data->suspend_mode)&&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->chip_data->easy_wakeup_info.sleep_mode)
 	  {
-	  	/*increase wake_lock time to avoid system suspend.*/
-		wake_lock_timeout(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock, TS_WAKE_LOCK_TIMEOUT);
+	  	/*increase __pm_stay_awake time to avoid system suspend.*/
+		__pm_wakeup_event(&g_himax_nc_ts_data->tskit_himax_data->ts_platform_data->ts_wake_lock, TS_WAKE_LOCK_TIMEOUT);
 		msleep(HX_SLEEP_200MS);
 		retval = himax_read_event_stack(buf, HX_RECEIVE_BUF_MAX_SIZE);
 		if(retval < 0)

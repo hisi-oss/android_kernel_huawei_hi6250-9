@@ -20,7 +20,6 @@
 #include <linux/of_gpio.h>
 #include <linux/kthread.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 #if defined(CONFIG_HAS_EARLYSUSPEND)
 #include <linux/earlysuspend.h>
 #endif
@@ -44,7 +43,7 @@ struct ts_test_item {
 
 extern struct ts_kit_platform_data g_ts_kit_platform_data;
 
-struct wake_lock ts_test_wake_lock;
+struct wakeup_source ts_test_wake_lock;
 struct completion cq_test_sync_1, cq_test_sync_2;
 int cq_test_buff[50];
 
@@ -301,14 +300,14 @@ static int ts_test_thread(void *p)
 
 	TS_LOG_INFO("touchscreen test start polling\n");
 
-	wake_lock_init(&ts_test_wake_lock, WAKE_LOCK_IDLE, "ts_test");
+	wakeup_source_init(&ts_test_wake_lock,  "ts_test");
 
 repeat:
 	msleep(1000);
 	for (i = 0, ret = -99; i < ARRAY_SIZE(g_test_items); i++) {
 		if (!g_test_items[i].item_switch)
 			continue;
-		wake_lock(&ts_test_wake_lock);
+		__pm_stay_awake(&ts_test_wake_lock);
 		TS_LOG_INFO("touchscreen test :%s begin\n",
 			    g_test_items[i].item_name);
 		if (g_test_items[i].test_func)
@@ -318,7 +317,7 @@ repeat:
 		TS_LOG_INFO("touchscreen test :%s end, ret:%d\n",
 			    g_test_items[i].item_name, ret);
 		g_test_items[i].item_switch = 0;
-		wake_unlock(&ts_test_wake_lock);
+		__pm_relax(&ts_test_wake_lock);
 	}
 	goto repeat;
 

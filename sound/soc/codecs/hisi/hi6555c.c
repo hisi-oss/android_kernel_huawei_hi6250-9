@@ -30,7 +30,6 @@
 #include <asm/io.h>
 #include <linux/spinlock.h>
 #include <linux/switch.h>
-#include <linux/wakelock.h>
 #include <linux/vmalloc.h>
 #include <linux/moduleparam.h>
 #include <linux/printk.h>
@@ -4184,7 +4183,7 @@ static void hi6555c_hs_micbias_enable(struct snd_soc_codec *codec, bool enable)
 			hi6555c_hs_micbias_pd(codec, true);
 	} else {
 		if ((0 == priv->hs_micbias_work) && !priv->hs_micbias_hkadc) {
-			wake_lock_timeout(&priv->wake_lock, msecs_to_jiffies(3500));
+			__pm_wakeup_event(&priv->wake_lock, msecs_to_jiffies(3500));
 			mod_delayed_work(priv->hs_micbias_hkadc_dwq,
 					&priv->hs_micbias_hkadc_dw,
 					msecs_to_jiffies(3000));
@@ -4379,7 +4378,7 @@ static irqreturn_t hi6555c_irq_handler(int irq, void *data)
 	irq_mask &= (~IRQ_PLUG_IN);
 	irq_masked = irqs & (~irq_mask);
 
-	wake_lock_timeout(&priv->wake_lock, msecs_to_jiffies(2000));
+	__pm_wakeup_event(&priv->wake_lock, msecs_to_jiffies(2000));
 	/* distribute and handle irq individually, one deal one time */
 	if (irq_masked & IRQ_PLUG_OUT) {
 		queue_delayed_work(priv->hs_po_dwq,
@@ -4782,7 +4781,7 @@ static void hs_lineout_rm_recheck_func(struct snd_soc_codec *codec)
 	cancel_delayed_work(&priv->lineout_po_recheck_dw);
 	flush_workqueue(priv->lineout_po_recheck_dwq);
 
-	wake_lock_timeout(&priv->wake_lock, msecs_to_jiffies(3500));/*lint !e713*/
+	__pm_wakeup_event(&priv->wake_lock, msecs_to_jiffies(3500));/*lint !e713*/
 	mod_delayed_work(priv->lineout_po_recheck_dwq,
 			&priv->lineout_po_recheck_dw,
 			msecs_to_jiffies(800));
@@ -5662,7 +5661,7 @@ static int hi6555c_set_priv(struct snd_soc_codec *codec)
 	mutex_init(&priv->hs_micbias_mutex);
 	mutex_init(&priv->hkadc_mutex);
 	mutex_init(&priv->plug_mutex);
-	wake_lock_init(&priv->wake_lock, WAKE_LOCK_SUSPEND, "hi6555c");
+	wakeup_source_init(&priv->wake_lock, "hi6555c");
 
 	return 0;
 }
@@ -5672,7 +5671,7 @@ static void hi6555c_unset_priv(struct snd_soc_codec *codec)
 	struct hi6555c_priv *priv = snd_soc_codec_get_drvdata(codec);
 
 	if (priv) {
-		wake_lock_destroy(&priv->wake_lock);
+		wakeup_source_trash(&priv->wake_lock);
 		snd_soc_codec_set_drvdata(codec, NULL);
 	}
 

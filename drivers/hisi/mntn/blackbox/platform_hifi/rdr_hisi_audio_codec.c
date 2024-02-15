@@ -15,7 +15,6 @@
 #include <linux/kthread.h>
 #include <linux/thread_info.h>
 #include <linux/slab.h>
-#include <linux/wakelock.h>
 #include <linux/vmalloc.h>
 
 #include <linux/hisi/util.h>
@@ -39,7 +38,7 @@ struct rdr_codec_des_s {
 	struct semaphore dump_sem;
 	struct task_struct *kdump_task;
 	struct task_struct *khandler_task;
-	struct wake_lock rdr_wl;
+	struct wakeup_source rdr_wl;
 };
 static struct rdr_codec_des_s codec_des;
 
@@ -138,7 +137,7 @@ static int dump_codec(const char *filepath)
 /*lint +e838*/
 void rdr_codec_hifi_watchdog_process(void)
 {
-	wake_lock(&codec_des.rdr_wl);
+	__pm_stay_awake(&codec_des.rdr_wl);
 	up(&codec_des.handler_sem);
 }/*lint !e454*/
 /*lint -e715*/
@@ -222,7 +221,7 @@ void rdr_audio_codec_reset(u32 modid, u32 etype, u64 coreid)
 	/*       ....send watchdog event.....   */
 	hi64xx_watchdog_send_event();
 
-	wake_unlock(&codec_des.rdr_wl);/*lint !e455*/
+	__pm_relax(&codec_des.rdr_wl);/*lint !e455*/
 
 	BB_PRINT_END();
 
@@ -237,7 +236,7 @@ int rdr_audio_codec_init(void)
 	codec_des.pathname = NULL;
 	codec_des.dumpdone_cb = NULL;
 
-	wake_lock_init(&codec_des.rdr_wl, WAKE_LOCK_SUSPEND, "rdr_codechifi");
+	wakeup_source_init(&codec_des.rdr_wl, "rdr_codechifi");
 	sema_init(&codec_des.dump_sem, 0);
 	sema_init(&codec_des.handler_sem, 0);
 	codec_des.kdump_task = NULL;
@@ -274,7 +273,7 @@ error:
 		codec_des.khandler_task = NULL;
 	}
 
-	wake_lock_destroy(&codec_des.rdr_wl);
+	wakeup_source_trash(&codec_des.rdr_wl);
 
 	BB_PRINT_END();
 
@@ -297,7 +296,7 @@ void rdr_audio_codec_exit(void)
 		codec_des.khandler_task = NULL;
 	}
 
-	wake_lock_destroy(&codec_des.rdr_wl);
+	wakeup_source_trash(&codec_des.rdr_wl);
 
 	BB_PRINT_END();
 

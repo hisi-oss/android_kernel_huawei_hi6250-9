@@ -94,7 +94,7 @@ DIAG_DUMP_INFO_STRU g_stDumpInfo = {0};
 extern DIAG_TRANS_HEADER_STRU g_stBbpTransHead;
 extern DIAG_TRANS_HEADER_STRU g_stPSTransHead;
 
-struct wake_lock diag_wakelock;
+struct wakeup_source diag_wakelock;
 
 /*****************************************************************************
   3 Function
@@ -189,7 +189,7 @@ VOS_UINT32 diag_AppAgentMsgProcInit(enum VOS_INIT_PHASE_DEFINE ip)
 
     if(ip == VOS_IP_LOAD_CONFIG)
     {
-    	 wake_lock_init(&diag_wakelock,WAKE_LOCK_SUSPEND,"diag_wakelock");
+    	 wakeup_source_init(&diag_wakelock,"diag_wakelock");
         ret = (VOS_UINT32)mdrv_sysboot_register_reset_notify(resetName, (pdrv_reset_cbfun)diag_ResetCcoreCB, 0, resetLevel);
         if(ret)
         {
@@ -339,7 +339,7 @@ VOS_VOID diag_AppAgentMsgProc(MsgBlock* pMsgBlock)
     }
 
     /*????????????????????????*/
-    wake_lock(&diag_wakelock);
+    __pm_stay_awake(&diag_wakelock);
 
     diag_DumpMsgInfo(pMsgBlock->ulSenderPid, (*(VOS_UINT32*)pMsgBlock->aucValue), pMsgBlock->ulLength);
 
@@ -448,7 +448,7 @@ VOS_VOID diag_AppAgentMsgProc(MsgBlock* pMsgBlock)
     }
 
    /*??????????????????????*/
-  wake_unlock(&diag_wakelock);
+  __pm_relax(&diag_wakelock);
 
    return ;
 }

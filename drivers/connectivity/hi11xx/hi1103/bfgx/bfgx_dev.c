@@ -410,7 +410,7 @@ int32 prepare_to_visit_node_etc(struct ps_core_s *ps_core_d)
         return -EFAULT;
     }
 
-    /* lock wake_lock */
+    /* lock __pm_stay_awake */
     bfg_wake_lock_etc();
 
     /* try to wake up device */

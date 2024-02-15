@@ -32,7 +32,6 @@
 #ifdef CONFIG_HUAWEI_HW_DEV_DCT
 #include <huawei_platform/devdetect/hw_dev_dec.h>
 #endif
-#include <linux/wakelock.h>
 #include <huawei_platform/log/hw_log.h>
 #include <chipset_common/hwusb/hw_usb_rwswitch.h>
 #include <huawei_platform/power/huawei_charger_sh.h>
@@ -44,7 +43,7 @@
 static struct mutex accp_detect_lock;
 static struct mutex accp_adaptor_reg_lock;
 static struct delayed_work   detach_delayed_work;
-static struct wake_lock usb_switch_lock;
+static struct wakeup_source usb_switch_lock;
 #ifdef CONFIG_FSA9685_DEBUG_FS
 static int reg_locked = 1;
 static char chip_regs[0x5c+2] = { 0 };
@@ -60,14 +59,14 @@ static int is_sh_support_fcp(void);
 static void usb_switch_wake_lock(void)
 {
     if (!wake_lock_active(&usb_switch_lock)) {
-        wake_lock(&usb_switch_lock);
+        __pm_stay_awake(&usb_switch_lock);
         hwlog_info("usb switch wake lock\n");
     }
 }
 static void usb_switch_wake_unlock(void)
 {
     if (wake_lock_active(&usb_switch_lock)) {
-        wake_unlock(&usb_switch_lock);
+        __pm_relax(&usb_switch_lock);
         hwlog_info("usb switch wake unlock\n");
     }
 }
@@ -992,7 +991,7 @@ static int fsa9685_probe(struct platform_device *pdev)
         goto err_create_link_failed;
     }
 #endif
-    wake_lock_init(&usb_switch_lock, WAKE_LOCK_SUSPEND, "usb_switch_wakelock");
+    wakeup_source_init(&usb_switch_lock, "usb_switch_wakelock");
 
     INIT_DELAYED_WORK(&detach_delayed_work, fsa9685_detach_work);
     /* interrupt register */

@@ -48,11 +48,11 @@ static int pd_dpm_wake_lock_call(struct notifier_block *fsc_nb, unsigned long ev
 	switch (event) {
 	case PD_WAKE_LOCK:
 		FSC_PRINT("FUSB %s - wake lock node called\n", __func__);
-		wake_lock(&chip->fusb302_wakelock);
+		__pm_stay_awake(&chip->fusb302_wakelock);
 		break;
 	case PD_WAKE_UNLOCK:
 		FSC_PRINT("FUSB %s - wake unlock node called\n", __func__);
-		wake_unlock(&chip->fusb302_wakelock);
+		__pm_relax(&chip->fusb302_wakelock);
 		break;
 	default:
 		FSC_PRINT("FUSB %s - unknown event: %ld\n", __func__, event);
@@ -283,7 +283,7 @@ static int fusb30x_probe (struct i2c_client* client,
         return -EIO;
     }
 
-	/* Init wake_lock node callback */
+	/* Init __pm_stay_awake node callback */
 	chip->fsc_nb.notifier_call = pd_dpm_wake_lock_call;
 	ret = register_pd_wake_unlock_notifier(&chip->fsc_nb);
 	if (ret < 0)

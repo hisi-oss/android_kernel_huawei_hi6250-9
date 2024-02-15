@@ -2349,7 +2349,7 @@ static int atmel_init_chip(void)
 		return -ENODEV;
 	}
 	data->do_calibration = true;
-	wake_lock_init(&data->ts_flash_wake_lock, WAKE_LOCK_SUSPEND, ATMEL_VENDER_NAME);
+	wakeup_source_init(&data->ts_flash_wake_lock, ATMEL_VENDER_NAME);
 
 	error = mxt_initialize(data);
 	if (error) {
@@ -4933,7 +4933,7 @@ static int atmel_get_rawdata(struct ts_rawdata_info *info,
 	}
 
 	atomic_set(&atmel_mmi_test_status, 1);
-	wake_lock(&data->ts_flash_wake_lock);
+	__pm_stay_awake(&data->ts_flash_wake_lock);
 	retval = mxt_dualX_disable(data, dualX_status);
 	if (retval) {
 		TS_LOG_ERR("mxt_dualX_disable error\n");
@@ -5116,7 +5116,7 @@ static int atmel_get_rawdata(struct ts_rawdata_info *info,
 		strncat(info->result, "-atmel_touch", strlen("-atmel_touch"));
 
 out:
-	wake_unlock(&data->ts_flash_wake_lock);
+	__pm_relax(&data->ts_flash_wake_lock);
 	atomic_set(&atmel_mmi_test_status, 0);
 
 	if (data->T37_buf) {

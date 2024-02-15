@@ -27,7 +27,6 @@
 #include <linux/delay.h>
 #include <linux/completion.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 #include <linux/version.h>
 #include <rdr_hisi_audio_adapter.h>
 
@@ -112,7 +111,7 @@ static uintptr_t asp_base_reg;
 static platform_type_t plat_type = PLATFORM_PHONE;
 static struct workqueue_struct *slimbus_lost_sync_wq = NULL;
 static struct delayed_work slimbus_lost_sync_delay_work;
-static struct wake_lock slimbus_wake_lock;
+static struct wakeup_source slimbus_wake_lock;
 
 volatile uint32_t slimbus_drv_lostms_get(void)
 {
@@ -540,7 +539,7 @@ static void CLBK_ManagerInterruptsHandler(void* pD, CSMI_Interrupt interrupt)
 	if ((interrupt & CSMI_INT_SYNC_LOST) && (slimbusDevices.devices > SOC_DEVICE_NUM)) {
 		SLIMBUS_DEV_LIMIT_ERR("LOST SYNC, interrupt:%#x \n", interrupt);
 		slimbus_dump_state(SLIMBUS_DUMP_LOSTMS);
-		wake_lock_timeout(&slimbus_wake_lock, msecs_to_jiffies(1000));
+		__pm_wakeup_event(&slimbus_wake_lock, msecs_to_jiffies(1000));
 		queue_delayed_work(slimbus_lost_sync_wq, &slimbus_lost_sync_delay_work, msecs_to_jiffies(50));
 	}
 }
@@ -769,7 +768,7 @@ int slimbus_drv_init(platform_type_t platform_type, void *slimbus_reg, void *asp
 	spin_lock_init(&slimbus_spinlock);
 	init_completion(&(internalReply.read_finish));
 	init_completion(&(internalReply.request_finish));
-	wake_lock_init(&slimbus_wake_lock, WAKE_LOCK_SUSPEND, "slimbus_wake_lock");
+	wakeup_source_init(&slimbus_wake_lock, "slimbus_wake_lock");
 
 	general_cfg.regBase = (uintptr_t)slimbus_reg;
 	asp_base_reg = (uintptr_t)asp_reg;
@@ -835,7 +834,7 @@ request_irq_failed:
 	devm_slimbus_priv = NULL;
 exit:
 	mutex_destroy(&slimbus_mutex);
-	wake_lock_destroy(&slimbus_wake_lock);
+	wakeup_source_trash(&slimbus_wake_lock);
 
 	return ret;
 }
@@ -859,7 +858,7 @@ int slimbus_drv_release(int irq)
 {
 	free_irq(irq, devm_slimbus_priv);
 	mutex_destroy(&slimbus_mutex);
-	wake_lock_destroy(&slimbus_wake_lock);
+	wakeup_source_trash(&slimbus_wake_lock);
 	if(slimbus_lost_sync_wq) {
 		cancel_delayed_work(&slimbus_lost_sync_delay_work);
 		flush_workqueue(slimbus_lost_sync_wq);

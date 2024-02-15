@@ -17,7 +17,6 @@
 #include <linux/platform_device.h>
 #include <huawei_platform/log/hw_log.h>
 #include <linux/notifier.h>
-#include <linux/wakelock.h>
 #include <linux/hisi/usb/hisi_usb.h>
 #include <linux/timer.h>
 #include <linux/hrtimer.h>
@@ -78,7 +77,7 @@ static int is_scp_charger = 0;
 #endif
 
 static struct uscp_device_info* g_di = NULL;
-static struct wake_lock uscp_wakelock;
+static struct wakeup_source uscp_wakelock;
 
 #ifdef CONFIG_HUAWEI_POWER_DEBUG
 static ssize_t uscp_dbg_show(void *dev_data, char *buf, size_t size)
@@ -136,7 +135,7 @@ static void uscp_wake_lock(void)
     if(!wake_lock_active(&uscp_wakelock))
     {
         hwlog_info("wake lock\n");
-        wake_lock(&uscp_wakelock);
+        __pm_stay_awake(&uscp_wakelock);
     }
 }
 
@@ -145,7 +144,7 @@ static void uscp_wake_unlock(void)
     if(wake_lock_active(&uscp_wakelock))
     {
         hwlog_info("wake unlock\n");
-        wake_unlock(&uscp_wakelock);
+        __pm_relax(&uscp_wakelock);
     }
 }
 
@@ -653,7 +652,7 @@ static int uscp_probe(struct platform_device *pdev)
     {
         goto free_gpio;
     }
-    wake_lock_init(&uscp_wakelock, WAKE_LOCK_SUSPEND, "usb_short_circuit_protect_wakelock");
+    wakeup_source_init(&uscp_wakelock, "usb_short_circuit_protect_wakelock");
     di->uscp_wq = create_singlethread_workqueue("usb_short_circuit_protect_wq");
     INIT_WORK(&di->uscp_check_wk, uscp_check_work);
     hrtimer_init(&di->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
@@ -687,7 +686,7 @@ static int uscp_probe(struct platform_device *pdev)
     return 0;
 
 fail_free_wakelock:
-	wake_lock_destroy(&uscp_wakelock);
+	wakeup_source_trash(&uscp_wakelock);
 free_gpio:
     gpio_free(di->gpio_uscp);
 free_mem:

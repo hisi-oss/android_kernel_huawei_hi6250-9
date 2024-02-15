@@ -6,7 +6,6 @@
 #include <linux/errno.h>
 #include <linux/types.h>
 #include <linux/time.h>
-#include <linux/wakelock.h>
 #include <linux/delay.h>
 #include <linux/wait.h>
 
@@ -29,7 +28,7 @@ void cp_wake_ap_isr(int t_level)
 		apcp_cpwkap_count();
 
 		/* Cp requset Ap wake, ap keep wake for 2s timeout */
-		wake_lock_timeout(&g_four_wire.m_timeout_wk,
+		__pm_wakeup_event(&g_four_wire.m_timeout_wk,
 				  msecs_to_jiffies(AP_IDLE_KEEP_WAKE_TIME));
 
 		schedule_work(&g_four_wire.m_cpwkap_work);
@@ -51,7 +50,7 @@ void ap_busy_wake(void)
 	/* cancel the 2s timeout timer */
 	del_timer(&g_four_wire.m_ap_idle_timer);
 	/* wake lock let ap keep wake */
-	wake_lock(&g_four_wire.m_bus_busy_wk);
+	__pm_stay_awake(&g_four_wire.m_bus_busy_wk);
 	/* realese the four wire lock */
 	spin_unlock_irqrestore(&g_four_wire.m_four_wire_splock, flags);
 }
@@ -71,7 +70,7 @@ static void ap_idle_wake_timer_work(struct work_struct *pt_work)
 		set_apcp_gpio_output_level(GPIO_4WIRE_AP_WK_CP,
 					   GPIO_LEVEL_HIGH);
 		/* release wake lock let ap keep wake */
-		wake_unlock(&g_four_wire.m_bus_busy_wk);
+		__pm_relax(&g_four_wire.m_bus_busy_wk);
 	}
 
 	/* realese the four wire lock */
@@ -200,10 +199,10 @@ int four_wire_wake_init(void)
 	int ret = 0;
 
 	hwlog_info("%s %d: Enter.\n", __func__, __LINE__);
-	wake_lock_init(&g_four_wire.m_bus_busy_wk, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&g_four_wire.m_bus_busy_wk,
 		       "apcp bus wk");
 
-	wake_lock_init(&g_four_wire.m_timeout_wk, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&g_four_wire.m_timeout_wk,
 		       "cp_wk_ap wk");
 
 	/* initialize spinlock used for four wire lock */

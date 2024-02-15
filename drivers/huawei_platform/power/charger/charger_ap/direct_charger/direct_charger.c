@@ -462,7 +462,7 @@ int direct_charge_get_cutoff_normal_flag(void)
 
 /**********************************************************
 *  Function:       direct_charge_wake_lock
-*  Description:   apply direct_charge wake_lock
+*  Description:   apply direct_charge __pm_stay_awake
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
@@ -477,14 +477,14 @@ void direct_charge_wake_lock(void)
 	di = g_di;
 
 	if (!wake_lock_active(&di->direct_charge_lock)) {
-		wake_lock(&di->direct_charge_lock);
+		__pm_stay_awake(&di->direct_charge_lock);
 		hwlog_info("direct_charge wake lock\n");
 	}
 }
 
 /**********************************************************
 *  Function:       direct_charge_wake_unlock
-*  Description:   release direct_charge wake_lock
+*  Description:   release direct_charge __pm_stay_awake
 *  Parameters:   NULL
 *  return value:  NULL
 **********************************************************/
@@ -499,7 +499,7 @@ void direct_charge_wake_unlock(void)
 	di = g_di;
 
 	if (wake_lock_active(&di->direct_charge_lock)) {
-		wake_unlock(&di->direct_charge_lock);
+		__pm_relax(&di->direct_charge_lock);
 		hwlog_info("direct_charge wake unlock\n");
 	}
 }

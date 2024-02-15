@@ -205,8 +205,8 @@ static int ilitek_report_gesture(struct ts_fingers *p_info)
     ilitek_info("ts kit key value = %d\n", reprot_gesture_key_value);
 
     if (reprot_gesture_key_value != TS_GESTURE_INVALID) {
-        /*increase wake_lock time to avoid system suspend.*/
-        wake_lock_timeout(&ts_dev_data->ts_platform_data->ts_wake_lock, 5 * HZ);
+        /*increase __pm_stay_awake time to avoid system suspend.*/
+        __pm_wakeup_event(&ts_dev_data->ts_platform_data->ts_wake_lock, 5 * HZ);
 
         mutex_lock(&g_ilitek_ts->wrong_touch_lock);
         if (true == ts_dev_data->easy_wakeup_info.off_motion_on) {

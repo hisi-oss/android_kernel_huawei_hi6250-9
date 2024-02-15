@@ -26,7 +26,6 @@
 #include <linux/interrupt.h>
 #include <linux/irq.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 
 #include <linux/semaphore.h>
 #include <linux/pm_runtime.h>
@@ -104,7 +103,7 @@ struct rt1711_chip {
 	int irq_gpio;
 	int irq;
 	int chip_id;
-	struct wake_lock rt1711h_wakelock;
+	struct wakeup_source rt1711h_wakelock;
 	unsigned int pd_remove_cc_open;
 };
 
@@ -114,7 +113,7 @@ static void rt1711h_wake_lock(struct rt1711_chip* chip)
 		return;
 	}
 	if (!wake_lock_active(&chip->rt1711h_wakelock)) {
-		wake_lock(&chip->rt1711h_wakelock);
+		__pm_stay_awake(&chip->rt1711h_wakelock);
 		hwlog_info("rt1711h wake lock\n");
 	}
 }
@@ -125,7 +124,7 @@ static void rt1711h_wake_unlock(struct rt1711_chip* chip)
 		return;
 	}
 	if (wake_lock_active(&chip->rt1711h_wakelock)) {
-		wake_unlock(&chip->rt1711h_wakelock);
+		__pm_relax(&chip->rt1711h_wakelock);
 		hwlog_info("rt1711h wake unlock\n");
 	}
 }
@@ -1842,7 +1841,7 @@ static int rt1711_i2c_probe(struct i2c_client *client,
 	chip->client = client;
 	sema_init(&chip->io_lock, 1);
 	sema_init(&chip->suspend_lock, 1);
-	wake_lock_init(&chip->rt1711h_wakelock, WAKE_LOCK_SUSPEND, "rt1711h_wakelock");
+	wakeup_source_init(&chip->rt1711h_wakelock, "rt1711h_wakelock");
 	i2c_set_clientdata(client, chip);
 	INIT_DELAYED_WORK(&chip->poll_work, rt1711_poll_work);
 
@@ -1851,7 +1850,7 @@ static int rt1711_i2c_probe(struct i2c_client *client,
 
 	ret = rt1711_regmap_init(chip);
 	if (ret < 0) {
-		wake_lock_destroy(&chip->rt1711h_wakelock);
+		wakeup_source_trash(&chip->rt1711h_wakelock);
 		dev_err(chip->dev, "rt1711 regmap init fail\n");
 		return -EINVAL;
 	}
@@ -1894,7 +1893,7 @@ err_irq_init:
 	tcpc_device_unregister(chip->dev, chip->tcpc);
 err_tcpc_reg:
 	rt1711_regmap_deinit(chip);
-	wake_lock_destroy(&chip->rt1711h_wakelock);
+	wakeup_source_trash(&chip->rt1711h_wakelock);
 	return ret;
 }
 
@@ -1904,7 +1903,7 @@ static int rt1711_i2c_remove(struct i2c_client *client)
 
 	if (chip) {
 		cancel_delayed_work_sync(&chip->poll_work);
-		wake_lock_destroy(&chip->rt1711h_wakelock);
+		wakeup_source_trash(&chip->rt1711h_wakelock);
 
 		tcpc_device_unregister(chip->dev, chip->tcpc);
 		rt1711_regmap_deinit(chip);

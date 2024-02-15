@@ -13,7 +13,6 @@
 #include <linux/sysfs.h>
 
 #include <asm/io.h>
-#include <linux/wakelock.h>
 #include <linux/platform_device.h>
 #include <linux/workqueue.h>
 #include <asm/atomic.h>

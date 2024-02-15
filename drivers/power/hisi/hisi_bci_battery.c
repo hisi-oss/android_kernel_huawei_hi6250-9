@@ -19,7 +19,6 @@
 #include <linux/platform_device.h>
 #include <linux/slab.h>
 #include <linux/power_supply.h>
-#include <linux/wakelock.h>
 #include <linux/notifier.h>
 #include <linux/hisi/usb/hisi_usb.h>
 #include <linux/power/hisi/hisi_bci_battery.h>
@@ -80,7 +79,7 @@ struct batt_dsm {
 	void (*dump)(char*);
 	int (*check_error) (char *buf);
 };
-static struct wake_lock low_power_lock;
+static struct wakeup_source low_power_lock;
 static int is_low_power_locked = 0;
 static unsigned int capacity_filter[WINDOW_LEN];
 static unsigned int capacity_sum;
@@ -439,7 +438,7 @@ static int capacity_changed(struct hisi_bci_device_info *di)
 	}
 
 	if ((low_bat_flag & BQ_FLAG_LOCK) != BQ_FLAG_LOCK && is_low_power_locked) {
-		wake_unlock(&low_power_lock);/*lint !e455*/
+		__pm_relax(&low_power_lock);/*lint !e455*/
 		is_low_power_locked = 0;
 	}
 
@@ -755,7 +754,7 @@ static int hisi_charger_event(struct notifier_block *nb, unsigned long event,
 	case BATTERY_LOW_WARNING:
 		break;
 	case BATTERY_LOW_SHUTDOWN:
-		wake_lock(&low_power_lock);
+		__pm_stay_awake(&low_power_lock);
 		is_low_power_locked = 1;
 		mod_delayed_work(system_wq, &di->hisi_bci_monitor_work, msecs_to_jiffies(0));
 		break;/*lint !e456*/
@@ -2030,12 +2029,12 @@ static int hisi_bci_battery_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, di);
 
-	wake_lock_init(&low_power_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&low_power_lock,
 		       "low_power_wake_lock");
 
 	low_bat_flag = is_hisi_battery_reach_threshold();
 	if ((low_bat_flag & BQ_FLAG_LOCK) == BQ_FLAG_LOCK) {
-		wake_lock(&low_power_lock);
+		__pm_stay_awake(&low_power_lock);
 		is_low_power_locked = 1;
 	}
 
@@ -2168,7 +2167,7 @@ usb_failed:
     power_supply_unregister(di->bat);
 #endif
 batt_failed:
-	wake_lock_destroy(&low_power_lock);
+	wakeup_source_trash(&low_power_lock);
 	platform_set_drvdata(pdev, NULL);
 	kfree(di);
 	di = NULL;
@@ -2186,7 +2185,7 @@ static int hisi_bci_battery_remove(struct platform_device *pdev)
 
 	hisi_unregister_notifier(&di->nb, 1);
 	cancel_delayed_work(&di->hisi_bci_monitor_work);
-	wake_lock_destroy(&low_power_lock);
+	wakeup_source_trash(&low_power_lock);
 	platform_set_drvdata(pdev, NULL);
 	kfree(di);
 	di = NULL;
@@ -2206,7 +2205,7 @@ static void hisi_bci_battery_shutdown(struct platform_device *pdev)
 
 	hisi_unregister_notifier(&di->nb, 1);
 	cancel_delayed_work(&di->hisi_bci_monitor_work);
-	wake_lock_destroy(&low_power_lock);
+	wakeup_source_trash(&low_power_lock);
 	bci_info("%s --\n", __func__);
 
 	return;

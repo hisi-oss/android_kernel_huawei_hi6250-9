@@ -45,7 +45,7 @@ static int wireless_normal_charge_flag = 0;
 static int wireless_fast_charge_flag = 0;
 static int wireless_super_charge_flag = 0;
 static int wireless_start_sample_flag = 0;
-static struct wake_lock g_rx_con_wakelock;
+static struct wakeup_source g_rx_con_wakelock;
 static struct mutex g_rx_en_mutex;
 static int rx_iout_samples[RX_IOUT_SAMPLE_LEN];
 static int g_fop_fixed_flag = 0;
@@ -105,14 +105,14 @@ int register_wireless_charger_vbus_notifier(struct notifier_block *nb)
 static void wireless_charge_wake_lock(void)
 {
 	if (!wake_lock_active(&g_rx_con_wakelock)) {
-		wake_lock(&g_rx_con_wakelock);
+		__pm_stay_awake(&g_rx_con_wakelock);
 		hwlog_info("wireless_charge wake lock\n");
 	}
 }
 static void wireless_charge_wake_unlock(void)
 {
 	if (wake_lock_active(&g_rx_con_wakelock)) {
-		wake_unlock(&g_rx_con_wakelock);
+		__pm_relax(&g_rx_con_wakelock);
 		hwlog_info("wireless_charge wake unlock\n");
 	}
 }
@@ -3116,7 +3116,7 @@ static int wireless_charge_remove(struct platform_device *pdev)
 		return 0;
 	}
 
-	wake_lock_destroy(&g_rx_con_wakelock);
+	wakeup_source_trash(&g_rx_con_wakelock);
 
 	hwlog_info("%s --\n", __func__);
 
@@ -3139,7 +3139,7 @@ static int wireless_charge_probe(struct platform_device *pdev)
 	np = di->dev->of_node;
 	di->ops = g_wireless_ops;
 	platform_set_drvdata(pdev, di);
-	wake_lock_init(&g_rx_con_wakelock, WAKE_LOCK_SUSPEND, "rx_con_wakelock");
+	wakeup_source_init(&g_rx_con_wakelock, "rx_con_wakelock");
 
 	ret = wireless_charge_check_ops(di);
 	if (ret)
@@ -3219,7 +3219,7 @@ wireless_charge_fail_2:
 wireless_charge_fail_1:
 	gpio_free(di->gpio_sw);
 wireless_charge_fail_0:
-	wake_lock_destroy(&g_rx_con_wakelock);
+	wakeup_source_trash(&g_rx_con_wakelock);
 	di->ops = NULL;
 	wireless_charge_device_info_free(di);
 	platform_set_drvdata(pdev, NULL);

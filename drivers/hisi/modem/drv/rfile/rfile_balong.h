@@ -82,7 +82,6 @@ extern "C" {
 #include <linux/hrtimer.h>
 #include <linux/kthread.h>
 #include <linux/delay.h>
-#include <linux/wakelock.h>
 
 #else /* __VXWORKS__ */
 #include <stdio.h>
@@ -262,7 +261,7 @@ struct bsp_rfile_main_stru
     struct list_head        fplist;               /* C???????????????? */
     struct list_head        dplist;               /* C???????????????? */
     u8                      data[RFILE_LEN_MAX];    /* ????ICC?????????????? */
-    struct wake_lock        wake_lock;
+    struct wakeup_source        __pm_stay_awake;
     u32                     pmState;                /*??????????*/
     u32                     opState;                /*????????*/
 

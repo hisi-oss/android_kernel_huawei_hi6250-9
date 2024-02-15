@@ -14,7 +14,6 @@
 #include <linux/fb.h>
 #include <linux/rtc.h>
 #include <huawei_platform/log/log_exception.h>
-#include <linux/wakelock.h>
 #include <linux/hisi/hisi_syscounter.h>
 #include <linux/time64.h>
 #include <linux/delay.h>
@@ -64,7 +63,7 @@ bool fingersense_data_intrans;        /* the data is on the way */
 s16 fingersense_data[FINGERSENSE_DATA_NSAMPLES] = { 0 };
 
 static struct type_record type_record;
-static struct wake_lock wlock;
+static struct wakeup_source wlock;
 static struct mutex mutex_write_cmd;
 static struct mutex mutex_write_adapter;
 static struct mutex mutex_unpack;
@@ -1216,7 +1215,7 @@ static bool is_aod_notifier(const pkt_header_t *head)
 			if (SUB_CMD_AOD_DSS_ON_REQ == (*sub_cmd)) {
 				hwlog_info("SUB_CMD_AOD_DSS_ON_REQ\n");
 				//make sure AOD DSS ON IPC can be handled
-				wake_lock_timeout(&wlock, HZ / 2);
+				__pm_wakeup_event(&wlock, HZ / 2);
 			} else {
 				hwlog_info("SUB_CMD_AOD_DSS_OFF_REQ\n");
 			}
@@ -1630,7 +1629,7 @@ static void process_ps_report(const pkt_header_t* head)
 
 	ps_value = sensor_event->xyz[0].x;
 	if(sensor_event->xyz[0].x != 0) {
-		wake_lock_timeout(&wlock, HZ);
+		__pm_wakeup_event(&wlock, HZ);
     		hwlog_info("Kernel get far event!pdata=%d\n", sensor_event->xyz[0].y);
 	} else
 		hwlog_info("Kernel get near event!!!!pdata=%d\n", sensor_event->xyz[0].y);
@@ -1640,7 +1639,7 @@ static void process_phonecall_report(const pkt_header_t* head)
 {
 	pkt_batch_data_req_t* sensor_event = (pkt_batch_data_req_t*) head;
 
-	wake_lock_timeout(&wlock, HZ);
+	__pm_wakeup_event(&wlock, HZ);
 	hwlog_info("Kernel get phonecall event! %d %d %d\n", sensor_event->xyz[0].x, sensor_event->xyz[0].y, sensor_event->xyz[0].z);
 	if (sensor_event->xyz[0].y == 1 && ps_value != 0)
 	{
@@ -1650,7 +1649,7 @@ static void process_phonecall_report(const pkt_header_t* head)
 
 static void process_step_counter_report(const pkt_header_t* head)
 {
-	wake_lock_timeout(&wlock, HZ);
+	__pm_wakeup_event(&wlock, HZ);
 	hwlog_info("Kernel get pedometer event!\n");
 	step_counter_data_process((pkt_step_counter_data_req_t *) head);
 	report_sensor_event(head->tag, (int*)(&((pkt_step_counter_data_req_t*) head)->step_count), head->length);
@@ -1709,7 +1708,7 @@ static int process_sensors_report(const pkt_header_t* head)
 
 	switch(head->tag) {
 		case TAG_TILT_DETECTOR:
-			wake_lock_timeout(&wlock, HZ);
+			__pm_wakeup_event(&wlock, HZ);
             		hwlog_info("Kernel get TILT_DETECTOR event!=%d\n", sensor_event->xyz[0].x);
 			break;
 		case TAG_PS:
@@ -1925,7 +1924,7 @@ static int inputhub_process_fingerprint_report(const pkt_header_t* head)
 	char* fingerprint_data = NULL;
 	const fingerprint_upload_pkt_t* fingerprint_data_upload = (const fingerprint_upload_pkt_t*)head;
 
-	wake_lock_timeout(&wlock, 2 * HZ);
+	__pm_wakeup_event(&wlock, 2 * HZ);
 
 	hwlog_info("fingerprint: %s: tag = %d, data:%d\n", __func__, fingerprint_data_upload->fhd.hd.tag, fingerprint_data_upload->data);
 	fingerprint_data = (char*)fingerprint_data_upload + sizeof(pkt_common_data_t);
@@ -1947,7 +1946,7 @@ static int inputhub_process_motion_report(const pkt_header_t* head)
 	if ((((int)motion_data[0]) == MOTIONHUB_TYPE_TAKE_OFF) || (((int)motion_data[0]) == MOTIONHUB_TYPE_PICKUP) ||
 		(((int)motion_data[0]) == MOTION_TYPE_MOVE))
         {
-            wake_lock_timeout(&wlock, HZ);
+            __pm_wakeup_event(&wlock, HZ);
             hwlog_err("%s weaklock HZ motiontype = %d \n", __func__, motion_data[0]);
         }
 
@@ -2012,7 +2011,7 @@ int inputhub_route_recv_mcu_data(const char *buf, unsigned int length)
 		if(head->tag == TAG_PS){
 			hwlog_info("hold lock  avoid system suspend for ps");
 			//hold wakelock 1ms avoid system suspend
-			wake_lock_timeout(&wlock, 1);
+			__pm_wakeup_event(&wlock, 1);
 		}
 	#ifdef CONFIG_CONTEXTHUB_SHMEM
 		mcu_notifier_queue_work(head, inputhub_process_sensor_report_notifier_handler);
@@ -2060,7 +2059,7 @@ static void init_locks(void)
 	spin_lock_init(&type_record.lock_spin);
 	spin_lock_init(&ref_cnt_lock);
 	/* Initialize wakelock */
-	wake_lock_init(&wlock, WAKE_LOCK_SUSPEND, "sensorhub");
+	wakeup_source_init(&wlock, "sensorhub");
 }
 
 void inputhub_route_init(void)
@@ -2089,5 +2088,5 @@ void inputhub_route_exit(void)
 {
 	/*close all ports*/
 	close_all_ports();
-	wake_lock_destroy(&wlock);
+	wakeup_source_trash(&wlock);
 }

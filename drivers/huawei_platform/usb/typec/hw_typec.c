@@ -29,7 +29,6 @@
 #include <linux/slab.h>
 #include <linux/delay.h>
 #include <linux/jiffies.h>
-#include <linux/wakelock.h>
 #include <linux/io.h>
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
@@ -73,7 +72,7 @@ void typec_wake_lock(struct typec_device_info *di)
 {
     if (!wake_lock_active(&di->wake_lock)) {
         hwlog_err("usb typec wake lock\n");
-        wake_lock(&di->wake_lock);
+        __pm_stay_awake(&di->wake_lock);
     }
 }
 
@@ -81,7 +80,7 @@ void typec_wake_unlock(struct typec_device_info *di)
 {
     if (wake_lock_active(&di->wake_lock)) {
         hwlog_err("usb typec wake unlock\n");
-        wake_unlock(&di->wake_lock);
+        __pm_relax(&di->wake_lock);
     }
 }
 
@@ -786,7 +785,7 @@ static int __init typec_init(void)
 
     g_typec_dev = di;
     BLOCKING_INIT_NOTIFIER_HEAD(&di->typec_current_nh);
-    wake_lock_init(&di->wake_lock, WAKE_LOCK_SUSPEND, "typec_wake_lock");
+    wakeup_source_init(&di->wake_lock, "typec_wake_lock");
 
     return 0;
 }
@@ -795,7 +794,7 @@ static void __exit typec_exit(void)
 {
     class_destroy(typec_class);
     sysfs_remove_group(&typec_dev->kobj, &typec_attr_group);
-	wake_lock_destroy(&g_typec_dev->wake_lock);
+	wakeup_source_trash(&g_typec_dev->wake_lock);
 }
 
 subsys_initcall(typec_init);

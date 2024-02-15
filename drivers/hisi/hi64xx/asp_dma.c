@@ -21,7 +21,6 @@
 #include <linux/of_irq.h>
 #include <linux/of_platform.h>
 #include <linux/hwspinlock.h>
-#include <linux/wakelock.h>
 #include <linux/interrupt.h>
 #include <linux/hisi/hi64xx/asp_dma.h>
 #include <linux/delay.h>
@@ -42,7 +41,7 @@ struct asp_dma_priv {
 	spinlock_t lock;
 	struct resource *res;
 	struct hwspinlock *hwlock;
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	void __iomem *asp_dma_reg_base_addr;
 	struct dma_callback callback[ASP_DMA_MAX_CHANNEL_NUM];
 };
@@ -458,7 +457,7 @@ static int asp_dma_probe (struct platform_device *pdev)
 		goto err_exit;
 	}
 
-	wake_lock_init(&priv->wake_lock, WAKE_LOCK_SUSPEND, "asp_dma");
+	wakeup_source_init(&priv->wake_lock, "asp_dma");
 
 	spin_lock_init(&priv->lock);
 
@@ -498,7 +497,7 @@ static int asp_dma_remove (struct platform_device *pdev)
 		dev_err(priv->dev,"hwspinlock free failed.\n");
 	}
 
-	wake_lock_destroy(&priv->wake_lock);
+	wakeup_source_trash(&priv->wake_lock);
 
 	free_irq(priv->irq, priv);
 

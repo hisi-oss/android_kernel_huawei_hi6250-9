@@ -2147,7 +2147,7 @@ static int mstar_get_gesture_code(u8 *pPacket, struct ts_fingers *info)
 	}
 
 	if (nReportGestureType != 0) {
-		wake_lock_timeout(&tskit_mstar_data->mstar_chip_data->ts_platform_data->ts_wake_lock, 5 * HZ);
+		__pm_wakeup_event(&tskit_mstar_data->mstar_chip_data->ts_platform_data->ts_wake_lock, 5 * HZ);
 		if (true == tskit_mstar_data->mstar_chip_data->easy_wakeup_info.off_motion_on) {
 			tskit_mstar_data->mstar_chip_data->easy_wakeup_info.off_motion_on = false;
 			mstar_easy_wakeup_gesture_report_coordinate(nTmpBuffer, nGestureCount);

@@ -1748,7 +1748,7 @@ static int sec_ts_init_chip(void)
 	pdata->max_x = ts->chip_data->x_max - 1;
 	pdata->max_y = ts->chip_data->y_max - 1;
 
-	wake_lock_init(&ts->wakelock, WAKE_LOCK_SUSPEND, "tsp_wakelock");
+	wakeup_source_init(&ts->wakelock, "tsp_wakelock");
 	init_completion(&ts->resume_done);
 
 #if defined (CONFIG_TEE_TUI)

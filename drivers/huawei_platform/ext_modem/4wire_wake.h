@@ -7,7 +7,6 @@
 
 #include <linux/types.h>
 #include <linux/semaphore.h>
-#include <linux/wakelock.h>
 #include <linux/workqueue.h>
 #include <linux/timer.h>
 
@@ -16,9 +15,9 @@ typedef struct four_wire_wake_mgmt {
 
 	spinlock_t m_four_wire_splock;	/* use spinlock for four wire */
 
-	struct wake_lock m_bus_busy_wk;	/* wakelock for hold wake for bus busy tx or rx */
+	struct wakeup_source m_bus_busy_wk;	/* wakelock for hold wake for bus busy tx or rx */
 
-	struct wake_lock m_timeout_wk;	/* 2s timeout wakelock when cp wake ap */
+	struct wakeup_source m_timeout_wk;	/* 2s timeout wakelock when cp wake ap */
 
 	struct timer_list m_ap_idle_timer;	/* when bus idle, ap hold wake for a 2s timeout */
 

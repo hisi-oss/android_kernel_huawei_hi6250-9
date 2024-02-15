@@ -35,7 +35,6 @@
 #include <linux/time.h>
 #include <linux/uaccess.h>
 #include <linux/vmalloc.h>
-#include <linux/wakelock.h>
 
 #include <linux/device.h>
 #include "../../huawei_ts_kit.h"
@@ -750,7 +749,7 @@ struct sec_ts_data {
 	struct mutex eventlock;
 	struct delayed_work work_read_info;
 	struct completion resume_done;
-	struct wake_lock wakelock;
+	struct wakeup_source wakelock;
 	int frame_size;
 	int *pFrame;
 	bool probe_done;

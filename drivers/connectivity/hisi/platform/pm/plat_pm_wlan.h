@@ -9,7 +9,6 @@
 #if (_PRE_OS_VERSION_LINUX == _PRE_OS_VERSION)
 #include <linux/mutex.h>
 #include <linux/kernel.h>
-#include <linux/wakelock.h>
 
 #include <linux/mmc/host.h>
 #include <linux/mmc/sdio_func.h>

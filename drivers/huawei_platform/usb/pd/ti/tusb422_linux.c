@@ -48,7 +48,6 @@
 #include <linux/sysfs.h>
 #include <linux/workqueue.h>
 #ifdef CONFIG_WAKELOCK
-	#include <linux/wakelock.h>
 #endif
 #ifdef CONFIG_DUAL_ROLE_USB_INTF
 	#include "tusb422_linux_dual_role.h"
@@ -92,8 +91,8 @@ struct tusb422_pwr_delivery {
 	struct hrtimer timer;
 	bool timer_expired;
 #ifdef CONFIG_WAKELOCK
-	struct wake_lock attach_wakelock;
-	struct wake_lock detach_wakelock;
+	struct wakeup_source attach_wakelock;
+	struct wakeup_source detach_wakelock;
 #endif
 	void (*callback) (unsigned int);
 	tcpc_config_t *configuration;
@@ -529,10 +528,10 @@ static inline void tusb422_schedule_work(struct work_struct *work)
 #ifdef CONFIG_WAKELOCK
 void tusb422_wake_lock_attach(void)
 {
-	wake_unlock(&tusb422_pd->detach_wakelock);
+	__pm_relax(&tusb422_pd->detach_wakelock);
 
 	if (!wake_lock_active(&tusb422_pd->attach_wakelock))
-		wake_lock(&tusb422_pd->attach_wakelock);
+		__pm_stay_awake(&tusb422_pd->attach_wakelock);
 
 	return;
 }
@@ -541,10 +540,10 @@ void tusb422_wake_lock_attach(void)
 
 void tusb422_wake_lock_detach(void)
 {
-	wake_lock_timeout(&tusb422_pd->detach_wakelock,
+	__pm_wakeup_event(&tusb422_pd->detach_wakelock,
 					  msecs_to_jiffies(WAKE_LOCK_TIMEOUT_MS));
 
-	wake_unlock(&tusb422_pd->attach_wakelock);
+	__pm_relax(&tusb422_pd->attach_wakelock);
 
 	return;
 }
@@ -556,8 +555,8 @@ void tusb422_wake_lock_control(bool enable_lock)
 	}
 	else
 	{
-		wake_unlock(&tusb422_pd->attach_wakelock);
-		wake_unlock(&tusb422_pd->detach_wakelock);
+		__pm_relax(&tusb422_pd->attach_wakelock);
+		__pm_relax(&tusb422_pd->detach_wakelock);
 	}
 	return;
 }
@@ -1327,8 +1326,8 @@ static int tusb422_probe(struct i2c_client *client, const struct i2c_device_id *
 	}
 
 #ifdef CONFIG_WAKELOCK
-	wake_lock_init(&tusb422_pd->attach_wakelock, WAKE_LOCK_SUSPEND, "typec_attach_wakelock");
-	wake_lock_init(&tusb422_pd->detach_wakelock, WAKE_LOCK_SUSPEND, "typec_detach_wakelock");
+	wakeup_source_init(&tusb422_pd->attach_wakelock, "typec_attach_wakelock");
+	wakeup_source_init(&tusb422_pd->detach_wakelock, "typec_detach_wakelock");
 #endif
 
 	tusb422_pd->timer_expired = false;
@@ -1409,8 +1408,8 @@ err_dualrole:
 	cancel_delayed_work_sync(&tusb422_pd->poll_work);
 #endif
 #ifdef CONFIG_WAKELOCK
-	wake_lock_destroy(&tusb422_pd->attach_wakelock);
-	wake_lock_destroy(&tusb422_pd->detach_wakelock);
+	wakeup_source_trash(&tusb422_pd->attach_wakelock);
+	wakeup_source_trash(&tusb422_pd->detach_wakelock);
 #endif
 
 #ifdef CONFIG_REGMAP
@@ -1449,8 +1448,8 @@ static int tusb422_remove(struct i2c_client *client)
 	}
 #endif
 #ifdef CONFIG_WAKELOCK
-	wake_lock_destroy(&tusb422_pd->attach_wakelock);
-	wake_lock_destroy(&tusb422_pd->detach_wakelock);
+	wakeup_source_trash(&tusb422_pd->attach_wakelock);
+	wakeup_source_trash(&tusb422_pd->detach_wakelock);
 #endif
 #ifdef TUSB422_DEBUG
 	sysfs_remove_group(&client->dev.kobj, &tusb422_attr_group);

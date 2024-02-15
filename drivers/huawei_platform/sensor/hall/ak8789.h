@@ -21,7 +21,6 @@
 #include <linux/of_gpio.h>
 #include <linux/device.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 #include <linux/time.h>
 #include <linux/gpio.h>
 #include <linux/list.h>
@@ -121,7 +120,7 @@ struct ak8789_data {
 	int count;
 	int state;
 	struct workqueue_struct *hall_wq;
-	struct wake_lock wakelock;
+	struct wakeup_source wakelock;
 	spinlock_t spinlock;
 
 	struct work_struct inter_work;

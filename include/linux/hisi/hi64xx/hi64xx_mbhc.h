@@ -2,7 +2,6 @@
 #define __HI64xx_mbhc_H__
 #include <sound/jack.h>
 #include <linux/switch.h>
-#include <linux/wakelock.h>
 #include <linux/hisi/hi64xx/hi64xx_irq.h>
 #include <linux/hisi/hi64xx/hi64xx_utils.h>
 #include <linux/hisi/hi64xx/hi64xx_resmgr.h>

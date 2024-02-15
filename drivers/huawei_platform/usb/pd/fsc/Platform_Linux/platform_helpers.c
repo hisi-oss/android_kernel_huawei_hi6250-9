@@ -6,7 +6,6 @@
 #include <linux/hrtimer.h>                                                      // hrtimer
 #include <linux/workqueue.h>                                                    // work_struct, delayed_work
 #include <linux/delay.h>                                                        // udelay, usleep_range, msleep
-#include <linux/wakelock.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
 #include <linux/gpio.h>
@@ -609,7 +608,7 @@ void fusb_GPIO_Cleanup(void)
     }
 
 #ifdef FSC_INTERRUPT_TRIGGERED
-    wake_lock_destroy(&chip->fusb302_wakelock);
+    wakeup_source_trash(&chip->fusb302_wakelock);
 #endif // FSC_INTERRUPT_TRIGGERED
 
     if (gpio_is_valid(chip->gpio_IntN) >= 0)
@@ -1057,7 +1056,7 @@ enum hrtimer_restart _fusb_wake_timeout(struct hrtimer* timer)
     }
 
     FSC_PRINT("FUSB  %s - Wake Unlock\n", __func__);
-    wake_unlock(&chip->fusb302_wakelock);
+    __pm_relax(&chip->fusb302_wakelock);
 
     return HRTIMER_NORESTART;
 }
@@ -3873,7 +3872,7 @@ static void fusb302_main_work_handler(struct kthread_work *work)
 
     fusb_StopTimers(&chip->timer_wake_unlock);
     mutex_lock(&chip->thread_lock);
-    wake_lock(&chip->fusb302_wakelock);
+    __pm_stay_awake(&chip->fusb302_wakelock);
 
 
     FSC_PRINT("FUSB %s - Entering State Machine via Timer Interrupt\n", __func__);
@@ -3883,7 +3882,7 @@ static void fusb302_main_work_handler(struct kthread_work *work)
     } while(platform_get_device_irq_state());
 
     fusb_StartTimers(&chip->timer_wake_unlock, 3000); /* 3 second */
-    //wake_unlock(&chip->fusb302_wakelock);
+    //__pm_relax(&chip->fusb302_wakelock);
     FSC_PRINT("FUSB %s - Exiting State Machine via Timer Interrupt\n", __func__);
     mutex_unlock(&chip->thread_lock);
 
@@ -3902,7 +3901,7 @@ FSC_S32 fusb_EnableInterrupts(void)
         return -ENOMEM;
     }
 
-    wake_lock_init(&chip->fusb302_wakelock, WAKE_LOCK_SUSPEND, "fusb302wakelock");
+    wakeup_source_init(&chip->fusb302_wakelock, "fusb302wakelock");
 
     /* Set up IRQ for INT_N GPIO */
     ret = gpio_to_irq(chip->gpio_IntN); // Returns negative errno on error
@@ -4023,7 +4022,7 @@ static irqreturn_t _fusb_isr_intn(FSC_S32 irq, void *dev_id)
 
     fusb_StopTimers(&chip->timer_wake_unlock);
     mutex_lock(&chip->thread_lock);
-    wake_lock(&chip->fusb302_wakelock);
+    __pm_stay_awake(&chip->fusb302_wakelock);
     FSC_PRINT("FUSB %s - Entering ISR\n", __func__);
 
     do
@@ -4033,7 +4032,7 @@ static irqreturn_t _fusb_isr_intn(FSC_S32 irq, void *dev_id)
 
     FSC_PRINT("FUSB  %s - Scheduling Wake Unlock\n", __func__);
     fusb_StartTimers(&chip->timer_wake_unlock, 3000); /* 3 second */
-    //wake_unlock(&chip->fusb302_wakelock);
+    //__pm_relax(&chip->fusb302_wakelock);
     mutex_unlock(&chip->thread_lock);
 
     FSC_PRINT("FUSB %s - Exiting ISR\n", __func__);

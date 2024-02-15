@@ -1198,7 +1198,7 @@ static int wacom_chip_detect(struct ts_kit_platform_data *platform_data)
 		goto err_i2c_check;
 	}
 
-	wake_lock_init(&wac_data->ts_wake_lock, WAKE_LOCK_SUSPEND, WACOM_WAKELOCK_NAME);
+	wakeup_source_init(&wac_data->ts_wake_lock, WACOM_WAKELOCK_NAME);
 
 out:
 	TS_LOG_INFO("wacom chip detect done\n");

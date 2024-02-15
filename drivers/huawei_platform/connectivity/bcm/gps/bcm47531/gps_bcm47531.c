@@ -37,7 +37,6 @@
 #include <linux/unistd.h>
 #include <linux/bug.h>
 #include <linux/mutex.h>
-#include <linux/wakelock.h>
 #include <linux/of.h>
 #include <linux/of_platform.h>
 #include <linux/of_device.h>
@@ -78,8 +77,8 @@ struct gps_geofence_wake {
 	int host_req_pin;
 	/*misc driver structure*/
 	struct miscdevice misc;
-	/*wake_lock*/
-	struct wake_lock wake_lock;
+	/*__pm_stay_awake*/
+	struct wakeup_source wake_lock;
 };
 static struct gps_geofence_wake g_geofence_wake;
 static int gps_geofence_wake_open(struct inode *inode, struct file *filp)
@@ -113,8 +112,8 @@ static const struct file_operations gps_geofence_wake_fops = {
 static void gps_geofence_wake_lock(int gpio)
 {
 	struct gps_geofence_wake *ac_data = &g_geofence_wake;
-	/*we need to use wake_lock_timeout instead of wake_unlock*/
-	wake_lock_timeout(&ac_data->wake_lock, 5 * HZ);
+	/*we need to use __pm_wakeup_event instead of __pm_relax*/
+	__pm_wakeup_event(&ac_data->wake_lock, 5 * HZ);
 }
 
 static irqreturn_t gps_host_wake_isr(int irq, void *dev)
@@ -127,7 +126,7 @@ static irqreturn_t gps_host_wake_isr(int irq, void *dev)
 
 	gpio_value = gpio_get_value(gps_host_wake);
 
-	/*wake_lock*/
+	/*__pm_stay_awake*/
 	gps_geofence_wake_lock(gpio_value);
 
 	return IRQ_HANDLED;
@@ -392,10 +391,10 @@ static int k3_gps_bcm_probe(struct platform_device *pdev)
 		     MISC_DYNAMIC_MINOR, ret);
 		goto err_free_host_wake;
 	}
-	/*3. Init wake_lock*/
-	wake_lock_init(&ac_data->wake_lock, WAKE_LOCK_SUSPEND,
+	/*3. Init __pm_stay_awake*/
+	wakeup_source_init(&ac_data->wake_lock,
 		       "gps_geofence_wakelock");
-	pr_info("[gps]wake_lock_init done\n");
+	pr_info("[gps]wakeup_source_init done\n");
 	irq = gps_gpio_irq_init(gps_bcm->gpioid_hostwake.gpio);
 	if (irq < 0) {
 		pr_info("[gps]hostwake irq error\n");
@@ -473,7 +472,7 @@ err_free_clk:
 	clk_put(gps_bcm->clk);
 err_free_misc_register:
 	misc_deregister(&ac_data->misc);
-	wake_lock_destroy(&ac_data->wake_lock);
+	wakeup_source_trash(&ac_data->wake_lock);
 	pr_err("%s: misc_deregister!\n", __func__);
 err_free_host_wake:
 	gpio_free(gps_bcm->gpioid_hostwake.gpio);

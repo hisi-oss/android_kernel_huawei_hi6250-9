@@ -27,7 +27,6 @@
 #include <soc_acpu_baseaddr_interface.h>
 #include <soc_syscounter_interface.h>
 #include <clocksource/arm_arch_timer.h>
-#include <linux/wakelock.h>
 #include "hisi_flp.h"
 #include "../inputhub_api.h"
 #include "hisi_softtimer.h"
@@ -129,7 +128,7 @@ typedef struct flp_port {
     unsigned int            need_awake;
     unsigned int            need_report;
     compensate_data_t       pdr_compensate;
-    struct wake_lock        wlock;
+    struct wakeup_source        wlock;
     unsigned int            need_hold_wlock;
     loc_source_status       location_status;
 } flp_port_t;
@@ -1039,7 +1038,7 @@ static void flp_sleep_timeout(unsigned long data)
         flp_port->work_para = FLP_GENL_CMD_NOTIFY_TIMEROUT;
         queue_work(system_power_efficient_wq, &flp_port->work);
         if (flp_port->need_hold_wlock) {
-            wake_lock_timeout(&flp_port->wlock, (long)(2 * HZ));
+            __pm_wakeup_event(&flp_port->wlock, (long)(2 * HZ));
         }
     }
     return ;
@@ -1439,7 +1438,7 @@ static int flp_common_ioctl(flp_port_t *flp_port, unsigned int cmd, unsigned lon
             break;
         case FLP_IOCTL_COMMON_RELEASE_WAKELOCK:
             if (flp_port->need_hold_wlock) {
-                wake_unlock(&flp_port->wlock);/*lint !e455*/
+                __pm_relax(&flp_port->wlock);/*lint !e455*/
             }
             break;
         default:
@@ -2268,7 +2267,7 @@ static int flp_open(struct inode *inode, struct file *filp)/*lint -e715*/
     list_add_tail(&flp_port->list, &g_flp_dev.list);
     mutex_unlock(&g_flp_dev.recovery_lock);
     mutex_unlock(&g_flp_dev.lock);
-    wake_lock_init(&flp_port->wlock, WAKE_LOCK_SUSPEND, "hisi_flp");
+    wakeup_source_init(&flp_port->wlock, "hisi_flp");
     filp->private_data = flp_port;
     printk(HISI_FLP_DEBUG "%s %d: v1.4 enter\n", __func__, __LINE__);
     return 0;
@@ -2300,7 +2299,7 @@ static int flp_release(struct inode *inode, struct file *file)/*lint -e715*/
     }
     hisi_softtimer_delete(&flp_port->sleep_timer);
     cancel_work_sync(&flp_port->work);
-    wake_lock_destroy(&flp_port->wlock);
+    wakeup_source_trash(&flp_port->wlock);
 
     mutex_lock(&g_flp_dev.lock);
     mutex_lock(&g_flp_dev.recovery_lock);

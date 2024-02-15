@@ -509,7 +509,7 @@ static int mxt_check_reg_init(struct mxt_data *data)
 #if defined(CONFIG_MXT_UPDATE_BY_OBJECT)
 	object_mem = config_mem + (config_mem_size >> 1);
 #endif
-	wake_lock(&data->ts_flash_wake_lock);
+	__pm_stay_awake(&data->ts_flash_wake_lock);
 	while (data_pos < cfg->size - OBJECT_CFG_HEAD_SIZE) {
 		/* Read type, instance, length */
 		ret = sscanf(cfg->data + data_pos, "%x %x %x%n",
@@ -659,7 +659,7 @@ static int mxt_check_reg_init(struct mxt_data *data)
 	}
 
 release_mem:
-	wake_unlock(&data->ts_flash_wake_lock);
+	__pm_relax(&data->ts_flash_wake_lock);
 	kfree(config_mem);
 release:
 	release_firmware(cfg);
@@ -1171,7 +1171,7 @@ int atmel_load_fw(struct mxt_data *data)
 			goto release_firmware;
 		}
 	}
-	wake_lock(&data->ts_flash_wake_lock);
+	__pm_stay_awake(&data->ts_flash_wake_lock);
 	while (pos < fw->size - 1) {
 		ret = mxt_check_bootloader(data, MXT_WAITING_FRAME_DATA, true);
 		if (ret) {
@@ -1223,7 +1223,7 @@ int atmel_load_fw(struct mxt_data *data)
 
 	data->in_bootloader = false;
 release_lock:
-	wake_unlock(&data->ts_flash_wake_lock);
+	__pm_relax(&data->ts_flash_wake_lock);
 release_firmware:
 	release_firmware(fw);
 	return ret;

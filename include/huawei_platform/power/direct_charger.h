@@ -19,7 +19,6 @@
 #include <linux/gpio.h>
 #include <linux/of.h>
 #include <linux/of_gpio.h>
-#include <linux/wakelock.h>
 #ifdef CONFIG_HISI_COUL
 #include <linux/power/hisi/coul/hisi_coul_drv.h>
 #endif
@@ -623,7 +622,7 @@ struct direct_charge_device {
 	int scp_adaptor_detect_flag;
 	char dc_err_dsm_buff[CHARGE_DMDLOG_SIZE];
 	int scp_stop_charging_complete_flag;
-	struct wake_lock direct_charge_lock;
+	struct wakeup_source direct_charge_lock;
 	int adaptor_test_result_type;
 	char thermal_reason[SCP_THERMAL_REASON_SIZE];
 	int adaptor_antifake_key_index;

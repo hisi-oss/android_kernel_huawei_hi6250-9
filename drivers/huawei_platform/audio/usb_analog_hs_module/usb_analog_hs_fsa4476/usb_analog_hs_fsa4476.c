@@ -20,7 +20,6 @@
 #include <linux/ioctl.h>
 #include <linux/of_device.h>
 #include <linux/of_platform.h>
-#include <linux/wakelock.h>
 #include <linux/of_irq.h>
 #include <linux/of_gpio.h>
 #include <linux/uaccess.h>
@@ -83,7 +82,7 @@ struct usb_ana_hs_fsa4476_data {
     int mic_switch_delay_time;
     int registed;  //usb analog headset dev register flag
     int sd_gpio_used;
-    struct wake_lock wake_lock;
+    struct wakeup_source wake_lock;
     struct mutex mutex;
     struct workqueue_struct *analog_hs_plugin_delay_wq;
     struct delayed_work analog_hs_plugin_delay_work;
@@ -177,12 +176,12 @@ static void usb_analog_hs_plugin_work(struct work_struct *work)
 {
     IN_FUNCTION;
 
-    wake_lock(&g_pdata_fsa4476->wake_lock);
+    __pm_stay_awake(&g_pdata_fsa4476->wake_lock);
     //change codec hs resistence from 70ohm to 3Kohm, to reduce the pop sound in hs when usb analog hs plug in.
     g_pdata_fsa4476->codec_ops_dev->ops.hs_high_resistence_enable(g_pdata_fsa4476->private_data, true);
     #ifdef CONFIG_SUPERSWITCH_FSC
     if (set_superswitch_sbu_switch(Sbu_Cross_Close_Aux) < 0) { //SBU2 connect to HS_FB
-        wake_unlock(&g_pdata_fsa4476->wake_lock);
+        __pm_relax(&g_pdata_fsa4476->wake_lock);
         return;
     }
     #endif
@@ -204,7 +203,7 @@ static void usb_analog_hs_plugin_work(struct work_struct *work)
     mutex_unlock(&g_pdata_fsa4476->mutex);
     //recovery codec hs resistence to 70ohm, to avoid affecting other hs businesses.
     g_pdata_fsa4476->codec_ops_dev->ops.hs_high_resistence_enable(g_pdata_fsa4476->private_data, false);
-    wake_unlock(&g_pdata_fsa4476->wake_lock);
+    __pm_relax(&g_pdata_fsa4476->wake_lock);
 
     OUT_FUNCTION;
 }
@@ -213,7 +212,7 @@ static void usb_analog_hs_plugout_work(struct work_struct *work)
 {
     IN_FUNCTION;
 
-    wake_lock(&g_pdata_fsa4476->wake_lock);
+    __pm_stay_awake(&g_pdata_fsa4476->wake_lock);
     if (g_pdata_fsa4476->analog_hs_plugin_delay_wq) {
          logi("remove plugin work in plugin_delay_workqueue if exist to prevent GPIO-EN1 remaining high caused by inserting-removing headset too fast!\n");
          cancel_delayed_work(&g_pdata_fsa4476->analog_hs_plugin_delay_work);
@@ -239,13 +238,13 @@ static void usb_analog_hs_plugout_work(struct work_struct *work)
 
         #ifdef CONFIG_SUPERSWITCH_FSC
         if (set_superswitch_sbu_switch(Sbu_None) < 0) { //HS_FB disconnect
-            wake_unlock(&g_pdata_fsa4476->wake_lock);
+            __pm_relax(&g_pdata_fsa4476->wake_lock);
             return;
         }
         #endif
         usb_analog_hs_fsa4476_enable(FSA4776_DISABLE);
     }
-    wake_unlock(&g_pdata_fsa4476->wake_lock);
+    __pm_relax(&g_pdata_fsa4476->wake_lock);
 
     OUT_FUNCTION;
 }
@@ -365,7 +364,7 @@ void usb_ana_hs_fsa4476_plug_in_out_handle(int hs_state)
     }
     IN_FUNCTION;
 
-    wake_lock_timeout(&g_pdata_fsa4476->wake_lock, msecs_to_jiffies(1000));
+    __pm_wakeup_event(&g_pdata_fsa4476->wake_lock, msecs_to_jiffies(1000));
 
     switch (hs_state) {
         case USB_ANA_HS_PLUG_IN:
@@ -850,7 +849,7 @@ static int usb_ana_hs_fsa4476_probe(struct platform_device *pdev)
         g_pdata_fsa4476->switch_antenna = false;
     }
 
-    wake_lock_init(&g_pdata_fsa4476->wake_lock, WAKE_LOCK_SUSPEND, "usb_analog_hs");
+    wakeup_source_init(&g_pdata_fsa4476->wake_lock, "usb_analog_hs");
     mutex_init(&g_pdata_fsa4476->mutex);
 
     /* load dts config for board difference */

@@ -22,7 +22,6 @@
 #include "inputhub_route.h"
 #include "inputhub_bridge.h"
 #include "protocol.h"
-#include <linux/wakelock.h>
 /*******************************************************************************************
 Function:       fhb_read
 Description:    read /dev/fingerprinthub
@@ -159,7 +158,7 @@ void fingerprint_report(void)
     inputhub_route_write(ROUTE_FHB_PORT, &fingerprint_upload, fingerprint_upload.hd.length);
 }
 
-extern  struct wake_lock wlock;
+extern  struct wakeup_source wlock;
 int send_fingerprint_cmd_internal(int tag, obj_cmd_t cmd, fingerprint_type_t type, bool use_lock)
 {
     pkt_header_t hpkt;

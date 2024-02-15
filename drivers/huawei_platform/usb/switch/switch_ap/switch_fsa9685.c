@@ -58,7 +58,6 @@
 #ifdef CONFIG_BOOST_5V
 #include <huawei_platform/power/boost_5v.h>
 #endif
-#include <linux/wakelock.h>
 #include <huawei_platform/log/hw_log.h>
 #include <chipset_common/hwusb/hw_usb_rwswitch.h>
 #include <huawei_platform/usb/switch/switch_fsa9685.h>
@@ -168,7 +167,7 @@ void fsa9685_usb_switch_wake_lock(void)
 	}
 
 	if (!wake_lock_active(&di->usb_switch_lock)) {
-		wake_lock(&di->usb_switch_lock);
+		__pm_stay_awake(&di->usb_switch_lock);
 		hwlog_info("usb_switch_lock lock\n");
 	}
 }
@@ -183,7 +182,7 @@ void fsa9685_usb_switch_wake_unlock(void)
 	}
 
 	if (wake_lock_active(&di->usb_switch_lock)) {
-		wake_unlock(&di->usb_switch_lock);
+		__pm_relax(&di->usb_switch_lock);
 		hwlog_info("usb_switch_lock unlock\n");
 	}
 }
@@ -2798,7 +2797,7 @@ static int fsa9685_probe(
 	/* init lock */
 	mutex_init(&di->accp_detect_lock);
 	mutex_init(&di->accp_adaptor_reg_lock);
-	wake_lock_init(&di->usb_switch_lock, WAKE_LOCK_SUSPEND, "usb_switch_wakelock");
+	wakeup_source_init(&di->usb_switch_lock, "usb_switch_wakelock");
 
 	/* init work */
 	INIT_DELAYED_WORK(&di->detach_delayed_work, fsa9685_detach_work);
@@ -2966,7 +2965,7 @@ fail_free_int_irq:
 fail_free_int_gpio:
 	gpio_free(gpio);
 fail_free_wakelock:
-	wake_lock_destroy(&di->usb_switch_lock);
+	wakeup_source_trash(&di->usb_switch_lock);
 err_create_link_failed:
     device_remove_file(&client->dev, &dev_attr_fcp_mmi);
 err_create_fcp_mmi_failed:
@@ -2994,7 +2993,7 @@ static int fsa9685_remove(struct i2c_client *client)
 	free_irq(client->irq, client);
 	gpio_free(gpio);
 	if (di)
-		wake_lock_destroy(&di->usb_switch_lock);
+		wakeup_source_trash(&di->usb_switch_lock);
 
 	hwlog_info("remove end\n");
 	return 0;

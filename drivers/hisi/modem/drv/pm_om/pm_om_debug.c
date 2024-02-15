@@ -211,12 +211,12 @@ s32 pm_wakeup_ccore(enum debug_wake_type type)
 
 void debug_pm_wake_lock(void)
 {
-    wake_lock(&g_pmom_debug.wakelock_debug);
+    __pm_stay_awake(&g_pmom_debug.wakelock_debug);
 } /*lint !e454*/
 
 void debug_pm_wake_unlock(void)
 {
-    wake_unlock(&g_pmom_debug.wakelock_debug); /*lint !e455*/
+    __pm_relax(&g_pmom_debug.wakelock_debug); /*lint !e455*/
 }
 
 static s32 pm_wakeup_icc_msg(u32 id , u32 len, void* context)
@@ -417,7 +417,7 @@ void pm_wakeup_init(void)
 {
 	char* dump_base = NULL;
 
-	wake_lock_init(&g_pmom_debug.wakelock_debug, WAKE_LOCK_SUSPEND, "cp_pm_wakeup");
+	wakeup_source_init(&g_pmom_debug.wakelock_debug, "cp_pm_wakeup");
 
 	/* ????????icc????(??????????),??????????,?????????? */
 	(void)bsp_icc_event_register(ICC_CHN_IFC << 16 | IFC_RECV_FUNC_WAKEUP, \

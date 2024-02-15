@@ -50,7 +50,6 @@
 #include <linux/of.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
-#include <linux/wakelock.h>
 #include <osl_module.h>
 #include <osl_sem.h>
 #include <osl_list.h>
@@ -83,7 +82,7 @@ struct softtimer_ctrl
 	u64 start_slice;
 	slice_curtime get_curtime;
 	slice_value   get_slice_value;
-	struct     wake_lock     wake_lock;
+	struct     __pm_stay_awake     __pm_stay_awake;
 };
 /*lint --e{64,456}*/
 static struct softtimer_ctrl timer_control[2];	/*timer_control[0] wake, timer_control[1] normal*/
@@ -377,7 +376,7 @@ int  softtimer_task_func(void* data)
 			stop_hard_timer(ptimer_control);
 		}
 		if(ACORE_SOFTTIMER_ID==ptimer_control->hard_timer_id)
-			wake_unlock(&ptimer_control->wake_lock); /*lint !e455*/
+			__pm_relax(&ptimer_control->wake_lock); /*lint !e455*/
 		if(debug_wakeup_timer.wakeup_flag)
 		{
 			softtimer_print("wakeup timer name:%s,wakeup_timer_id:%d",debug_wakeup_timer.wakeup_timer_name,debug_wakeup_timer.wakeup_timer_id);
@@ -432,7 +431,7 @@ OSL_IRQ_FUNC(static irqreturn_t,softtimer_interrupt_call_back,irq,dev)
 		}
 		spin_unlock_irqrestore(&ptimer_control->timer_list_lock,flags); /*lint !e550*/
 		if(ACORE_SOFTTIMER_ID==ptimer_control->hard_timer_id)
-			wake_lock(&ptimer_control->wake_lock);  /*lint !e454*/
+			__pm_stay_awake(&ptimer_control->wake_lock);  /*lint !e454*/
 		osl_sem_up(&ptimer_control->soft_timer_sem);  /*lint !e456*/
 	}
 	return IRQ_HANDLED; /*lint !e454*/ /*lint !e456*/
@@ -509,7 +508,7 @@ int  bsp_softtimer_init(void)
 			softtimer_print("bsp_hardtimer_alloc error,softtimer init failed 2\n");
 			return BSP_ERROR;
 		}
-		wake_lock_init(&timer_control[SOFTTIMER_WAKE].wake_lock, WAKE_LOCK_SUSPEND, "softtimer_wake");
+		wakeup_source_init(&timer_control[SOFTTIMER_WAKE].__pm_stay_awake, "softtimer_wake");
 		timer_control[SOFTTIMER_WAKE].get_curtime = bsp_slice_getcurtime;
 		timer_control[SOFTTIMER_WAKE].get_slice_value = bsp_get_slice_value;
 		mdrv_timer_debug_register(timer_control[SOFTTIMER_WAKE].hard_timer_id,(FUNCPTR_1)get_softtimer_int_stat,0);
@@ -542,7 +541,7 @@ int  bsp_softtimer_init(void)
 			timer_control[SOFTTIMER_NOWAKE].get_curtime = bsp_slice_getcurtime_hrt;
 			timer_control[SOFTTIMER_NOWAKE].get_slice_value = bsp_get_slice_value_hrt;
 		}
-		wake_lock_init(&timer_control[SOFTTIMER_NOWAKE].wake_lock, WAKE_LOCK_SUSPEND, "softtimer_nowake");
+		wakeup_source_init(&timer_control[SOFTTIMER_NOWAKE].__pm_stay_awake, "softtimer_nowake");
 	 }
 	 bsp_trace(BSP_LOG_LEVEL_ERROR,BSP_MODU_SOFTTIMER,"softtimer init success\n");
 	return BSP_OK;

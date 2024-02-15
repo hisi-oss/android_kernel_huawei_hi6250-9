@@ -76,7 +76,7 @@ s32 bsp_load_ps_callback ( u32 channel_id , u32 len, void* context )
     loadps_trace(BSP_LOG_LEVEL_INFO ," bsp_load_ps_callback wakeup loadps task\n");
     /*????loadps??????????????*/
 
-    wake_lock(&g_loadpsMain.wake_lock);/*lint !e454*/
+    __pm_stay_awake(&g_loadpsMain.__pm_stay_awake);/*lint !e454*/
 
     osl_sem_up(&g_loadpsMain.task_mutex);
 
@@ -209,7 +209,7 @@ s32 load_ps_task(void* obj)
 load_next:
         g_loadpsMain.opState = EN_LOADPS_DONE;
 
-        wake_unlock(&g_loadpsMain.wake_lock);/*lint !e455*/
+        __pm_relax(&g_loadpsMain.__pm_stay_awake);/*lint !e455*/
 
     }
 }
@@ -232,7 +232,7 @@ static int __init his_loadps_probe(struct platform_device *pdev)
     osl_sem_init(0, &(g_loadpsMain.task_mutex));
     osl_sem_init(0, &(g_loadpsMain.suspend_mutex));
 
-    wake_lock_init(&g_loadpsMain.wake_lock,WAKE_LOCK_SUSPEND, "loadps_wakelock");
+    wakeup_source_init(&g_loadpsMain.__pm_stay_awake, "loadps_wakelock");
     /*????????????*/
     g_loadpsMain.taskid = kthread_run(load_ps_task, BSP_NULL, "loadps");
     if (IS_ERR(g_loadpsMain.taskid))

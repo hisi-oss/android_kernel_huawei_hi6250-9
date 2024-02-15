@@ -8,7 +8,6 @@
 #include <linux/uaccess.h>
 #include <linux/kernel.h>
 #include <linux/hisi/usb/hisi_usb.h>
-#include <linux/wakelock.h>
 #include <linux/version.h>
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0))
 #include <uapi/linux/sched/types.h>
@@ -24,7 +23,7 @@
 struct completion probe_msg_complete;
 struct completion disconnect_msg_complete;
 struct completion nv_check;
-struct wake_lock rcv_wake_lock;
+struct wakeup_source rcv_wake_lock;
 static atomic_t nv_check_ref = ATOMIC_INIT(0);
 
 #define HIFI_USBAUDIO_MSG_TIMEOUT (2 * HZ)
@@ -44,7 +43,7 @@ struct usbaudio_msg_proc
 	struct task_struct *kthread;
 	struct interface_set_mesg interface_msg_list;
 	struct semaphore proc_sema;
-	struct wake_lock msg_proc_wake_lock;
+	struct wakeup_source msg_proc_wake_lock;
 	bool kthread_msg_proc_should_stop;
 };
 
@@ -101,7 +100,7 @@ static irq_rt_t usbaudio_mailbox_recv_isr(void *usr_para, void *mail_handle, uns
 		return IRQ_NH_MB;
 	}
 
-	wake_lock_timeout(&rcv_wake_lock, msecs_to_jiffies(1000));
+	__pm_wakeup_event(&rcv_wake_lock, msecs_to_jiffies(1000));
 	switch(rcv_msg.msg_type) {
 		case USBAUDIO_CHN_MSG_PROBE_RCV:
 			pr_info("receive message: probe succ.\n");
@@ -308,7 +307,7 @@ static int interface_msg_proc_thread(void *p)
 		if (ret == -ETIME) {
 			pr_err("proc sema down_int err -ETIME .\n");
 		}
-		wake_lock(&msg_proc.msg_proc_wake_lock);
+		__pm_stay_awake(&msg_proc.msg_proc_wake_lock);
 		if (list_empty(&msg_proc.interface_msg_list.node)) {
 			pr_err("interface_msg_list is empty!\n");
 		} else {
@@ -326,7 +325,7 @@ static int interface_msg_proc_thread(void *p)
 				pr_err("set_mesg is null \n");
 			}
 		}
-		wake_unlock(&msg_proc.msg_proc_wake_lock);
+		__pm_relax(&msg_proc.msg_proc_wake_lock);
 	}
 
 	return 0;
@@ -347,8 +346,8 @@ int usbaudio_mailbox_init(void)
 
 	INIT_LIST_HEAD(&msg_proc.interface_msg_list.node);
 	sema_init(&msg_proc.proc_sema, 0);
-	wake_lock_init(&msg_proc.msg_proc_wake_lock, WAKE_LOCK_SUSPEND, "usbaudio_msg_proc");
-	wake_lock_init(&rcv_wake_lock, WAKE_LOCK_SUSPEND, "usbaudio_rcv_msg");
+	wakeup_source_init(&msg_proc.msg_proc_wake_lock, "usbaudio_msg_proc");
+	wakeup_source_init(&rcv_wake_lock, "usbaudio_rcv_msg");
 	msg_proc.kthread_msg_proc_should_stop = false;
 	msg_proc.kthread = kthread_create(interface_msg_proc_thread, 0, "interface_msg_proc_thread");
 
@@ -384,6 +383,6 @@ void usbaudio_mailbox_deinit(void)
 		kfree(set_mesg);
 	}
 
-	wake_lock_destroy(&msg_proc.msg_proc_wake_lock);
-	wake_lock_destroy(&rcv_wake_lock);
+	wakeup_source_trash(&msg_proc.msg_proc_wake_lock);
+	wakeup_source_trash(&rcv_wake_lock);
 }

@@ -41,7 +41,6 @@
 #include <linux/of_platform.h>
 #include <linux/interrupt.h>
 #include "hisi_sim_hotplug.h"
-#include <linux/wakelock.h>
 #include <linux/hisi/hw_cmdline_parse.h> /*for runmode_is_factory*/
 
 
@@ -86,7 +85,7 @@ struct hisi_sim_hotplug_info
     struct workqueue_struct *sim_hotplug_det_wq;
     struct workqueue_struct *sim_debounce_delay_wq;
     struct mutex            sim_hotplug_lock;
-    struct wake_lock        sim_hotplug_wklock;
+    struct wakeup_source        sim_hotplug_wklock;
     struct work_struct      sim_hotplug_hpd_work;
     struct work_struct      sim_hotplug_det_work;
     struct delayed_work     sim_debounce_delay_work;
@@ -940,7 +939,7 @@ static void inquiry_sim_det_irq_reg(struct work_struct *work)
         if (0 == info->det_debounce_checking && NULL != info->sim_debounce_delay_wq)
         {
             info->det_debounce_checking = 1;
-            wake_lock_timeout(&info->sim_hotplug_wklock, msecs_to_jiffies(info->det_debounce_wait_time + 5));
+            __pm_wakeup_event(&info->sim_hotplug_wklock, msecs_to_jiffies(info->det_debounce_wait_time + 5));
             queue_delayed_work(info->sim_debounce_delay_wq,
                                &info->sim_debounce_delay_work,
                                msecs_to_jiffies(info->det_debounce_wait_time));
@@ -1319,7 +1318,7 @@ static int sim_state_init(struct hisi_sim_hotplug_info *info, struct device *dev
     }
 
     mutex_init(&(info->sim_hotplug_lock));
-    wake_lock_init(&info->sim_hotplug_wklock, WAKE_LOCK_SUSPEND, "android-simhotplug");
+    wakeup_source_init(&info->sim_hotplug_wklock, "android-simhotplug");
 
     return 0;
 }
@@ -1476,7 +1475,7 @@ static int hisi_sim_hotplug_probe(struct platform_device *pdev)
     return ret;
 
 free_sim_lock:
-    wake_lock_destroy(&info->sim_hotplug_wklock);
+    wakeup_source_trash(&info->sim_hotplug_wklock);
     mutex_destroy(&info->sim_hotplug_lock);
 
 free_sim_det_wq:
@@ -1505,7 +1504,7 @@ static int hisi_sim_hotplug_remove(struct platform_device *pdev)
     }
 
     mutex_destroy(&info->sim_hotplug_lock);
-    wake_lock_destroy(&info->sim_hotplug_wklock);
+    wakeup_source_trash(&info->sim_hotplug_wklock);
 
     if (info->sim_hotplug_det_wq)
     {

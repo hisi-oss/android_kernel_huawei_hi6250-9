@@ -614,7 +614,7 @@ static int direct_charge_lvc_probe(struct platform_device	*pdev)
 	di->direct_charge_wq = create_singlethread_workqueue("direct_charge_wq");
 	di->direct_charge_watchdog_wq = create_singlethread_workqueue("direct_charge_watchdog_wq");
 
-	wake_lock_init(&di->direct_charge_lock, WAKE_LOCK_SUSPEND, "direct_charge_wakelock");
+	wakeup_source_init(&di->direct_charge_lock, "direct_charge_wakelock");
 	INIT_WORK(&di->threshold_caculation_work, threshold_caculation_work);
 	INIT_WORK(&di->charge_control_work, charge_control_work);
 	INIT_WORK(&di->fault_work, direct_charge_fault_work);
@@ -687,7 +687,7 @@ static int direct_charge_lvc_probe(struct platform_device	*pdev)
 
 free_sysfs_group:
 	direct_charge_sysfs_remove_group(di);
-	wake_lock_destroy(&di->direct_charge_lock);
+	wakeup_source_trash(&di->direct_charge_lock);
 fail_0:
 	devm_kfree(&pdev->dev, di);
 	di = NULL;
@@ -709,7 +709,7 @@ static int direct_charge_lvc_remove(struct platform_device *pdev)
 		hwlog_err("[%s]di is NULL!\n", __func__);
 		return -ENODEV;
 	}
-	wake_lock_destroy(&di->direct_charge_lock);
+	wakeup_source_trash(&di->direct_charge_lock);
 
 	return 0;
 }

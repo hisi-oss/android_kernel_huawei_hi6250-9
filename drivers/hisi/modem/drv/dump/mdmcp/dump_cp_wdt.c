@@ -63,7 +63,6 @@
 #include <linux/slab.h>
 #include <linux/of.h>
 #include <linux/delay.h>
-#include <linux/wakelock.h>
 #include <asm/string.h>
 #include <asm/traps.h>
 #include "product_config.h"

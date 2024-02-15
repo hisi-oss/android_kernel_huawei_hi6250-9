@@ -21,7 +21,6 @@
 #include <linux/debugfs.h>
 #include <linux/platform_device.h>
 #include <huawei_platform/log/hw_log.h>
-#include <linux/wakelock.h>
 
 /* marco define*/
 #define NO_ERR 0
@@ -567,7 +566,7 @@ struct ts_data{
 #if defined (CONFIG_HUAWEI_DSM)
 	struct ts_dsm_info dsm_info;
 #endif
-	struct wake_lock ts_wake_lock;
+	struct wakeup_source ts_wake_lock;
 };
 
 int ts_power_control_notify(enum ts_pm_type pm_type,  int timeout);

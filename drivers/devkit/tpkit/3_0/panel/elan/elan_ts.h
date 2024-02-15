@@ -151,7 +151,7 @@ struct elan_ktf_ts_data {
 	atomic_t tp_mode;
 	char project_id[10];
 	char color_id[2];
-	struct wake_lock wake_lock;
+	struct wakeup_source wake_lock;
 	bool sd_fw_updata;
 	bool pen_detected;
 	char lcd_panel_info[LCD_PANEL_INFO_MAX_LEN];

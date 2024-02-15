@@ -1016,7 +1016,7 @@ s32 bsp_nvm_kernel_init(void)
     osl_sem_init(0,&g_nv_ctrl.suspend_sem);
     osl_sem_init(1,&g_nv_ctrl.rw_sem);
     osl_sem_init(0,&g_nv_ctrl.cc_sem);
-    wake_lock_init(&g_nv_ctrl.wake_lock,WAKE_LOCK_SUSPEND,"nv_wakelock");
+    wakeup_source_init(&g_nv_ctrl.__pm_stay_awake,"nv_wakelock");
     g_nv_ctrl.shared_addr = (nv_global_info_s *)NV_GLOBAL_INFO_ADDR;
 
     nv_record("Balong nv init  start! %s %s\n",__DATE__,__TIME__);

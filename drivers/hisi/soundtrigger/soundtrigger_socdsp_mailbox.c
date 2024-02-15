@@ -5,7 +5,6 @@
 #include <linux/kthread.h>
 #include <linux/uaccess.h>
 #include <linux/kernel.h>
-#include <linux/wakelock.h>
 #include <linux/errno.h>
 #include "../hi64xx_dsp/hi64xx_algo_interface.h"
 #include "soundtrigger_socdsp_mailbox.h"
@@ -19,7 +18,7 @@ struct completion start_msg_complete;
 struct completion stop_msg_complete;
 struct completion parameter_set_msg_complete;
 struct completion parameter_get_msg_complete;
-struct wake_lock soundtrigger_rcv_wake_lock;
+struct wakeup_source soundtrigger_rcv_wake_lock;
 
 #define SOCDSP_WAKEUP_MSG_TIMEOUT (2 * HZ)
 #define NORMAL_BUFFER_LEN (640) //16K*1ch*2byte*20ms
@@ -71,7 +70,7 @@ static irq_rt_t soundtrigger_mailbox_recv_isr(void *usr_para, void *mail_handle,
 		return IRQ_NH_MB;
 	}
 
-	wake_lock_timeout(&soundtrigger_rcv_wake_lock, msecs_to_jiffies(1000));
+	__pm_wakeup_event(&soundtrigger_rcv_wake_lock, msecs_to_jiffies(1000));
 	switch(rcv_msg.msg_type) {
 	case WAKEUP_CHN_MSG_START_ACK:
 		pr_info("receive message: start succ.\n");
@@ -263,7 +262,7 @@ int soundtrigger_mailbox_init(void)
 		return -EIO;
 	}
 
-	wake_lock_init(&soundtrigger_rcv_wake_lock, WAKE_LOCK_SUSPEND, "soundtrigger_rcv_msg");
+	wakeup_source_init(&soundtrigger_rcv_wake_lock, "soundtrigger_rcv_msg");
 
 	g_model_buf = ioremap_wc(HISI_AP_AUDIO_WAKEUP_MODEL_ADDR, HISI_AP_AUDIO_WAKEUP_MODEL_SIZE);
 	if (g_model_buf == NULL) {
@@ -284,6 +283,6 @@ void soundtrigger_mailbox_deinit(void)
 		g_model_buf = NULL;
 	}
 	DRV_MAILBOX_REGISTERRECVFUNC(MAILBOX_MAILCODE_HIFI_TO_ACPU_WAKEUP, NULL, NULL);
-	wake_lock_destroy(&soundtrigger_rcv_wake_lock);
+	wakeup_source_trash(&soundtrigger_rcv_wake_lock);
 }
 

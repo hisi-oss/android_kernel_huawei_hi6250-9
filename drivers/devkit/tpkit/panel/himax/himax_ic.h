@@ -34,7 +34,6 @@
 #include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/buffer_head.h>
-#include <linux/wakelock.h>
 #include <linux/seq_file.h>
 #include <linux/proc_fs.h>
 #include "himax_platform.h"
@@ -421,7 +420,7 @@ struct himax_ts_data {
 	struct input_dev *input_dev;
 	struct himax_i2c_platform_data *pdata;
 	struct himax_virtual_key *button;
-	struct wake_lock ts_flash_wake_lock;
+	struct wakeup_source ts_flash_wake_lock;
 	struct regulator *vddd;
 	struct regulator *vdda;
 

@@ -15,7 +15,6 @@
 #include <linux/gpio.h>
 #include <linux/wait.h>
 #include <linux/kthread.h>
-#include <linux/wakelock.h>
 
 #include "viatel.h"
 #include "modem_ttys.h"

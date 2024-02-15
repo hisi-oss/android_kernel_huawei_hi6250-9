@@ -56,7 +56,6 @@
 #else
 #include <linux/usb/hcd.h>
 #endif
-#include <linux/wakelock.h>
 
 #include "dwc_otg_hcd_if.h"
 #include "dwc_otg_dbg.h"

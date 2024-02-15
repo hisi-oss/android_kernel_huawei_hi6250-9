@@ -508,9 +508,9 @@ struct tcpc_device *hisi_tcpc_device_register(struct device *parent,
 
 	/* If system support "WAKE_LOCK_IDLE",
 	 * please use it instead of "WAKE_LOCK_SUSPEND" */
-	wake_lock_init(&tcpc->attach_wake_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&tcpc->attach_wake_lock,
 			"hisi_tcpc_attach_wakelock");
-	wake_lock_init(&tcpc->dettach_temp_wake_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&tcpc->dettach_temp_wake_lock,
 			"hisi_tcpc_detach_wakelock");
 
 	D("to timer_init\n");
@@ -621,8 +621,8 @@ void hisi_tcpc_device_unregister(struct device *dev, struct tcpc_device *tcpc)
 
 	hisi_tcpc_typec_deinit(tcpc);
 
-	wake_lock_destroy(&tcpc->dettach_temp_wake_lock);
-	wake_lock_destroy(&tcpc->attach_wake_lock);
+	wakeup_source_trash(&tcpc->dettach_temp_wake_lock);
+	wakeup_source_trash(&tcpc->attach_wake_lock);
 
 #ifdef CONFIG_DUAL_ROLE_USB_INTF
 	devm_dual_role_instance_unregister(&tcpc->dev, tcpc->dr_usb);

@@ -295,7 +295,7 @@ typedef struct env_enable {
 
 typedef struct ar_port {
 	struct work_struct work;
-	struct wake_lock wlock;
+	struct wakeup_source wlock;
 	struct softtimer_list   sleep_timer;
 	struct list_head list;
 	unsigned int channel_type;

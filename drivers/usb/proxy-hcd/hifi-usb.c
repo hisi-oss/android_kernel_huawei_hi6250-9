@@ -3,7 +3,6 @@
 #include <linux/io.h>
 #include <linux/slab.h>
 #include <linux/workqueue.h>
-#include <linux/wakelock.h>
 #include <linux/list.h>
 #include <linux/usb.h>
 #include <linux/usb/hcd.h>
@@ -1306,7 +1305,7 @@ static int hifi_usb_init(struct proxy_hcd_client *client)
 	INIT_LIST_HEAD(&proxy->complete_urb_list);
 	mutex_init(&proxy->msg_lock);
 	spin_lock_init(&proxy->lock);
-	wake_lock_init(&proxy->hifi_usb_wake_lock, WAKE_LOCK_SUSPEND,
+	wakeup_source_init(&proxy->hifi_usb_wake_lock,
 				"hifi_usb_wake_lock");
 	setup_timer(&proxy->confirm_udev_timer, confirm_udev_timer_fn,
 				(unsigned long)(uintptr_t)proxy);
@@ -1558,7 +1557,7 @@ static void handle_hub_status_change(struct hifi_usb_proxy *proxy,
 	HIFI_USB_STAT(stat_hub_status_change_msg, &proxy->stat);
 	if (!wake_lock_active(&proxy->hifi_usb_wake_lock)) {
 		INFO("hifi_usb_wake_lock on HUB_STATUS_CHANGE\n");
-		wake_lock_timeout(&proxy->hifi_usb_wake_lock,
+		__pm_wakeup_event(&proxy->hifi_usb_wake_lock,
 					msecs_to_jiffies(200));
 	}
 	spin_unlock(&proxy->lock); /*lint !e455 */
@@ -1766,7 +1765,7 @@ void hifi_usb_msg_receiver(struct hifi_usb_op_msg *__msg)
 		INFO("HiFi USB Wakeup AP\n");
 		if (!wake_lock_active(&proxy->hifi_usb_wake_lock)) {
 			INFO("hifi_usb_wake_lock on ID_HIFI_AP_USB_WAKEUP\n");
-			wake_lock_timeout(&proxy->hifi_usb_wake_lock,
+			__pm_wakeup_event(&proxy->hifi_usb_wake_lock,
 					msecs_to_jiffies(200));
 		}
 
@@ -2438,7 +2437,7 @@ int start_hifi_usb(void)
 	mod_timer(&proxy->confirm_udev_timer,
 				jiffies + HIFI_USB_CONFIRM_UDEV_CONNECT_TIME);
 
-	wake_lock_timeout(&proxy->hifi_usb_wake_lock,
+	__pm_wakeup_event(&proxy->hifi_usb_wake_lock,
 					msecs_to_jiffies(2000));
 
 	INFO("START_HIFI_USB time %d ms\n",

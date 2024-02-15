@@ -52,7 +52,7 @@ struct kbdev_proxy {
 	int notify_event;
 };
 
-extern struct wake_lock wlock;
+extern struct wakeup_source wlock;
 extern int iom3_power_state;
 extern int g_iom3_state;
 extern volatile int hall_value;

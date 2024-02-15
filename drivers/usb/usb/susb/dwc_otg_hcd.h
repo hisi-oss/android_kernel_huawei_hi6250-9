@@ -33,7 +33,6 @@
 #ifndef DWC_DEVICE_ONLY
 #ifndef __DWC_HCD_H__
 #define __DWC_HCD_H__
-#include <linux/wakelock.h>
 
 #include "dwc_otg_os_dep.h"
 #include "usb.h"

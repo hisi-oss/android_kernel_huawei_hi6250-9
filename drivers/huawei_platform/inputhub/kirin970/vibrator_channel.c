@@ -32,7 +32,6 @@
 #include <linux/switch.h>
 #include <linux/timer.h>
 #include <linux/delay.h>
-#include <linux/wakelock.h>
 
 struct drv2605_data {
 	struct led_classdev cclassdev;
@@ -61,7 +60,7 @@ static char reg_add = 0;
 static char reg_value = 0;
 extern struct vibrator_paltform_data vibrator_data;
 extern sys_status_t iom3_sr_status;
-struct wake_lock vibwlock;
+struct wakeup_source vibwlock;
 
 static int vib_time =0;
 #if defined(CONFIG_HISI_VIBRATOR)
@@ -677,7 +676,7 @@ static int vibrator_enable(struct led_classdev *cdev, int value)
 		}
 		vib_time = val;
 		//vibrator_set_time(val);
-		wake_lock_timeout(&vibwlock,VIB_WAKELOCK_TIME);
+		__pm_wakeup_event(&vibwlock,VIB_WAKELOCK_TIME);
 		hwlog_err("vibrator_enable, time = %d end\n", val);
 	}else{
 		//vibrator_set_time(VIB_OFF);
@@ -892,7 +891,7 @@ static int __init vibratorhub_init(void)
 		return -ENOMEM;
 	}
 
-	wake_lock_init(&vibwlock, WAKE_LOCK_SUSPEND, "vib_sensorhub");
+	wakeup_source_init(&vibwlock, "vib_sensorhub");
 	INIT_WORK(&data->work_play_eff, haptics_play_effect);
 	INIT_WORK(&data->work, vibra_set_work);
 
@@ -918,7 +917,7 @@ static void __exit vibratorhub_exit(void)
 	led_classdev_unregister(&data->cclassdev);
 	cancel_work_sync(&data->work_play_eff);
 	cancel_work_sync(&data->work);
-	wake_lock_destroy(&vibwlock);
+	wakeup_source_trash(&vibwlock);
 	hwlog_info("exit %s\n", __func__);
 }
 

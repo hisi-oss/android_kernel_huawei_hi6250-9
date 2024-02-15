@@ -8,7 +8,6 @@
 *****************************************************************************/
 #include <linux/mutex.h>
 #include <linux/kernel.h>
-#include <linux/wakelock.h>
 
 #include "plat_pm_wlan.h"
 #include "hw_bfg_ps.h"

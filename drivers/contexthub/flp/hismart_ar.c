@@ -1413,7 +1413,7 @@ static int ar_common_ioctl(ar_port_t *ar_port, unsigned int cmd, unsigned long a
 	break ;
 	case FLP_IOCTL_COMMON_RELEASE_WAKELOCK:
 		if (ar_port->need_hold_wlock)
-			wake_unlock(&ar_port->wlock);
+			__pm_relax(&ar_port->wlock);
 	break;
 	default:
 		printk(KERN_ERR "hismart:[%s]:line[%d] ar_common_ioctl input cmd[0x%x] error\n", __func__, __LINE__, cmd);
@@ -1538,8 +1538,8 @@ static void ar_sleep_timeout(unsigned long data)
 			pr_info("hismart:[%s]:line[%d] not set pid, timer out but not report\n", __func__, __LINE__);
 		}
 		if (ar_port->need_hold_wlock) {
-			pr_info("hismart:[%s]:line[%d] wake_lock_timeout 2\n", __func__, __LINE__);
-			wake_lock_timeout(&ar_port->wlock, (long)(2 * HZ));
+			pr_info("hismart:[%s]:line[%d] __pm_wakeup_event 2\n", __func__, __LINE__);
+			__pm_wakeup_event(&ar_port->wlock, (long)(2 * HZ));
 		}
 	}
 	return;
@@ -1574,7 +1574,7 @@ static int ar_open(struct inode *inode, struct file *filp)/*lint -e715*/
 	INIT_WORK(&ar_port->work, ar_timerout_work);
 
 	list_add_tail(&ar_port->list, &g_ar_dev.list);
-	wake_lock_init(&ar_port->wlock, WAKE_LOCK_SUSPEND, "hisi_ar");
+	wakeup_source_init(&ar_port->wlock, "hisi_ar");
 	filp->private_data = ar_port;
 	printk(HISI_AR_DEBUG "hismart:[%s]:line[%d] v1.4 enter\n", __func__, __LINE__);
 
@@ -1598,7 +1598,7 @@ static int ar_release(struct inode *inode, struct file *file)/*lint -e715*/
 
 	hisi_softtimer_delete(&ar_port->sleep_timer);
 	cancel_work_sync(&ar_port->work);
-	wake_lock_destroy(&ar_port->wlock);
+	wakeup_source_trash(&ar_port->wlock);
 
 	mutex_lock(&g_ar_dev.lock);
 	list_del(&ar_port->list);

@@ -33,7 +33,6 @@
 #include <linux/delay.h>
 #include <linux/slab.h>
 #include <linux/regulator/consumer.h>
-#include <linux/wakelock.h>
 #include <asm/irq.h>
 #include <linux/hisi/util.h>
 #include <linux/kthread.h>
@@ -86,7 +85,7 @@ static struct dsm_client *power_key_dclient;
 struct hisi_powerkey_info {
 	struct input_dev *idev;
 	int irq[6];
-	struct wake_lock pwr_wake_lock;
+	struct wakeup_source pwr_wake_lock;
 };
 
 static struct semaphore long_presspowerkey_happen_sem;
@@ -154,7 +153,7 @@ static irqreturn_t hisi_powerkey_handler(int irq, void *data)
 {
 	struct hisi_powerkey_info *info = (struct hisi_powerkey_info *)data;
 
-	wake_lock_timeout(&info->pwr_wake_lock, HZ);
+	__pm_wakeup_event(&info->pwr_wake_lock, HZ);
 
 	if (info->irq[0] == irq) {
 		pr_err("[%s] power key press interrupt!\n",
@@ -236,7 +235,7 @@ static int hisi_powerkey_probe(struct spmi_device *pdev)
 	info->idev->evbit[0] = BIT_MASK(EV_KEY);
 	__set_bit(KEY_POWER, info->idev->keybit);
 
-	wake_lock_init(&info->pwr_wake_lock, WAKE_LOCK_SUSPEND, "android-pwr");
+	wakeup_source_init(&info->pwr_wake_lock, "android-pwr");
 
 #if defined (CONFIG_HUAWEI_DSM)
 	/* initialize the statistic variable */
@@ -356,7 +355,7 @@ static int hisi_powerkey_probe(struct spmi_device *pdev)
 
 input_err:
 unregister_err:
-	wake_lock_destroy(&info->pwr_wake_lock);
+	wakeup_source_trash(&info->pwr_wake_lock);
 	input_free_device(info->idev);
 
 	return ret; //lint !e429
@@ -369,7 +368,7 @@ static int hisi_powerkey_remove(struct spmi_device *pdev)
 	hisi_powerkey_unregister_notifier(&hisi_test_powerkey_nb);
 #endif
 	if (NULL != info) {
-		wake_lock_destroy(&info->pwr_wake_lock);
+		wakeup_source_trash(&info->pwr_wake_lock);
 		input_free_device(info->idev);
 		input_unregister_device(info->idev);
 	}

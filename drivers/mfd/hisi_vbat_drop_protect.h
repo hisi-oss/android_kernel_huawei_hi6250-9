@@ -8,7 +8,6 @@
 #include <linux/workqueue.h>
 #include <linux/mfd/hisi_pmic.h>
 #include <soc_pmctrl_interface.h>
-#include <linux/wakelock.h>
 #include <pmic_interface.h>
 
 #ifndef BIT
@@ -89,7 +88,7 @@ enum drop_freq_en {
 struct hisi_vbat_drop_protect_dev {
 	struct device		    *dev;
     void __iomem            *pmctrl_base;
-    struct wake_lock        vbatt_check_lock;
+    struct wakeup_source        vbatt_check_lock;
 	struct delayed_work     vbat_drop_irq_work;
     int                     big_cpu_auto_div_en;     /* control big cpu auto 2 div enable */
     int                     middle_cpu_auto_div_en;

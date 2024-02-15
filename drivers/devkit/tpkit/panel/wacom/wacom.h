@@ -253,7 +253,7 @@ struct wacom_i2c {
 	struct ts_pens *ts_cache_pens;
 	struct wacom_features *features;
 	struct wacom_id ids;
-	struct wake_lock ts_wake_lock;
+	struct wakeup_source ts_wake_lock;
 	int next_pen_tool;
 	u8 data[WACOM_TOUCH_INPUTSIZE];
 	struct regulator *tp_vci;
