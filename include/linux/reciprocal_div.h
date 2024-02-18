@@ -5,7 +5,7 @@
 
 /*
  * This algorithm is based on the paper "Division by Invariant
- * Integers Using Multiplication" by Torbjörn Granlund and Peter
+ * Integers Using Multiplication" by Torbj??rn Granlund and Peter
  * L. Montgomery.
  *
  * The assembler implementation from Agner Fog, which this code is

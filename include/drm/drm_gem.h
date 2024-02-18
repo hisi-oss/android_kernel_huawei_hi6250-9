@@ -8,7 +8,7 @@
  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.
  * Copyright (c) 2009-2010, Code Aurora Forum.
  * All rights reserved.
- * Copyright © 2014 Intel Corporation
+ * Copyright ?? 2014 Intel Corporation
  *   Daniel Vetter <daniel.vetter@ffwll.ch>
  *
  * Author: Rickard E. (Rik) Faith <faith@valinux.com>

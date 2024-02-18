@@ -1,7 +1,7 @@
 /*
  * Platform data for LPC32xx SoC MLC NAND controller
  *
- * Copyright © 2012 Roland Stigge
+ * Copyright ?? 2012 Roland Stigge
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

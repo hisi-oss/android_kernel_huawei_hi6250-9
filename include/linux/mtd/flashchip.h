@@ -1,6 +1,6 @@
 /*
- * Copyright © 2000      Red Hat UK Limited
- * Copyright © 2000-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright ?? 2000      Red Hat UK Limited
+ * Copyright ?? 2000-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 ST Microelectronics
+ * Copyright ?? 2010 ST Microelectronics
  * Shiraz Hashim <shiraz.linux.kernel@gmail.com>
  *
  * This file is licensed under the terms of the GNU General Public

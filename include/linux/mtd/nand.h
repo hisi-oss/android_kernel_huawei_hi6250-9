@@ -1,7 +1,7 @@
 /*
  *  linux/include/linux/mtd/nand.h
  *
- *  Copyright © 2000-2010 David Woodhouse <dwmw2@infradead.org>
+ *  Copyright ?? 2000-2010 David Woodhouse <dwmw2@infradead.org>
  *                        Steven J. Hill <sjhill@realitydiluted.com>
  *		          Thomas Gleixner <tglx@linutronix.de>
  *

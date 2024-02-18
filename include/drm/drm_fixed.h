@@ -20,7 +20,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  *
  * Authors: Dave Airlie
- *          Christian König
+ *          Christian K??nig
  */
 #ifndef DRM_FIXED_H
 #define DRM_FIXED_H

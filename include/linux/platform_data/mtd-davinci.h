@@ -1,9 +1,9 @@
 /*
  * mach-davinci/nand.h
  *
- * Copyright © 2006 Texas Instruments.
+ * Copyright ?? 2006 Texas Instruments.
  *
- * Ported to 2.6.23 Copyright © 2008 by
+ * Ported to 2.6.23 Copyright ?? 2008 by
  *   Sander Huijsen <Shuijsen@optelecom-nkf.com>
  *   Troy Kisky <troy.kisky@boundarydevices.com>
  *   Dirk Behme <Dirk.Behme@gmail.com>

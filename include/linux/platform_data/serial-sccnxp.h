@@ -3,7 +3,7 @@
  *
  *  Copyright (C) 2012 Alexander Shiyan <shc_work@mail.ru>
  *
- *  Based on sc26xx.c, by Thomas Bogendörfer (tsbogend@alpha.franken.de)
+ *  Based on sc26xx.c, by Thomas Bogend??rfer (tsbogend@alpha.franken.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

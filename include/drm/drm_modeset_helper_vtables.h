@@ -1,10 +1,10 @@
 /*
- * Copyright © 2006 Keith Packard
- * Copyright © 2007-2008 Dave Airlie
- * Copyright © 2007-2008 Intel Corporation
+ * Copyright ?? 2006 Keith Packard
+ * Copyright ?? 2007-2008 Dave Airlie
+ * Copyright ?? 2007-2008 Intel Corporation
  *   Jesse Barnes <jesse.barnes@intel.com>
- * Copyright © 2011-2013 Intel Corporation
- * Copyright © 2015 Intel Corporation
+ * Copyright ?? 2011-2013 Intel Corporation
+ * Copyright ?? 2015 Intel Corporation
  *   Daniel Vetter <daniel.vetter@ffwll.ch>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a

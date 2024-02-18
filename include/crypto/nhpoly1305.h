@@ -18,7 +18,7 @@
 #define NH_PAIR_STRIDE		2
 #define NH_MESSAGE_UNIT		(NH_PAIR_STRIDE * 2 * sizeof(u32))
 
-/* Num passes (Toeplitz iteration count): 4, to give ε = 2^{-128} */
+/* Num passes (Toeplitz iteration count): 4, to give ?? = 2^{-128} */
 #define NH_NUM_PASSES		4
 #define NH_HASH_BYTES		(NH_NUM_PASSES * sizeof(u64))
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2007-2008 Intel Corporation
+ * Copyright ?? 2007-2008 Intel Corporation
  *   Jesse Barnes <jesse.barnes@intel.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a

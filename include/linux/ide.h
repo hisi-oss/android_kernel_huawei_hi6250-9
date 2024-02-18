@@ -80,7 +80,7 @@ struct ide_io_ports {
 	unsigned long	device_addr;
 
 	union {
-		unsigned long status_addr;	/*  read: status  */
+		unsigned long status_addr;	/* ??read: status ??*/
 		unsigned long command_addr;	/* write: command */
 	};
 

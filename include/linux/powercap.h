@@ -258,7 +258,7 @@ static inline void *powercap_get_zone_data(struct powercap_zone *power_zone)
 * Used to create a control_type with the power capping class. Here control_type
 * can represent a type of technology, which can control a range of power zones.
 * For example a control_type can be RAPL (Running Average Power Limit)
-* Intel® 64 and IA-32 Processor Architectures. The name can be any string
+* Intel?? 64 and IA-32 Processor Architectures. The name can be any string
 * which must be unique, otherwise this function returns NULL.
 * A pointer to the control_type instance is returned on success.
 */

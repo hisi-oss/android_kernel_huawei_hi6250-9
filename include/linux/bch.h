@@ -14,7 +14,7 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Copyright © 2011 Parrot S.A.
+ * Copyright ?? 2011 Parrot S.A.
  *
  * Author: Ivan Djelic <ivan.djelic@parrot.com>
  *

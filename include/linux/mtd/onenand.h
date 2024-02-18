@@ -1,7 +1,7 @@
 /*
  *  linux/include/linux/mtd/onenand.h
  *
- *  Copyright © 2005-2009 Samsung Electronics
+ *  Copyright ?? 2005-2009 Samsung Electronics
  *  Kyungmin Park <kyungmin.park@samsung.com>
  *
  * This program is free software; you can redistribute it and/or modify

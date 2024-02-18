@@ -24,7 +24,7 @@
  *     You should have received a copy of the GNU General Public License 
  *     along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- *     Michel Dänzer <daenzer@debian.org>, 10/2001
+ *     Michel D??nzer <daenzer@debian.org>, 10/2001
  *     - simplify irda_pv_t to avoid endianness issues
  *     
  ********************************************************************/

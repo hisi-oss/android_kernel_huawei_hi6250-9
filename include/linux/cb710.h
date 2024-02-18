@@ -1,7 +1,7 @@
 /*
  *  cb710/cb710.h
  *
- *  Copyright by Michał Mirosław, 2008-2009
+ *  Copyright by Micha?? Miros??aw, 2008-2009
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -128,7 +128,7 @@ void cb710_dump_regs(struct cb710_chip *chip, unsigned dump);
 /*
  *  cb710/sgbuf2.h
  *
- *  Copyright by Michał Mirosław, 2008-2009
+ *  Copyright by Micha?? Miros??aw, 2008-2009
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
