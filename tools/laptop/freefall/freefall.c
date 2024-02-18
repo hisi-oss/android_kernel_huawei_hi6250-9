@@ -3,7 +3,7 @@
  * Copyright 2008 Eric Piel
  * Copyright 2009 Pavel Machek <pavel@ucw.cz>
  * Copyright 2012 Sonal Santan
- * Copyright 2014 Pali Roh??r <pali.rohar@gmail.com>
+ * Copyright 2014 Pali Rohár <pali.rohar@gmail.com>
  *
  * GPLv2.
  */

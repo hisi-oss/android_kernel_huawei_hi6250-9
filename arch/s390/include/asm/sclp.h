@@ -97,7 +97,7 @@ struct zpci_report_error_header {
 			 * 2: Informational Report
 			 *	(OpenCrypto Successful Diagnostics Execution)
 			 */
-	u16 length;	/* Length of Subsequent Data (up to 4K ??? SCLP header */
+	u16 length;	/* Length of Subsequent Data (up to 4K – SCLP header */
 	u8 data[0];	/* Subsequent Data passed verbatim to SCLP ET 24 */
 } __packed;
 

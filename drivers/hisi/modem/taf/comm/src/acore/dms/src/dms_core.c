@@ -47,7 +47,7 @@
 */
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 
 #include "vos.h"
@@ -63,14 +63,14 @@
 
 
 /*****************************************************************************
-    ??????????????????????.C??????????
+    协议栈打印打点方式下的.C文件宏定义
 *****************************************************************************/
 
 #define THIS_FILE_ID                    PS_FILE_ID_DMS_CORE_C
 
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
 
 DMS_MAIN_INFO                           g_stDmsMainInfo = {0};
@@ -107,16 +107,16 @@ VOS_UINT8                               g_ucDmsPrintModemLogType = 0;
 
 
 /*****************************************************************************
-  3 ????????????
+  3 外部函数声明
 *****************************************************************************/
 
 extern VOS_VOID At_MsgProc(MsgBlock* pMsg);
 extern VOS_UINT32 At_PidInit(enum VOS_INIT_PHASE_DEFINE enPhase);
 extern void *hisi_io_memcpy(void *dest, const void *src, unsigned int count);
-/* ????pclint???? */
+/* 解决pclint问题 */
 
 /*****************************************************************************
-  3 ????????
+  3 函数实现
 *****************************************************************************/
 
 VOS_VOID DMS_ReadPortDebugCfgNV(VOS_VOID)
@@ -127,7 +127,7 @@ VOS_VOID DMS_ReadPortDebugCfgNV(VOS_VOID)
 
     TAF_MEM_SET_S(&stPortDebugNVCfg, sizeof(stPortDebugNVCfg), 0x00, sizeof(TAF_NV_PORT_DEBUG_CFG_STRU));
 
-    /* ????NV?? */
+    /* 读取NV项 */
     if (NV_OK != NV_ReadEx(MODEM_ID_0,
                            en_NV_Item_DMS_DEBUG_CFG,
                           &stPortDebugNVCfg,
@@ -151,7 +151,7 @@ VOS_VOID DMS_ReadGetModemLogCfgNV(VOS_VOID)
 
     TAF_MEM_SET_S(&stPrintModemLogType, sizeof(stPrintModemLogType), 0x00, sizeof(stPrintModemLogType));
 
-    /* ????NV?? */
+    /* 读取NV项 */
     if (NV_OK != NV_Read(en_NV_Item_Print_Modem_Log_Type,
                          &stPrintModemLogType,
                          sizeof(TAF_NV_PRINT_MODEM_LOG_TYPE_STRU)))
@@ -174,19 +174,19 @@ VOS_VOID DMS_Init(VOS_VOID)
     g_stDmsMainInfo.pfnRdDataCallback  = NULL;
     g_stDmsMainInfo.pfnConnectCallBack = NULL;
 
-    /*????????????????handle*/
+    /*初始化所有端口的handle*/
     for (ulport = 0; ulport < DMS_PHY_BEAR_LAST; ulport++)
     {
         g_stDmsMainInfo.stPhyProperty[ulport].lPortHandle = UDI_INVALID_HANDLE;
     }
 
-    /*????????????????????????????????????????????????????????*/
+    /*物理通道默认属性，存在多个物理通道有能力对应一个逻辑通道*/
     g_stDmsMainInfo.stPhyProperty[DMS_PHY_BEAR_USB_PCUI].enLogicChan  = DMS_CHANNEL_AT;
     g_stDmsMainInfo.stPhyProperty[DMS_PHY_BEAR_USB_CTRL].enLogicChan  = DMS_CHANNEL_AT;
     g_stDmsMainInfo.stPhyProperty[DMS_PHY_BEAR_USB_PCUI2].enLogicChan = DMS_CHANNEL_AT;
 
 
-    /* ??????AT?????????????????? */
+    /* 初始化AT通道使用的静态内存 */
     Dms_StaticBufInit();
 
 
@@ -248,24 +248,24 @@ VOS_VOID DMS_UsbDisableCB(VOS_VOID)
 
     DMS_DBG_SDM_FUN(DMS_SDM_USB_DISABLE, 0, 0, 0);
 
-    /* nv????1??????at sever????1??????at sever????at sever????pcui??ctrl?? */
+    /* nv值为1表示有at sever，非1表示无at sever，无at sever关闭pcui和ctrl口 */
     if (VOS_TRUE == g_stDmsMainInfo.bPortOpenFlg)
     {
-        /* ????PCUI???? */
+        /* 关闭PCUI通道 */
         ulRet = DMS_VcomPcuiClose();
         if(ERR_MSP_SUCCESS!=ulRet)
         {
             DMS_DBG_SDM_FUN(DMS_SDM_USB_DISABLE_ERR,0, 0, 3);
         }
 
-        /* ????CTRL???? */
+        /* 关闭CTRL通道 */
         ulRet = DMS_VcomCtrlClose();
         if(ERR_MSP_SUCCESS!=ulRet)
         {
             DMS_DBG_SDM_FUN(DMS_SDM_USB_DISABLE_ERR,0, 0, 5);
         }
 
-        /* ????PCUI2???? */
+        /* 关闭PCUI2通道 */
         ulRet = DMS_VcomPcui2Close();
         if(ERR_MSP_SUCCESS != ulRet)
         {
@@ -274,7 +274,7 @@ VOS_VOID DMS_UsbDisableCB(VOS_VOID)
 
     }
 
-    /* ????NDIS CTRL???? */
+    /* 关闭NDIS CTRL通道 */
     ulRet =  DMS_NcmClose();
     if(ERR_MSP_SUCCESS!=ulRet)
     {
@@ -298,14 +298,14 @@ VOS_VOID DMS_UsbEnableCB(VOS_VOID)
 
     DMS_DBG_SDM_FUN(DMS_SDM_USB_ENABLE, 0, 0, 0);
 
-    /* NVE?????????????????????????? */
+    /* NVE只读取一次，读取后不再读取 */
     if (VOS_FALSE == g_stDmsMainInfo.bPortCfgFlg)
     {
         g_dms_debug_atserv_nv_info.ulNvValue        = stAtServerNv.nv_data[0];
 
         g_stDmsMainInfo.bPortCfgFlg                 = VOS_TRUE;
 
-        /* nv????1??????at sever????1??????at sever????at sever????pcui??ctrl?? */
+        /* nv值为1表示有at sever，非1表示无at sever，无at sever打开pcui和ctrl口 */
         if ((1 != stAtServerNv.nv_data[0])
             )
         {
@@ -321,21 +321,21 @@ VOS_VOID DMS_UsbEnableCB(VOS_VOID)
     {
         g_stDmsMainInfo.bPortOpenFlg = VOS_TRUE;
 
-        /*???? AT PCUI ????*/
+        /*打开 AT PCUI 通道*/
         ulRet = DMS_VcomPcuiOpen();
         if (ERR_MSP_SUCCESS != ulRet)
         {
             DMS_DBG_SDM_FUN(DMS_SDM_USB_ENABLE_ERR, 0, 0, 3);
         }
 
-        /*???? AT CTRL ????*/
+        /*打开 AT CTRL 通道*/
         ulRet = DMS_VcomCtrlOpen();
         if (ERR_MSP_SUCCESS != ulRet)
         {
             DMS_DBG_SDM_FUN(DMS_SDM_USB_ENABLE_ERR, 0, 0, 5);
         }
 
-        /*???? AT PCUI2 ????*/
+        /*打开 AT PCUI2 通道*/
         ulRet = DMS_VcomPcui2Open();
         if (ERR_MSP_SUCCESS != ulRet)
         {
@@ -343,7 +343,7 @@ VOS_VOID DMS_UsbEnableCB(VOS_VOID)
         }
     }
 
-    /*???? NDIS CTRL ????*/
+    /*打开 NDIS CTRL 通道*/
     ulRet = DMS_NcmOpen();
     if (ERR_MSP_SUCCESS != ulRet)
     {
@@ -436,7 +436,7 @@ ssize_t DMS_ReadPortCfgFile(
     ulLength        = VOS_StrLen(acModeTemp);
     len             = PS_MIN(len, ulLength);
 
-    /*??????????????????????????????*/
+    /*拷贝内核空间数据到用户空间上面*/
     if (0 == copy_to_user(buf,(VOS_VOID *)acModeTemp, (VOS_ULONG)len))
     {
         *ppos += (loff_t)len;
@@ -476,7 +476,7 @@ ssize_t DMS_WritePortCfgFile(
         return -ENOSPC;
     }
 
-    /*??????????????????????????????*/
+    /*拷贝用户空间数据到内核空间上面*/
     if (copy_from_user((VOS_VOID *)acModeTemp, (VOS_VOID *)buf, (VOS_ULONG)len) > 0)
     {
         return -EFAULT;
@@ -496,7 +496,7 @@ ssize_t DMS_WritePortCfgFile(
 
     g_stDmsMainInfo.ulPortCfgValue  = ulValue;
 
-    /* ????????????????????????????????????????????????????NVE */
+    /* 如果已经写过这个文件，则以写的值为准，后续不需要再读NVE */
     g_stDmsMainInfo.bPortCfgFlg     = TRUE;
 
     return (ssize_t)len;
@@ -513,7 +513,7 @@ VOS_UINT32 DMS_RegOmChanDataReadCB(
 {
     DMS_NLK_OM_CHAN_PROPERTY_STRU      *pstOmChanProp = VOS_NULL_PTR;
 
-    /* ???????????????????? */
+    /* 检查通道号和函数指针 */
     if ((enChan >= DMS_OM_CHAN_BUTT) || (VOS_NULL_PTR == pFunc))
     {
         printk(KERN_ERR "[%s][LINE: %d] Invalid channel %d.\n",
@@ -521,7 +521,7 @@ VOS_UINT32 DMS_RegOmChanDataReadCB(
         return VOS_ERR;
     }
 
-    /* ???????????????????? */
+    /* 设置通道数据回调函数 */
     pstOmChanProp = DMS_GET_NLK_OM_CHAN_PROP(enChan);
     pstOmChanProp->pDataFunc = pFunc;
 
@@ -536,7 +536,7 @@ VOS_UINT32 DMS_RegOmChanEventCB(
 {
     DMS_NLK_OM_CHAN_PROPERTY_STRU      *pstOmChanProp = VOS_NULL_PTR;
 
-    /* ?????????? */
+    /* 检查通道号 */
     if ((enChan >= DMS_OM_CHAN_BUTT) || (VOS_NULL_PTR == pFunc))
     {
         printk(KERN_ERR "[%s][LINE: %d] Invalid channel %d.\n",
@@ -544,7 +544,7 @@ VOS_UINT32 DMS_RegOmChanEventCB(
         return VOS_ERR;
     }
 
-    /* ???????????????????? */
+    /* 设置通道事件回调函数 */
     pstOmChanProp = DMS_GET_NLK_OM_CHAN_PROP(enChan);
     pstOmChanProp->pEvtFunc = pFunc;
 
@@ -571,14 +571,14 @@ VOS_UINT32 DMS_WriteOmData(
 
     DMS_DBG_NLK_DL_TOTAL_PKT_NUM(1);
 
-    /* ???????? */
+    /* 检查通道 */
     if (enChan >= DMS_OM_CHAN_BUTT)
     {
         DMS_DBG_NLK_DL_ERR_CHAN_PKT_NUM(1);
         return VOS_ERR;
     }
 
-    /* ???????? */
+    /* 检查数据 */
     if ((VOS_NULL_PTR == pucData) || (0 == ulLength))
     {
         DMS_DBG_NLK_DL_ERR_PARA_PKT_NUM(1);
@@ -587,21 +587,21 @@ VOS_UINT32 DMS_WriteOmData(
 
     DMS_DBG_NLK_DL_NORM_CHAN_PKT_NUM(enChan, 1);
 
-    /* ??????????, ???????????????????? */
+    /* 对数据分块, 避免一次发送过多数据 */
     pucMem        = pucData;
     ulMemNum      = (ulLength >= DMS_GET_NLK_THRESH_SIZE())?(ulLength / DMS_GET_NLK_DATA_SIZE()):0;
     ulLastMemSize = (ulLength >= DMS_GET_NLK_THRESH_SIZE())?(ulLength % DMS_GET_NLK_DATA_SIZE()):ulLength;
 
     wake_lock(&g_stDmsMainInfo.stwakelock);
 
-    /* ?????????????????? */
+    /* 发送固定大小数据块 */
     for (ulCnt = 0; ulCnt < ulMemNum; ulCnt++)
     {
         DMS_NLK_Send(DMS_GET_NLK_PHY_BEAR(enChan), DMS_GET_NLK_MSG_TYPE(enChan), pucMem, DMS_GET_NLK_DATA_SIZE());
         pucMem += DMS_GET_NLK_DATA_SIZE();
     }
 
-    /* ?????????????????? */
+    /* 发送最后一块数据块 */
     if (0 != ulLastMemSize)
     {
         DMS_NLK_Send(DMS_GET_NLK_PHY_BEAR(enChan), DMS_GET_NLK_MSG_TYPE(enChan), pucMem, ulLastMemSize);
@@ -622,25 +622,25 @@ VOS_VOID DMS_NLK_InitEntity(VOS_VOID)
     /* netlink socket */
     pstNlkEntity->pstSock    = VOS_NULL_PTR;
 
-    /* netlink ?????????????? */
+    /* netlink 消息数据块大小 */
     pstNlkEntity->ulDataSize   = DMS_NLK_DEFUALT_DATA_SIZE;
 
-    /* netlink ?????????????? */
+    /* netlink 消息数据块大小 */
     pstNlkEntity->ulThreshSize = DMS_NLK_DEFUALT_DATA_SIZE * 2;
 
-    /* netlink ?????????????? */
+    /* netlink 物理承载进程号 */
     pstNlkEntity->astPhyBearProp[DMS_NLK_PHY_BEAR_LTE].lPid     = DMS_NLK_INVALID_PID;
     pstNlkEntity->astPhyBearProp[DMS_NLK_PHY_BEAR_GU].lPid      = DMS_NLK_INVALID_PID;
 
-    /* netlink ????????????(LTE CLTR) */
+    /* netlink 逻辑通道属性(LTE CLTR) */
     pstNlkEntity->astOmChanProp[DMS_OM_CHAN_LTE_CTRL].enPhyBear = DMS_NLK_PHY_BEAR_LTE;
     pstNlkEntity->astOmChanProp[DMS_OM_CHAN_LTE_CTRL].enMsgType = DMS_NLK_MSG_TYPE_LTE_CTRL;
 
-    /* netlink ????????????(LTE DATA) */
+    /* netlink 逻辑通道属性(LTE DATA) */
     pstNlkEntity->astOmChanProp[DMS_OM_CHAN_LTE_DATA].enPhyBear = DMS_NLK_PHY_BEAR_LTE;
     pstNlkEntity->astOmChanProp[DMS_OM_CHAN_LTE_DATA].enMsgType = DMS_NLK_MSG_TYPE_LTE_DATA;
 
-    /* netlink ????????????(GU DATA) */
+    /* netlink 逻辑通道属性(GU DATA) */
     pstNlkEntity->astOmChanProp[DMS_OM_CHAN_GU_DATA].enPhyBear  = DMS_NLK_PHY_BEAR_GU;
     pstNlkEntity->astOmChanProp[DMS_OM_CHAN_GU_DATA].enMsgType  = DMS_NLK_MSG_TYPE_GU_DATA;
 
@@ -657,7 +657,7 @@ VOS_UINT32 DMS_NLK_CfgOpen(
     DMS_OM_CHAN_EVENT_CB_FUNC           pEvtFunc       = VOS_NULL_PTR;
     DMS_OM_CHAN_ENUM_UINT32             enChan;
 
-    /* ?????????? */
+    /* 检查承载号 */
     if (enPhyBear >= DMS_NLK_PHY_BEAR_BUTT)
     {
         printk("[%s][LINE: %d] Invalid PHY bearer %d.\n",
@@ -665,16 +665,16 @@ VOS_UINT32 DMS_NLK_CfgOpen(
         return VOS_ERR;
     }
 
-    /* ????????PID */
+    /* 设置承载PID */
     pstPhyBearProp = DMS_GET_NLK_PHY_BEAR_PROP(enPhyBear);
     pstPhyBearProp->lPid = pstNlkHdr->nlmsg_pid;
 
-    /* ?????????????????????????? */
+    /* 遍历所有与该承载关联的通道 */
     for (enChan = 0; enChan < DMS_OM_CHAN_BUTT; enChan++)
     {
         pEvtFunc = DMS_GET_NLK_OM_CHAN_EVT_CB_FUNC(enChan);
 
-        /* ???????????????????????????????????????? */
+        /* 通知物理承载相同的逻辑通道使用者通道打开 */
         if ((enPhyBear == DMS_GET_NLK_PHY_BEAR(enChan)) && (VOS_NULL_PTR != pEvtFunc))
         {
             pEvtFunc(enChan, DMS_CHAN_EVT_OPEN);
@@ -694,7 +694,7 @@ VOS_UINT32 DMS_NLK_CfgClose(
     DMS_OM_CHAN_EVENT_CB_FUNC           pEvtFunc       = VOS_NULL_PTR;
     DMS_OM_CHAN_ENUM_UINT32             enChan;
 
-    /* ?????????? */
+    /* 检查承载号 */
     if (enBear >= DMS_NLK_PHY_BEAR_BUTT)
     {
         printk("[%s][LINE: %d] Invalid PHY bearer %d.\n",
@@ -702,16 +702,16 @@ VOS_UINT32 DMS_NLK_CfgClose(
         return VOS_ERR;
     }
 
-    /* ????????PID */
+    /* 设置承载PID */
     pstPhyBearProp = DMS_GET_NLK_PHY_BEAR_PROP(enBear);
     pstPhyBearProp->lPid = DMS_NLK_INVALID_PID;
 
-    /* ?????????????????????????? */
+    /* 遍历所有与该承载关联的通道 */
     for (enChan = 0; enChan < DMS_OM_CHAN_BUTT; enChan++)
     {
         pEvtFunc = DMS_GET_NLK_OM_CHAN_EVT_CB_FUNC(enChan);
 
-        /* ???????????????????????????????????????? */
+        /* 通知物理承载相同的逻辑通道使用者通道关闭 */
         if ((enBear == DMS_GET_NLK_PHY_BEAR(enChan)) && (VOS_NULL_PTR != pEvtFunc))
         {
             pEvtFunc(enChan, DMS_CHAN_EVT_CLOSE);
@@ -781,11 +781,11 @@ VOS_VOID DMS_NLK_ProcLteCtrlMsg(struct nlmsghdr *pstNlkHdr)
     DMS_OM_CHAN_DATA_READ_CB_FUNC       pDataFunc  = VOS_NULL_PTR;
     DMS_NLK_PAYLOAD_STRU               *pstPayload = VOS_NULL_PTR;
 
-    /* ?????????????????? */
+    /* 获取通道注册的回调 */
     pDataFunc = DMS_GET_NLK_OM_CHAN_DATA_CB_FUNC(DMS_OM_CHAN_LTE_CTRL);
     if (VOS_NULL_PTR != pDataFunc)
     {
-        /* ???????????? */
+        /* 透传数据内容 */
         pstPayload = nlmsg_data(pstNlkHdr);
         (VOS_VOID)pDataFunc(DMS_OM_CHAN_LTE_CTRL, pstPayload->aucData, pstPayload->ulLength);
         DMS_DBG_NLK_UL_SEND_MSG_NUM(pstNlkHdr->nlmsg_type, 1);
@@ -804,11 +804,11 @@ VOS_VOID DMS_NLK_ProcLteDataMsg(struct nlmsghdr *pstNlkHdr)
     DMS_OM_CHAN_DATA_READ_CB_FUNC       pDataFunc  = VOS_NULL_PTR;
     DMS_NLK_PAYLOAD_STRU               *pstPayload = VOS_NULL_PTR;
 
-    /* ?????????????????? */
+    /* 获取通道注册的回调 */
     pDataFunc = DMS_GET_NLK_OM_CHAN_DATA_CB_FUNC(DMS_OM_CHAN_LTE_DATA);
     if (VOS_NULL_PTR != pDataFunc)
     {
-        /* ???????????? */
+        /* 透传数据内容 */
         pstPayload = nlmsg_data(pstNlkHdr);
         (VOS_VOID)pDataFunc(DMS_OM_CHAN_LTE_DATA, pstPayload->aucData, pstPayload->ulLength);
         DMS_DBG_NLK_UL_SEND_MSG_NUM(pstNlkHdr->nlmsg_type, 1);
@@ -827,11 +827,11 @@ VOS_VOID DMS_NLK_ProcGuDataMsg(struct nlmsghdr *pstNlkHdr)
     DMS_OM_CHAN_DATA_READ_CB_FUNC       pDataFunc = VOS_NULL_PTR;
     DMS_NLK_PAYLOAD_STRU               *pstPayload = VOS_NULL_PTR;
 
-    /* ?????????????????? */
+    /* 获取通道注册的回调 */
     pDataFunc = DMS_GET_NLK_OM_CHAN_DATA_CB_FUNC(DMS_OM_CHAN_GU_DATA);
     if (VOS_NULL_PTR != pDataFunc)
     {
-        /* ???????????? */
+        /* 透传数据内容 */
         pstPayload = nlmsg_data(pstNlkHdr);
         (VOS_VOID)pDataFunc(DMS_OM_CHAN_GU_DATA, pstPayload->aucData, pstPayload->ulLength);
         DMS_DBG_NLK_UL_SEND_MSG_NUM(pstNlkHdr->nlmsg_type, 1);
@@ -861,21 +861,21 @@ VOS_INT DMS_NLK_Send(
 
     DMS_DBG_NLK_DL_TOTAL_MSG_NUM(1);
 
-    /* ???? netlink socket */
+    /* 检查 netlink socket */
     if (VOS_NULL_PTR == DMS_GET_NLK_SOCK())
     {
         DMS_DBG_NLK_DL_ERR_SOCK_MSG_NUM(1);
         return -EIO;
     }
 
-    /* ???????????????? */
+    /* 检查物理承载状态 */
     if (DMS_NLK_INVALID_PID == DMS_GET_NLK_PHY_PID(enPhyBear))
     {
         DMS_DBG_NLK_DL_ERR_PID_MSG_NUM(1);
         return -EINVAL;
     }
 
-    /* ???? netlink ???? */
+    /* 申请 netlink 消息 */
     ulPayloadSize = sizeof(DMS_NLK_PAYLOAD_STRU) + ulLength;
     ulMsgSize = NLMSG_SPACE(ulPayloadSize);
 
@@ -886,7 +886,7 @@ VOS_INT DMS_NLK_Send(
         return -ENOBUFS;
     }
 
-    /* ???? netlink ?????? */
+    /* 填充 netlink 消息头 */
     /* Use "ulMsgSize - sizeof(*pstNlkHdr)" here (incluing align pads) */
     pstNlkHdr = nlmsg_put(pstSkb, 0, 0, (VOS_INT)enMsgType,
                     (VOS_INT)(ulMsgSize - sizeof(struct nlmsghdr)), 0);
@@ -897,7 +897,7 @@ VOS_INT DMS_NLK_Send(
         return -EMSGSIZE;
     }
 
-    /* ???? netlink ????????PID */
+    /* 填充 netlink 消息接收PID */
 #if ((LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)) || (VOS_OS_VER == VOS_WIN32))
     NETLINK_CB(pstSkb).portid = DMS_GET_NLK_PHY_PID(enPhyBear);
 #else
@@ -905,14 +905,14 @@ VOS_INT DMS_NLK_Send(
 #endif
     NETLINK_CB(pstSkb).dst_group = 0;
 
-    /* ???? netlink ???????? */
+    /* 填充 netlink 消息内容 */
     pstPlayload = nlmsg_data(pstNlkHdr);
     pstPlayload->ulLength = ulLength;
     memset(pstPlayload->aucReserved, 0x00, sizeof(pstPlayload->aucReserved));/* unsafe_function_ignore: memset */
 
     memcpy(pstPlayload->aucData, pucData, ulLength);/* unsafe_function_ignore: memcpy */
 
-    /* ???? netlink ???? */
+    /* 发送 netlink 消息 */
 #if ((LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)) || (VOS_OS_VER == VOS_WIN32))
     lRet = netlink_unicast(DMS_GET_NLK_SOCK(), pstSkb, NETLINK_CB(pstSkb).portid, 0);
 #else
@@ -942,17 +942,17 @@ VOS_VOID DMS_NLK_Input(struct sk_buff *pstSkb)
 
     DMS_DBG_NLK_UL_TOTAL_MSG_NUM(1);
 
-    /* ???? netlink ???? */
+    /* 获取 netlink 消息 */
     pstNlkHdr = nlmsg_hdr(pstSkb);
 
-    /* ???? netlink ???????????? */
+    /* 检查 netlink 消息是否合法 */
     if (!NLMSG_OK(pstNlkHdr, pstSkb->len))
     {
         DMS_DBG_NLK_UL_ERR_MSG_NUM(1);
         return;
     }
 
-    /* ???? netlink ???? */
+    /* 处理 netlink 消息 */
     switch (pstNlkHdr->nlmsg_type)
     {
         case DMS_NLK_MSG_TYPE_LTE_CFG:
@@ -991,10 +991,10 @@ VOS_INT __init DMS_NLK_Init(VOS_VOID)
 
     printk("DMS_NLK_Init,entry,%u",VOS_GetSlice());
 
-    /* ?????? netlink ???? */
+    /* 初始化 netlink 实体 */
     DMS_NLK_InitEntity();
 
-    /* ???????????????? netlink socket */
+    /* 在内核态创建一个 netlink socket */
 #if ((LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)) || (VOS_OS_VER == VOS_WIN32))
     pstSock = netlink_kernel_create(&init_net, NETLINK_HW_LOGCAT, &g_stDmsNlkCfg);
 #else
@@ -1010,7 +1010,7 @@ VOS_INT __init DMS_NLK_Init(VOS_VOID)
         return -ENOMEM;
     }
 
-    /* ???? socket */
+    /* 保存 socket */
     pstNlkEntity = DMS_GET_NLK_ENTITY();
     pstNlkEntity->pstSock = pstSock;
 
@@ -1022,7 +1022,7 @@ VOS_INT __init DMS_NLK_Init(VOS_VOID)
 
 VOS_VOID __exit DMS_NLK_Exit(VOS_VOID)
 {
-    /* ???? netlink socket */
+    /* 释放 netlink socket */
     netlink_kernel_release(DMS_GET_NLK_SOCK());
     DMS_NLK_InitEntity();
     return;
@@ -1058,14 +1058,14 @@ ssize_t DMS_ReadGetSliceFile(
         return 0;
     }
 
-    /* ?????? */
+    /* 初始化 */
     ulLength            = 0;
     ulHigh32bitValue    = 0;
     ulLow32bitValue     = 0;
 
     TAF_MEM_SET_S(acModeTemp, sizeof(acModeTemp), 0x00, DMS_GET_SLICE_FILE_LEN);
 
-    /* ????????  Seattle ?? Portland?????? */
+    /* 获取时间  Seattle 和 Portland不一样 */
     (VOS_VOID)mdrv_timer_get_accuracy_timestamp(&ulHigh32bitValue, &ulLow32bitValue);
 
     if (ulHigh32bitValue != 0)
@@ -1080,7 +1080,7 @@ ssize_t DMS_ReadGetSliceFile(
     ulLength        = VOS_StrLen(acModeTemp);
     len             = PS_MIN(len, ulLength);
 
-    /*??????????????????????????????*/
+    /*拷贝内核空间数据到用户空间上面*/
     if (0 == copy_to_user(buf,(VOS_VOID *)acModeTemp, (VOS_ULONG)len))
     {
         *ppos += (loff_t)len;
@@ -1136,14 +1136,14 @@ ssize_t DMS_ReadModemStatusFile(
                  g_stDmsMainInfo.aucModemStatus[1],
                  g_stDmsMainInfo.aucModemStatus[2]);
 
-    /* ???????????????????????????????? */
+    /* 获取按需拨号的模式以及时长的地址 */
     VOS_sprintf_s((VOS_CHAR *)acStatus, sizeof(acStatus), "%s", g_stDmsMainInfo.aucModemStatus);
 
     ulStatusLen = VOS_StrLen(acStatus);
 
     len = PS_MIN(len, ulStatusLen);
 
-    /*??????????????????????????????*/
+    /*拷贝内核空间数据到用户空间上面*/
     if (0 == copy_to_user(buf,(VOS_VOID *)acStatus, (VOS_ULONG)len))
     {
         *ppos += (loff_t)len;

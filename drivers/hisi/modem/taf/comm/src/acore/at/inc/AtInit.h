@@ -50,7 +50,7 @@
 #define __ATINIT_H__
 
 /*****************************************************************************
-  1 ??????????????
+  1 其他头文件包含
 *****************************************************************************/
 #include "vos.h"
 #include "AtCtx.h"
@@ -74,13 +74,13 @@ extern "C" {
 #pragma pack(4)
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
-/* ???????????????????? */
+/* 多时隙等级最大宏定义 */
 #define AT_GAS_GRR_MULTISLOT_CLASS_MAX  (12)
 
 #if (defined(CONFIG_BALONG_SPE))
-/* ????SPE???????? */
+/* 设置SPE端口参数 */
 /*lint -emacro({717}, AT_SET_SPE_PORT_ATTR_BYPASS_MODE)*/
 #define AT_SET_SPE_PORT_ATTR_BYPASS_MODE(pstAttr,pstNetDev,ulTdNum,ulRdNum)\
             do\
@@ -95,7 +95,7 @@ extern "C" {
 
 
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
 
 
@@ -112,64 +112,64 @@ typedef VOS_UINT8 AT_GAS_HIGH_MULTISLOT_CLASS_ENUM_UINT8;
 
 
 /*****************************************************************************
-  4 ????????????
+  4 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  5 ??????????
+  5 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 ????????
+  6 消息定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  7 STRUCT????
+  7 STRUCT定义
 *****************************************************************************/
 /*****************************************************************************
- ??????    : AT_NV_UE_CAPABILITY_STRU
- ????????  : ??
- ????????  : ??????NV????UE????????
+ 结构名    : AT_NV_UE_CAPABILITY_STRU
+ 协议表格  : 无
+ 结构说明  : 存储在NV中的UE能力信息
 *****************************************************************************/
 typedef struct
 {
-    VOS_UINT8                           aucReserved1[11];                       /* ???????????? */
+    VOS_UINT8                           aucReserved1[11];                       /* 留作以后扩展 */
     VOS_UINT8                           ucAsRelIndicator;                       /* Access Stratum Release Indicator             */
 
-    VOS_UINT8                           ucHSDSCHSupport;                        /* ????????enHSDSCHSupport??????                */
-    VOS_UINT8                           ucHSDSCHPhyCategory;                    /* ????HS-DSCH????????????????                  */
+    VOS_UINT8                           ucHSDSCHSupport;                        /* 是否支持enHSDSCHSupport的标志                */
+    VOS_UINT8                           ucHSDSCHPhyCategory;                    /* 支持HS-DSCH物理层的类型标志                  */
 
     VOS_UINT8                           ucMacEhsSupport;
     VOS_UINT8                           ucHSDSCHPhyCategoryExt;
-    VOS_UINT8                           ucMultiCellSupport;                     /* ???????? Multi cell support,????????MultiCell,Ex2???? */
+    VOS_UINT8                           ucMultiCellSupport;                     /* 是否支持 Multi cell support,如果支持MultiCell,Ex2存在 */
     VOS_UINT8                           ucHSDSCHPhyCategoryExt2;                /* HS-DSCH physical layer category extension 2 */
 
-    VOS_UINT8                           aucReserved2[17];                       /* ???????????? */
+    VOS_UINT8                           aucReserved2[17];                       /* 留作以后扩展 */
 
     VOS_UINT8                           ucHSDSCHPhyCategoryExt3;                /* HS-DSCH physical layer category extension 3 */
-    VOS_UINT8                           ucDcMimoSupport;                        /* ????????DC+MIMO */
+    VOS_UINT8                           ucDcMimoSupport;                        /* 是否支持DC+MIMO */
 
-    VOS_UINT8                           aucReserved3[3];                        /* ???????????? */
+    VOS_UINT8                           aucReserved3[3];                        /* 留作以后扩展 */
 
 } AT_NV_UE_CAPABILITY_STRU;
 
 
 
 /*****************************************************************************
-  8 UNION????
+  8 UNION定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  9 OTHERS????
+  9 OTHERS定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  10 ????????
+  10 函数声明
 *****************************************************************************/
 extern VOS_VOID AT_ReadPlatformNV(VOS_VOID);
 extern VOS_VOID AT_ReadClientConfigNV(VOS_VOID);

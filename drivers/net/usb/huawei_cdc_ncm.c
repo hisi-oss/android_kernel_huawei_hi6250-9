@@ -10,7 +10,7 @@
  * connection.
  * This code has been heavily inspired by the cdc_mbim.c driver, which is
  * Copyright (c) 2012  Smith Micro Software, Inc.
- * Copyright (c) 2012  Bj??rn Mork <bjorn@mork.no>
+ * Copyright (c) 2012  Bjørn Mork <bjorn@mork.no>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

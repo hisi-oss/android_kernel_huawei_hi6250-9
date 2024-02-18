@@ -2,7 +2,7 @@
  *	MPTCP implementation - Linked Increase congestion control Algorithm (LIA)
  *
  *	Initial Design & Implementation:
- *	S??bastien Barr?? <sebastien.barre@uclouvain.be>
+ *	Sébastien Barré <sebastien.barre@uclouvain.be>
  *
  *	Current Maintainer & Author:
  *	Christoph Paasch <christoph.paasch@uclouvain.be>
@@ -10,7 +10,7 @@
  *	Additional authors:
  *	Jaakko Korkeaniemi <jaakko.korkeaniemi@aalto.fi>
  *	Gregory Detal <gregory.detal@uclouvain.be>
- *	Fabien Duch??ne <fabien.duchene@uclouvain.be>
+ *	Fabien Duchêne <fabien.duchene@uclouvain.be>
  *	Andreas Seelinger <Andreas.Seelinger@rwth-aachen.de>
  *	Lavkesh Lahngir <lavkesh51@gmail.com>
  *	Andreas Ripke <ripke@neclab.eu>
@@ -264,7 +264,7 @@ static void __exit mptcp_ccc_unregister(void)
 module_init(mptcp_ccc_register);
 module_exit(mptcp_ccc_unregister);
 
-MODULE_AUTHOR("Christoph Paasch, S??bastien Barr??");
+MODULE_AUTHOR("Christoph Paasch, Sébastien Barré");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("MPTCP LINKED INCREASE CONGESTION CONTROL ALGORITHM");
 MODULE_VERSION("0.1");

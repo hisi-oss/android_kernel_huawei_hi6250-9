@@ -20,7 +20,7 @@
     MA 02110-1301 USA.							     */
 /* ------------------------------------------------------------------------- */
 
-/* With some changes from Ky??sti M??lkki <kmalkki@cc.hut.fi> and even
+/* With some changes from Kyösti Mälkki <kmalkki@cc.hut.fi> and even
    Frodo Looijaard <frodol@dds.nl> */
 
 #ifndef _LINUX_I2C_ALGO_PCF_H

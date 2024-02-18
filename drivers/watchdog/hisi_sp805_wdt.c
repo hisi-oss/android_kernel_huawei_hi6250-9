@@ -453,7 +453,7 @@ static void m3_wdt_timeout_notify(unsigned int default_timeout)
 
 /* ask mcu reset its wdt timeout value  start */
 /*
-????PSCI_MSG_TYPE_M3_WDTTIMEOUT ????????????????????????????????:
+如下PSCI_MSG_TYPE_M3_WDTTIMEOUT 等宏定义，如下三个文件要保持一致:
 kernel\drivers\watchdog\sp805_wdt.c
 kernel\drivers\hisi\mntn\blackbox\platform_lpm3\rdr_hisi_lpm3.c
 vendor\hisi\confidential\lpmcu\include\psci.h

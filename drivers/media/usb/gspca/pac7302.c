@@ -4,9 +4,9 @@
  * Copyright (C) 2008-2012 Jean-Francois Moine <http://moinejf.free.fr>
  * Copyright (C) 2005 Thomas Kaiser thomas@kaiser-linux.li
  *
- * Separated from Pixart PAC7311 library by M??rton N??meth
- * Camera button input handling by M??rton N??meth <nm127@freemail.hu>
- * Copyright (C) 2009-2010 M??rton N??meth <nm127@freemail.hu>
+ * Separated from Pixart PAC7311 library by Márton Németh
+ * Camera button input handling by Márton Németh <nm127@freemail.hu>
+ * Copyright (C) 2009-2010 Márton Németh <nm127@freemail.hu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

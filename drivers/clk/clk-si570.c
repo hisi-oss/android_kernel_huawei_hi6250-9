@@ -6,7 +6,7 @@
  * Copyright (C) 2011 - 2013 Xilinx Inc.
  *
  * Author: Guenter Roeck <guenter.roeck@ericsson.com>
- *	   S??ren Brinkmann <soren.brinkmann@xilinx.com>
+ *	   Sören Brinkmann <soren.brinkmann@xilinx.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

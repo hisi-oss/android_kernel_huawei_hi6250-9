@@ -4,7 +4,7 @@
 * Version:       0.1.2
 * Description:   Irda KingSun KS-959 USB Dongle
 * Status:        Experimental
-* Author:        Alex Villac??s Lasso <a_villacis@palosanto.com>
+* Author:        Alex Villacís Lasso <a_villacis@palosanto.com>
 *         with help from Domen Puncer <domen@coderock.org>
 *
 *    Based on stir4200, mcs7780, kingsun-sir drivers.
@@ -907,6 +907,6 @@ static struct usb_driver irda_driver = {
 
 module_usb_driver(irda_driver);
 
-MODULE_AUTHOR("Alex Villac??s Lasso <a_villacis@palosanto.com>");
+MODULE_AUTHOR("Alex Villacís Lasso <a_villacis@palosanto.com>");
 MODULE_DESCRIPTION("IrDA-USB Dongle Driver for KingSun KS-959");
 MODULE_LICENSE("GPL");

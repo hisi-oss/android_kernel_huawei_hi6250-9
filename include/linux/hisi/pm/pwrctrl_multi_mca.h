@@ -36,7 +36,7 @@ typedef enum
     MCA_CMD_DFS_RLQOS,          /* DFS QoS release.             */
     MCA_CMD_DFS_UDQOS,          /* DFS QoS update.              */
     MCA_CMD_DFS_SETPROFILE,         /* Set All DFS profile.    */
-    /* V8R1B050?????????????? */
+    /* V8R1B050新增上下电命令 */
     MCA_CMD_PM_RQQOS,           /* PM QoS request.              */
     MCA_CMD_PM_RLQOS,           /* PM QoS release.              */
     MCA_CMD_PM_UDQOS,           /* PM QoS update.               */
@@ -95,7 +95,7 @@ union mca_udata_req
 #else
 	struct {s32_t dev_id; u32_t prof_buf[1];} dfs_set_prof_req; 
 #endif
-    /*V8R1B050????*/
+    /*V8R1B050新增*/
 
     struct {u32_t module_id; s32_t qos_id; u32_t req_value;} pm_rqqos_req;
 
@@ -103,7 +103,7 @@ union mca_udata_req
 
     struct {u32_t module_id; s32_t qos_id; s32_t req_id; u32_t req_value;} pm_udqos_req;
 
-    /*V8R1B071????*/
+    /*V8R1B071新增*/
 
     struct {u32_t req_value;} acpu_dfs_req;
 };
@@ -113,7 +113,7 @@ union mca_udata_rsp
     char data[MCA_UDATA_RSP_SIZE];
 
     /* Declare MCA command udata structure. */
-    /*????????????????????????????*/
+    /*假命令用于表示返回失败的情况*/
     /*struct {char name[MCA_UDATA_REQ_SIZE];} dfs_devid_req;*/
     struct {s32_t ret;} dfs_default_rsp;
 
@@ -153,7 +153,7 @@ union mca_udata_rsp
     struct {s32_t ret;} dfs_udqos_rsp;
     struct {s32_t ret;} dfs_set_prof_rsp;
 
-    /*V8R1B050????*/
+    /*V8R1B050新增*/
 
     struct {s32_t ret; s32_t req_id;} pm_rqqos_rsp;
 
@@ -161,7 +161,7 @@ union mca_udata_rsp
 
     struct {s32_t ret;} pm_udqos_rsp;
     
-    /*V8R1B071????*/
+    /*V8R1B071新增*/
     struct {s32_t ret;} acpu_dfs_rsp;
 
 };

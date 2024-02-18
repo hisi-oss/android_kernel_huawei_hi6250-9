@@ -1,6 +1,6 @@
 /* ir-rc6-decoder.c - A decoder for the RC6 IR protocol
  *
- * Copyright (C) 2010 by David H??rdeman <david@hardeman.nu>
+ * Copyright (C) 2010 by David Härdeman <david@hardeman.nu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -310,5 +310,5 @@ module_init(ir_rc6_decode_init);
 module_exit(ir_rc6_decode_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("David H??rdeman <david@hardeman.nu>");
+MODULE_AUTHOR("David Härdeman <david@hardeman.nu>");
 MODULE_DESCRIPTION("RC6 IR protocol decoder");

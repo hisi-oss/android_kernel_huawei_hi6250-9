@@ -5,7 +5,7 @@
  * Based in part on the fsam7440 driver, which is:
  * Copyright 2005 Alejandro Vidal Mata & Javier Vidal Mata.
  * and on the fsaa1655g driver, which is:
- * Copyright 2006 Martin Ve??e??a.
+ * Copyright 2006 Martin Večeřa.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 // Copyright     :  Copyright (C) 2015, Hisilicon Technologies Co., Ltd.
 // File name     :  hisi_scharger_v300.h
 // Version       :  1.0
@@ -165,8 +165,8 @@ struct charge_cv_vdpm_data {
 #define CHG_STATUS0_REG                 (SOC_SCHARGER_STATUS0_ADDR(0))
 #define CHG_BUCK_OK                     (1<<SOC_SCHARGER_STATUS0_buck_ok_START)
 #define CHG_VERSION_REG5                (SOC_SCHARGER_CHIP_VERSION_5_ADDR(0))
-/* BUCK_REG0?????????????????? */
-/* buck??????????????????????????????00000???100mA???00001???150mA???00010???500mA???00011???900mA???00100???1A???00101???1.2A???00110???1.3A???00111???1.4A???01000???1.5A???01001???1.6A???01010???1.7A???01011???1.8A???01100???1.9A???01101???2A???01110???2.1A???01111???2.2A???10000???2.4A???10001???2.6A???10010???2.8A???10011???3A???10100???3.2A???10101~11111:3.2A??? */
+/* BUCK_REG0调节寄存器。 */
+/* buck平均限流环设定电流：00000：100mA；00001：150mA；00010：500mA；00011：900mA；00100：1A；00101：1.2A；00110：1.3A；00111：1.4A；01000：1.5A；01001：1.6A；01010：1.7A；01011：1.8A；01100：1.9A；01101：2A；01110：2.1A；01111：2.2A；10000：2.4A；10001：2.6A；10010：2.8A；10011：3A；10100：3.2A；10101~11111:3.2A。 */
 #define CHG_INPUT_SOURCE_REG            (SOC_SCHARGER_BUCK_REG0_ADDR(0))
 #define CHG_ILIMIT_SHIFT                (SOC_SCHARGER_BUCK_REG0_buck_ilimit_START)
 #define CHG_ILIMIT_MSK                  (0x1f<<CHG_ILIMIT_SHIFT)
@@ -200,7 +200,7 @@ struct charge_cv_vdpm_data {
 #define CHG_ILIMIT_3080                 (3080)
 #define CHG_ILIMIT_3200                 (3200)
 
-/* CHG_REG1??????????????? */
+/* CHG_REG1调节寄存器 */
 #define CHG_FAST_CURRENT_REG            (SOC_SCHARGER_CHG_REG1_ADDR(0))
 #define CHG_FAST_ICHG_SHIFT             (SOC_SCHARGER_CHG_REG1_chg_fast_ichg_START)
 #define CHG_FAST_ICHG_MSK               (0x1f<<CHG_FAST_ICHG_SHIFT)
@@ -235,18 +235,18 @@ struct charge_cv_vdpm_data {
 #define CHG_FAST_ICHG_4200MA            (4200)
 #define CHG_FAST_ICHG_4500MA            (4500)
 
-/* DET_TOP_REG0??????????????? */
+/* DET_TOP_REG0调节寄存器 */
 #define CHG_VBUS_VSET_REG               (SOC_SCHARGER_DET_TOP_REG0_ADDR(0))
-/* ????????????????????????????????????00???5V???01???9V???10&11???12V??? */
+/* 适配器输入电压档位配置：00：5V；01：9V；10&11：12V。 */
 #define VBUS_VSET_SHIFT                 (SOC_SCHARGER_DET_TOP_REG0_vbus_vset_START)
 #define VBUS_VSET_MSK                   (0x03<<VBUS_VSET_SHIFT)
 #define VBUS_VSET_5V                    (5)
 #define VBUS_VSET_9V                    (9)
 #define VBUS_VSET_12V                   (12)
 
-/* BUCK_REG2?????????????????? */
+/* BUCK_REG2调节寄存器。 */
 #define CHG_DPM_SEL_REG                 (SOC_SCHARGER_BUCK_REG2_ADDR(0))
-/* DPM?????????????????????000???82.5%;001???85%???010???87.5%???011???90%???100???92.5%???101???95%??? */
+/* DPM输入电压设定：000：82.5%;001：85%；010：87.5%；011：90%；100：92.5%；101：95%。 */
 #define CHG_DPM_SEL_SHIFT               (SOC_SCHARGER_BUCK_REG2_buck_dpm_sel_START)
 #define CHG_DPM_SEL_MSK                 (0x07<<CHG_DPM_SEL_SHIFT)
 #define CHG_DPM_SEL_82_5                (0)
@@ -259,21 +259,21 @@ struct charge_cv_vdpm_data {
 #define CHG_DPM_SEL_STEP                (25)
 #define VINDPM_4520                     (4520)
 #define VINDPM_4700                     (4700)
-/* CHG_REG0?????????????????? */
-/* charger???????????????0????????????1???????????? */
+/* CHG_REG0调节寄存器。 */
+/* charger使能信号：0：关闭；1：使能。 */
 #define CHG_ENABLE_REG                  (SOC_SCHARGER_CHG_REG0_ADDR(0))
 #define CHG_EN_SHIFT                    (SOC_SCHARGER_CHG_REG0_chg_en_START)
 #define CHG_EN_MSK                      (1<<CHG_EN_SHIFT)
 
 #define BATFET_CTRL_CFG_REG             (SOC_SCHARGER_CHG_REG0_ADDR(0))
-/* batfet_ctrl???????????????????????????????????????pwr_rst_n?????????????????????????????????????????????????????????dc_plug_n?????????0?????????batfet???1?????????batfet??? */
+/* batfet_ctrl配置寄存器该寄存器除了受到pwr_rst_n复位外，还受到模拟送给数字另外一个信号dc_plug_n控制：0：关闭batfet；1：打开batfet。 */
 #define BATFET_CTRL_CFG_SHIFT           (SOC_SCHARGER_CHG_REG0_batfet_ctrl_cfg_START)
 #define BATFET_CTRL_CFG_MSK             (1<<BATFET_CTRL_CFG_SHIFT)
 #define CHG_BATFET_DIS                  (0)
 #define CHG_BATFET_EN                   (1)
 
 #define CHG_PRE_ICHG_REG                (SOC_SCHARGER_CHG_REG0_ADDR(0))
-/* ?????????????????????????????????00???100mA???01???200mA???10???300mA???11???400mA??? */
+/* 预充电电流大小调节位：00：100mA；01：200mA；10：300mA；11：400mA。 */
 #define CHG_PRE_ICHG_SHIFT              (SOC_SCHARGER_CHG_REG0_chg_pre_ichg_START)
 #define CHG_PRE_ICHG_MSK                (0x03<<CHG_PRE_ICHG_SHIFT)
 #define CHG_PRG_ICHG_STEP               (100)
@@ -285,7 +285,7 @@ struct charge_cv_vdpm_data {
 #define CHG_PRG_ICHG_MAX                (400)
 
 #define CHG_PRE_VCHG_REG                (SOC_SCHARGER_CHG_REG0_ADDR(0))
-/* ???????????????????????????????????????00???2.8V???01???3.0V???10???3.1V???11???3.2V??? */
+/* 预充电电压阈值大小调节位：00：2.8V；01：3.0V；10：3.1V；11：3.2V。 */
 #define CHG_PRE_VCHG_SHIFT              (SOC_SCHARGER_CHG_REG0_chg_pre_vchg_START)
 #define CHG_PRE_VCHG_MSK                (0x03<<CHG_PRE_VCHG_SHIFT)
 #define CHG_PRG_VCHG_2800               (2800)
@@ -293,9 +293,9 @@ struct charge_cv_vdpm_data {
 #define CHG_PRG_VCHG_3100               (3100)
 #define CHG_PRG_VCHG_3200               (3200)
 
-/* CHG_REG3?????????????????? */
+/* CHG_REG3调节寄存器。 */
 
-/* ????????????????????????????????????00???5 h???01???8 h???10???12 h???11???20 h??? */
+/* 快充安全计时器（小时）：00：5 h；01：8 h；10：12 h；11：20 h。 */
 #define CHG_FASTCHG_TIMER_REG           (SOC_SCHARGER_CHG_REG3_ADDR(0))
 #define CHG_FASTCHG_TIMER_SHIFT         (SOC_SCHARGER_CHG_REG3_chg_fastchg_timer_START)
 #define CHG_FASTCHG_TIMER_MSK           (0x03<<CHG_FASTCHG_TIMER_SHIFT)
@@ -304,16 +304,16 @@ struct charge_cv_vdpm_data {
 #define CHG_FASTCHG_TIMER_12H           (2)
 #define CHG_FASTCHG_TIMER_20H           (3)
 
-/* CHG_REG4?????????????????? */
-/* ????????????????????????0???Disabled???1???Enabled??? */
+/* CHG_REG4调节寄存器。 */
+/* 终止充电控制位：0：Disabled；1：Enabled。 */
 #define CHG_EN_TERM_REG                 (SOC_SCHARGER_CHG_REG4_ADDR(0))
 #define CHG_EN_TERM_SHIFT               (SOC_SCHARGER_CHG_REG4_chg_en_term_START)
 #define CHG_EN_TERM_MSK                 (0x01<<CHG_EN_TERM_SHIFT)
 #define CHG_TERM_EN                     (1)
 #define CHG_TERM_DIS                    (0)
 
-/* CHG_REG2?????????????????? */
-/* ?????????????????????????????????????????????0000???3.8V???0001???3.85V???0010???3.9V???0011???3.95V???0100???4V???0101???4.05V???0110???4.1V???0111???4.15V???1000???4.2???1001???4.25???1010???4.3???1011???4.35???1100???4.4???1101???4.45???1110???4.5???1111???4.5??? */
+/* CHG_REG2调节寄存器。 */
+/* 快充电完成电压阈值大小调节位：0000：3.8V；0001：3.85V；0010：3.9V；0011：3.95V；0100：4V；0101：4.05V；0110：4.1V；0111：4.15V；1000：4.2；1001：4.25；1010：4.3；1011：4.35；1100：4.4；1101：4.45；1110：4.5；1111：4.5。 */
 #define CHG_FAST_VCHG_REG               (SOC_SCHARGER_CHG_REG2_ADDR(0))
 #define CHG_FAST_VCHG_SHIFT             (SOC_SCHARGER_CHG_REG2_chg_fast_vchg_START)
 #define CHG_FAST_VCHG_MSK               (0x0f<<CHG_FAST_VCHG_SHIFT)
@@ -336,7 +336,7 @@ struct charge_cv_vdpm_data {
 #define CHG_FAST_VCHG_4500              (4500)
 #define CHG_FAST_VCHG_MAX               (4500)
 
-/* ????????????????????????????????????000???50???001???100mA???010???150mA???011???200mA???100???300mA???101???400mA???110???500mA???111???600mA??? */
+/* 终止充电电流阈值调节位：000：50；001：100mA；010：150mA；011：200mA；100：300mA；101：400mA；110：500mA；111：600mA。 */
 #define CHG_TERM_ICHG_REG               (SOC_SCHARGER_CHG_REG2_ADDR(0))
 #define CHG_TERM_ICHG_SHIFT             (SOC_SCHARGER_CHG_REG2_chg_term_ichg_START)
 #define CHG_TERM_ICHG_MSK               (0x07<<CHG_TERM_ICHG_SHIFT)
@@ -349,8 +349,8 @@ struct charge_cv_vdpm_data {
 #define CHG_TERM_ICHG_500MA             (500)
 #define CHG_TERM_ICHG_600MA             (600)
 
-/* ?????????????????????????????? */
-/* SOC?????????????????????V200??????????????????????????????????????????????????????????????????????????????Default???????????????chg_en???watchdog_timer??????????????????????????????Host???????????????watchdog_timer???????????????00?????????watchdog_timer???????????????01???10s???10???20s???11???40s ??? */
+/* 喂狗时间控制寄存器。 */
+/* SOC每隔一定时间对V200进行一次寄存器写操作；如果没有写操作事件发生，则进入Default模式，复位chg_en和watchdog_timer寄存器；否则是正常的Host模式。系统watchdog_timer时间设置：00：系统watchdog_timer功能屏蔽；01：10s；10：20s；11：40s 。 */
 #define WATCHDOG_CTRL_REG               (SOC_SCHARGER_WATCHDOG_CTRL_ADDR(0))
 #define WATCHDOG_TIMER_SHIFT            (SOC_SCHARGER_WATCHDOG_CTRL_watchdog_timer_START)
 #define WATCHDOG_TIMER_MSK              (0x03<<WATCHDOG_TIMER_SHIFT)
@@ -358,12 +358,12 @@ struct charge_cv_vdpm_data {
 #define WATCHDOG_TIMER_20_S             (20)
 #define WATCHDOG_TIMER_40_S             (40)
 
-/* ???????????????????????????????????? */
+/* 看门狗软复位控制寄存器。 */
 #define WATCHDOG_SOFT_RST_REG           (SOC_SCHARGER_WATCHDOG_SOFT_RST_ADDR(0))
 #define WD_RST_N_SHIFT                  (SOC_SCHARGER_WATCHDOG_SOFT_RST_wd_rst_n_START)
 #define WD_RST_N_MSK                    (1<<WD_RST_N_SHIFT)
 #define WATCHDOG_TIMER_RST              (1<<WD_RST_N_SHIFT)
-/* OTG???????????????0 */
+/* OTG控制寄存器0 */
 #define CHG_OTG_REG0                    (SOC_SCHARGER_OTG_REG0_ADDR(0))
 #define CHG_OTG_LIM_SHIFT               (SOC_SCHARGER_OTG_REG0_otg_lim_set_START)
 #define CHG_OTG_LIM_MSK                 (0x03<<CHG_OTG_LIM_SHIFT)
@@ -382,7 +382,7 @@ struct charge_cv_vdpm_data {
 #define APPLE_DETECT_SHIFT             (2)
 #define APPLE_DETECT_MASK             (1<<2)
 
-/* ?????????????????????0 */
+/* 充电状态寄存器0 */
 #define CHG_STATUS0_REG                 (SOC_SCHARGER_STATUS0_ADDR(0))
 #define HI6523_CHG_BUCK_OK              (0x01<<SOC_SCHARGER_STATUS0_buck_ok_START)
 #define HI6523_CHG_STAT_CHARGE_DONE     (0x03<<SOC_SCHARGER_STATUS0_chg_chgstate_START)
@@ -396,12 +396,12 @@ struct charge_cv_vdpm_data {
 #define CHG_STAT_ENABLE                 (1)
 #define CHG_STAT_DISABLE                (0)
 
-/* ?????????????????????1 */
+/* 充电状态寄存器1 */
 #define CHG_STATUS1_REG                 (SOC_SCHARGER_STATUS1_ADDR(0))
 #define HI6523_WATCHDOG_OK              (0x01<<SOC_SCHARGER_STATUS1_wdt_time_out_n_START)
 
 
-/* ADC ??????????????? */
+/* ADC 控制寄存器 */
 #define CHG_ADC_CTRL_REG                (SOC_SCHARGER_ADC_CTRL_ADDR(0))
 #define CHG_ADC_EN_SHIFT                (SOC_SCHARGER_ADC_CTRL_hkadc_en_START)
 #define CHG_ADC_EN_MSK                  (1<<CHG_ADC_EN_SHIFT)
@@ -422,12 +422,12 @@ struct charge_cv_vdpm_data {
 #define CHG_ADC_CH_IBUS_REF             (0x01)
 #define CHG_ADC_CH_IBUS                 (0)
 #define CHG_ADC_BUFF_LEN                (10)
-/* ADC ????????????????????? */
+/* ADC 开始转换寄存器 */
 #define CHG_ADC_START_REG               (SOC_SCHARGER_ADC_START_ADDR(0))
 #define CHG_ADC_START_SHIFT             (SOC_SCHARGER_ADC_START_hkadc_start_START)
 #define CHG_ADC_START_MSK               (1<<CHG_ADC_START_SHIFT)
 
-/* ADC ??????????????? */
+/* ADC 状态寄存器 */
 #define CHG_ADC_CONV_STATUS_REG         (SOC_SCHARGER_ADC_CONV_STATUS_ADDR(0))
 #define CHG_ADC_CONV_STATUS_SHIFT       (SOC_SCHARGER_ADC_CONV_STATUS_hkadc_valid_START)
 #define CHG_ADC_CONV_STATUS_MSK         (1<<CHG_ADC_CONV_STATUS_SHIFT)
@@ -441,17 +441,17 @@ struct charge_cv_vdpm_data {
 #define CHG_ADC_APPDET_CHSEL_MSK		(1<<CHG_ADC_APPDET_CHSEL_SHIFT)
 #define CHG_ADC_APPDET_DPLUS			(1)
 #define CHG_ADC_APPDET_DMINUS			(0)
-/* ADC ???????????????*/
+/* ADC 数据寄存器*/
 #define CHG_ADC_DATA_REG                (SOC_SCHARGER_ADC_DATA1_ADDR(0))
 
-/* Hiz MODE??????????????? */
+/* Hiz MODE控制寄存器 */
 #define CHG_HIZ_CTRL_REG                (SOC_SCHARGER_SCHG_LOGIC_CTRL_ADDR(0))
 #define CHG_HIZ_ENABLE_SHIFT            (SOC_SCHARGER_SCHG_LOGIC_CTRL_buck_enb_START)
 #define CHG_HIZ_ENABLE_MSK              (1<<CHG_HIZ_ENABLE_SHIFT)
 
 #define CHG_IRQ_STATUS1                        (SOC_SCHARGER_IRQ_STATUS1_ADDR(0))
 
-/* irq???????????????*/
+/* irq中断寄存器*/
 #define CHG_IRQ0                        (SOC_SCHARGER_IRQ0_ADDR(0))
 #define CHG_OTG_OCP                     (1 << SOC_SCHARGER_IRQ0_otg_ocp_r_START)
 #define CHG_OTG_SCP                     (1 << SOC_SCHARGER_IRQ0_otg_scp_r_START)
@@ -477,7 +477,7 @@ struct charge_cv_vdpm_data {
 #define CHG_WDT_IRQ_DEFAULT				(0x0)
 #define CHG_IRQ_MASK_ALL				(0xFF)
 
-/* chg_reg5??????????????????????????? */
+/* chg_reg5电池通道补偿寄存器 */
 #define CHG_IR_COMP_REG                 (SOC_SCHARGER_CHG_REG5_ADDR(0))
 #define CHG_IR_COMP_SHIFT               (SOC_SCHARGER_CHG_REG5_chg_ir_set_START)
 #define CHG_IR_COMP_MSK                 (0x07<<CHG_IR_COMP_SHIFT)
@@ -499,7 +499,7 @@ struct charge_cv_vdpm_data {
 #define CHG_IR_VCLAMP_MIN               (0)
 #define CHG_IR_VCLAMP_MAX               (350)
 
-/* FCP UVP/OVP voltage set????????? */
+/* FCP UVP/OVP voltage set寄存器 */
 #define CHG_UVP_OVP_VOLTAGE_REG         (SOC_SCHARGER_SYS_RESVO1_ADDR(0))
 #define CHG_UVP_OVP_VOLTAGE_MSK         (0xf)
 #define CHG_UVP_OVP_VOLTAGE_SHIFT       (1)
@@ -526,13 +526,13 @@ struct charge_cv_vdpm_data {
 #define FCP_ADAPTER_VOL_CHECK_POLLTIME      (100)
 #define FCP_ADAPTER_VOL_CHECK_TIMEOUT       (10)
 
-/* fcp ??????????????? */
+/* fcp 读写寄存器 */
 #define CHG_FCP_CMD_REG                 (SOC_SCHARGER_CMD_ADDR(0))
 #define CHG_FCP_ADDR_REG                (SOC_SCHARGER_ADDR_ADDR(0))
 #define CHG_FCP_WDATA_REG               (SOC_SCHARGER_DATA0_ADDR(0))
 #define CHG_FCP_RDATA_REG               (SOC_SCHARGER_FCP_RDATA_ADDR(0))
 
-/* fcp ??????????????? */
+/* fcp 控制寄存器 */
 #define CHG_FCP_CTRL_REG                (SOC_SCHARGER_CNTL_ADDR(0))
 #define CHG_FCP_EN_SHIFT                (SOC_SCHARGER_CNTL_enable_START)
 #define CHG_FCP_EN_MSK                  (1<<CHG_FCP_EN_SHIFT)
@@ -543,7 +543,7 @@ struct charge_cv_vdpm_data {
 #define CHG_FCP_EN                      (1)
 #define CHG_FCP_DIS                     (0)
 
-/* fcp det ??????????????? */
+/* fcp det 控制寄存器 */
 #define CHG_FCP_DET_CTRL_REG            (SOC_SCHARGER_FCP_CTRL_ADDR(0))
 #define CHG_FCP_DET_EN_SHIFT            (SOC_SCHARGER_FCP_CTRL_fcp_det_en_START)
 #define CHG_FCP_DET_EN_MSK              (1<<CHG_FCP_DET_EN_SHIFT)
@@ -551,11 +551,11 @@ struct charge_cv_vdpm_data {
 #define CHG_FCP_CMP_EN_MSK              (1<<CHG_FCP_CMP_EN_SHIFT)
 #define CHG_FCP_DET_EN                  (1)
 
-/* fcp soft reset??????????????? */
+/* fcp soft reset控制寄存器 */
 #define CHG_FCP_SOFT_RST_REG            (SOC_SCHARGER_FCP_SOFT_RST_CTRL_ADDR(0))
 #define CHG_FCP_SOFT_RST_VAL            (BIT(2))
 
-/* fcp ???????????????*/
+/* fcp 状态寄存器*/
 #define CHG_FCP_STATUS_REG              (SOC_SCHARGER_STATUIS_ADDR(0))
 #define CHG_FCP_DVC_SHIFT               (SOC_SCHARGER_STATUIS_dvc_START)
 #define CHG_FCP_DVC_MSK                 (0x03<<CHG_FCP_DVC_SHIFT)
@@ -563,32 +563,32 @@ struct charge_cv_vdpm_data {
 #define CHG_FCP_ATTATCH_MSK             (1<<CHG_FCP_ATTATCH_SHIFT)
 #define CHG_FCP_SLAVE_GOOD              (CHG_FCP_DVC_MSK | CHG_FCP_ATTATCH_MSK)
 
-/*????????????adapter????????????*/
+/*高压快充adapter状态标志*/
 #define CHG_FCP_SET_STATUS_REG          (SOC_SCHARGER_FCP_ADAP_CTRL_ADDR(0))
 #define CHG_FCP_SET_STATUS_SHIFT        (SOC_SCHARGER_FCP_ADAP_CTRL_fcp_set_d60m_r_START)
 #define CHG_FCP_SET_STATUS_MSK          (1<<CHG_FCP_SET_STATUS_SHIFT)
 
-/* fcp ???????????????1 */
+/* fcp 中断寄存器1 */
 #define CHG_FCP_ISR1_REG                (SOC_SCHARGER_ISR1_ADDR(0))
 #define CHG_FCP_CMDCPL                  (1<<SOC_SCHARGER_ISR1_cmdcpl_START)
 #define CHG_FCP_ACK                     (1<<SOC_SCHARGER_ISR1_ack_START)
 #define CHG_FCP_NACK                    (1<<SOC_SCHARGER_ISR1_nack_START)
 #define CHG_FCP_CRCPAR                  (1<<SOC_SCHARGER_ISR1_crcpar_START)
 
-/* fcp ???????????????2 */
+/* fcp 中断寄存器2 */
 #define CHG_FCP_ISR2_REG                (SOC_SCHARGER_ISR2_ADDR(0))
 #define CHG_FCP_CRCRX                   (1<<SOC_SCHARGER_ISR2_crcrx_START)
 #define CHG_FCP_PARRX                   (1<<SOC_SCHARGER_ISR2_parrx_START)
 #define CHG_FCP_PROTSTAT                (1<<SOC_SCHARGER_ISR2_protstat_START)
 
-/* fcp ???????????????3 */
+/* fcp 中断寄存器3 */
 #define CHG_FCP_IRQ3_REG                (SOC_SCHARGER_FCP_IRQ3_ADDR(0))
 #define CHG_FCP_TAIL_HAND_FAIL          (1<<SOC_SCHARGER_FCP_IRQ3_tail_hand_fail_irq_START)
 #define CHG_FCP_INIT_HAND_FAIL          (1<<SOC_SCHARGER_FCP_IRQ3_init_hand_fail_irq_START)
-/* fcp ???????????????4 */
+/* fcp 中断寄存器4 */
 #define CHG_FCP_IRQ4_REG                (SOC_SCHARGER_FCP_IRQ4_ADDR(0))
 #define CHG_FCP_ENABLE_HAND_FAIL        (1<<SOC_SCHARGER_FCP_IRQ4_enable_hand_fail_irq_START)
-/* fcp ???????????????5 */
+/* fcp 中断寄存器5 */
 #define CHG_FCP_IRQ5_REG                (SOC_SCHARGER_FCP_IRQ5_ADDR(0))
 #define CHG_FCP_SET_DET_SHIFT           (SOC_SCHARGER_FCP_IRQ5_fcp_set_d60m_r_START)
 #define CHG_FCP_SET_DET_MSK             (1<<SOC_SCHARGER_FCP_IRQ5_fcp_set_d60m_r_START)

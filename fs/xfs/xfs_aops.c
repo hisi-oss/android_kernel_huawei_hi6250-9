@@ -1620,7 +1620,7 @@ xfs_vm_bmap(
 
 	/*
 	 * The swap code (ab-)uses ->bmap to get a block mapping and then
-	 * bypasse?? the file system for actual I/O.  We really can't allow
+	 * bypasseѕ the file system for actual I/O.  We really can't allow
 	 * that on reflinks inodes, so we have to skip out here.  And yes,
 	 * 0 is the magic code for a bmap error.
 	 *

@@ -20,7 +20,7 @@
 #define THIS_FILE_ID OAM_FILE_ID_OAL_GPIO_H
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
 #ifdef _PRE_BOARD_SD5115
 #define oal_gpio_port_e             HI_GPIO_PORT_E
@@ -33,42 +33,42 @@
 #endif
 
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
 
 /*****************************************************************************
-  4 ????????????
-*****************************************************************************/
-
-
-/*****************************************************************************
-  5 ??????????
+  4 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 ????????
+  5 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  7 STRUCT????
-*****************************************************************************/
-
-/*****************************************************************************
-  8 UNION????
+  6 消息定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  9 OTHERS????
+  7 STRUCT定义
 *****************************************************************************/
 
 /*****************************************************************************
-  10 ????????
+  8 UNION定义
+*****************************************************************************/
+
+
+/*****************************************************************************
+  9 OTHERS定义
+*****************************************************************************/
+
+/*****************************************************************************
+  10 函数声明
 *****************************************************************************/
 #ifdef _PRE_BOARD_SD5115
-/*GPIO??????????????*/
+/*GPIO位配置属性操作*/
 OAL_STATIC OAL_INLINE oal_uint oal_gpio_bit_attr_get(oal_gpio_port_e em_port, oal_gpio_bit_e em_bit, oal_gpio_bit_attr_s *pst_attr)
 {
     return hi_kernel_gpio_bit_attr_get(em_port, em_bit, pst_attr);
@@ -79,7 +79,7 @@ OAL_STATIC OAL_INLINE oal_uint oal_gpio_bit_attr_set(oal_gpio_port_e em_port, oa
     return hi_kernel_gpio_bit_attr_set(em_port, em_bit, pst_attr);
 }
 
-/*GPIO????????????,??????????????????GPIO????????????????????GPIO????????????????*/
+/*GPIO端口属性配置,无特殊需要不要关闭GPIO端口时钟，会导致该组GPIO相关的位不能工作*/
 OAL_STATIC OAL_INLINE oal_uint oal_gpio_port_attr_get(oal_gpio_port_e em_port, oal_gpio_port_attr_s *pst_attr)
 {
     return hi_kernel_gpio_port_attr_get(em_port, pst_attr);
@@ -90,25 +90,25 @@ OAL_STATIC OAL_INLINE oal_uint oal_gpio_port_attr_set(oal_gpio_port_e em_port, o
     return hi_kernel_gpio_port_attr_set(em_port, pst_attr);
 }
 
-/*GPIO???????? ????GPIO????(0~7bit)????????????????????, ??????????????????????*/
+/*GPIO端口输出 当该GPIO端口(0~7bit)全部配置为输出模式时, 通过此接口配置输出数据*/
 OAL_STATIC OAL_INLINE oal_uint oal_gpio_port_gpio_write(oal_gpio_port_e em_port, uint uc_data)
 {
     return hi_kernel_gpio_write(em_port, uc_data);
 }
 
-/*GPIO???????? ????GPIO????(0~7bit)????????????????????, ??????????????????????*/
+/*GPIO端口输入 当该GPIO端口(0~7bit)全部配置为输入模式时, 通过此接口得到输入数据*/
 OAL_STATIC OAL_INLINE oal_uint oal_gpio_port_gpio_read(oal_gpio_port_e em_port, uint *puc_data)
 {
     return hi_kernel_gpio_read(em_port, puc_data);
 }
 
-/*GPIO????????, ????GPIO????????????????,??????????????????????*/
+/*GPIO电平设置, 当该GPIO配置为输出模式时,通过此接口配置输出电平*/
 OAL_STATIC OAL_INLINE oal_uint oal_gpio_bit_write(oal_gpio_port_e em_port, oal_gpio_bit_e em_bit, oal_level_e em_level)
 {
     return hi_kernel_gpio_bit_write( em_port, em_bit, em_level);
 }
 
-/*GPIO??????????????????GPIO????????????,????????????????????????*/
+/*GPIO输入电平获取，当该GPIO配置为输入时,可通过此接口得到输入电平*/
 OAL_STATIC OAL_INLINE oal_uint oal_gpio_bit_read(oal_gpio_port_e em_port, oal_gpio_bit_e em_bit, oal_level_e *pem_level)
 {
     return hi_kernel_gpio_bit_read( em_port, em_bit, pem_level);

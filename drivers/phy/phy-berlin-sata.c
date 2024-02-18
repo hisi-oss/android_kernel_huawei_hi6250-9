@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2014 Marvell Technology Group Ltd.
  *
- * Antoine T??nart <antoine.tenart@free-electrons.com>
+ * Antoine Ténart <antoine.tenart@free-electrons.com>
  *
  * This file is licensed under the terms of the GNU General Public
  * License version 2. This program is licensed "as is" without any
@@ -296,5 +296,5 @@ static struct platform_driver phy_berlin_sata_driver = {
 module_platform_driver(phy_berlin_sata_driver);
 
 MODULE_DESCRIPTION("Marvell Berlin SATA PHY driver");
-MODULE_AUTHOR("Antoine T??nart <antoine.tenart@free-electrons.com>");
+MODULE_AUTHOR("Antoine Ténart <antoine.tenart@free-electrons.com>");
 MODULE_LICENSE("GPL v2");

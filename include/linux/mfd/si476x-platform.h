@@ -196,8 +196,8 @@ enum si476x_func {
  *          GND. One half of the capacitance value shown here is the
  *          additional load capacitance presented to the xtal. The
  *          minimum step size is 0.277 pF. Recommended value is 0x28
- *          but it will be layout dependent. Range is 0???0x3F i.e.
- *          (0???16.33 pF)
+ *          but it will be layout dependent. Range is 0–0x3F i.e.
+ *          (0–16.33 pF)
  * @ctsien: enable CTSINT(interrupt request when CTS condition
  *          arises) when set
  * @intsel: when set A1 pin becomes the interrupt pin; otherwise,

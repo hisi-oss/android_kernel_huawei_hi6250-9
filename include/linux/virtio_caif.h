@@ -1,6 +1,6 @@
 /*
  * Copyright (C) ST-Ericsson AB 2012
- * Author: Sjur Br??ndeland <sjur.brandeland@stericsson.com>
+ * Author: Sjur Brændeland <sjur.brandeland@stericsson.com>
  *
  * This header is BSD licensed so
  * anyone can use the definitions to implement compatible remote processors

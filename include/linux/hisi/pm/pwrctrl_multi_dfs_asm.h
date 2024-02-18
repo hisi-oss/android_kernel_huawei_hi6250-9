@@ -1,5 +1,5 @@
 /******************************************************************************
-??????????????????????????????????????
+修改以下文件需要保证下面文件的一致性：
 hardware\libhardware\include\hardware\hisi\pwrctrl_multi_memcfg.h       ->vendor\hisi\modem\drv\hi6210\src\comm\inc\pwrctrl_multi_memcfg.h
 hardware\libhardware\include\hardware\hisi\pwrctrl_multi_dfs_asm.h      ->vendor\hisi\modem\drv\hi6210\src\comm\inc\pwrctrl_multi_dfs_asm.h
 hardware\libhardware\include\hardware\hisi\soc_baseaddr_interface.h     ->vendor\hisi\platform\hi6210sft\soc_baseaddr_interface.h

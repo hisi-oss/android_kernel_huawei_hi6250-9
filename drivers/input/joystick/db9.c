@@ -2,7 +2,7 @@
  *  Copyright (c) 1999-2001 Vojtech Pavlik
  *
  *  Based on the work of:
- *	Andree Borrmann		Mats Sj??vall
+ *	Andree Borrmann		Mats Sjövall
  */
 
 /*

@@ -2210,8 +2210,8 @@ static int hi6526_get_dp_res(void)
   Description:   get  chip temperature
   Input:         NA
   Output:        NA
-  Return:        temerature (??)
-  Remart:        VPTAT_ACR= 2500*code??????????/4095 (mV)
+  Return:        temerature (¡ã)
+  Remart:        VPTAT_ACR= 2500*code£¨Ê®½øÖÆ£©/4095 (mV)
                  temp=1308.518-4.2392*T
 ********************************************************/
 static int _hi6526_get_chip_temp(int *temp)

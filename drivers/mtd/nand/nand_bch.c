@@ -2,7 +2,7 @@
  * This file provides ECC correction for more than 1 bit per block of data,
  * using binary BCH codes. It relies on the generic BCH library lib/bch.c.
  *
- * Copyright ?? 2011 Ivan Djelic <ivan.djelic@parrot.com>
+ * Copyright © 2011 Ivan Djelic <ivan.djelic@parrot.com>
  *
  * This file is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the

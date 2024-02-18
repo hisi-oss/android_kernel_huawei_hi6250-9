@@ -6,7 +6,7 @@
 
 #include <linux/tracepoint.h>
 
-DECLARE_EVENT_CLASS(timer,/*[false alarm]:????????????*/
+DECLARE_EVENT_CLASS(timer,/*[false alarm]:错误告警*/
 	TP_PROTO(unsigned int cpu_id, unsigned int cur_freq,
 	         unsigned int target_freq, unsigned int nr_running,
 		 unsigned int boost, bool offline),
@@ -63,7 +63,7 @@ DEFINE_EVENT(timer, hifreq_hotplug_wakeup,
 	TP_ARGS(cpu_id, cur_freq, target_freq, nr_running, boost, offline)
 );
 
-DECLARE_EVENT_CLASS(task,/*[false alarm]:????????????*/
+DECLARE_EVENT_CLASS(task,/*[false alarm]:错误告警*/
 	TP_PROTO(unsigned int cpu_id, unsigned int cur_freq,
 		 unsigned int target_freq, bool offline),
 	TP_ARGS(cpu_id, cur_freq, target_freq, offline),
@@ -93,7 +93,7 @@ DEFINE_EVENT(task, hifreq_hotplug_task,
 	TP_ARGS(cpu_id, cur_freq, target_freq, offline)
 );
 
-DECLARE_EVENT_CLASS(info,/*[false alarm]:????????????*/
+DECLARE_EVENT_CLASS(info,/*[false alarm]:错误告警*/
 	TP_PROTO(unsigned int cpu_id, unsigned int cur_freq,
 	         unsigned int target_freq, unsigned int nr_running,
 		 unsigned int boost, bool offline,

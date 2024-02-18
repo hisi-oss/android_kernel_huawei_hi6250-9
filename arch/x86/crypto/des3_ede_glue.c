@@ -1,7 +1,7 @@
 /*
  * Glue Code for assembler optimized version of 3DES
  *
- * Copyright ?? 2014 Jussi Kivilinna <jussi.kivilinna@mbnet.fi>
+ * Copyright © 2014 Jussi Kivilinna <jussi.kivilinna@mbnet.fi>
  *
  * CBC & ECB parts based on code (crypto/cbc.c,ecb.c) by:
  *   Copyright (c) 2006 Herbert Xu <herbert@gondor.apana.org.au>

@@ -1,5 +1,5 @@
 /*
- *  Copyright ?? 2012 Mike Dunn <mikedunn@newsguy.com>
+ *  Copyright © 2012 Mike Dunn <mikedunn@newsguy.com>
  *
  * mtd nand driver for M-Systems DiskOnChip G4
  *

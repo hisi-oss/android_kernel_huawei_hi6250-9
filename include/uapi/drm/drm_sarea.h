@@ -2,7 +2,7 @@
  * \file drm_sarea.h
  * \brief SAREA definitions
  *
- * \author Michel D??nzer <michel@daenzer.net>
+ * \author Michel Dänzer <michel@daenzer.net>
  */
 
 /*

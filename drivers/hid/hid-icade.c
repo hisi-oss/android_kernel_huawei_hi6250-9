@@ -19,9 +19,9 @@
 #include "hid-ids.h"
 
 /*
- *   ???      A C Y L
- *  ??? ???
- *   ???      B X Z R
+ *   ↑      A C Y L
+ *  ← →
+ *   ↓      B X Z R
  *
  *
  *  UP ON,OFF  = w,e

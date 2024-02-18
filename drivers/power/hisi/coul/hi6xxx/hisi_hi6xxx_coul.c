@@ -407,9 +407,9 @@ static int hi6xxx_coul_convert_regval2uv(unsigned int reg_val)
   Description:   convert register value to uv
   Input:         reg_val:voltage reg value
   Output:        NULL
-  Return:        value of register in  ??
+  Return:        value of register in  ¡æ
   Remark:     vol = code(23bit) * 1.3 / 2^23
-              temp = (vol - 358.68mv )/ 1.3427 ?? (vol = 1.3427 * temp + 358.68)
+              temp = (vol - 358.68mv )/ 1.3427 ¡æ (vol = 1.3427 * temp + 358.68)
               For 6421v700/6421v800
 ********************************************************/
 static  int hi6xxx_coul_convert_regval2temp(unsigned int reg_val)

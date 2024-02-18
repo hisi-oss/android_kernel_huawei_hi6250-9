@@ -3,7 +3,7 @@
  * PCIe Gen 2 Core
  *
  * Copyright 2014, Broadcom Corporation
- * Copyright 2014, Rafa?? Mi??ecki <zajec5@gmail.com>
+ * Copyright 2014, Rafał Miłecki <zajec5@gmail.com>
  *
  * Licensed under the GNU/GPL. See COPYING for details.
  */

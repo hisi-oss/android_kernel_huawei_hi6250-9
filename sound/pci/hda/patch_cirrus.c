@@ -245,8 +245,8 @@ static const struct hda_verb cs4208_coef_init_verbs[] = {
  *
  * http://www.cirrus.com/en/pubs/errata/ER880C3.pdf
  *
- * 6. At high temperature (TA > +85??C), the digital supply current (IVD)
- * may be excessive (up to an additional 200 ??A), which is most easily
+ * 6. At high temperature (TA > +85°C), the digital supply current (IVD)
+ * may be excessive (up to an additional 200 μA), which is most easily
  * observed while the part is being held in reset (RESET# active low).
  *
  * Root Cause: At initial powerup of the device, the logic that drives

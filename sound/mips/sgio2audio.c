@@ -4,7 +4,7 @@
  *   Copyright 2003 Vivien Chappelier <vivien.chappelier@linux-mips.org>
  *   Copyright 2008 Thomas Bogendoerfer <tsbogend@alpha.franken.de>
  *   Mxier part taken from mace_audio.c:
- *   Copyright 2007 Thorben J??ndling <tj.trevelyan@gmail.com>
+ *   Copyright 2007 Thorben Jändling <tj.trevelyan@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by

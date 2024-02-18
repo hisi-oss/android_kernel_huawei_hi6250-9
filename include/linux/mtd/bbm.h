@@ -4,10 +4,10 @@
  *  NAND family Bad Block Management (BBM) header file
  *    - Bad Block Table (BBT) implementation
  *
- *  Copyright ?? 2005 Samsung Electronics
+ *  Copyright © 2005 Samsung Electronics
  *  Kyungmin Park <kyungmin.park@samsung.com>
  *
- *  Copyright ?? 2000-2005
+ *  Copyright © 2000-2005
  *  Thomas Gleixner <tglx@linuxtronix.de>
  *
  * This program is free software; you can redistribute it and/or modify

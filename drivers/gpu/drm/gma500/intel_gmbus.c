@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2006 Dave Airlie <airlied@linux.ie>
- * Copyright ?? 2006-2008,2010 Intel Corporation
+ * Copyright © 2006-2008,2010 Intel Corporation
  *   Jesse Barnes <jesse.barnes@intel.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a

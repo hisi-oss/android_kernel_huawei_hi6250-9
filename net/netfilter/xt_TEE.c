@@ -1,9 +1,9 @@
 /*
  *	"TEE" target extension for Xtables
- *	Copyright ?? Sebastian Cla??en, 2007
+ *	Copyright © Sebastian Claßen, 2007
  *	Jan Engelhardt, 2007-2010
  *
- *	based on ipt_ROUTE.c from C??dric de Launois
+ *	based on ipt_ROUTE.c from Cédric de Launois
  *	<delaunois@info.ucl.be>
  *
  *	This program is free software; you can redistribute it and/or
@@ -163,7 +163,7 @@ static void __exit tee_tg_exit(void)
 
 module_init(tee_tg_init);
 module_exit(tee_tg_exit);
-MODULE_AUTHOR("Sebastian Cla??en <sebastian.classen@freenet.ag>");
+MODULE_AUTHOR("Sebastian Claßen <sebastian.classen@freenet.ag>");
 MODULE_AUTHOR("Jan Engelhardt <jengelh@medozas.de>");
 MODULE_DESCRIPTION("Xtables: Reroute packet copy");
 MODULE_LICENSE("GPL");

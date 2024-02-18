@@ -52,7 +52,7 @@ static int ms5637_read_raw(struct iio_dev *indio_dev,
 			return ret;
 
 		switch (channel->type) {
-		case IIO_TEMP:	/* in milli ??C */
+		case IIO_TEMP:	/* in milli °C */
 			*val = temperature;
 
 			return IIO_VAL_INT;

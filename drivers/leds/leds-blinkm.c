@@ -1,6 +1,6 @@
 /*
  *  leds-blinkm.c
- *  (c) Jan-Simon M??ller (dl9pf@gmx.de)
+ *  (c) Jan-Simon Möller (dl9pf@gmx.de)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

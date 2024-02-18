@@ -5,7 +5,7 @@
  *  Mike Rapoport <mike@compulab.co.il>
  *
  *  Derived from drivers/mtd/nand/h1910.c
- *       Copyright (C) 2002 Marius Gr??ger (mag@sysgo.de)
+ *       Copyright (C) 2002 Marius Gröger (mag@sysgo.de)
  *       Copyright (c) 2001 Thomas Gleixner (gleixner@autronix.de)
  *
  *

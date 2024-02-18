@@ -1,7 +1,7 @@
 /*
  * imx25 pinctrl driver.
  *
- * Copyright 2013 Eukr??a Electromatique <denis@eukrea.com>
+ * Copyright 2013 Eukréa Electromatique <denis@eukrea.com>
  *
  * This driver was mostly copied from the imx51 pinctrl driver which has:
  *

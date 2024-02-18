@@ -1,7 +1,7 @@
 
 
 /*****************************************************************************
-  1 ????????????
+  1 、头文件包含
 *****************************************************************************/
 #ifdef __cplusplus
 #if __cplusplus
@@ -60,11 +60,11 @@ extern "C" {
 #endif
 
 /*****************************************************************************
-  2 ??????????????
+  2 、全局变量定义
 *****************************************************************************/
 struct mmc_trace_client *mmc_trace_fd = NULL;
 
-/*????????4??????*/
+/*最大支持4个字符*/
 static char *_dev_name[4] = {
 	"emmc",
 	"sd",
@@ -76,16 +76,16 @@ u64 *mmc_trace_switch = NULL;
 u64 g_mmc_trace_buffer_addr = 0;
 u32 g_mmc_trace_fd_size = 0;
 
-/* ????????????????????*/
+/* 注册时返回的模块信息*/
 struct rdr_register_module_result mmc_current_info;
 
-/* ????????coreid*/
+/* 当前异常coreid*/
 static long current_core_id = RDR_EMMC;
 
-/*????buffer????????????*/
+/*维测buffer开始虚拟地址*/
 static u64 *dump_vir_addr = NULL;
 
-/*????????0:OFF  1:ON*/
+/*打印开关0:OFF  1:ON*/
 int g_mmctrace_dbg_lvl = 0;
 
 extern struct sdhci_host *g_sdhci_for_mmctrace;
@@ -115,7 +115,7 @@ int mntn_filesys_write_log(const char *pname, void *pbuf_vir, unsigned int ulen,
 #endif
 
 /*****************************************************************************
-  3 ??????????
+  3 、函数实现
 *****************************************************************************/
 
 void sdhci_dumpregs_fortrace(struct sdhci_host *host)
@@ -517,7 +517,7 @@ static void mmc_trace_xprintf(const char *fmt, va_list ap, void (*mmc_trace_prin
 
 static void mmc_trace_rdr_dump(u32 modid, u32 etype, u64 coreid, char *pathname, pfn_cb_dump_done pfn_cb)
 {
-	/* ?????????????????????????????????????????????????????????? */
+	/* 保存回调函数是为了在做完日志保存后通知框架本核日志保存完成 */
 	pfn_cb(modid, coreid);
 	return;
 }
@@ -554,14 +554,14 @@ static int mmc_trace_rdr_register_core(void)
 	s_module_ops.ops_dump = mmc_trace_rdr_dump;
 	s_module_ops.ops_reset = mmc_trace_rdr_reset;
 
-	/* ????????????????????????????????????????????????????. */
+	/* 向框架提供本模块保存日志的方法和本模块重置状态的函数. */
 	ret = rdr_register_module_ops(current_core_id, &s_module_ops, &mmc_current_info);
 	if (ret < 0) {
 		pr_err("%s:rdr register module ops fail!\n", __func__);
 		return ret;
 	}
 
-	/*RDR ?????????? */
+	/*RDR 内存初始化 */
 	ret = mmc_trace_clean_rdr_memory(mmc_current_info);
 	if (ret < 0) {
 		pr_err("%s:rdr clean memory fail!\n", __func__);
@@ -577,25 +577,25 @@ static int mmc_trace_rdr_register_exception(void)
 	struct rdr_exception_info_s einfo;
 	u32 ret;
 
-	/*????????????????????????. */
+	/*本模块初始化失败异常注册. */
 	memset(&einfo, 0, sizeof(struct rdr_exception_info_s));
-	/*??????????RDR_MODID_MMC_INIT_FAIL */
+	/*初始化失败RDR_MODID_MMC_INIT_FAIL */
 	einfo.e_modid = RDR_MODID_MMC_INIT_FAIL;
 	einfo.e_modid_end = RDR_MODID_MMC_INIT_FAIL;
-	/*????????????. */
+	/*处理级别最高. */
 	einfo.e_process_priority = RDR_ERR;
-	/* ???????? */
+	/* 立即重启 */
 	einfo.e_reboot_priority = RDR_REBOOT_NOW;
-	/* ????AP????????.?????? */
+	/* 通知AP保存日志.待修改 */
 	einfo.e_notify_core_mask = RDR_AP;
-	/* ????AP????????.????????ap?????????? */
+	/* 通知AP重置状态.并且通知ap复位全系统 */
 	einfo.e_reset_core_mask = RDR_AP;
-	/* ????????????????(??????????????????). */
+	/* 不允许本异常重入(多次发生不重复处理). */
 	einfo.e_reentrant = (u32)RDR_REENTRANT_DISALLOW;
-	/* ?????????????????? */
+	/* 异常类型初始化失败 */
 	einfo.e_exce_type = MMC_S_EXCEPTION;
 	einfo.e_exce_subtype = MMC_EXCEPT_INIT_FAIL;
-	/* ??????????EMMC. */
+	/* 异常发生在EMMC. */
 	einfo.e_from_core = RDR_EMMC;
 	einfo.e_upload_flag = (u32)RDR_UPLOAD_NO;
 	memcpy(einfo.e_from_module, "RDR_MMC_INIT", sizeof("RDR_MMC_INIT"));
@@ -607,7 +607,7 @@ static int mmc_trace_rdr_register_exception(void)
 		return -1;
 	}
 
-	/*??????????????. */
+	/*本模块超时异常. */
 	memset(&einfo, 0, sizeof(struct rdr_exception_info_s));
 	einfo.e_modid = RDR_MODID_MMC_CMD_TIMEOUT;
 	einfo.e_modid_end = RDR_MODID_MMC_CMD_TIMEOUT;
@@ -666,7 +666,7 @@ struct mmc_trace_client *mmc_trace_client_init(void)
 		return NULL;
 	}
 
-	/*RDR ?????????? */
+	/*RDR 模块初始化 */
 	if (mmc_trace_rdr_init() != 0) {
 		pr_err("%s:mmc trace init fail!\n", __func__);
 		return NULL;
@@ -677,7 +677,7 @@ struct mmc_trace_client *mmc_trace_client_init(void)
 	g_mmc_trace_buffer_addr = (u64) dump_vir_addr;
 	g_mmc_trace_fd_size = sizeof(struct mmc_trace_client);
 
-	/*  ???????????????????????????????????? */
+	/*  初始化、通用、性能日志内存划分初始化 */
 	pInit = (struct mmc_trace_init *)MMC_TRACE_INIT_START_ADDR;
 	pComm = (struct mmc_trace_comm *)MMC_TRACE_COMM_START_ADDR;
 	pPerf = (struct mmc_trace_perf *)MMC_TRACE_PERF_START_ADDR;
@@ -741,7 +741,7 @@ static int mmc_trace_init_record(struct mmc_host *host, const char *fmt, ...)
 		return -1;
 	}
 
-	/*????mntn????????????????log */
+	/*通过mntn开关配置是否记录log */
 	if (0 == check_himntn(HIMNTN_MMC_TRACE)) {
 		MMCTRACE_DEBUGPL(0x3, "%s:mntn is closed \n", __func__);
 		return 0;
@@ -773,13 +773,13 @@ int mmc_trace_comm_record(struct mmc_host *host, const char *fmt, ...)
 		return -1;
 	}
 
-	/*????mntn????????????????log */
+	/*通过mntn开关配置是否记录log */
 	if (0 == check_himntn(HIMNTN_MMC_TRACE)) {
 		MMCTRACE_DEBUGPL(0x3, "%s:mntn is closed \n", __func__);
 		return 0;
 	}
 
-	/*????proc????????????????log */
+	/*通过proc节点配置是否记录log */
 	if (!(MMC_COMMON_FLAG & (mmc_trace_fd->proc_flag))) {
 		return 0;
 	}
@@ -815,13 +815,13 @@ void mmc_trace_perf_record(struct mmc_trace_perf_point_record *record)
 	if (mmc_trace_fd->mmc_trace_tofile_perf == true)
 		return;
 
-	/*????mntn????????????????log */
+	/*通过mntn开关配置是否记录log */
 	if (0 == check_himntn(HIMNTN_MMC_TRACE)) {
 		MMCTRACE_DEBUGPL(0x3, "%s:mntn is closed \n", __func__);
 		return;
 	}
 
-	/*????proc????????????????log */
+	/*通过proc节点配置是否记录log */
 	if (!(MMC_PERFORMANCE_FLAG & (mmc_trace_fd->proc_flag))) {
 		return;
 	}
@@ -900,7 +900,7 @@ static int mmc_trace_tofile(MMC_TRACE_TYPE trace_type)
 		return -1;
 	}
 
-	/*??????????log???????????????????????????? */
+	/*获取各维测log的生成文件名，内存路径及大小 */
 	if (trace_type == TRACE_INIT) {
 		mmc_trace_filepath = ((struct mmc_trace_init *)(mmc_trace_fd->mmc_trace_init))->init_save_filepath;
 		mmc_trace_buffer = (char *)(((struct mmc_trace_init *)(mmc_trace_fd->mmc_trace_init))->init_buff);
@@ -918,7 +918,7 @@ static int mmc_trace_tofile(MMC_TRACE_TYPE trace_type)
 		return -1;
 	}
 
-	/*????hisi_logs?????????????? */
+	/*删除hisi_logs目录下的旧文件 */
 	retval = mntn_filesys_rm_file(mmc_trace_filepath);
 	if (0 != retval) {
 		pr_err("%s: mntn_filesys_rm_file fail \n", __func__);
@@ -931,7 +931,7 @@ static int mmc_trace_tofile(MMC_TRACE_TYPE trace_type)
 		return -1;
 	}
 
-	/*????????bin???????? */
+	/*生成新的bin文件接口 */
 	retval = mntn_filesys_write_log(mmc_trace_filepath, ((struct queue *)(mmc_trace_buffer))->data, mmc_trace_size, 0660);
 	if (!retval) {
 		pr_err("%s: mntn_filesys_write_log fail \n", __func__);
@@ -965,7 +965,7 @@ void mmc_trace_comm_tofile(int index)
 		return;
 	}
 
-	/*????????????log */
+	/*防止继续记录log */
 	mmc_trace_fd->mmc_trace_tofile_comm = true;
 
 	mdelay(100);
@@ -1010,18 +1010,18 @@ void mmc_trace_perf_tofile(void)
 		return;
 	}
 
-	/*????????????log */
+	/*防止继续记录log */
 	mmc_trace_fd->mmc_trace_tofile_perf = true;
 
 	mdelay(100);
 
-	/*???????? */
+	/*调测使用 */
 
-	/*???????????????????????????????????????????????????? */
+	/*完整一条性能日志数据结构，下面进行内容填充并写入内存 */
 	record_exp = (struct mmc_trace_perf_record_exp *)(((struct mmc_trace_perf *)(mmc_trace_fd->mmc_trace_perf))->perf_buff + sizeof(struct queue) - 8);
 	record_position = (char *)(((struct mmc_trace_perf *)(mmc_trace_fd->mmc_trace_perf))->perf_buff + sizeof(struct queue) - 8);
 
-	/*???????????????????????????????? */
+	/*日志个数，根据划分内存大小来计算 */
 	buf_size = ((struct queue *)(((struct mmc_trace_perf *)(mmc_trace_fd->mmc_trace_perf))->perf_buff))->max;
 	cnt = buf_size / (int)sizeof(struct mmc_trace_perf_record_exp);
 	step = sizeof(struct mmc_trace_perf_record_exp);
@@ -1096,21 +1096,21 @@ void mmc_trace_byself(int index)
 	mmc_trace_perf_tofile();
 }
 
-/*????????????????*/
+/*后续调测使用接口*/
 
 /*****************************************************************************
- ??	  ??   ??  : mmc_trace_init_begin
- ????????      : ??????????????????
- ????????      : host
- ????????      : ??
- ??   ??   ??  : void
- ????????      :
- ????????      :
+ 函	  数   名  : mmc_trace_init_begin
+ 功能描述      : 初始化记录开始标记
+ 输入参数      : host
+ 输出参数      : 无
+ 返   回   值  : void
+ 调用函数      :
+ 被调函数      :
 
- ????????      :
- ??        ??  : 2015??3??9??
-           ??  : ???? 00145322
- ????????      : ??????????
+ 修改历史      :
+ 日        期  : 2015年3月9日
+           者  : 袁旦 00145322
+ 修改内容      : 新生成函数
 *****************************************************************************/
 void mmc_trace_init_begin(struct mmc_host *host)
 {
@@ -1193,14 +1193,14 @@ void mmc_trace_record(struct mmc_host *host, struct mmc_request *mrq)
 		|| (mmc_trace_fd->mmc_trace_reset_cmdtimeout == true))
 		return;
 
-	/*?????????????? */
+	/*初始化日志记录 */
 	if (((host->index == EMMC) && mmc_trace_fd->mmc_trace_init_mmc_flag)
 		|| ((host->index == SD) && mmc_trace_fd->mmc_trace_init_sd_flag)
 		|| ((host->index == SDIO)
 			&& mmc_trace_fd->mmc_trace_init_sdio_flag)) {
 		mmc_trace_init_record(host, "[A]%x,[R0]%x,[C]%d\n", mrq->cmd->arg, mrq->cmd->resp[0], mrq->cmd->opcode);
 	} else {
-		/*???????????? */
+		/*通用日志记录 */
 		if ((mrq->cmd->opcode == CMD25) || (mrq->cmd->opcode == CMD18)
 			|| (mrq->cmd->opcode == CMD13)) {
 			mmc_trace_comm_record(host, "[C]%d\n", mrq->cmd->opcode);
@@ -1225,7 +1225,7 @@ void mmc_trace_emmc_init_fail_reset(void)
 		return;
 	}
 
-	/*????????????log */
+	/*防止继续记录log */
 	mmc_trace_fd->mmc_trace_reset_initfail = true;
 
 	mdelay(15000);

@@ -1,7 +1,7 @@
 /*
  * BCM47XX MTD partitioning
  *
- * Copyright ?? 2012 Rafa?? Mi??ecki <zajec5@gmail.com>
+ * Copyright © 2012 Rafał Miłecki <zajec5@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

@@ -95,13 +95,13 @@
 #include "VosTaskPrioDef.h"
 
 
-/* LINUX ?????? */
+/* LINUX 不支持 */
 
 
 
 
 /*****************************************************************************
-    ??????????????????????.C??????????
+    协议栈打印打点方式下的.C文件宏定义
 *****************************************************************************/
 #define    THIS_FILE_ID        PS_FILE_ID_V_TIMER_C
 
@@ -193,13 +193,13 @@ VOS_VOID VOS_ShowUsed26MTimerInfo( VOS_VOID );
 
 VOS_VOID VOS_TimerDump(VOS_INT lModId, VOS_UINT32 ulFileID, VOS_UINT32 ulLineNo);
 
-/* ??????????????Timer?????????????? */
+/* 自旋锁，用来作Timer的临界资源保护 */
 VOS_SPINLOCK                  g_stVosTimerSpinLock;
 
 
 #define VOS_26M_TIMER_ID     (TIMER_ACPU_OM_TCXO_ID)
 
-/* ???? VOS 26 timer ???????????? */
+/* 记录 VOS 26 timer 可维可测信息 */
 VOS_TIMER_SOC_TIMER_INFO_STRU g_st26MSocTimerInfo;
 
 /* the semaphore will be given when 26M's interrupt occures */
@@ -544,7 +544,7 @@ VOS_VOID VOS_TimerTaskFunc( VOS_UINT32 Para0, VOS_UINT32 Para1,
                 else
                 {
                     /*lint -e613*/
-                    vos_Timer_expire_tail_Ptr->next = vos_TimerCtrlBlkCurrent;/* [false alarm]: ????Fortify ???? */
+                    vos_Timer_expire_tail_Ptr->next = vos_TimerCtrlBlkCurrent;/* [false alarm]: 屏蔽Fortify 错误 */
                     /*lint +e613*/
                     vos_Timer_expire_tail_Ptr = vos_TimerCtrlBlkCurrent;
                 }
@@ -602,7 +602,7 @@ VOS_VOID VOS_TimerTaskFunc( VOS_UINT32 Para0, VOS_UINT32 Para1,
 
                 TempValue = (VOS_UINT_PTR)(vos_Timer_expire_head_Ptr->CallBackFunc);
 
-                /* CallBackFunc??????32??????????????name?????????????????????? */
+                /* CallBackFunc需要用32位传入，所以和name互换位置保证数据不丢失 */
                 OM_RecordInfoStart(VOS_EXC_DUMP_MEM_NUM_4, (VOS_UINT32)(vos_Timer_expire_head_Ptr->Pid), vos_Timer_expire_head_Ptr->Name, (VOS_UINT32)TempValue);
 
                 if ( VOS_NULL_PTR == vos_Timer_expire_head_Ptr->CallBackFunc )

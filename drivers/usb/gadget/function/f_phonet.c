@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2007-2008 Nokia Corporation. All rights reserved.
  *
- * Author: R??mi Denis-Courmont
+ * Author: Rémi Denis-Courmont
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -735,5 +735,5 @@ void gphonet_cleanup(struct net_device *dev)
 }
 
 DECLARE_USB_FUNCTION_INIT(phonet, phonet_alloc_inst, phonet_alloc);
-MODULE_AUTHOR("R??mi Denis-Courmont");
+MODULE_AUTHOR("Rémi Denis-Courmont");
 MODULE_LICENSE("GPL");

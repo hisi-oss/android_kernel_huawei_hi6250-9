@@ -1,6 +1,6 @@
 /* visorbus_main.c
  *
- * Copyright ??? 2010 - 2015 UNISYS CORPORATION
+ * Copyright � 2010 - 2015 UNISYS CORPORATION
  * All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it

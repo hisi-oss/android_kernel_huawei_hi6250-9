@@ -1112,7 +1112,7 @@ struct tvcard bttv_tvcards[] = {
 
 	/* ---- card 0x34 ---------------------------------- */
 	[BTTV_BOARD_PINNACLEPRO] = {
-		/* David H??rdeman <david@2gen.com> */
+		/* David Härdeman <david@2gen.com> */
 		.name           = "Pinnacle PCTV Studio Pro",
 		.video_inputs   = 4,
 		/* .audio_inputs= 1, */
@@ -1151,7 +1151,7 @@ struct tvcard bttv_tvcards[] = {
 		.has_radio	= 1,
 	},
 	[BTTV_BOARD_LIFETEC_9415] = {
-		/* Tim R??stermundt <rosterm@uni-muenster.de>
+		/* Tim Röstermundt <rosterm@uni-muenster.de>
 		in de.comp.os.unix.linux.hardware:
 			options bttv card=0 pll=1 radio=1 gpiomask=0x18e0
 			gpiomux =0x44c71f,0x44d71f,0,0x44d71f,0x44dfff
@@ -2493,7 +2493,7 @@ struct tvcard bttv_tvcards[] = {
 	},
 		/* ---- card 0x8b ---------------------------------- */
 	[BTTV_BOARD_PV_M4900] = {
-		/* S??rgio Fortier <sergiofortier@yahoo.com.br> */
+		/* Sérgio Fortier <sergiofortier@yahoo.com.br> */
 		.name           = "Prolink PixelView PlayTV MPEG2 PV-M4900",
 		.video_inputs   = 3,
 		/* .audio_inputs= 1, */
@@ -4114,7 +4114,7 @@ u32 bttv_tda9880_setnorm(struct bttv *btv, u32 gpiobits)
 
 /*
  * reset/enable the MSP on some Hauppauge cards
- * Thanks to Ky??sti M??lkki (kmalkki@cc.hut.fi)!
+ * Thanks to Kyösti Mälkki (kmalkki@cc.hut.fi)!
  *
  * Hauppauge:  pin  5
  * Voodoo:     pin 20

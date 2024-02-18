@@ -75,7 +75,7 @@ static int rv8803_read_reg(const struct i2c_client *client, u8 reg)
 	s32 ret;
 
 	/*
-	 * There is a 61??s window during which the RTC does not acknowledge I2C
+	 * There is a 61µs window during which the RTC does not acknowledge I2C
 	 * transfers. In that case, ensure that there are multiple attempts.
 	 */
 	do

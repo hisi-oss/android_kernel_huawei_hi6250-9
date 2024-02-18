@@ -1,7 +1,7 @@
 /*
  * Samsung S3C64XX/S5PC1XX OneNAND driver
  *
- *  Copyright ?? 2008-2010 Samsung Electronics
+ *  Copyright © 2008-2010 Samsung Electronics
  *  Kyungmin Park <kyungmin.park@samsung.com>
  *  Marek Szyprowski <m.szyprowski@samsung.com>
  *

@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2006-2014 Intel Corporation.
+ * Copyright © 2006-2014 Intel Corporation.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -515,7 +515,7 @@ static int iommu_identity_mapping;
 #define IDENTMAP_GFX		2
 #define IDENTMAP_AZALIA		4
 
-/* Broadwell and Skylake have broken ECS support ??? normal so-called "second
+/* Broadwell and Skylake have broken ECS support — normal so-called "second
  * level" translation of DMA requests-without-PASID doesn't actually happen
  * unless you also set the NESTE bit in an extended context-entry. Which of
  * course means that SVM doesn't work because it's trying to do nested
@@ -2899,7 +2899,7 @@ static int iommu_should_identity_map(struct device *dev, int startup)
 
 	/*
 	 * At boot time, we don't yet know if devices will be 64-bit capable.
-	 * Assume that they will ??? if they turn out not to be, then we can
+	 * Assume that they will — if they turn out not to be, then we can
 	 * take them out of the 1:1 domain later.
 	 */
 	if (!startup) {

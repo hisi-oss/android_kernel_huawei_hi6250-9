@@ -46,7 +46,7 @@
 #include "PPP/Inc/link.h"
 
 /*****************************************************************************
-    ??????????????????????.C??????????
+    协议栈打印打点方式下的.C文件宏定义
 *****************************************************************************/
 #define    THIS_FILE_ID        PS_FILE_ID_AUTH_C
 
@@ -134,7 +134,7 @@ VOS_VOID auth_StartReq(struct link *l, struct authinfo *authp)
   {
     auth_Req(authp,l);
 
-    /* ????????????????????????????????, ????LCP Layer Up, ???????????? */
+    /* 防止在上一次认证定时器没有超时前, 发生LCP Layer Up, 再次需要认证 */
     if (VOS_NULL != authp->hAuthTimer)
     {
         PS_STOP_REL_TIMER(&(authp->hAuthTimer));
@@ -160,7 +160,7 @@ VOS_VOID auth_StopTimer(struct authinfo *authp)
     }
 }
 
-/*lint -e{572} 0??????*/
+/*lint -e{572} 0的移位*/
 struct ppp_mbuf *
 auth_ReadHeader(struct authinfo *authp, struct ppp_mbuf *bp)
 {

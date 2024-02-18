@@ -1,7 +1,7 @@
 
 
 /*****************************************************************************
-  1 ??????????????
+  1 其他头文件包含
 *****************************************************************************/
 #include  <linux/hisi/pm/pwrctrl_multi_def.h>
 #include  "soc_modem_sctrl_interface.h"
@@ -23,17 +23,17 @@ extern "C" {
 
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
-#define PWC_VOTE_STAT_LOCK          (1)   /*????????????????*/
-#define PWC_VOTE_STAT_UNLOCK        (0)   /*????????????????*/
+#define PWC_VOTE_STAT_LOCK          (1)   /*投票不允许单板睡*/
+#define PWC_VOTE_STAT_UNLOCK        (0)   /*去投票允许单板睡*/
 #define PERI_SLEEP_STATE_MAX        (16)
 #define PERI_SLEEP_CUR_STATE_NUM    (5)
 #define ACPU_CPUIDLE_CUR_CPU_NUM    (8)
 #define ACPU_CLUSTER_CUR_CPU_NUM    (2)
 
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
 typedef enum tagPWC_SC_RESERVED28_ID_E
 {
@@ -44,7 +44,7 @@ typedef enum tagPWC_SC_RESERVED28_ID_E
 
 typedef enum tagPWC_PD_MOUDLE_ID_E
 {
-    /*????bit????????sc??????SC_MTCMOS_STAT0??SC_MTCMOS_STAT1*/
+    /*详细bit定义参考sc寄存器SC_MTCMOS_STAT0，SC_MTCMOS_STAT1*/
     PWC_PD_ID_PERI          = SOC_AO_SCTRL_SC_PW_MTCMOS_EN0_pw_en0_0peri_START,
     PWC_PD_ID_G3D           = SOC_AO_SCTRL_SC_PW_MTCMOS_EN0_pw_en0_1g3d_START,
     PWC_PD_ID_CODECISP      = SOC_AO_SCTRL_SC_PW_MTCMOS_EN0_pw_en0_2codecisp_START,
@@ -83,17 +83,17 @@ typedef enum tagPWC_PD_MOUDLE_ID_E
 } PWC_PD_MOUDLE_ID;
 
 /*****************************************************************************
-  4 ??????????
+  4 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  5 ????????
+  5 消息定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 STRUCT????
+  6 STRUCT定义
 *****************************************************************************/
 
 typedef struct PWC_TELE_MNTN_PU_STRU_S
@@ -181,10 +181,10 @@ typedef struct PWC_TELE_MNTN_CPUIDLE_STRU_S
 
 typedef struct PWC_TELE_MNTN_VOTESTAT_STRU_S
 {
-    u32_t stat;             /*PWC_VOTE_STAT_LOCK ???? PWC_VOTE_STAT_UNLOCK*/
-    u32_t voteMap;          /*????????????????????????*/
-    s32_t clientId;         /*??????PWC_CLIENT_ID_E????1??????*/
-    u32_t taskId;           /*??????????????ID*/
+    u32_t stat;             /*PWC_VOTE_STAT_LOCK 或者 PWC_VOTE_STAT_UNLOCK*/
+    u32_t voteMap;          /*软件投票值或者硬件投票值*/
+    s32_t clientId;         /*含义为PWC_CLIENT_ID_E的低1个字节*/
+    u32_t taskId;           /*此次投票的任务ID*/
 }PWC_TELE_MNTN_VOTESTAT_STRU;
 
 typedef struct PWC_TELE_MNTN_VOTE_STRU_S
@@ -401,60 +401,60 @@ typedef struct PWC_ACPU_LOG_STRU_S
 
 typedef struct ST_STORE_ADDR_INFO_S
 {
-    u32_t ulStartAddr;            /*????????????????????????*/
-    u32_t ulLength;               /*??????????????4????????,????32bit*/
+    u32_t ulStartAddr;            /*需要备份的寄存器地址信息*/
+    u32_t ulLength;               /*内容长度，需要4字节对齐,单位32bit*/
 } ST_STORE_REG_ADDR_INFO;
 
 typedef struct ST_STORE_BIT_ADDR_INFO_S
 {
-    u32_t ulAddr;               /*????????????????????????*/
-    u32_t ulToAddr;             /*????????,????32bit*/
-    u32_t ulMask;               /*????????,????32bit*/
-    u32_t ulSetMask;            /*??????????,????32bit*/
+    u32_t ulAddr;               /*需要备份的寄存器地址信息*/
+    u32_t ulToAddr;             /*恢复地址,单位32bit*/
+    u32_t ulMask;               /*恢复屏蔽,单位32bit*/
+    u32_t ulSetMask;            /*特殊写使能,单位32bit*/
 } ST_STORE_BIT_ADDR_INFO;
 
 
 typedef struct ST_VOTE_HW_INFO_S
 {
-    u32_t voteEn;                   /*????????????????????*/
-    u32_t voteDis;                  /*????????????????????*/
-    u32_t voteStat;                 /*??????????????????????*/
-    u32_t voteSleepMsk;             /*????????????*/
-    u32_t voteWakeMsk;              /*????????????*/
-    u32_t voteSleepStat;            /*??????????????????????*/
-    u32_t voteWakeStat;             /*??????????????????????*/
+    u32_t voteEn;                   /*唤醒投票，即禁止睡眠*/
+    u32_t voteDis;                  /*睡眠投票，即允许睡眠*/
+    u32_t voteStat;                 /*投票状态寄存器，屏蔽前*/
+    u32_t voteSleepMsk;             /*睡眠投票屏蔽*/
+    u32_t voteWakeMsk;              /*唤醒投票屏蔽*/
+    u32_t voteSleepStat;            /*投票状态寄存器，屏蔽后*/
+    u32_t voteWakeStat;             /*投票状态寄存器，屏蔽后*/
 } ST_VOTE_HW_INFO;
 
 #ifdef CHIP_BB_HI6210
 typedef struct ST_SYSCTRL_INT_INFO_S
 {
-    u32_t intStatR;                 /*????????????????????*/
-    u32_t intStatM;                 /*??????????????????????*/
-    u32_t intClr;                   /*????????????*/
-    u32_t intEn0;                   /*????????????*/
-    u32_t intDis0;                  /*??????????????????????*/
-    u32_t intEnStat;                /*????????????????????*/
+    u32_t intStatR;                 /*睡眠投票，即允许睡眠*/
+    u32_t intStatM;                 /*投票状态寄存器，屏蔽前*/
+    u32_t intClr;                   /*睡眠投票屏蔽*/
+    u32_t intEn0;                   /*唤醒投票屏蔽*/
+    u32_t intDis0;                  /*投票状态寄存器，屏蔽后*/
+    u32_t intEnStat;                /*唤醒投票，即禁止睡眠*/
 } ST_SYSCTRL_INT_HW_INFO;
 #else
 typedef struct ST_SYSCTRL_INT_INFO_S
 {
-    u32_t intEnStat;                /*????????????????????*/
-    u32_t intStatR;                 /*????????????????????*/
-    u32_t intStatM;                 /*??????????????????????*/
-    u32_t intClr;                   /*????????????*/
-    u32_t intEn0;                   /*????????????*/
-    u32_t intDis0;                  /*??????????????????????*/
+    u32_t intEnStat;                /*唤醒投票，即禁止睡眠*/
+    u32_t intStatR;                 /*睡眠投票，即允许睡眠*/
+    u32_t intStatM;                 /*投票状态寄存器，屏蔽前*/
+    u32_t intClr;                   /*睡眠投票屏蔽*/
+    u32_t intEn0;                   /*唤醒投票屏蔽*/
+    u32_t intDis0;                  /*投票状态寄存器，屏蔽后*/
 } ST_SYSCTRL_INT_HW_INFO;
 #endif
 
 typedef struct ST_SET_BIT_ADDR_INFO_S
 {
-    u32_t ulAddr;               /*????????????????????????*/
-    u32_t ulMask;               /*??????,????32bit*/
-    u32_t ulvalue;              /*??????????,????32bit*/
+    u32_t ulAddr;               /*需要配置的寄存器地址信息*/
+    u32_t ulMask;               /*屏蔽位,单位32bit*/
+    u32_t ulvalue;              /*要写入的值,单位32bit*/
 } ST_SET_BIT_ADDR_INFO;
 /*****************************************************************************
-  7 UNION????
+  7 UNION定义
 *****************************************************************************/
 typedef enum tagPWC_TELE_SLEEP_MODE_ID_E
 {
@@ -484,17 +484,17 @@ typedef enum tagPWC_TELE_SLEEP_CLIENT_ID_E
 
 
 /*****************************************************************************
-  8 OTHERS????
+  8 OTHERS定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  9 ????????????
+  9 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  10 ????????
+  10 函数声明
 *****************************************************************************/
 
 

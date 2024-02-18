@@ -410,4 +410,4 @@ module_i2c_driver(sis_ts_driver);
 
 MODULE_DESCRIPTION("SiS 9200 Family Touchscreen Driver");
 MODULE_LICENSE("GPL v2");
-MODULE_AUTHOR("Mika Penttil?? <mika.penttila@nextfour.com>");
+MODULE_AUTHOR("Mika Penttilä <mika.penttila@nextfour.com>");

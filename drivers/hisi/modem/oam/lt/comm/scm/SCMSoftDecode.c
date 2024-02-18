@@ -48,7 +48,7 @@
 
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 **************************************************************************** */
 #include "SCMProc.h"
 #include "SCMSoftDecode.h"
@@ -59,24 +59,24 @@
 #define    THIS_FILE_ID        PS_FILE_ID_SCM_SOFT_DECODE_C
 
 /* ****************************************************************************
-  2 ????????????
+  2 全局变量定义
 **************************************************************************** */
-/* ??????????????OM?????????????????????? */
+/* 自旋锁，用来作OM数据接收的临界资源保护 */
 VOS_SPINLOCK             g_stScmSoftDecodeDataRcvSpinLock;
 
-/* HDLC???????? */
+/* HDLC控制结构 */
 OM_HDLC_STRU             g_stScmHdlcSoftDecodeEntity;
 
-/* SCM?????????????????? */
+/* SCM数据接收数据缓冲区 */
 VOS_CHAR                 g_aucSCMDataRcvBuffer[SCM_DATA_RCV_PKT_SIZE];
 
-/* SCM???????????????????? */
+/* SCM数据接收任务控制结构 */
 SCM_DATA_RCV_CTRL_STRU   g_stSCMDataRcvTaskCtrlInfo;
 
 SCM_SOFTDECODE_INFO_STRU   g_stScmSoftDecodeInfo;
 
 /*****************************************************************************
-  3 ????????????
+  3 外部引用声明
 *****************************************************************************/
 
 VOS_UINT32 SCM_SoftDecodeAcpuRcvData(
@@ -88,7 +88,7 @@ VOS_UINT32 SCM_SoftDecodeAcpuRcvData(
 VOS_UINT32 SCM_SoftDecodeCfgHdlcInit(OM_HDLC_STRU *pstHdlc);
 
 /*****************************************************************************
-  4 ????????
+  4 函数实现
 *****************************************************************************/
 
 
@@ -147,14 +147,14 @@ VOS_VOID SCM_RcvDataDispatch(
     OM_HDLC_STRU                       *pstHdlcCtrl,
     VOS_UINT8                           ucDataType)
 {
-    /* TL???? */
+    /* TL数据 */
     if (SCM_DATA_TYPE_TL == ucDataType)
     {
         if (VOS_NULL_PTR != g_astSCMDecoderCbFunc[SOCP_DECODER_DST_CB_TL_OM])
         {
             diag_PTR(EN_DIAG_PTR_SCM_DISPATCH);
 
-            /* TL??????DATATYPE???????????????? */
+            /* TL不需要DATATYPE字段，回调时删除 */
             g_astSCMDecoderCbFunc[SOCP_DECODER_DST_CB_TL_OM](SOCP_DECODER_DST_LOM,
                                                     pstHdlcCtrl->pucDecapBuff + sizeof(SOCP_DATA_TYPE_ENUM_UIN8),
                                                     pstHdlcCtrl->ulInfoLen - sizeof(SOCP_DATA_TYPE_ENUM_UIN8),
@@ -200,7 +200,7 @@ VOS_UINT32 SCM_SoftDecodeAcpuRcvData(
         }
         else if (HDLC_NOT_HDLC_FRAME == ulResult)
         {
-            /*????????????,????HDLC??????*/
+            /*不是完整分帧,继续HDLC解封装*/
         }
         else
         {
@@ -214,7 +214,7 @@ VOS_UINT32 SCM_SoftDecodeAcpuRcvData(
 
 VOS_UINT32 SCM_SoftDecodeCfgHdlcInit(OM_HDLC_STRU *pstHdlc)
 {
-    /* ????????HDLC???????????? */
+    /* 申请用于HDLC解封装的缓存 */
     pstHdlc->pucDecapBuff    = (VOS_UINT8 *)VOS_MemAlloc(MSP_PID_DIAG_APP_AGENT, STATIC_MEM_PT, SCM_DATA_RCV_PKT_SIZE);
 
     if (VOS_NULL_PTR == pstHdlc->pucDecapBuff)
@@ -224,10 +224,10 @@ VOS_UINT32 SCM_SoftDecodeCfgHdlcInit(OM_HDLC_STRU *pstHdlc)
         return VOS_ERR;
     }
 
-    /* HDLC?????????????????? */
+    /* HDLC解封装缓存长度赋值 */
     pstHdlc->ulDecapBuffSize = SCM_DATA_RCV_PKT_SIZE;
 
-    /* ??????HDLC???????????????? */
+    /* 初始化HDLC解封装控制上下文 */
     Om_HdlcInit(pstHdlc);
 
     return VOS_OK;
@@ -303,7 +303,7 @@ VOS_VOID SCM_SoftDecodeCfgRcvSelfTask(VOS_VOID)
 
             diag_PTR(EN_DIAG_PTR_SCM_RCVDATA);
 
-            /* ????HDLC?????????? */
+            /* 调用HDLC解封装函数 */
             if (VOS_OK != SCM_SoftDecodeAcpuRcvData(&g_stScmHdlcSoftDecodeEntity,
                                                     (VOS_UINT8 *)g_stSCMDataRcvTaskCtrlInfo.pucBuffer,
                                                     (VOS_UINT32)lReadLen))
@@ -332,7 +332,7 @@ VOS_UINT32 SCM_SoftDecodeCfgRcvTaskInit(VOS_VOID)
         return VOS_ERR;
     }
 
-    /* ????OM?????????????????????? */
+    /* 注册OM配置数据接收自处理任务 */
     ulRslt = VOS_RegisterSelfTaskPrio(MSP_FID_DIAG_ACPU,
                                       (VOS_TASK_ENTRY_TYPE)SCM_SoftDecodeCfgRcvSelfTask,
                                       SCM_DATA_RCV_SELFTASK_PRIO,

@@ -120,7 +120,7 @@ static int stmmac_adjust_systime(void __iomem *ioaddr, u32 sec, u32 nsec,
 	if (add_sub) {
 		/* If the new sec value needs to be subtracted with
 		 * the system time, then MAC_STSUR reg should be
-		 * programmed with (2^32 ??? <new_sec_value>)
+		 * programmed with (2^32 – <new_sec_value>)
 		 */
 		if (gmac4)
 			sec = (100000000ULL - sec);

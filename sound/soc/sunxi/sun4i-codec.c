@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Emilio L??pez <emilio@elopez.com.ar>
+ * Copyright 2014 Emilio López <emilio@elopez.com.ar>
  * Copyright 2014 Jon Smirl <jonsmirl@gmail.com>
  * Copyright 2015 Maxime Ripard <maxime.ripard@free-electrons.com>
  * Copyright 2015 Adam Sampson <ats@offog.org>
@@ -923,7 +923,7 @@ static struct platform_driver sun4i_codec_driver = {
 module_platform_driver(sun4i_codec_driver);
 
 MODULE_DESCRIPTION("Allwinner A10 codec driver");
-MODULE_AUTHOR("Emilio L??pez <emilio@elopez.com.ar>");
+MODULE_AUTHOR("Emilio López <emilio@elopez.com.ar>");
 MODULE_AUTHOR("Jon Smirl <jonsmirl@gmail.com>");
 MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com>");
 MODULE_LICENSE("GPL");

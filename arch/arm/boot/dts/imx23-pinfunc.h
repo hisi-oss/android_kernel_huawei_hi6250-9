@@ -1,7 +1,7 @@
 /*
  * Header providing constants for i.MX23 pinctrl bindings.
  *
- * Copyright (C) 2013 Lothar Wa??mann <LW@KARO-electronics.de>
+ * Copyright (C) 2013 Lothar Waßmann <LW@KARO-electronics.de>
  *
  * The code contained herein is licensed under the GNU General Public
  * License. You may obtain a copy of the GNU General Public License

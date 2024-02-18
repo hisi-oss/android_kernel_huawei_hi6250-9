@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "mac_frame.h"
 #include "mac_vap.h"
@@ -17,17 +17,17 @@ extern "C" {
 #define THIS_FILE_ID OAM_FILE_ID_MAC_FRAME_RAM_C
 
 /*****************************************************************************
-  2 ????????????
+  2 函数原型声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  3 ????????????
+  3 全局变量定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  4 ????????
+  4 函数实现
 *****************************************************************************/
 
 
@@ -46,11 +46,11 @@ oal_void mac_set_ht_capabilities_ie_cb(oal_void *pst_vap, oal_uint8 *puc_buffer,
     mac_vap_stru          *pst_mac_vap;
 
     pst_mac_vap = (mac_vap_stru *)pst_vap;
-    /* ??????pucbuffer??????????ht cap ie?????? */
+    /* 首先将pucbuffer指针指回到ht cap ie的首部 */
     puc_buffer -= (MAC_IE_HDR_LEN + MAC_HT_CAPINFO_LEN + MAC_HT_AMPDU_PARAMS_LEN + MAC_HT_SUP_MCS_SET_LEN + MAC_HT_EXT_CAP_LEN + MAC_HT_TXBF_CAP_LEN);
-    /* ???????????????????????????????????????????????????????? */
+    /* 接下来的操作一定要按照元素的先后顺序进行避免指针跳错位置 */
     puc_buffer += MAC_IE_HDR_LEN;
-    /* ????ht_capinfo_field */
+    /* 更正ht_capinfo_field */
     pst_ht_capinfo = (mac_frame_ht_cap_stru *)puc_buffer;
     pst_ht_capinfo->bit_lsig_txop_protection = mac_mib_get_LsigTxopFullProtectionActivated(pst_mac_vap);
     

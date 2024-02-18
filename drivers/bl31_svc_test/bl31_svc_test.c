@@ -20,7 +20,7 @@
 #include "bl31_svc_test.h"
 
 #define BL31_IOC_MAGIC 'x'
-#define BL31_IOC_MAX_NR 99 //???????????????????????????
+#define BL31_IOC_MAX_NR 99 //定义命令的最大序列
 
 struct bl31_fun_id fun_ids[BL31_IOC_MAX_NR]={
     {_IO(BL31_IOC_MAGIC, 1 ),  "RPMB_SVC_CALL_COUNT",                            0xc6000000},
@@ -109,7 +109,7 @@ struct bl31_fun_id fun_ids[BL31_IOC_MAX_NR]={
     {_IO(BL31_IOC_MAGIC, 84),  "IPC_SVC_SECURE_OS_FIQ",                          0x85000060},
     {_IO(BL31_IOC_MAGIC, 85),  "CPU_VOLT_FN_GET_VAL",                            0xc800aa01},
     {_IO(BL31_IOC_MAGIC, 86),  "BL31_DEBUG_FN_VAL",                              0xc800aa02},
-    /*86?????????functionID,13??????ID????????????mask_value????????????*/
+    /*86个确定functionID,13个泛ID，以下用mask_value进行测试*/
     {_IO(BL31_IOC_MAGIC, 87),  "BL31_IP_REGULATOR_FID",                          0xc500fff0},
     {_IO(BL31_IOC_MAGIC, 88),  "BL31_L3SHARE_FID",                               0xc500f008},
     {_IO(BL31_IOC_MAGIC, 89),  "BL31_DSU_PCTRL_FID",                             0xc500f080},

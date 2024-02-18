@@ -360,5 +360,5 @@ module_init(bcm53xxspi_module_init);
 module_exit(bcm53xxspi_module_exit);
 
 MODULE_DESCRIPTION("Broadcom BCM53xx SPI Controller driver");
-MODULE_AUTHOR("Rafa?? Mi??ecki <zajec5@gmail.com>");
+MODULE_AUTHOR("Rafał Miłecki <zajec5@gmail.com>");
 MODULE_LICENSE("GPL");

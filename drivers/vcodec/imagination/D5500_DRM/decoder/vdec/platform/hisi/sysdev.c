@@ -119,69 +119,69 @@ void power_on(int isDec)
     unsigned int val =  0;
     unsigned int val2 =  0;
     unsigned int val3 =  0;
-    writel(0xe0000060,(ioremap(PERI_CRG,4) + 0x00));/*????????????*/
+    writel(0xe0000060,(ioremap(PERI_CRG,4) + 0x00));/*外设时钟使能*/
     writel(0xe018,(ioremap(PERI_CRG,4) + 0x64));
 
     //val = readl(ioremap(PMC,4) + 0x380);
     //val &= (~(0x1<<4));
-    //writel(val,(ioremap(PMC,4) + 0x380));/*????VCODEC_SUBSYS??????????????*/
+    //writel(val,(ioremap(PMC,4) + 0x380));/*配置VCODEC_SUBSYS退出低功耗模式*/
 	writel(0x00100000,(ioremap(PMC,4) + 0x380));
     do
     {
         val = readl(ioremap(PMC,4) + 0x384);
         val &= (0x01<<4);
-    }while(val);              /*??????????????????????*/
+    }while(val);              /*查询退出请求是否被响应*/
     do
     {
         val = readl(ioremap(PMC,4) + 0x388);
         val &= (0x01<<4);
-    }while(val);         /*????VCODEC_SUBSYS????????????????*/
+    }while(val);         /*确认VCODEC_SUBSYS已退出低功耗模式*/
 
     if(isDec)
     {
-        writel(0x04,(ioremap(PERI_CRG,4) + 0x150));/*MTCMOS????*/
-        writel(0x800,(ioremap(PERI_CRG,4) + 0x30));/*????VENC??NOC_VENC????*/
-        writel(0x04,(ioremap(PERI_CRG,4) + 0x148));/*ISO??????*/
-        writel(0x200,(ioremap(PERI_CRG,4) + 0x88));/*??????*/
+        writel(0x04,(ioremap(PERI_CRG,4) + 0x150));/*MTCMOS使能*/
+        writel(0x800,(ioremap(PERI_CRG,4) + 0x30));/*开启VENC和NOC_VENC时钟*/
+        writel(0x04,(ioremap(PERI_CRG,4) + 0x148));/*ISO去使能*/
+        writel(0x200,(ioremap(PERI_CRG,4) + 0x88));/*解复位*/
 
         val = readl(ioremap(PMC,4) + 0x380);
         val &= (~(0x1<<10));
-	    //writel(val,(ioremap(PMC,4) + 0x380));/*????NOC VDEC??????????????*/
+	    //writel(val,(ioremap(PMC,4) + 0x380));/*配置NOC VDEC退出低功耗模式*/
 		writel(0x04000000,(ioremap(PMC,4) + 0x380));
         do
         {
             val = readl(ioremap(PMC,4) + 0x384);
             val &= (0x01<<10);
-        }while(val);              //??????????????????
+        }while(val);              //查询请求是否被响应
         do
         {
             val = readl(ioremap(PMC,4) + 0x388);
             val &= (0x01<<10);
-        }while(val);         /*????PMC??NOC_POWER_IDLEACK??0x384?? bit 10??NOC_POWER_IDLE??0x388?? bit 10????1??b0*/
+        }while(val);         /*轮询PMC中NOC_POWER_IDLEACK（0x384） bit 10和NOC_POWER_IDLE（0x388） bit 10都为1’b0*/
 
     }
     else
     {
-        writel(0x02,(ioremap(PERI_CRG,4) + 0x150));/*MTCMOS????*/
-	    writel(0x400,(ioremap(PERI_CRG,4) + 0x30));/*????VENC??NOC_VENC????*/
-	    writel(0x02,(ioremap(PERI_CRG,4) + 0x148));	/*ISO??????*/
-        writel(0x100,(ioremap(PERI_CRG,4) + 0x88));/*??????*/
+        writel(0x02,(ioremap(PERI_CRG,4) + 0x150));/*MTCMOS使能*/
+	    writel(0x400,(ioremap(PERI_CRG,4) + 0x30));/*开启VENC和NOC_VENC时钟*/
+	    writel(0x02,(ioremap(PERI_CRG,4) + 0x148));	/*ISO去使能*/
+        writel(0x100,(ioremap(PERI_CRG,4) + 0x88));/*解复位*/
 
         val = readl(ioremap(PMC,4) + 0x380);
         val &= (~(0x1<<11));
 
-        writel(val,(ioremap(PMC,4) + 0x380));/*????NOC VENC??????????????*/
+        writel(val,(ioremap(PMC,4) + 0x380));/*配置NOC VENC退出低功耗模式*/
         do
         {
             val = readl(ioremap(PMC,4) + 0x384);
             val &= (0x01<<11);
-        }while(val);              //??????????????????
+        }while(val);              //查询请求是否被响应
 
         do
         {
             val = readl(ioremap(PMC,4) + 0x388);
             val &= (0x01<<11);
-        }while(val);         /*????PMC??NOC_POWER_IDLEACK??0x384?? bit 10??NOC_POWER_IDLE??0x388?? bit 10????1??b0*/
+        }while(val);         /*轮询PMC中NOC_POWER_IDLEACK（0x384） bit 10和NOC_POWER_IDLE（0x388） bit 10都为1’b0*/
 
     }
 

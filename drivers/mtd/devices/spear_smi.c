@@ -4,7 +4,7 @@
  * The serial nor interface is largely based on m25p80.c, however the SPI
  * interface has been replaced by SMI.
  *
- * Copyright ?? 2010 STMicroelectronics.
+ * Copyright © 2010 STMicroelectronics.
  * Ashish Priyadarshi
  * Shiraz Hashim <shiraz.linux.kernel@gmail.com>
  *

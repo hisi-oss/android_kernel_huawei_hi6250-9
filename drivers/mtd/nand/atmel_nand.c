@@ -1,25 +1,25 @@
 /*
- *  Copyright ?? 2003 Rick Bronson
+ *  Copyright © 2003 Rick Bronson
  *
  *  Derived from drivers/mtd/nand/autcpu12.c
- *	 Copyright ?? 2001 Thomas Gleixner (gleixner@autronix.de)
+ *	 Copyright © 2001 Thomas Gleixner (gleixner@autronix.de)
  *
  *  Derived from drivers/mtd/spia.c
- *	 Copyright ?? 2000 Steven J. Hill (sjhill@cotw.com)
+ *	 Copyright © 2000 Steven J. Hill (sjhill@cotw.com)
  *
  *
  *  Add Hardware ECC support for AT91SAM9260 / AT91SAM9263
- *     Richard Genoud (richard.genoud@gmail.com), Adeneo Copyright ?? 2007
+ *     Richard Genoud (richard.genoud@gmail.com), Adeneo Copyright © 2007
  *
  *     Derived from Das U-Boot source code
  *     		(u-boot-1.1.5/board/atmel/at91sam9263ek/nand.c)
- *     ?? Copyright 2006 ATMEL Rousset, Lacressonniere Nicolas
+ *     © Copyright 2006 ATMEL Rousset, Lacressonniere Nicolas
  *
  *  Add Programmable Multibit ECC support for various AT91 SoC
- *     ?? Copyright 2012 ATMEL, Hong Xu
+ *     © Copyright 2012 ATMEL, Hong Xu
  *
  *  Add Nand Flash Controller support for SAMA5 SoC
- *     ?? Copyright 2013 ATMEL, Josh Wu (josh.wu@atmel.com)
+ *     © Copyright 2013 ATMEL, Josh Wu (josh.wu@atmel.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

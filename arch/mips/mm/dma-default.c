@@ -66,7 +66,7 @@ static inline struct page *dma_addr_to_page(struct device *dev,
  * Note that the R14000 and R16000 should also be checked for in this
  * condition.  However this function is only called on non-I/O-coherent
  * systems and only the R10000 and R12000 are used in such systems, the
- * SGI IP28 Indigo?? rsp. SGI IP32 aka O2.
+ * SGI IP28 Indigo² rsp. SGI IP32 aka O2.
  */
 static inline int cpu_needs_post_dma_flush(struct device *dev)
 {

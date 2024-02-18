@@ -6,7 +6,7 @@
 
 #include <linux/tracepoint.h>
 
-TRACE_EVENT(l3_cache_request_enter,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3_cache_request_enter,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int request_id, unsigned int size, unsigned int g_acp_flag),
 	TP_ARGS(request_id, size, g_acp_flag),
 	TP_STRUCT__entry(
@@ -24,7 +24,7 @@ TRACE_EVENT(l3_cache_request_enter,/* [false alarm]:??????????????? */
 		  __entry->request_id, __entry->size, __entry->g_acp_flag)
 );
 
-TRACE_EVENT(l3_cache_request_succ,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3_cache_request_succ,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int request_id, unsigned int g_acp_flag),
 	TP_ARGS(request_id, g_acp_flag),
 	TP_STRUCT__entry(
@@ -41,7 +41,7 @@ TRACE_EVENT(l3_cache_request_succ,/* [false alarm]:??????????????? */
 );
 
 
-TRACE_EVENT(l3_cache_release_enter,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3_cache_release_enter,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int request_id, unsigned int g_acp_flag),
 	TP_ARGS(request_id, g_acp_flag),
 	TP_STRUCT__entry(
@@ -57,7 +57,7 @@ TRACE_EVENT(l3_cache_release_enter,/* [false alarm]:??????????????? */
 		  __entry->request_id, __entry->g_acp_flag)
 );
 
-TRACE_EVENT(l3_cache_release_succ,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3_cache_release_succ,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int request_id, unsigned int g_acp_flag),
 	TP_ARGS(request_id, g_acp_flag),
 	TP_STRUCT__entry(
@@ -73,7 +73,7 @@ TRACE_EVENT(l3_cache_release_succ,/* [false alarm]:??????????????? */
 		  __entry->request_id, __entry->g_acp_flag)
 );
 
-TRACE_EVENT(l3_cache_share_perf,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3_cache_share_perf,/* [false alarm]:原生宏定义 */
 	TP_PROTO(const char *acp, int request_id, unsigned int g_acp_flag),
 	TP_ARGS(acp, request_id, g_acp_flag),
 	TP_STRUCT__entry(

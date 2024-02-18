@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2011 Tony Breeds IBM Corporation
+ * Copyright © 2011 Tony Breeds IBM Corporation
  *
  * Based on earlier code:
  *   Copyright (C) Paul Mackerras 1997.
@@ -12,7 +12,7 @@
  *
  *    Copyright 2007 David Gibson, IBM Corporation.
  *    Copyright 2010 Ben. Herrenschmidt, IBM Corporation.
- *    Copyright ?? 2011 David Kleikamp IBM Corporation
+ *    Copyright © 2011 David Kleikamp IBM Corporation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

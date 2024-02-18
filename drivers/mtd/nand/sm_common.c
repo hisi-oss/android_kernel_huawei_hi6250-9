@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2009 - Maxim Levitsky
+ * Copyright © 2009 - Maxim Levitsky
  * Common routines & support for xD format
  *
  * This program is free software; you can redistribute it and/or modify

@@ -88,7 +88,7 @@
  * Number of data bits follow fibonacci sequence, with the exception of the
  * last level (+1 data bit, so it makes 64bit total).  The only worse code when
  * encoding bit polarity runlength is 1 plain bits => 2 code bits.
-prefix    data bits                                    max val  N?? data bits
+prefix    data bits                                    max val  Nº data bits
 0 x                                                         0x2            1
 10 x                                                        0x4            1
 110 xx                                                      0x8            2

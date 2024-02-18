@@ -986,10 +986,10 @@ int hisi_coul_convert_regval2uv(unsigned int reg_val)
 
 /****************************************************************************
   Function:     hisi_coul_convert_regval2temp
-  Description:  convert chip temperature regval to ??
+  Description:  convert chip temperature regval to бу
   Input:        reg_val
   Output:       NA
-  Return:       ??
+  Return:       бу
 ****************************************************************************/
 int hisi_coul_convert_regval2temp(unsigned int reg_val)
 {

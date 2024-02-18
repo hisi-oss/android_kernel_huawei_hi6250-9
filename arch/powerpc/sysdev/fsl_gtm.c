@@ -246,7 +246,7 @@ static int gtm_set_ref_timer16(struct gtm_timer *tmr, int frequency,
  */
 int gtm_set_timer16(struct gtm_timer *tmr, unsigned long usec, bool reload)
 {
-	/* quite obvious, frequency which is enough for ??Sec precision */
+	/* quite obvious, frequency which is enough for µSec precision */
 	int freq = 1000000;
 	unsigned int bit;
 
@@ -282,7 +282,7 @@ EXPORT_SYMBOL(gtm_set_timer16);
  */
 int gtm_set_exact_timer16(struct gtm_timer *tmr, u16 usec, bool reload)
 {
-	/* quite obvious, frequency which is enough for ??Sec precision */
+	/* quite obvious, frequency which is enough for µSec precision */
 	const int freq = 1000000;
 
 	/*

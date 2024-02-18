@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2012 Simon Budig, <simon.budig@kernelconcepts.de>
  * Daniel Wagener <daniel.wagener@kernelconcepts.de> (M09 firmware support)
- * Lothar Wa??mann <LW@KARO-electronics.de> (DT support)
+ * Lothar Waßmann <LW@KARO-electronics.de> (DT support)
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and

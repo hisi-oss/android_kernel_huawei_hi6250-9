@@ -34,7 +34,7 @@
  *  - 'cstate_pkg': The counter is available for each physical package.
  *    The counters include PKG_C*_RESIDENCY.
  *
- * All of these counters are specified in the Intel?? 64 and IA-32
+ * All of these counters are specified in the Intel® 64 and IA-32
  * Architectures Software Developer.s Manual Vol3b.
  *
  * Model specific counters:

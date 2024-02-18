@@ -3,9 +3,9 @@
  *
  *  Support for the Keith und Koep Trizeps4 Module Platform.
  *
- *  Author:	J??rgen Schindele
+ *  Author:	Jürgen Schindele
  *  Created:	20 02, 2006
- *  Copyright:	J??rgen Schindele
+ *  Copyright:	Jürgen Schindele
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2 as
@@ -556,7 +556,7 @@ static void __init trizeps4_map_io(void)
 }
 
 MACHINE_START(TRIZEPS4, "Keith und Koep Trizeps IV module")
-	/* MAINTAINER("J??rgen Schindele") */
+	/* MAINTAINER("Jürgen Schindele") */
 	.atag_offset	= 0x100,
 	.init_machine	= trizeps4_init,
 	.map_io		= trizeps4_map_io,
@@ -568,7 +568,7 @@ MACHINE_START(TRIZEPS4, "Keith und Koep Trizeps IV module")
 MACHINE_END
 
 MACHINE_START(TRIZEPS4WL, "Keith und Koep Trizeps IV-WL module")
-	/* MAINTAINER("J??rgen Schindele") */
+	/* MAINTAINER("Jürgen Schindele") */
 	.atag_offset	= 0x100,
 	.init_machine	= trizeps4_init,
 	.map_io		= trizeps4_map_io,

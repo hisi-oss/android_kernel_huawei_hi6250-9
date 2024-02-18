@@ -25,7 +25,7 @@ static void send_fiq(fiq_num fiq_num_t)
 {
 	u32 regval = 0;
 	
-	/*????FIQ??????*/
+	/*更新FIQ的状态*/
 	regval = readl((volatile const void *)g_fiq_ctrl.smem_fiq_status_addr);
 	regval |= ((u32)0x1 << fiq_num_t);
 	writel(regval,(volatile void *)g_fiq_ctrl.smem_fiq_status_addr);
@@ -74,12 +74,12 @@ int bsp_send_cp_fiq(fiq_num fiq_num_t)
 	}
 	check_fiq_send();
 
-	/*????????????????*/
+	/*更新中断处理次数*/
 	tmp = readl((volatile const void *)g_fiq_ctrl.smem_send_cnt_addr);
 	tmp += 1;
 	writel(tmp, (volatile  void *)g_fiq_ctrl.smem_send_cnt_addr);
 
-	/*????FIQ*/
+	/*发送FIQ*/
 	send_fiq(fiq_num_t);
 	
 	return BSP_OK;

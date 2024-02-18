@@ -2,7 +2,7 @@
  * Swap block device support for MTDs
  * Turns an MTD device into a swap device with block wear leveling
  *
- * Copyright ?? 2007,2011 Nokia Corporation. All rights reserved.
+ * Copyright © 2007,2011 Nokia Corporation. All rights reserved.
  *
  * Authors: Jarkko Lavinen <jarkko.lavinen@nokia.com>
  *

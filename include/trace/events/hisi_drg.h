@@ -6,7 +6,7 @@
 
 #include <linux/tracepoint.h>
 
-TRACE_EVENT(drg_thermal_limit,/* [false alarm]:??????????????? */
+TRACE_EVENT(drg_thermal_limit,/* [false alarm]:原生宏定义 */
 	TP_PROTO(const char *name, int slave_id, int thermal_state,
 		 int target_state, unsigned long target_freq,
 		 unsigned long cliped_freq),
@@ -36,7 +36,7 @@ TRACE_EVENT(drg_thermal_limit,/* [false alarm]:??????????????? */
 	          __entry->target_state, __entry->target_freq, __entry->cliped_freq)
 );
 
-TRACE_EVENT(drg_update_freq_range,/* [false alarm]:??????????????? */
+TRACE_EVENT(drg_update_freq_range,/* [false alarm]:原生宏定义 */
 	TP_PROTO(const char *name, int slave_id, int state,
 		 unsigned long min_freq, unsigned long max_freq),
 	TP_ARGS(name, slave_id, state, min_freq, max_freq),
@@ -62,7 +62,7 @@ TRACE_EVENT(drg_update_freq_range,/* [false alarm]:??????????????? */
 	          __entry->min_freq, __entry->max_freq)
 );
 
-TRACE_EVENT(drg_check_limit,/* [false alarm]:??????????????? */
+TRACE_EVENT(drg_check_limit,/* [false alarm]:原生宏定义 */
 	TP_PROTO(const char *name, int cpu, unsigned long target_freq,
 		 unsigned long min_freq, unsigned long max_freq),
 	TP_ARGS(name, cpu, target_freq, min_freq, max_freq),
@@ -88,7 +88,7 @@ TRACE_EVENT(drg_check_limit,/* [false alarm]:??????????????? */
 	          __entry->min_freq, __entry->max_freq)
 );
 
-TRACE_EVENT(drg_cpu_policy_adjust,/* [false alarm]:??????????????? */
+TRACE_EVENT(drg_cpu_policy_adjust,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int cpu, unsigned int margin,
 		 unsigned long min_freq, unsigned long max_freq),
 	TP_ARGS(cpu, margin, min_freq, max_freq),

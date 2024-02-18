@@ -94,12 +94,12 @@ extern void* g_lpm3_tcm_virt;
 #define HI_IPF_REGBASE_ADDR_VIRT                g_ipf_regbase_addr_virt
 #define HI_M3TCM0_MEM_ADDR_VIRT                 g_lpm3_tcm_virt
 #define HI_M3TCM1_MEM_ADDR_VIRT                 (HI_M3TCM0_MEM_ADDR_VIRT + HI_M3TCM0_MEM_SIZE)
-/*??????????k3v3??p532/v7r5??k3??????????,k3??????????????????*/
+/*以下为统一k3v3和p532/v7r5，k3上进行打桩,k3上不会使用以下地址*/
 
 #else   /* !((defined __KERNEL__) && (defined BSP_CONFIG_PHONE_TYPE)) */
 
 #ifndef DDR_GU_ADDR_VIRT
-#define DDR_GU_ADDR_VIRT 0               /* todo:????????????GU???? */
+#define DDR_GU_ADDR_VIRT 0               /* todo:需要删除，待GU确认 */
 #endif
 
 /* SHARED_MEM */
@@ -111,7 +111,7 @@ extern void* g_lpm3_tcm_virt;
 /************************************************************************
                 * IP BASE ADDR *
 ************************************************************************/
-/* AP??sysctrl reg base ,k3??*/
+/* AP侧sysctrl reg base ,k3有*/
 #ifdef HI_AP_SYSCTRL_BASE_ADDR
 #define HI_AP_SYSCTRL_BASE_ADDR_VIRT               HI_IO_ADDRESS(HI_AP_SYSCTRL_BASE_ADDR)
 #define HI_AP_SCTRL_BASE_ADDR_VIRT                 HI_IO_ADDRESS(HI_AP_SYSCTRL_BASE_ADDR)
@@ -555,7 +555,7 @@ extern void* g_lpm3_tcm_virt;
 #ifdef HI_MMC_DEV_REGBASE_ADDR
 #define HI_MMC_DEV_REGBASE_ADDR_VIRT            HI_IO_ADDRESS(HI_MMC_DEV_REGBASE_ADDR)
 #endif
-/*SSDMA????*/
+/*SSDMA模块*/
 #ifdef HI_SSDMA_REGBASE_ADDR
 #define HI_SSDMA_REGBASE_ADDR_VIRT              HI_IO_ADDRESS(HI_SSDMA_REGBASE_ADDR)
 #endif
@@ -781,7 +781,7 @@ extern void* g_lpm3_tcm_virt;
 #define HI_CORESIGHT_PTM1_BASE_ADDR_VIRT         HI_IO_ADDRESS(HI_CORESIGHT_PTM1_BASE_ADDR)
 #endif
 
-/* fpga ????????????????????/???? ?????????????????????????????????? */
+/* fpga 保留空间，为读取单模/多模 模式寄存器，映射该区域，左凤华关注 */
 #ifdef HI_FPGA_RESERVED_SPACE_FOR_MODE_SW_BASE_ADDR
 #define HI_FPGA_RESERVED_SPACE_FOR_MODE_SW_BASE_ADDR_VIRT         HI_IO_ADDRESS(HI_FPGA_RESERVED_SPACE_FOR_MODE_SW_BASE_ADDR)
 #endif

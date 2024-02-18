@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2012 NetCommWireless
+ * Copyright © 2012 NetCommWireless
  * Iwo Mergler <Iwo.Mergler@netcommwireless.com.au>
  *
  * Test for multi-bit error recovery on a NAND page This mostly tests the

@@ -939,7 +939,7 @@ static int translate_table(struct net *net, const char *name,
 				return -EINVAL;
 			}
 
-	/* we now know the following (along with E=mc??):
+	/* we now know the following (along with E=mc²):
 	 *  - the nr of entries in each chain is right
 	 *  - the size of the allocated space is right
 	 *  - all valid hooks have a corresponding chain

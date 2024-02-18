@@ -451,8 +451,8 @@ STATIC int soh_hi6531_acr_calculate_acr(void)
   Description:   get acr chip temperature
   Input:         NA
   Output:        NA
-  Return:        temerature (??)
-  Remart:        VPTAT_ACR= 1800*code??????????/4095 (mV)
+  Return:        temerature (¡ã)
+  Remart:        VPTAT_ACR= 1800*code£¨Ê®½øÖÆ£©/4095 (mV)
                  VPTAT_ACR=386.38+1.3*T
 ********************************************************/
 STATIC int soh_hi6531_acr_get_chip_temp(void)

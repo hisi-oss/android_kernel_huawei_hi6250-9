@@ -23,9 +23,9 @@
 
 
 //USB_PortMode switch index define
-#define INDEX_ENDUSER_SWITCH            0x11    //0x11 ??????USB????????17: "pcmodem2";
-#define INDEX_FACTORY_REWORK            0x0E   //0x0E ??????USB????????14: "manufacture,adb";
-#define INDEX_USB_REWORK_SN            0x0D   //0x0D ??????USB????????13;
+#define INDEX_ENDUSER_SWITCH            0x11    //0x11 设置为USB端口模式17: "pcmodem2";
+#define INDEX_FACTORY_REWORK            0x0E   //0x0E 设置为USB端口模式14: "manufacture,adb";
+#define INDEX_USB_REWORK_SN            0x0D   //0x0D 设置为USB端口模式13;
 
 /*========================================================================
 FUNCTION       hw_usb_port_switch_request

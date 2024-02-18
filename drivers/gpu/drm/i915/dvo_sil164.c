@@ -1,6 +1,6 @@
 /**************************************************************************
 
-Copyright ?? 2006 Dave Airlie
+Copyright © 2006 Dave Airlie
 
 All Rights Reserved.
 

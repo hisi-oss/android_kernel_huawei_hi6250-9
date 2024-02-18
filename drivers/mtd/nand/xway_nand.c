@@ -3,8 +3,8 @@
  *  under the terms of the GNU General Public License version 2 as published
  *  by the Free Software Foundation.
  *
- *  Copyright ?? 2012 John Crispin <blogic@openwrt.org>
- *  Copyright ?? 2016 Hauke Mehrtens <hauke@hauke-m.de>
+ *  Copyright © 2012 John Crispin <blogic@openwrt.org>
+ *  Copyright © 2016 Hauke Mehrtens <hauke@hauke-m.de>
  */
 
 #include <linux/mtd/nand.h>

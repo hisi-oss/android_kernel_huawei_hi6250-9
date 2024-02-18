@@ -1,7 +1,7 @@
 /*
  *  Atheros AR71XX/AR724X specific PCI setup code
  *
- *  Copyright (C) 2011 Ren?? Bolldorf <xsecute@googlemail.com>
+ *  Copyright (C) 2011 René Bolldorf <xsecute@googlemail.com>
  *  Copyright (C) 2008-2011 Gabor Juhos <juhosg@openwrt.org>
  *  Copyright (C) 2008 Imre Kaloz <kaloz@openwrt.org>
  *

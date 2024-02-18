@@ -69,12 +69,12 @@
  *		MMCRC[50:51] = cache_sel[2:3]  (L3EVENT_SEL1)
  * else if cache_sel[1]: # L1 event
  *	MMCR1[16] = cache_sel[2]
-??*	MMCR1[17] = cache_sel[3]
+ *	MMCR1[17] = cache_sel[3]
  *
  * if mark:
  *	MMCRA[63]    = 1		(SAMPLE_ENABLE)
  *	MMCRA[57:59] = sample[0:2]	(RAND_SAMP_ELIG)
-??*	MMCRA[61:62] = sample[3:4]	(RAND_SAMP_MODE)
+ *	MMCRA[61:62] = sample[3:4]	(RAND_SAMP_MODE)
  *
  * if EBB and BHRB:
  *	MMCRA[32:33] = IFM

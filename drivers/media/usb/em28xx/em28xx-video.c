@@ -6,7 +6,7 @@
 		      Markus Rechberger <mrechberger@gmail.com>
 		      Mauro Carvalho Chehab <mchehab@infradead.org>
 		      Sascha Sommer <saschasommer@freenet.de>
-   Copyright (C) 2012 Frank Sch??fer <fschaefer.oss@googlemail.com>
+   Copyright (C) 2012 Frank Schäfer <fschaefer.oss@googlemail.com>
 
 	Some parts based on SN9C10x PC Camera Controllers GPL driver made
 		by Luca Risolia <luca.risolia@studio.unibo.it>

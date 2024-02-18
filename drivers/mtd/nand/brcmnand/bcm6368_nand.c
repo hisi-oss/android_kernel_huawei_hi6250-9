@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  *
  * Derived from bcm63138_nand.c:
- * Copyright ?? 2015 Broadcom Corporation
+ * Copyright © 2015 Broadcom Corporation
  *
  * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/include/bcm963xx/63268_map_part.h:
  * Copyright 2000-2010 Broadcom Corporation

@@ -65,7 +65,7 @@ int x86_acpi_suspend_lowlevel(void)
 	 * just read it.  At least on 90 nm Pentium M (Family 6, Model
 	 * 13), reading an invalid MSR is not guaranteed to trap, see
 	 * Erratum X4 in "Intel Pentium M Processor on 90 nm Process
-	 * with 2-MB L2 Cache and Intel?? Processor A100 and A110 on 90
+	 * with 2-MB L2 Cache and Intel® Processor A100 and A110 on 90
 	 * nm process with 512-KB L2 Cache Specification Update".
 	 */
 	if (!rdmsr_safe(MSR_EFER,

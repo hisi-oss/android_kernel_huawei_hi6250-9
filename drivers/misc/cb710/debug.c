@@ -1,7 +1,7 @@
 /*
  *  cb710/debug.c
  *
- *  Copyright by Micha?? Miros??aw, 2008-2009
+ *  Copyright by Michał Mirosław, 2008-2009
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

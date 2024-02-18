@@ -7,7 +7,7 @@ extern "C" {
 #endif
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "oal_ext_if.h"
 #include "oam_ext_if.h"
@@ -16,17 +16,17 @@ extern "C" {
 #define THIS_FILE_ID OAM_FILE_ID_OAL_FSM_C
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
 
 
-oal_uint32  oal_fsm_create(oal_void                   *p_oshandle,         /*??????owner????????????????????????????VAP????*/
-                                const oal_uint8          *p_name,             /*????????????*/
-                                oal_void                 *p_ctx,              /*??????context*/
-                                oal_fsm_stru             *pst_oal_fsm,        /* oal?????????? */
-                                oal_uint8                 uc_init_state,      /*????????*/
-                                const oal_fsm_state_info *p_state_info,       /*??????????????*/
-                                oal_uint8                 uc_num_states       /*??????????????????*/
+oal_uint32  oal_fsm_create(oal_void                   *p_oshandle,         /*状态机owner的指针，对低功耗状态机，指向VAP结构*/
+                                const oal_uint8          *p_name,             /*状态机的名字*/
+                                oal_void                 *p_ctx,              /*状态机context*/
+                                oal_fsm_stru             *pst_oal_fsm,        /* oal状态机内容 */
+                                oal_uint8                 uc_init_state,      /*初始状态*/
+                                const oal_fsm_state_info *p_state_info,       /*状态机实例指针*/
+                                oal_uint8                 uc_num_states       /*本状态机的状态个数*/
 )
 {
     oal_uint32      ul_loop;
@@ -43,12 +43,12 @@ oal_uint32  oal_fsm_create(oal_void                   *p_oshandle,         /*???
        return OAL_FAIL;
     }
 
-    /*??????????????????????????????????*/
+    /*检查状态信息顺序是否和状态定义匹配*/
     for (ul_loop = 0;ul_loop < uc_num_states;ul_loop++)
     {
         if ((p_state_info[ul_loop].state >= OAL_FSM_MAX_STATES) || (p_state_info[ul_loop].state!=ul_loop))
         {
-            /* OAM??????????????%s*/
+            /* OAM日志中不能使用%s*/
             OAL_IO_PRINT("oal_fsm_create::entry %d has invalid state %d }",ul_loop,p_state_info[ul_loop].state);
             return OAL_FAIL;
         }
@@ -73,7 +73,7 @@ oal_uint32  oal_fsm_create(oal_void                   *p_oshandle,         /*???
         pst_oal_fsm->uc_name[ul_loop] = '\0';
     }
 
-    /*??????????*/
+    /*启动状态机*/
    if(pst_oal_fsm->p_state_info[pst_oal_fsm->uc_cur_state].oal_fsm_entry)
    {
        pst_oal_fsm->p_state_info[pst_oal_fsm->uc_cur_state].oal_fsm_entry(pst_oal_fsm->p_ctx);
@@ -107,13 +107,13 @@ oal_uint32 oal_fsm_trans_to_state(oal_fsm_stru* p_fsm,oal_uint8 uc_state)
         return OAL_SUCC;
     }
 
-    /*??????????????????????*/
+    /*调用前一状态的退出函数*/
     if (p_fsm->p_state_info[p_fsm->uc_cur_state].oal_fsm_exit)
     {
         p_fsm->p_state_info[p_fsm->uc_cur_state].oal_fsm_exit(p_fsm->p_ctx);
     }
 
-    /*????????????????????*/
+    /*调用本状态的进入函数*/
     if (p_fsm->p_state_info[uc_state].oal_fsm_entry)
     {
        p_fsm->p_state_info[uc_state].oal_fsm_entry(p_fsm->p_ctx);

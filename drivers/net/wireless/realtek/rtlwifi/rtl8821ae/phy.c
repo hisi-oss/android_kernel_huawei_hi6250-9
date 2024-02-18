@@ -3911,7 +3911,7 @@ static void _rtl8821ae_iqk_tx(struct ieee80211_hw *hw, enum radio_path path)
 
 			rtl_write_dword(rtlpriv, 0xc80, 0x18008c10);/* TX_TONE_idx[9:0], TxK_Mask[29] TX_Tone = 16 */
 			rtl_write_dword(rtlpriv, 0xc84, 0x38008c10);/* RX_TONE_idx[9:0], RxK_Mask[29] */
-			rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8??\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
+			rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8ϥ\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
 			rtl_write_dword(rtlpriv, 0x980, 0xfa000000);
 			rtl_write_dword(rtlpriv, 0x980, 0xf8000000);
 
@@ -3988,7 +3988,7 @@ static void _rtl8821ae_iqk_tx(struct ieee80211_hw *hw, enum radio_path path)
 					default:
 						break;
 					}
-					rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8??\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
+					rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8ϥ\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
 					cal_retry = 0;
 					while (1) {
 						/* one shot */
@@ -4042,7 +4042,7 @@ static void _rtl8821ae_iqk_tx(struct ieee80211_hw *hw, enum radio_path path)
 			} else {
 				rtl_write_dword(rtlpriv, 0xc80, 0x18008c10);/* TX_TONE_idx[9:0], TxK_Mask[29] TX_Tone = 16 */
 				rtl_write_dword(rtlpriv, 0xc84, 0x38008c10);/* RX_TONE_idx[9:0], RxK_Mask[29] */
-				rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8??\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
+				rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8ϥ\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
 				cal_retry = 0;
 				while (1) {
 					/* one shot */
@@ -4152,7 +4152,7 @@ static void _rtl8821ae_iqk_tx(struct ieee80211_hw *hw, enum radio_path path)
 					}
 					rtl_write_dword(rtlpriv, 0xc88, 0x821603e0);
 					rtl_write_dword(rtlpriv, 0xc8c, 0x68163e96);
-					rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8??\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
+					rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8ϥ\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
 					cal_retry = 0;
 					while (1) {
 						/* one shot */
@@ -4235,7 +4235,7 @@ static void _rtl8821ae_iqk_tx(struct ieee80211_hw *hw, enum radio_path path)
 
 					if (k == 2)
 						rtl_set_bbreg(hw, 0xce8, BIT(30), 0x1);  /* RX VDF Enable */
-					rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8??\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
+					rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8ϥ\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
 
 					cal_retry = 0;
 					while (1) {
@@ -4311,7 +4311,7 @@ static void _rtl8821ae_iqk_tx(struct ieee80211_hw *hw, enum radio_path path)
 				rtl_write_dword(rtlpriv, 0xc84, 0x38008c10);/* RX_TONE_idx[9:0], RxK_Mask[29] */
 				rtl_write_dword(rtlpriv, 0xc88, 0x821603e0);
 				/* ODM_Write4Byte(pDM_Odm, 0xc8c, 0x68163e96); */
-				rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8??\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
+				rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8ϥ\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
 				cal_retry = 0;
 				while (1) {
 					/* one shot */
@@ -4390,7 +4390,7 @@ static void _rtl8821ae_iqk_tx(struct ieee80211_hw *hw, enum radio_path path)
 
 				rtl_write_dword(rtlpriv, 0xc8c, 0x28160d00); /*pDM_Odm->SupportInterface == 1*/
 
-				rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8??\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
+				rtl_write_dword(rtlpriv, 0xcb8, 0x00100000);/* cb8[20] \B1N SI/PI \A8ϥ\CE\C5v\A4\C1\B5\B9 iqk_dpk module */
 
 				cal_retry = 0;
 				while (1) {

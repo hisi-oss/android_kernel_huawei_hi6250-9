@@ -3,7 +3,7 @@
  *
  * Based on hid-gyration.c
  *
- * Copyright (c) 2009 Bruno Pr??mont <bonbons@linux-vserver.org>
+ * Copyright (c) 2009 Bruno Prémont <bonbons@linux-vserver.org>
  */
 
 /*

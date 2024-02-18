@@ -31,7 +31,7 @@
  * on physical properties, they differ on the number of axes (2/3),
  * precision (8/12 bits), and special features (freefall detection,
  * click...). Unfortunately, not all the differences can be probed via
- * a register. They can be connected either via I??C or SPI.
+ * a register. They can be connected either via I²C or SPI.
  */
 
 #include <linux/lis3lv02d.h>

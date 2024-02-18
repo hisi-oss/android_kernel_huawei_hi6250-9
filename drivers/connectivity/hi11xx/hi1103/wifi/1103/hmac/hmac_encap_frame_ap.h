@@ -11,7 +11,7 @@ extern "C" {
 
 
 /*****************************************************************************
-  1 ??????????????
+  1 其他头文件包含
 *****************************************************************************/
 #include "oal_ext_if.h"
 #include "mac_vap.h"
@@ -19,23 +19,23 @@ extern "C" {
 #include "hmac_vap.h"
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
 typedef enum
 {
-    /* ??????????open */
+    /* 加密方式为open */
     HMAC_AP_AUTH_SEQ1_OPEN_ANY  = 0,
-    /* ??????????wep,?????????? */
+    /* 加密方式为wep,处理重传帧 */
     HMAC_AP_AUTH_SEQ1_WEP_NOT_RESEND,
-    /* ??????????wep,???????????? */
+    /* 加密方式为wep,处理非重传帧 */
     HMAC_AP_AUTH_SEQ1_WEP_RESEND,
-    /* ??????????open */
+    /* 加密方式为open */
     HMAC_AP_AUTH_SEQ3_OPEN_ANY,
-    /* ??????????WEP,assoc??????auth comlete */
+    /* 加密方式为WEP,assoc状态为auth comlete */
     HMAC_AP_AUTH_SEQ3_WEP_COMPLETE,
-    /* ??????????WEP,assoc??????assoc */
+    /* 加密方式为WEP,assoc状态为assoc */
     HMAC_AP_AUTH_SEQ3_WEP_ASSOC,
-    /* ?????????? */
+    /* 什么也不做 */
     HMAC_AP_AUTH_DUMMY,
 
     HMAC_AP_AUTH_BUTT
@@ -43,37 +43,37 @@ typedef enum
 typedef oal_uint8 hmac_ap_auth_process_code_enum_uint8;
 
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  4 ????????????
+  4 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  5 ??????????
+  5 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 ????????
+  6 消息定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  7 STRUCT????
+  7 STRUCT定义
 *****************************************************************************/
 typedef struct tag_hmac_auth_rsp_param_stru
 {
-    /* ????auth request???????????? */
+    /* 收到auth request是否为重传帧 */
     oal_uint8                               uc_auth_resend;
-    /* ??????????wep */
+    /* 记录是否为wep */
     oal_bool_enum_uint8                     en_is_wep_allowed;
-    /* ?????????????? */
+    /* 记录认证的类型 */
     oal_uint16                              us_auth_type;
-    /* ????????????????user??????????*/
+    /* 记录函数处理前，user的关联状态*/
     mac_user_asoc_state_enum_uint8          en_user_asoc_state;
     oal_uint8                               uc_pad[3];
 
@@ -91,12 +91,12 @@ typedef struct tag_hmac_auth_rsp_handle_stru
     hmac_auth_rsp_fun        st_auth_rsp_fun;
 }hmac_auth_rsp_handle_stru;
 /*****************************************************************************
-  8 UNION????
+  8 UNION定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  9 OTHERS????
+  9 OTHERS定义
 *****************************************************************************/
 
 OAL_STATIC OAL_INLINE oal_void hmac_mgmt_encap_chtxt(oal_uint8 *puc_frame,
@@ -113,18 +113,18 @@ OAL_STATIC OAL_INLINE oal_void hmac_mgmt_encap_chtxt(oal_uint8 *puc_frame,
     puc_frame[6] = MAC_EID_CHALLENGE;
     puc_frame[7] = WLAN_CHTXT_SIZE;
 
-    /* ??challenge text?????????????? */
+    /* 将challenge text拷贝到帧体中去 */
     oal_memcopy(&puc_frame[8], puc_chtxt, WLAN_CHTXT_SIZE);
 
-    /* ??????????????Challenge Text Element?????? */
+    /* 认证帧长度增加Challenge Text Element的长度 */
     *pus_auth_rsp_len += (WLAN_CHTXT_SIZE + MAC_IE_HDR_LEN);
 
-    /* ??????????challenge text */
+    /* 保存明文的challenge text */
     oal_memcopy(pst_hmac_user_sta->auc_ch_text, &puc_frame[8], WLAN_CHTXT_SIZE);
 }
 
 /*****************************************************************************
-  10 ????????
+  10 函数声明
 *****************************************************************************/
 
 extern oal_uint16  hmac_encap_auth_rsp_etc(mac_vap_stru *pst_mac_vap, oal_netbuf_stru *pst_auth_rsp, oal_netbuf_stru *pst_auth_req, oal_uint8 *puc_chtxt);

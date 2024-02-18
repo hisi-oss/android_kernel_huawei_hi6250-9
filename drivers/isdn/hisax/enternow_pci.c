@@ -331,7 +331,7 @@ static void en_cs_init(struct IsdnCard *card, struct IsdnCardState *cs)
 	cs->hw.njet.isac = cs->hw.njet.base + 0xC0; // Fenster zum AMD
 
 	/* Reset an */
-	cs->hw.njet.ctrl_reg = 0x07;  // ge??ndert von 0xff
+	cs->hw.njet.ctrl_reg = 0x07;  // geändert von 0xff
 	outb(cs->hw.njet.ctrl_reg, cs->hw.njet.base + NETJET_CTRL);
 	/* 20 ms Pause */
 	mdelay(20);

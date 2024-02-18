@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2004-2010 Nokia Corporation
  *
- * Based on code written by Juha Yrj??l??, David Weinehall, Mikko Ylinen and
+ * Based on code written by Juha Yrjölä, David Weinehall, Mikko Ylinen and
  * Felipe Balbi. Converted to I2C driver by Aaro Koskinen.
  *
  * This file is subject to the terms and conditions of the GNU General
@@ -295,7 +295,7 @@ module_platform_driver(cbus_i2c_driver);
 
 MODULE_ALIAS("platform:i2c-cbus-gpio");
 MODULE_DESCRIPTION("CBUS I2C driver");
-MODULE_AUTHOR("Juha Yrj??l??");
+MODULE_AUTHOR("Juha Yrjölä");
 MODULE_AUTHOR("David Weinehall");
 MODULE_AUTHOR("Mikko Ylinen");
 MODULE_AUTHOR("Felipe Balbi");

@@ -42,11 +42,11 @@ extern "C" {
 #define OS_WAITQUEUE_ACTIVE(wq)                                     waitqueue_active(wq)
 #define OS_WAKE_UP_INTERRUPTIBLE(wq)                                wake_up_interruptible(wq)
 
-#define SOH                         0x01       /* ???????? */
-#define EOT                         0x04       /* ???????? */
-#define ACK                         0x06       /* ???????????? */
-#define NAK                         0x15       /* ?????????????????????????????????????????????????? */
-#define CAN                         0x18       /* ???????? */
+#define SOH                         0x01       /* 开始字符 */
+#define EOT                         0x04       /* 发送完成 */
+#define ACK                         0x06       /* 正确接收应答 */
+#define NAK                         0x15       /* 校验错误重新发送，通讯开始时用于接收方协商累加校验 */
+#define CAN                         0x18       /* 结束下载 */
 
 #define PATCH_INTEROP_TIMEOUT        (HZ)
 
@@ -131,26 +131,26 @@ extern "C" {
  */
 enum PATCH_INFO_TYPE_ENUM
 {
-    ENUM_INFO_SDIO    =  0,        /* SDIO ????????patch */
-    ENUM_INFO_UART,                /* uart????????patch */
+    ENUM_INFO_SDIO    =  0,        /* SDIO 接口下载patch */
+    ENUM_INFO_UART,                /* uart接口下载patch */
 
-    ENUM_INFO_TOTAL                /* ???????? */
+    ENUM_INFO_TOTAL                /* 接口总数 */
 
 };
 #if 0
 enum PATCH_CFG_CMD_ENUM
 {
-    ERROR_TYPE_CMD  = 0,           /* ?????????? */
-    FILE_TYPE_CMD,                 /* ???????????????? */
-    NUM_TYPE_CMD,                  /* ???????????????? */
-    QUIT_TYPE_CMD                  /* ???????? */
+    ERROR_TYPE_CMD  = 0,           /* 错误的命令 */
+    FILE_TYPE_CMD,                 /* 下载配置文件命令 */
+    NUM_TYPE_CMD,                  /* 下载配置参数命令 */
+    QUIT_TYPE_CMD                  /* 退出命令 */
 };
 #endif
 
 enum PATCH_WAIT_RESPONSE_ENUM
 {
-    NO_RESPONSE  = 0,               /* ??????device???? */
-    WAIT_RESPONSE                   /* ????device???? */
+    NO_RESPONSE  = 0,               /* 不等待device响应 */
+    WAIT_RESPONSE                   /* 等待device响应 */
 };
 
 /*
@@ -204,24 +204,24 @@ typedef struct patch_globals
 }PATCH_GLOBALS_STUR;
 
 
-/* xmodem????????????????CRC????*/
+/* xmodem每包数据的结构，CRC校验*/
 typedef struct xmodem_crc_pkt
 {
-    int8  Head;                             /* ???????? */
-    int8  PacketNum;                        /* ?????? */
-    int8  PacketAnt;                        /* ??????????*/
-    int8  packet_data[XMODE_DATA_LEN];      /* ???? */
-    int8  CRCValue_H;                       /* CRC?????????? */
-    int8  CRCValue_L;                       /* CRC?????????? */
+    int8  Head;                             /* 开始字符 */
+    int8  PacketNum;                        /* 包序号 */
+    int8  PacketAnt;                        /* 包序号补码*/
+    int8  packet_data[XMODE_DATA_LEN];      /* 数据 */
+    int8  CRCValue_H;                       /* CRC校验码高位 */
+    int8  CRCValue_L;                       /* CRC校验码低位 */
 }XMODEM_CRC_PKT_STRU;
 
 
-/* xmodem????????????????CRC????*/
+/* xmodem每包数据的结构，CRC校验*/
 typedef struct xmodem_head_pkt
 {
-    int8  Head;                             /* ???????? */
-    int8  PacketNum;                        /* ?????? */
-    int8  PacketAnt;                        /* ??????????*/
+    int8  Head;                             /* 开始字符 */
+    int8  PacketNum;                        /* 包序号 */
+    int8  PacketAnt;                        /* 包序号补码*/
 }XMODEM_HEAD_PKT_STRU;
 
 

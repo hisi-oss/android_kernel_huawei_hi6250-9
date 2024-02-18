@@ -3,7 +3,7 @@
  *
  * Driver for SST25L SPI Flash chips
  *
- * Copyright ?? 2009 Bluewater Systems Ltd
+ * Copyright © 2009 Bluewater Systems Ltd
  * Author: Andre Renaud <andre@bluewatersys.com>
  * Author: Ryan Mallon
  *

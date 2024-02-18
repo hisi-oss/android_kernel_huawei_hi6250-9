@@ -11,7 +11,7 @@
  *  include/linux/dmaengine.h.
  *
  *  Copyright (C) 2003 Nokia Corporation
- *  Author: Juha Yrj??l?? <juha.yrjola@nokia.com>
+ *  Author: Juha Yrjölä <juha.yrjola@nokia.com>
  *
  */
 

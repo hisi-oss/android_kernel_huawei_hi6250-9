@@ -2,7 +2,7 @@
    em28xx-camera.c - driver for Empia EM25xx/27xx/28xx USB video capture devices
 
    Copyright (C) 2009 Mauro Carvalho Chehab <mchehab@infradead.org>
-   Copyright (C) 2013 Frank Sch??fer <fschaefer.oss@googlemail.com>
+   Copyright (C) 2013 Frank Schäfer <fschaefer.oss@googlemail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

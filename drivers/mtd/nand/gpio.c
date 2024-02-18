@@ -6,7 +6,7 @@
  * Written by Ben Dooks <ben@simtec.co.uk>
  *   Based on 2.4 version by Mark Whittaker
  *
- * ?? 2004 Simtec Electronics
+ * © 2004 Simtec Electronics
  *
  * Device driver for NAND flash that uses a memory mapped interface to
  * read/write the NAND commands and data, and GPIO pins for control signals

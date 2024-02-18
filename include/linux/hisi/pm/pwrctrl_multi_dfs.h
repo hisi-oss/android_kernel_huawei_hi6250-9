@@ -70,7 +70,7 @@ typedef enum
 #define DFS_DEVICE_ID_BUS           (4)
 #define DFS_DEVICE_ID_BUSLOW        (5)
 #define DFS_DEVICE_ID_MDMNOC        (6)
-/*????????????????END*/
+/*如果增加，请更新END*/
 #define DFS_DEVICE_ID_END           DFS_DEVICE_ID_MDMNOC
 
 /*
@@ -87,18 +87,18 @@ typedef enum
 /*
  *  DFS Device QoS
  */
-#define DFS_QOS_ID_ACPU_MINFREQ     (0 /*?? DFS_QOS_ID_ACPU_MINFREQ_E ????*/)
-#define DFS_QOS_ID_ACPU_MAXFREQ     (1 /*?? DFS_QOS_ID_ACPU_MAXFREQ_E ????*/)
-#define DFS_QOS_ID_CCPU_MINFREQ     (2 /*?? DFS_QOS_ID_CCPU_MINFREQ_E ????*/)
-#define DFS_QOS_ID_CCPU_MAXFREQ     (3 /*?? DFS_QOS_ID_CCPU_MAXFREQ_E ????*/)
-#define DFS_QOS_ID_DDR_MINFREQ      (4 /*?? DFS_QOS_ID_DDR_MINFREQ_E ????*/)
-#define DFS_QOS_ID_DDR_MAXFREQ      (5 /*?? DFS_QOS_ID_DDR_MAXFREQ_E ????*/)
-#define DFS_QOS_ID_GPU_MINFREQ      (6 /*?? DFS_QOS_ID_GPU_MINFREQ_E ????*/)
-#define DFS_QOS_ID_GPU_MAXFREQ      (7 /*?? DFS_QOS_ID_GPU_MAXFREQ_E ????*/)
-#define DFS_QOS_ID_BUS_MINFREQ      (8 /*?? DFS_QOS_ID_BUS_MINFREQ_E ????*/)
-#define DFS_QOS_ID_BUS_MAXFREQ      (9 /*?? DFS_QOS_ID_BUS_MAXFREQ_E ????*/)
+#define DFS_QOS_ID_ACPU_MINFREQ     (0 /*与 DFS_QOS_ID_ACPU_MINFREQ_E 一致*/)
+#define DFS_QOS_ID_ACPU_MAXFREQ     (1 /*与 DFS_QOS_ID_ACPU_MAXFREQ_E 一致*/)
+#define DFS_QOS_ID_CCPU_MINFREQ     (2 /*与 DFS_QOS_ID_CCPU_MINFREQ_E 一致*/)
+#define DFS_QOS_ID_CCPU_MAXFREQ     (3 /*与 DFS_QOS_ID_CCPU_MAXFREQ_E 一致*/)
+#define DFS_QOS_ID_DDR_MINFREQ      (4 /*与 DFS_QOS_ID_DDR_MINFREQ_E 一致*/)
+#define DFS_QOS_ID_DDR_MAXFREQ      (5 /*与 DFS_QOS_ID_DDR_MAXFREQ_E 一致*/)
+#define DFS_QOS_ID_GPU_MINFREQ      (6 /*与 DFS_QOS_ID_GPU_MINFREQ_E 一致*/)
+#define DFS_QOS_ID_GPU_MAXFREQ      (7 /*与 DFS_QOS_ID_GPU_MAXFREQ_E 一致*/)
+#define DFS_QOS_ID_BUS_MINFREQ      (8 /*与 DFS_QOS_ID_BUS_MINFREQ_E 一致*/)
+#define DFS_QOS_ID_BUS_MAXFREQ      (9 /*与 DFS_QOS_ID_BUS_MAXFREQ_E 一致*/)
 
-/*????DFS Device QOS ID*/
+/*新增DFS Device QOS ID*/
 enum DFS_QOS_ID
 {
     DFS_QOS_ID_START = DFS_QOS_ID_BUS_MAXFREQ,
@@ -108,7 +108,7 @@ enum DFS_QOS_ID
     DFS_QOS_ID_MDMNOC_MAXFREQ,
     DFS_QOS_ID_END
 };
-/*????PM Device QOS ID*/
+/*新增PM Device QOS ID*/
 enum PM_QOS_ID
 {
     PM_QOS_ID_START = DFS_QOS_ID_END,
@@ -143,7 +143,7 @@ enum PM_QOS_ID
 #define DFS_QOS_DDR_MAXFREQ_NAME    "da"
 #define DFS_QOS_GPU_MINFREQ_NAME    "gi"
 #define DFS_QOS_GPU_MAXFREQ_NAME    "ga"
-/*????????????????DFS_QOS_OBJ_NAME_SIZE*/
+/*名字长度不能超过DFS_QOS_OBJ_NAME_SIZE*/
 #define DFS_QOS_BUS_MINFREQ_NAME    "bi"
 #define DFS_QOS_BUS_MAXFREQ_NAME    "ba"
 #define DFS_QOS_BUSLOW_MINFREQ_NAME  "bli"
@@ -177,7 +177,7 @@ enum PM_QOS_ID
 #define DFS_QOS_DDR_MAXFREQ_NAME    "ddr_maxfreq"
 #define DFS_QOS_GPU_MINFREQ_NAME    "gpu_minfreq"
 #define DFS_QOS_GPU_MAXFREQ_NAME    "gpu_maxfreq"
-/*????????????????DFS_QOS_OBJ_NAME_SIZE*/
+/*名字长度不能超过DFS_QOS_OBJ_NAME_SIZE*/
 #define DFS_QOS_BUS_MINFREQ_NAME    "bus_minfreq"
 #define DFS_QOS_BUS_MAXFREQ_NAME    "bus_maxfreq"
 #define DFS_QOS_BUSLOW_MINFREQ_NAME  "buslow_minfreq"

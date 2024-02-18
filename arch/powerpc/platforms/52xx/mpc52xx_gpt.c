@@ -72,7 +72,7 @@
 #include <asm/mpc52xx.h>
 
 MODULE_DESCRIPTION("Freescale MPC52xx gpt driver");
-MODULE_AUTHOR("Sascha Hauer, Grant Likely, Albrecht Dre??");
+MODULE_AUTHOR("Sascha Hauer, Grant Likely, Albrecht Dreß");
 MODULE_LICENSE("GPL");
 
 /**

@@ -273,7 +273,7 @@
  * @has_finger_size -  the default finger width settings for the
  * sensor can be configured and registers F11_2D_Ctrl42 through F11_2D_Ctrl44
  * exist.
- * @has_segmentation_aggressiveness - the sensor???s ability to distinguish
+ * @has_segmentation_aggressiveness - the sensor’s ability to distinguish
  * multiple objects close together can be configured and register F11_2D_Ctrl45
  * exists.
  * @has_XY_clip -  the inactive outside borders of the sensor can be

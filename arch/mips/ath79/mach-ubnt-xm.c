@@ -1,7 +1,7 @@
 /*
  *  Ubiquiti Networks XM (rev 1.0) board support
  *
- *  Copyright (C) 2011 Ren?? Bolldorf <xsecute@googlemail.com>
+ *  Copyright (C) 2011 René Bolldorf <xsecute@googlemail.com>
  *
  *  Derived from: mach-pb44.c
  *

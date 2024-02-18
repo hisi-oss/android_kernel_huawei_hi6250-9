@@ -1,7 +1,7 @@
 /*
  * Broadcom Northstar USB 3.0 PHY Driver
  *
- * Copyright (C) 2016 Rafa?? Mi??ecki <rafal@milecki.pl>
+ * Copyright (C) 2016 Rafał Miłecki <rafal@milecki.pl>
  *
  * All magic values used for initialization (and related comments) were obtained
  * from Broadcom's SDK:

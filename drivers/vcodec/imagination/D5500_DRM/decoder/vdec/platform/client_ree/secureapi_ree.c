@@ -1,4 +1,4 @@
-
+﻿
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
 
 #include "secureapi_ree.h"

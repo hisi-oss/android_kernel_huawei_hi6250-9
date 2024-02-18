@@ -49,7 +49,7 @@
 #define __TAFSSAAPI_H__
 
 /*****************************************************************************
-  1 ??????????????
+  1 其他头文件包含
 *****************************************************************************/
 #include "vos.h"
 #include "TafTypeDef.h"
@@ -68,7 +68,7 @@ extern "C" {
 #pragma pack(4)
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
 #define TAF_SSA_MSG_ID_BASE             (0x5000)                                /* ID_TAF_SSA_INTERNAL_BASE */
 #define TAF_SSA_EVT_ID_BASE             (TAF_SSA_MSG_ID_BASE + 0x800)
@@ -76,11 +76,11 @@ extern "C" {
 #define TAF_SSA_LCS_THIRD_PARTY_ADDR_MAX_LEN    (20)
 #define TAF_SSA_LCS_MTLR_MAX_NUM                (7)
 
-/* ????OSA???????????? */
+/* 封装OSA申请消息接口 */
 #define TAF_SSA_ALLOC_MSG_WITH_HDR(ulMsgLen)\
             PS_ALLOC_MSG_WITH_HEADER_LEN(WUEPS_PID_TAF, (ulMsgLen))
 
-/* ????OSA?????? */
+/* 封装OSA消息头 */
 #define TAF_SSA_CFG_MSG_HDR(pstMsg, ulRecvPid, ulMsgId)\
            { \
             ((MSG_HEADER_STRU *)(pstMsg))->ulSenderCpuId   = VOS_LOCAL_CPUID;\
@@ -90,34 +90,34 @@ extern "C" {
             ((MSG_HEADER_STRU *)(pstMsg))->ulMsgName       = (ulMsgId); \
            }
 
-/* ????OSA??????(SSA????????) */
+/* 封装OSA消息头(SSA内部消息) */
 #define TAF_SSA_CFG_INTRA_MSG_HDR(pstMsg, ulMsgId)\
             TAF_SSA_CFG_MSG_HDR(pstMsg, WUEPS_PID_TAF, ulMsgId)
 
-/* ????OSA???????? */
+/* 获取OSA消息内容 */
 #define TAF_SSA_GET_MSG_ENTITY(pstMsg)\
             ((VOS_VOID *)&(((MSG_HEADER_STRU *)(pstMsg))->ulMsgName))
 
-/* ????OSA???????? */
+/* 获取OSA消息长度 */
 #define TAF_SSA_GET_MSG_LENGTH(pstMsg)\
             (((MSG_HEADER_STRU *)(pstMsg))->ulLength)
 
-/* ????OSA?????????????????????? */
+/* 封装OSA消息初始化消息内容接口 */
 #define TAF_SSA_CLR_MSG_ENTITY(pstMsg)\
             TAF_MEM_SET_S(TAF_SSA_GET_MSG_ENTITY(pstMsg), TAF_SSA_GET_MSG_LENGTH(pstMsg), 0x00, TAF_SSA_GET_MSG_LENGTH(pstMsg))
 
-/* ????OSA???????????? */
+/* 封装OSA发送消息接口 */
 #define TAF_SSA_SEND_MSG(pstMsg)\
             PS_SEND_MSG(WUEPS_PID_TAF, pstMsg)
 
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
 
 enum TAF_SSA_MSG_ID_ENUM
 {
-    /* ????????[0x5000, 0x50FF] */
-    /* ???????????????????????????????????????????????? */
+    /* 标准命令[0x5000, 0x50FF] */
+    /* 之前老的与呼叫无关的命令需要后面补充并转移到此处 */
 
     /* +CMOLR */
     ID_TAF_SSA_SET_LCS_MOLR_REQ         = TAF_SSA_MSG_ID_BASE + 0x0001,         /* _H2ASN_MsgChoice TAF_SSA_SET_LCS_MOLR_REQ_STRU */
@@ -131,7 +131,7 @@ enum TAF_SSA_MSG_ID_ENUM
     ID_TAF_SSA_SET_LCS_MTLRA_REQ        = TAF_SSA_MSG_ID_BASE + 0x0005,         /* _H2ASN_MsgChoice TAF_SSA_SET_LCS_MTLRA_REQ_STRU */
     ID_TAF_SSA_GET_LCS_MTLRA_REQ        = TAF_SSA_MSG_ID_BASE + 0x0006,         /* _H2ASN_MsgChoice TAF_SSA_GET_LCS_MTLRA_REQ_STRU */
 
-    /* ????????[0x5100, 0x51FF] */
+    /* 私有命令[0x5100, 0x51FF] */
 
     ID_TAF_SSA_MSG_ID_BUTT
 };
@@ -140,8 +140,8 @@ typedef VOS_UINT32 TAF_SSA_MSG_ID_ENUM_UINT32;
 
 enum TAF_SSA_EVT_ID_ENUM
 {
-    /* ????????[0x5800, 0x58FF] */
-    /* ???????????????????????????????????????????????? */
+    /* 标准命令[0x5800, 0x58FF] */
+    /* 之前老的与呼叫无关的命令需要后面补充并转移到此处 */
 
     /* +CMOLR */
     ID_TAF_SSA_SET_LCS_MOLR_CNF         = TAF_SSA_EVT_ID_BASE + 0x0001,         /* _H2ASN_MsgChoice TAF_SSA_SET_LCS_MOLR_CNF_STRU */
@@ -159,7 +159,7 @@ enum TAF_SSA_EVT_ID_ENUM
     ID_TAF_SSA_SET_LCS_MTLRA_CNF        = TAF_SSA_EVT_ID_BASE + 0x0007,         /* _H2ASN_MsgChoice TAF_SSA_SET_LCS_MTLRA_CNF_STRU */
     ID_TAF_SSA_GET_LCS_MTLRA_CNF        = TAF_SSA_EVT_ID_BASE + 0x0008,         /* _H2ASN_MsgChoice TAF_SSA_GET_LCS_MTLRA_CNF_STRU */
 
-    /* ????????[0x5900, 0x59FF] */
+    /* 私有命令[0x5900, 0x59FF] */
 
     ID_TAF_SSA_EVT_ID_BUTT
 };
@@ -203,22 +203,22 @@ typedef VOS_UINT8 TAF_SSA_LCS_MTLR_SUBSCRIBE_ENUM_UINT8;
 
 
 /*****************************************************************************
-  4 ????????????
+  4 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  5 ??????????
+  5 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 ????????
+  6 消息定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  7 STRUCT????
+  7 STRUCT定义
 *****************************************************************************/
 
 typedef struct
@@ -301,7 +301,7 @@ typedef struct
     TAF_CTRL_STRU                           stCtrl;
     TAF_ERROR_CODE_ENUM_UINT32              enResult;
     LCS_MOLR_PARA_STRU                      stMolrPara;
-    TAF_SSA_LCS_MOLR_ENABLE_TYPE_ENUM_UINT8 enEnable;                           /* MO-LR???????? */
+    TAF_SSA_LCS_MOLR_ENABLE_TYPE_ENUM_UINT8 enEnable;                           /* MO-LR使能状态 */
     LCS_PLANE_ENUM_UINT8                    enPlane;
     TAF_SSA_LCS_NMEA_REP_STRU               stNmeaRep;
     VOS_UINT8                               aucReserved[1];
@@ -395,7 +395,7 @@ typedef struct
 
 
 /*****************************************************************************
-  H2ASN????????????????
+  H2ASN顶级消息结构定义
 *****************************************************************************/
 typedef struct
 {
@@ -432,17 +432,17 @@ typedef struct
 }TafSsaEvt_MSG;
 
 /*****************************************************************************
-  8 UNION????
+  8 UNION定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  9 OTHERS????
+  9 OTHERS定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  10 ????????
+  10 函数声明
 *****************************************************************************/
 
 extern VOS_VOID TAF_SSA_SndTafMsg(

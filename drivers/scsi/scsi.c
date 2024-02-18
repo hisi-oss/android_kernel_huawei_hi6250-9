@@ -1182,7 +1182,7 @@ EXPORT_SYMBOL(__set_quiesce_for_each_device);
 
 /**
  * __clr_quiesce_for_each_device - clear all scsi device state to running
- * @shost:??       SCSI host pointer
+ * @shost:»       SCSI host pointer
  *
  * Description: this func will be called when resume to allow io req
  * from block level;this func is added by hisi.

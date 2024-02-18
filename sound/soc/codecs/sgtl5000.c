@@ -903,7 +903,7 @@ static bool sgtl5000_readable(struct device *dev, unsigned int reg)
  * This precalculated table contains all (vag_val * 100 / lo_calcntrl) results
  * to select an appropriate lo_vol_* in SGTL5000_CHIP_LINE_OUT_VOL
  * The calculatation was done for all possible register values which
- * is the array index and the following formula: 10^((idx???15)/40) * 100
+ * is the array index and the following formula: 10^((idx−15)/40) * 100
  */
 static const u8 vol_quot_table[] = {
 	42, 45, 47, 50, 53, 56, 60, 63,

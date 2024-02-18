@@ -1,7 +1,7 @@
 /*
  * drivers/mtd/nand/socrates_nand.c
  *
- *  Copyright ?? 2008 Ilya Yanok, Emcraft Systems
+ *  Copyright © 2008 Ilya Yanok, Emcraft Systems
  *
  *
  * This program is free software; you can redistribute it and/or modify

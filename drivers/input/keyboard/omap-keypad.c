@@ -4,7 +4,7 @@
  * OMAP Keypad Driver
  *
  * Copyright (C) 2003 Nokia Corporation
- * Written by Timo Ter??s <ext-timo.teras@nokia.com>
+ * Written by Timo Teräs <ext-timo.teras@nokia.com>
  *
  * Added support for H2 & H3 Keypad
  * Copyright (C) 2004 Texas Instruments
@@ -329,7 +329,7 @@ static struct platform_driver omap_kp_driver = {
 };
 module_platform_driver(omap_kp_driver);
 
-MODULE_AUTHOR("Timo Ter??s");
+MODULE_AUTHOR("Timo Teräs");
 MODULE_DESCRIPTION("OMAP Keypad Driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:omap-keypad");

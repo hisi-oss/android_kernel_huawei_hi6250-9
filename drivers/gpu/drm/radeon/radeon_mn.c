@@ -25,7 +25,7 @@
  */
 /*
  * Authors:
- *    Christian K??nig <christian.koenig@amd.com>
+ *    Christian König <christian.koenig@amd.com>
  */
 
 #include <linux/firmware.h>

@@ -1,7 +1,7 @@
 /*
  * Topro TP6800/6810 webcam driver.
  *
- * Copyright (C) 2011 Jean-Fran??ois Moine (http://moinejf.free.fr)
+ * Copyright (C) 2011 Jean-François Moine (http://moinejf.free.fr)
  * Copyright (C) 2009 Anders Blomdell (anders.blomdell@control.lth.se)
  * Copyright (C) 2008 Thomas Champagne (lafeuil@gmail.com)
  *

@@ -2,7 +2,7 @@
  * nozomi.c  -- HSDPA driver Broadband Wireless Data Card - Globe Trotter
  *
  * Written by: Ulf Jakobsson,
- *             Jan ??kerfeldt,
+ *             Jan Åkerfeldt,
  *             Stefan Thomasson,
  *
  * Maintained by: Paul Hardwick (p.hardwick@option.com)

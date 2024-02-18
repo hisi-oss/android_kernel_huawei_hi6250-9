@@ -1,7 +1,7 @@
 /*
  *  GPIO interface for IT87xx Super I/O chips
  *
- *  Author: Diego Elio Petten?? <flameeyes@flameeyes.eu>
+ *  Author: Diego Elio Pettenò <flameeyes@flameeyes.eu>
  *
  *  Based on it87_wdt.c     by Oliver Schuster
  *           gpio-it8761e.c by Denis Turischev
@@ -411,6 +411,6 @@ static void __exit it87_gpio_exit(void)
 module_init(it87_gpio_init);
 module_exit(it87_gpio_exit);
 
-MODULE_AUTHOR("Diego Elio Petten???? <flameeyes@flameeyes.eu>");
+MODULE_AUTHOR("Diego Elio PettenÃ² <flameeyes@flameeyes.eu>");
 MODULE_DESCRIPTION("GPIO interface for IT87xx Super I/O chips");
 MODULE_LICENSE("GPL");

@@ -2,7 +2,7 @@
  * Glue code for the SHA1 Secure Hash Algorithm assembler implementation using
  * ARM NEON instructions.
  *
- * Copyright ?? 2014 Jussi Kivilinna <jussi.kivilinna@iki.fi>
+ * Copyright © 2014 Jussi Kivilinna <jussi.kivilinna@iki.fi>
  *
  * This file is based on sha1_generic.c and sha1_ssse3_glue.c:
  *  Copyright (c) Alan Smithee.

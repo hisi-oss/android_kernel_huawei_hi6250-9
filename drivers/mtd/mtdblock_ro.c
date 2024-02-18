@@ -1,7 +1,7 @@
 /*
  * Simple read-only (writable only for RAM) mtdblock driver
  *
- * Copyright ?? 2001-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright © 2001-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1675,7 +1675,7 @@ static void i7core_udimm_check_mc_ecc_err(struct mem_ctl_info *mci)
 
 /*
  * According with tables E-11 and E-12 of chapter E.3.3 of Intel 64 and IA-32
- * Architectures Software Developer???s Manual Volume 3B.
+ * Architectures Software Developer’s Manual Volume 3B.
  * Nehalem are defined as family 0x06, model 0x1a
  *
  * The MCA registers used here are the following ones:

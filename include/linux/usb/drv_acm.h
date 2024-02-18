@@ -3,7 +3,7 @@
 #ifndef __DRV_ACM_H__
 #define __DRV_ACM_H__
 
-/* IOCTL CMD ???? */
+/* IOCTL CMD 定义 */
 #define ACM_IOCTL_SET_WRITE_CB      0x7F001000
 #define ACM_IOCTL_SET_READ_CB       0x7F001001
 #define ACM_IOCTL_SET_EVT_CB        0x7F001002
@@ -16,7 +16,7 @@
 
 #define ACM_IOCTL_WRITE_DO_COPY     0x7F001021
 
-/* Modem ?????????? */
+/* Modem 控制命令码 */
 #define ACM_MODEM_IOCTL_SET_MSC_READ_CB 0x7F001030
 #define ACM_MODEM_IOCTL_MSC_WRITE_CMD   0x7F001031
 #define ACM_MODEM_IOCTL_SET_REL_IND_CB  0x7F001032
@@ -35,7 +35,7 @@
 #define MODEM_CTRL_DSR		(1 << 1)
 #define MODEM_CTRL_DCD		(1 << 0)
 
-/* ???????????????? */
+/* 异步数据收发结构 */
 typedef struct tagACM_WR_ASYNC_INFO {
 	char *pVirAddr;
 	char *pPhyAddr;
@@ -43,10 +43,10 @@ typedef struct tagACM_WR_ASYNC_INFO {
 	void *pDrvPriv;
 } ACM_WR_ASYNC_INFO;
 
-/* ACM???????????? */
+/* ACM设备事件类型 */
 typedef enum tagACM_EVT_E {
-	ACM_EVT_DEV_SUSPEND = 0,        /* ??????????????????(??????????????????????????) */
-	ACM_EVT_DEV_READY = 1,          /* ????????????????(??????????????????????????) */
+	ACM_EVT_DEV_SUSPEND = 0,        /* 设备不可以进行读写(主要用于事件回调函数的状态) */
+	ACM_EVT_DEV_READY = 1,          /* 设备可以进行读写(主要用于事件回调函数的状态) */
 	ACM_EVT_DEV_BOTTOM
 } ACM_EVT_E;
 
@@ -55,7 +55,7 @@ typedef enum tagACM_IOCTL_FLOW_CONTROL_E {
 	ACM_IOCTL_FLOW_CONTROL_ENABLE		/* stop receiving data from ACM port */
 } ACM_IOCTL_FLOW_CONTROL_E;
 
-/* ??buffer???? */
+/* 读buffer信息 */
 typedef struct tagACM_READ_BUFF_INFO {
 	unsigned int u32BuffSize;
 	unsigned int u32BuffNum;

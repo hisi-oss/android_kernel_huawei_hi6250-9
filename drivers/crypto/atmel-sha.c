@@ -3,7 +3,7 @@
  *
  * Support for ATMEL SHA1/SHA256 HW acceleration.
  *
- * Copyright (c) 2012 Eukr??a Electromatique - ATMEL
+ * Copyright (c) 2012 Eukréa Electromatique - ATMEL
  * Author: Nicolas Royer <nicolas@eukrea.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1593,4 +1593,4 @@ module_platform_driver(atmel_sha_driver);
 
 MODULE_DESCRIPTION("Atmel SHA (1/256/224/384/512) hw acceleration support.");
 MODULE_LICENSE("GPL v2");
-MODULE_AUTHOR("Nicolas Royer - Eukr??a Electromatique");
+MODULE_AUTHOR("Nicolas Royer - Eukréa Electromatique");

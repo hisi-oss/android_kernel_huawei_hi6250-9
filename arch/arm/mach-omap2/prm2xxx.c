@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2010-2012 Texas Instruments, Inc.
  * Copyright (C) 2010 Nokia Corporation
- * Beno??t Cousson
+ * Benoît Cousson
  * Paul Walmsley
  * Rajendra Nayak <rnayak@ti.com>
  *

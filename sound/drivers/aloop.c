@@ -5,7 +5,7 @@
  *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
  *
  *  More accurate positioning and full-duplex support:
- *  Copyright (c) Ahmet ??nan <ainan at mathematik.uni-freiburg.de>
+ *  Copyright (c) Ahmet İnan <ainan at mathematik.uni-freiburg.de>
  *
  *  Major (almost complete) rewrite:
  *  Copyright (c) by Takashi Iwai <tiwai@suse.de>

@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2014  NXP Semiconductors  All rights reserved.
  *
- * Authors: Cl??ment Perrochaud <clement.perrochaud@nxp.com>
+ * Authors: Clément Perrochaud <clement.perrochaud@nxp.com>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,

@@ -19,7 +19,7 @@
  * Copyright 2008 Ben Dooks <ben-linux@fluff.org>
  * Copyright 2009 Simtec Electronics <linux@simtec.co.uk>
  *
- * Additional work by Herbert P??tzl <herbert@13thfloor.at> and
+ * Additional work by Herbert Pötzl <herbert@13thfloor.at> and
  * Harald Welte <laforge@openmoko.org>
  */
 

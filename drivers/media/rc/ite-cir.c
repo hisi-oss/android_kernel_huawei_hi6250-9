@@ -1,7 +1,7 @@
 /*
  * Driver for ITE Tech Inc. IT8712F/IT8512 CIR
  *
- * Copyright (C) 2010 Juan Jes??s Garc??a de Soria <skandalfo@gmail.com>
+ * Copyright (C) 2010 Juan Jesús García de Soria <skandalfo@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -26,7 +26,7 @@
  * <lirc@bartelmus.de>, Andrew Calkin <r_tay@hotmail.com> and James Edwards
  * <jimbo-lirc@edwardsclan.net>.
  *
- * The lirc_ite8709 driver was written by Gr??gory Lardi??re
+ * The lirc_ite8709 driver was written by Grégory Lardière
  * <spmf2004-lirc@yahoo.fr> in 2008.
  */
 

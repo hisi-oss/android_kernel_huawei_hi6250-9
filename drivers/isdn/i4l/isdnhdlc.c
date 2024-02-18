@@ -3,7 +3,7 @@
  *
  * Copyright (C)
  *	2009	Karsten Keil		<keil@b1-systems.de>
- *	2002	Wolfgang M??es		<wolfgang@iksw-muees.de>
+ *	2002	Wolfgang Mües		<wolfgang@iksw-muees.de>
  *	2001	Frode Isaksen		<fisaksen@bewan.com>
  *      2001	Kai Germaschewski	<kai.germaschewski@gmx.de>
  *
@@ -30,7 +30,7 @@
 
 /*-------------------------------------------------------------------*/
 
-MODULE_AUTHOR("Wolfgang M??es <wolfgang@iksw-muees.de>, "
+MODULE_AUTHOR("Wolfgang Mües <wolfgang@iksw-muees.de>, "
 	      "Frode Isaksen <fisaksen@bewan.com>, "
 	      "Kai Germaschewski <kai.germaschewski@gmx.de>");
 MODULE_DESCRIPTION("General purpose ISDN HDLC decoder");

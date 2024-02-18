@@ -1,5 +1,5 @@
 /**
- * Copyright (c) ????		Jochen Sch??uble <psionic@psionic.de>
+ * Copyright (c) ????		Jochen Schäuble <psionic@psionic.de>
  * Copyright (c) 2003-2004	Joern Engel <joern@wh.fh-wedel.de>
  *
  * Usage:

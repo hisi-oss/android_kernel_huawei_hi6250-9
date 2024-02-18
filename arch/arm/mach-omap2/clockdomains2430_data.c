@@ -4,7 +4,7 @@
  * Copyright (C) 2008-2009 Texas Instruments, Inc.
  * Copyright (C) 2008-2010 Nokia Corporation
  *
- * Paul Walmsley, Jouni H??gander
+ * Paul Walmsley, Jouni Högander
  *
  * This file contains clockdomains and clockdomain wakeup dependencies
  * for OMAP2xxx chips.  Some notes:

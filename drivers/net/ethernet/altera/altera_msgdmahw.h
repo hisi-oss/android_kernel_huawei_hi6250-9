@@ -50,7 +50,7 @@ struct msgdma_extended_desc {
 #define MSGDMA_DESC_CTL_EARLY_IRQ	BIT(15)
 #define MSGDMA_DESC_CTL_TR_ERR_IRQ	(0xff << 16)
 #define MSGDMA_DESC_CTL_EARLY_DONE	BIT(24)
-/* Writing ???1??? to the ???go??? bit commits the entire descriptor into the
+/* Writing ‘1’ to the ‘go’ bit commits the entire descriptor into the
  * descriptor FIFO(s)
  */
 #define MSGDMA_DESC_CTL_GO		BIT(31)

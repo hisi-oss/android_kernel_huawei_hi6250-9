@@ -15,7 +15,7 @@ typedef struct _loadps_status
     unsigned seq;
 } loadps_status;
 
-/*????????????*/
+/*镜像的头格式*/
 struct loadps_header
 {
    unsigned long magic;

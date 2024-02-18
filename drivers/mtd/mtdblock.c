@@ -1,8 +1,8 @@
 /*
  * Direct MTD block device access
  *
- * Copyright ?? 1999-2010 David Woodhouse <dwmw2@infradead.org>
- * Copyright ?? 2000-2003 Nicolas Pitre <nico@fluxnic.net>
+ * Copyright © 1999-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright © 2000-2003 Nicolas Pitre <nico@fluxnic.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

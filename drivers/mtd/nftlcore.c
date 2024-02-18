@@ -1,8 +1,8 @@
 /*
  * Linux driver for NAND Flash Translation Layer
  *
- * Copyright ?? 1999 Machine Vision Holdings, Inc.
- * Copyright ?? 1999-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright © 1999 Machine Vision Holdings, Inc.
+ * Copyright © 1999-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

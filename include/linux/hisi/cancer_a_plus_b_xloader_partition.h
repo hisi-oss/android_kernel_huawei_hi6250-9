@@ -46,7 +46,7 @@ static const struct partition partition_table_ufs[] =
   {PART_PATCH_A,        1048*1024,       32*1024,        UFS_PART_3},/* patch             32M     p57*/
   {PART_CUST_A,         2504*1024,      192*1024,        UFS_PART_3},/* cust             192M     p60*/
 #ifdef FILTER_AVS
-  {PART_SYSTEM_A,       2696*1024,     5848*1024,        UFS_PART_3},/* system          5848M     p61*/ //??????xloader??????????????????????????system????
+  {PART_SYSTEM_A,       2696*1024,     5848*1024,        UFS_PART_3},/* system          5848M     p61*/ //用于在xloader下加载筛选向量的镜像，复用system分区
 #endif
   {PART_HIBENCH_IMG,   11592*1024,      128*1024,        UFS_PART_3},/* hibench_img      128M     p65*/
   {"0", 0, 0, 0},

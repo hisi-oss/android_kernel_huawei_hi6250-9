@@ -28,7 +28,7 @@
 
 /*
  * Intended usage comments below are from vendor-supplied
- * Source: ATI REMOTE WONDER??? Installation Guide
+ * Source: ATI REMOTE WONDER™ Installation Guide
  * http://www2.ati.com/manuals/remctrl.pdf
  *
  * Scancodes were in strict left-right, top-bottom order on the

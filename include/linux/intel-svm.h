@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2015 Intel Corporation.
+ * Copyright © 2015 Intel Corporation.
  *
  * Authors: David Woodhouse <David.Woodhouse@intel.com>
  *
@@ -44,7 +44,7 @@ struct svm_dev_ops {
  * The SVM_FLAG_SUPERVISOR_MODE flag requests a PASID which can be used only
  * for access to kernel addresses. No IOTLB flushes are automatically done
  * for kernel mappings; it is valid only for access to the kernel's static
- * 1:1 mapping of physical memory ??? not to vmalloc or even module mappings.
+ * 1:1 mapping of physical memory — not to vmalloc or even module mappings.
  * A future API addition may permit the use of such ranges, by means of an
  * explicit IOTLB flush call (akin to the DMA API's unmap method).
  *
@@ -68,7 +68,7 @@ struct svm_dev_ops {
  *
  * By using a %NULL value for the @pasid argument, this function can
  * be used to simply validate that PASID support is available for the
- * given device ??? i.e. that it is behind an IOMMU which has the
+ * given device — i.e. that it is behind an IOMMU which has the
  * requisite support, and is enabled.
  *
  * Page faults are handled transparently by the IOMMU code, and there

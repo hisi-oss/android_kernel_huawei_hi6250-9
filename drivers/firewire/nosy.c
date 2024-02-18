@@ -1,6 +1,6 @@
 /*
  * nosy - Snoop mode driver for TI PCILynx 1394 controllers
- * Copyright (C) 2002-2007 Kristian H??gsberg
+ * Copyright (C) 2002-2007 Kristian Høgsberg
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

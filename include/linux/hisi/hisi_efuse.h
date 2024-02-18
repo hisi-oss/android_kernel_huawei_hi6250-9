@@ -46,14 +46,14 @@ typedef struct tag_efusec_data{
 	u32 is_init_success;
 } efusec_data_t;
 
-#define OK                                 (0)     /* ???? */
-#define ERROR                              (-1)    /* ???????????????????? ????????????*/
-#define ERROR_EXIT_PD                      (-2)    /* ????????power down???? */
-#define ERROR_ENTER_PD                     (-3)    /* ????????power down???? */
-#define ERROR_APB_PGM_DIS                  (-4)    /* ????eFusec?????????? */
-#define ERROR_EFUSEC_READ                  (-5)    /* ????????????eFuse?????? */
-#define ERROR_PRE_WRITE                    (-6)    /* ???????????????? */
-#define ERROR_PG_OPERATION                 (-7)    /* ????????????eFuse?????? */
+#define OK                                 (0)     /* 成功 */
+#define ERROR                              (-1)    /* 包括参数错误和不支持 两种错误情况*/
+#define ERROR_EXIT_PD                      (-2)    /* 不能退出power down模式 */
+#define ERROR_ENTER_PD                     (-3)    /* 不能退出power down模式 */
+#define ERROR_APB_PGM_DIS                  (-4)    /* 当前eFusec不允许烧写 */
+#define ERROR_EFUSEC_READ                  (-5)    /* 不能完成一次eFuse读操作 */
+#define ERROR_PRE_WRITE                    (-6)    /* 未完成预烧写置位 */
+#define ERROR_PG_OPERATION                 (-7)    /* 不能完成一次eFuse写操作 */
 
 
 #define HISI_EFUSE_READ_CHIPID             (0x1000)

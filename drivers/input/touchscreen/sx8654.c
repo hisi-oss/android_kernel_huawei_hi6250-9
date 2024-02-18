@@ -2,7 +2,7 @@
  * Driver for Semtech SX8654 I2C touchscreen controller.
  *
  * Copyright (c) 2015 Armadeus Systems
- *	S??bastien Szymanski <sebastien.szymanski@armadeus.com>
+ *	Sébastien Szymanski <sebastien.szymanski@armadeus.com>
  *
  * Using code from:
  *  - sx865x.c
@@ -281,6 +281,6 @@ static struct i2c_driver sx8654_driver = {
 };
 module_i2c_driver(sx8654_driver);
 
-MODULE_AUTHOR("S??bastien Szymanski <sebastien.szymanski@armadeus.com>");
+MODULE_AUTHOR("Sébastien Szymanski <sebastien.szymanski@armadeus.com>");
 MODULE_DESCRIPTION("Semtech SX8654 I2C Touchscreen Driver");
 MODULE_LICENSE("GPL");

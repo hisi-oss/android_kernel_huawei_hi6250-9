@@ -9,7 +9,7 @@ extern "C" {
 
 #if defined(_PRE_WLAN_FEATURE_AP_PM)
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "oal_ext_if.h"
 #include "wlan_spec.h"
@@ -29,7 +29,7 @@ extern "C" {
 extern oal_uint32  dmac_protection_update_mib_ap(mac_vap_stru *pst_mac_vap);
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
 
 hal_lpm_state_enum_uint8  g_pm_hal_state_map[DEV_PWR_STATE_BUTT] =
@@ -100,7 +100,7 @@ oal_uint32 mac_pm_arbiter_alloc_id(mac_device_stru* pst_device, oal_uint8* pst_n
         return MAC_PWR_ARBITER_ID_INVALID;
     }
 
-    /*??ul_id_bitmap????????????????????????????0????????????????ID*/
+    /*从ul_id_bitmap中从低位开始遍历，找到一个为0的位即为未分配的ID*/
     for (i=0;i<MAC_PM_ARBITER_MAX_REQUESTORS;i++)
     {
         if (((1<<i) & pst_pm_arbiter->ul_id_bitmap) == 0)
@@ -162,24 +162,24 @@ oal_void mac_pm_arbiter_to_state(mac_device_stru *pst_device, mac_vap_stru *pst_
         return;
     }
 
-    /*??????????????????????????????????????????bitmap????????????????bitmap*/
+    /*投票者本身必然发生了状态切换，清理原状态的bitmap，设置切换状态的bitmap*/
     pst_pm_arbiter->ul_state_bitmap[uc_state_from] &= ~(oal_uint32)(1<<ul_arbiter_id);
 
     pst_pm_arbiter->ul_state_bitmap[uc_state_to] |= (1<<ul_arbiter_id);
 
-    /* OAM??????????????%s*/
+    /* OAM日志中不能使用%s*/
     OAM_INFO_LOG3(pst_device->uc_cfg_vap_id, OAM_SF_PWR, "PM arbiter:%d vote to transmit from state %d to state %d",
                     ul_arbiter_id,uc_state_from,uc_state_to);
 
-    /*??????????????1??,device????????????*/
+    /*工作状态，只要1票,device就必须要切换*/
     if(DEV_PWR_STATE_WORK == uc_state_to)
     {
-        /* TBD:????work???????????????????????????????????????????? */
+        /* TBD:切回work时，防止多次设置硬件寄存器，需要在此过滤一下 */
         en_can_trans = OAL_TRUE;
     }
     else
     {
-        /*??????????????????????device????????????*/
+        /*如果所有成员都投票了，device进行状态切换*/
         for(i=0;i<pst_pm_arbiter->uc_requestor_num;i++)
         {
             if (pst_pm_arbiter->requestor[i].en_arbiter_type != MAC_PWR_ARBITER_TYPE_INVALID)
@@ -197,7 +197,7 @@ oal_void mac_pm_arbiter_to_state(mac_device_stru *pst_device, mac_vap_stru *pst_
     {
        pst_pm_arbiter->uc_prev_state = pst_pm_arbiter->uc_cur_state;
 
-       /*????hal??????*/
+       /*操作hal层接口*/
        if(OAL_SUCC == mac_pm_set_hal_state(pst_device, pst_mac_vap, uc_state_to))
        {
            //OAM_INFO_LOG1(pst_device->uc_cfg_vap_id, OAM_SF_PWR, "PM arbiter:set device to state %d",uc_state_to);
@@ -231,10 +231,10 @@ oal_uint32  mac_pm_wow_prepare_probe_resp(dmac_vap_stru *pst_dmac_vap)
         OAL_NETBUF_NEXT(pst_dmac_vap->pst_wow_probe_resp) = OAL_PTR_NULL;
     }
 
-    /* ????probe response?? */
+    /* 封装probe response帧 */
     pst_dmac_vap->us_wow_probe_resp_len = dmac_mgmt_encap_probe_response(pst_dmac_vap, pst_dmac_vap->pst_wow_probe_resp, &ast_dest_addr[0], OAL_FALSE);
 
-    /* ????1024 QAM IE */
+    /* 增加1024 QAM IE */
 #ifdef _PRE_WLAN_FEATURE_1024QAM
     mac_set_1024qam_vendor_ie(pst_dmac_vap, mac_netbuf_get_payload(pst_dmac_vap->pst_wow_probe_resp) + pst_dmac_vap->us_wow_probe_resp_len - MAC_80211_FRAME_LEN, &uc_ie_len);
     pst_dmac_vap->us_wow_probe_resp_len += uc_ie_len;
@@ -263,7 +263,7 @@ oal_uint32  mac_pm_wow_prepare_null_data(dmac_vap_stru *pst_dmac_vap)
     dmac_user_stru* pst_dmac_user;
 
 
-    /*????????STA??????VAP????null data??????keep alive*/
+    /*仅需要为STA模式的VAP准备null data帧，做keep alive*/
     if (WLAN_VAP_MODE_BSS_STA == pst_dmac_vap->st_vap_base_info.en_vap_mode)
     {
         pst_dmac_user = mac_res_get_dmac_user(pst_dmac_vap->st_vap_base_info.us_assoc_vap_id);
@@ -274,7 +274,7 @@ oal_uint32  mac_pm_wow_prepare_null_data(dmac_vap_stru *pst_dmac_vap)
 
         if (OAL_PTR_NULL == pst_dmac_vap->pst_wow_null_data)
         {
-            /* ????net_buff */
+            /* 申请net_buff */
             pst_dmac_vap->pst_wow_null_data = OAL_MEM_NETBUF_ALLOC(OAL_NORMAL_NETBUF, WLAN_SHORT_NETBUF_SIZE, OAL_NETBUF_PRIORITY_MID);
             if (OAL_PTR_NULL == pst_dmac_vap->pst_wow_null_data)
             {
@@ -286,16 +286,16 @@ oal_uint32  mac_pm_wow_prepare_null_data(dmac_vap_stru *pst_dmac_vap)
             OAL_NETBUF_NEXT(pst_dmac_vap->pst_wow_null_data) = OAL_PTR_NULL;
         }
 
-        /* ????????,????from ds??1??to ds??0??????frame control??????????????02 */
+        /* 填写帧头,其中from ds为1，to ds为0，因此frame control的第二个字节为02 */
         mac_hdr_set_frame_control(oal_netbuf_header(pst_dmac_vap->pst_wow_null_data), (oal_uint16)(WLAN_PROTOCOL_VERSION | WLAN_FC0_TYPE_DATA | WLAN_FC0_SUBTYPE_NODATA) | 0x0200);
 
-        /* ????ADDR1?????????? */
+        /* 设置ADDR1为目的地址 */
         oal_set_mac_addr((oal_netbuf_header(pst_dmac_vap->pst_wow_null_data) + 4), pst_dmac_user->st_user_base_info.auc_user_mac_addr);
 
-        /* ????ADDR2??SA */
+        /* 设置ADDR2为SA */
         oal_set_mac_addr((oal_netbuf_header(pst_dmac_vap->pst_wow_null_data) + 10),mac_mib_get_StationID(&pst_dmac_vap->st_vap_base_info));
 
-        /* ????ADDR3??BSSID */
+        /* 设置ADDR3为BSSID */
         oal_set_mac_addr((oal_netbuf_header(pst_dmac_vap->pst_wow_null_data) + 16), pst_dmac_vap->st_vap_base_info.auc_bssid);
     }
 
@@ -369,7 +369,7 @@ oal_uint32  mac_pm_set_wow_para(dmac_vap_stru *pst_dmac_vap, hal_wow_param_stru 
                 pst_wow_para->ul_ap0_probe_resp_phy = 0;
                 pst_wow_para->ul_ap0_probe_resp_rate = mac_fcs_get_prot_datarate(&pst_dmac_vap->st_vap_base_info);
                 ul_wow_set_bitmap |= HAL_WOW_PARA_AP0_PROBE_RESP;
-                /* ????????vap????????,ap??????wow????1s????mac??????????"null data" */
+                /* 硬件没对vap模式判断,ap下进入wow后会1s发送mac地址全零的"null data" */
                 pst_wow_para->ul_nulldata_interval = 0;
                 ul_wow_set_bitmap |= HAL_WOW_PARA_NULLDATA_INTERVAL;
             }
@@ -464,7 +464,7 @@ oal_uint32 mac_pm_set_hal_state(mac_device_stru *pst_device, mac_vap_stru *pst_m
     switch(uc_state_to)
     {
         case DEV_PWR_STATE_WORK:
-            /*??????????????beacon interval????*/
+            /*恢复接收通道和beacon interval配置*/
             st_para.bit_set_bcn_interval = OAL_TRUE;
         #ifdef _PRE_WLAN_FEATURE_DBAC
             if (mac_is_dbac_enabled(pst_device))
@@ -473,7 +473,7 @@ oal_uint32 mac_pm_set_hal_state(mac_device_stru *pst_device, mac_vap_stru *pst_m
             }
         #endif
             st_para.ul_idle_bcn_interval = pst_device->ul_beacon_interval;
-            /* ????ap????????????????????????????????prev state???? */
+            /* 此时ap上层的状态已经转化过来，所以需要prev state判断 */
             if (DEV_PWR_STATE_WOW == pst_ap_pm_handler->st_oal_fsm.uc_prev_state)
             {
                 st_wow_en.uc_en = 0;
@@ -485,7 +485,7 @@ oal_uint32 mac_pm_set_hal_state(mac_device_stru *pst_device, mac_vap_stru *pst_m
                 dmac_green_ap_resume(pst_device);
 #endif
             }
-            /* ?????????????????????????? */
+            /* 从深睡唤醒，重新启动定时器 */
             else if (DEV_PWR_STATE_DEEP_SLEEP== pst_ap_pm_handler->st_oal_fsm.uc_prev_state)
             {
                 frw_timer_restart_etc();
@@ -499,7 +499,7 @@ oal_uint32 mac_pm_set_hal_state(mac_device_stru *pst_device, mac_vap_stru *pst_m
             pst_hal_device = pst_dmac_vap->pst_hal_device;
             FRW_TIMER_STOP_TIMER(&(pst_hal_device->st_dfr_tx_prot.st_tx_prot_timer));
 #endif
-            /* ?????????????? */
+            /* 停止所有定时器 */
             frw_timer_stop_etc();
             break;
         case DEV_PWR_STATE_WOW:
@@ -515,7 +515,7 @@ oal_uint32 mac_pm_set_hal_state(mac_device_stru *pst_device, mac_vap_stru *pst_m
 #ifdef _PRE_WLAN_FEATURE_GREEN_AP
             dmac_green_ap_suspend(pst_device);
 #endif
-            /* ????????????non ht??obss??????????WOW????????????????WOW?????????????? */
+            /* 之前检测到有non ht的obss存在，在进WOW前清除掉，以免进WOW后还接力该设置 */
             if ((WLAN_VAP_MODE_BSS_AP == pst_mac_vap->en_vap_mode)
                 && (OAL_TRUE == pst_mac_vap->st_protection.bit_obss_non_ht_present))
             {
@@ -531,7 +531,7 @@ oal_uint32 mac_pm_set_hal_state(mac_device_stru *pst_device, mac_vap_stru *pst_m
             }
             break;
         case DEV_PWR_STATE_IDLE:
-            /*??????????,beacon????AP_IDLE_BCN_INTERVAL*/
+            /*单通道接收,beacon调成AP_IDLE_BCN_INTERVAL*/
             st_para.bit_set_bcn_interval = OAL_TRUE;
         #ifdef _PRE_WLAN_FEATURE_DBAC
             if (mac_is_dbac_enabled(pst_device))

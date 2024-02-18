@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 Philippe R??tornaz
+ * Copyright (C) 2011 Philippe Rétornaz
  *
  * Based on twl4030-pwrbutton driver by:
  *     Peter De Schrijver <peter.de-schrijver@nokia.com>

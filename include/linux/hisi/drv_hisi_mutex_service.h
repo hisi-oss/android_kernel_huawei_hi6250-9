@@ -35,17 +35,17 @@ typedef int (*pPREEMPTFUNC )(int param);
 #define ABEND "ABEND"
 
 #define STATUS_ALIVE 0
-#define T2  3 //????T2??????3??
+#define T2  3 //设置T2时间为3秒
 
-/*????????*/
+/*业务名称*/
 #define MUTEX_SERVICE_WIFI_NAME "WIFI_DISPLAY"
 #define MUTEX_SERVICE_MIRROR_NAME "MIRROR"
 #define MUTEX_SERVICE_HMP_NAME "HMP"
 #define MUTEX_SERVICE_HDMI_NAME "HDMI"
 
-#define MUTEX_SERVICE_GROUP_ID 0 /*??????????????????????ID*/
+#define MUTEX_SERVICE_GROUP_ID 0 /*有互斥关系的业务的组的ID*/
 
-/*????ID*/
+/*业务ID*/
 enum hisi_mutex_service_id {
     MUTEX_SERVICE_WIFIDIS_ID = 0,
     MUTEX_SERVICE_MIRROR_ID = 1,
@@ -53,7 +53,7 @@ enum hisi_mutex_service_id {
     MUTEX_SERVICE_HDMI_ID = 3,
 };
 
-/*??????????*/
+/*业务优先级*/
 enum hisi_mutex_service_priority {
     MUTEX_SERVICE_PRIORITY_0 = 0,
     MUTEX_SERVICE_PRIORITY_1 = 1,

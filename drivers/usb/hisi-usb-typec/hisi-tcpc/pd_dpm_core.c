@@ -1043,7 +1043,7 @@ static inline void dpm_dfp_update_svid_enter_mode(pd_port_t *pd_port,
 	svid_data->active_mode = ops;
 	pd_port->modal_operation = true;
 
-	// ??
+	// Пе
 	tcpci_enter_mode(pd_port->tcpc_dev,svid_data->svid, ops,
 				svid_data->remote_mode.mode_vdo[ops]);
 	D("-\n");

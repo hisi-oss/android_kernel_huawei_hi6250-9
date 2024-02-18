@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2014 Marvell Technology Group Ltd.
  *
- * Antoine T??nart <antoine.tenart@free-electrons.com>
+ * Antoine Ténart <antoine.tenart@free-electrons.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

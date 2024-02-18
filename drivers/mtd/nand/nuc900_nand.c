@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2009 Nuvoton technology corporation.
+ * Copyright © 2009 Nuvoton technology corporation.
  *
  * Wan ZongShun <mcuos.com@gmail.com>
  *

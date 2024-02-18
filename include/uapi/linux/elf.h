@@ -50,7 +50,7 @@ typedef __s64	Elf64_Sxword;
  * Specifications are available in:
  *
  * - Oracle: Linker and Libraries.
- *   Part No: 817???1984???19, August 2011.
+ *   Part No: 817–1984–19, August 2011.
  *   http://docs.oracle.com/cd/E18752_01/pdf/817-1984.pdf
  *
  * - System V ABI AMD64 Architecture Processor Supplement

@@ -66,10 +66,10 @@ struct hisi_thermal_data {
  * The temperature computation on the tsensor is as follow:
  *	Unit: millidegree Celsius
  *	Step: 255/200 (0.7843)
- *	Temperature base: -60??C
+ *	Temperature base: -60°C
  *
  * The register is programmed in temperature steps, every step is 784
- * millidegree and begins at -60 000 m??C
+ * millidegree and begins at -60 000 m°C
  *
  * The temperature from the steps:
  *

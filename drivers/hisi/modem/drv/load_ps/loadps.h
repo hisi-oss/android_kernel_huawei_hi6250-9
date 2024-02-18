@@ -6,7 +6,7 @@
 #include "bsp_trace.h"
 #include "bsp_loadps.h"
 
-/*loadps??????????????*/
+/*loadps模块的打印级别*/
 enum bsp_loadps_trace_level
 {
     BSP_LOADPS_TRACE_INFO = 0,
@@ -14,23 +14,23 @@ enum bsp_loadps_trace_level
     BSP_LOADPS_TRACE_ERROR
 };
 
-/* loadps?????????? */
+/* loadps模块的状态 */
 enum bsp_loadps_init_enum
 {
-    EN_LOADPS_INIT_INVALID = 0,  /* ???????? */
-    EN_LOADPS_INIT_SUSPEND,		 /* A??suspend?????? */
-    EN_LOADPS_INIT_RESETING,     /* C???????????? */
-    EN_LOADPS_INIT_FINISH        /* ?????????? */
+    EN_LOADPS_INIT_INVALID = 0,  /* 未初始化 */
+    EN_LOADPS_INIT_SUSPEND,		 /* A核suspend过程中 */
+    EN_LOADPS_INIT_RESETING,     /* C核重启过程中 */
+    EN_LOADPS_INIT_FINISH        /* 初始化结束 */
 };
 
-/* ???????? */
+/* 处理状态 */
 enum bsp_loadps_state_en
 {
-    EN_LOADPS_IDLE = 0,      /* ?????? */
-    EN_LOADPS_DOING,         /* ???????? */
-	EN_LOADPS_SUSPEND,         /* suspend???? */
-    EN_LOADPS_DONE,           /* ???????? */
-    EN_LOADPS_NEEDSTOP        /* ???????????????????? */
+    EN_LOADPS_IDLE = 0,      /* 待处理 */
+    EN_LOADPS_DOING,         /* 正在处理 */
+	EN_LOADPS_SUSPEND,         /* suspend状态 */
+    EN_LOADPS_DONE,           /* 处理结束 */
+    EN_LOADPS_NEEDSTOP        /* 遇到单独复位需要终止 */
 };
 
 struct bsp_loadps_loadinfo_debug
@@ -41,7 +41,7 @@ struct bsp_loadps_loadinfo_debug
     u32 ps_loadinfo_result;
 
 };
-/*loadps??????????????????????????*/
+/*loadps模块的加载时间调试数据结构*/
 struct bsp_loadps_timestamp_debug
 {
     u32 ps_callback_ms;
@@ -50,22 +50,22 @@ struct bsp_loadps_timestamp_debug
     u32 ps_load_image_total_elapse_ms;
 
 };
-/* ???????? */
+/* 主控信息 */
 struct bsp_loadps_main_stru
 {
     enum bsp_loadps_init_enum  eInitFlag;
     struct task_struct      *taskid;
     loadps_msg              loadps_msg;
-    struct semaphore        task_mutex;                /* ?????????? */
-    struct semaphore        suspend_mutex;                /* suspend?????? */
+    struct semaphore        task_mutex;                /* 任务信号量 */
+    struct semaphore        suspend_mutex;                /* suspend信号量 */
     struct wake_lock        wake_lock;
-    u32                     opState;                /*????????*/
-    /*??????????????????????????????????????????????????????*/
+    u32                     opState;                /*操作状态*/
+    /*记录各个关键的时间点信息方便协议栈同事定位镜像加载时间*/
     struct bsp_loadps_timestamp_debug timestamp_debug;
     struct bsp_loadps_loadinfo_debug  loadinfo_debug;
 };
 
-/*loadps??????????????????*/
+/*loadps模块的动态调试功能*/
 #define loadps_trace(trace_level, fmt, ...) do { \
         bsp_trace(trace_level, BSP_MODU_LOADPS,"loadps: " fmt "\n", ##__VA_ARGS__); \
 } while (0)

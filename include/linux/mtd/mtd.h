@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 1999-2010 David Woodhouse <dwmw2@infradead.org> et al.
+ * Copyright © 1999-2010 David Woodhouse <dwmw2@infradead.org> et al.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -210,7 +210,7 @@ struct mtd_info {
 	uint32_t flags;
 	uint64_t size;	 // Total size of the MTD
 
-	/* "Major" erase size for the device. Na??ve users may take this
+	/* "Major" erase size for the device. Naïve users may take this
 	 * to be the only erase size available, or may use the more detailed
 	 * information below if they desire
 	 */

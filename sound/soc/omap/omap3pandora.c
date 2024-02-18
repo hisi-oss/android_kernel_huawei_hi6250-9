@@ -1,7 +1,7 @@
 /*
  * omap3pandora.c  --  SoC audio for Pandora Handheld Console
  *
- * Author: Gra??vydas Ignotas <notasas@gmail.com>
+ * Author: Gražvydas Ignotas <notasas@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

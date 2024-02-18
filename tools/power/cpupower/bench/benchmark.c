@@ -37,7 +37,7 @@ if (config->output != stdout) {				\
  * compute how many rounds of calculation we should do
  * to get the given load time
  *
- * @param load aimed load time in ??s
+ * @param load aimed load time in µs
  *
  * @retval rounds of calculation
  **/

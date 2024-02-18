@@ -10,7 +10,7 @@
 #define SOC_Modem_A9_ROM_TABLE_BASE_ADDR	(0xF6600000)
 #define SOC_ACPU_ROM_TABLE_BASE_ADDR	(0xF6500000) 
 #define SOC_SC_ON_BASE_ADDR		(0xF7410000)
-/*??????????????ATB DAP TPIU*/
+/*Ê±ÖÓ·ÖÆµ¼Ä´æÆ÷ATB DAP TPIU*/
 #define SC_CLKCFG8BIT9 (0xF711ACC8)
 
 /****cpu_base****/

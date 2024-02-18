@@ -1,6 +1,6 @@
 /*
  * 3-axis accelerometer driver supporting SPI Bosch-Sensortec accelerometer chip
- * Copyright ?? 2015 Pengutronix, Markus Pargmann <mpa@pengutronix.de>
+ * Copyright © 2015 Pengutronix, Markus Pargmann <mpa@pengutronix.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

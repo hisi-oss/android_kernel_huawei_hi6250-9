@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2009 Intel Corporation
+ * Copyright © 2009 Intel Corporation
  *
  * Authors:
  *    Chris Wilson <chris@chris-wilson.co.uk>

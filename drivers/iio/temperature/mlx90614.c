@@ -653,7 +653,7 @@ static struct i2c_driver mlx90614_driver = {
 module_i2c_driver(mlx90614_driver);
 
 MODULE_AUTHOR("Peter Meerwald <pmeerw@pmeerw.net>");
-MODULE_AUTHOR("Vianney le Cl??ment de Saint-Marcq <vianney.leclement@essensium.com>");
+MODULE_AUTHOR("Vianney le Clément de Saint-Marcq <vianney.leclement@essensium.com>");
 MODULE_AUTHOR("Crt Mori <cmo@melexis.com>");
 MODULE_DESCRIPTION("Melexis MLX90614 contactless IR temperature sensor driver");
 MODULE_LICENSE("GPL");

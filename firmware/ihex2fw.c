@@ -1,8 +1,8 @@
 /*
  * Parser/loader for IHEX formatted data.
  *
- * Copyright ?? 2008 David Woodhouse <dwmw2@infradead.org>
- * Copyright ?? 2005 Jan Harkes <jaharkes@cs.cmu.edu>
+ * Copyright © 2008 David Woodhouse <dwmw2@infradead.org>
+ * Copyright © 2005 Jan Harkes <jaharkes@cs.cmu.edu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

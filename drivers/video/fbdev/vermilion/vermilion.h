@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * Authors:
- *   Thomas Hellstr??m <thomas-at-tungstengraphics-dot-com>
+ *   Thomas Hellström <thomas-at-tungstengraphics-dot-com>
  */
 
 #ifndef _VERMILION_H_

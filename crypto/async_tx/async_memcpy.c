@@ -1,7 +1,7 @@
 /*
  * copy offload engine support
  *
- * Copyright ?? 2006, Intel Corporation.
+ * Copyright © 2006, Intel Corporation.
  *
  *      Dan Williams <dan.j.williams@intel.com>
  *

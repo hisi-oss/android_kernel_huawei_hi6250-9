@@ -2,7 +2,7 @@
  * OMAP1/OMAP7xx - specific DMA driver
  *
  * Copyright (C) 2003 - 2008 Nokia Corporation
- * Author: Juha Yrj??l?? <juha.yrjola@nokia.com>
+ * Author: Juha Yrjölä <juha.yrjola@nokia.com>
  * DMA channel linking for 1610 by Samuel Ortiz <samuel.ortiz@nokia.com>
  * Graphics DMA and LCD DMA graphics tranformations
  * by Imre Deak <imre.deak@nokia.com>

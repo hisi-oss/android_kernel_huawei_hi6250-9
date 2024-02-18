@@ -9,7 +9,7 @@ extern "C" {
 
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "oal_main.h"
 #include "oal_workqueue.h"
@@ -43,7 +43,7 @@ typedef struct
 }oal_stacktrace_stru;
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
 #if (_PRE_OS_VERSION_LINUX == _PRE_OS_VERSION)
 void __iomem *g_l2cache_base_etc;
@@ -53,14 +53,14 @@ void __iomem *g_l2cache_base_etc;
 OAL_STATIC oal_stacktrace_stru g_st_backtrace_mgr;
 #endif
 
-/* ????/????DBDC?????????????????? */
+/* 动态/静态DBDC，其中一个默认使能 */
 oal_uint8  g_auc_wlan_service_device_per_chip[WLAN_SERVICE_DEVICE_MAX_NUM_PER_CHIP] = {WLAN_INIT_DEVICE_RADIO_CAP};
 
 
 /*****************************************************************************
-  3 ????????
+  3 函数实现
 *****************************************************************************/
-/* ??????????????????????CONFIG_STACKTRACE, ????CONFIG_STACKTRACE???? */
+/* 有些内核版本可能没开启CONFIG_STACKTRACE, 增加CONFIG_STACKTRACE的宏 */
 #if (_PRE_OS_VERSION_LINUX == _PRE_OS_VERSION) && defined(CONFIG_STACKTRACE) && (_PRE_PRODUCT_ID_HI1151 == _PRE_PRODUCT_ID) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 0, 0))
 OAL_STATIC oal_void oal_dump_stack_str_init(oal_void)
 {
@@ -155,12 +155,12 @@ oal_int32  ATTR_OAL_NO_FUNC_TRACE oal_main_init_etc(oal_void)
     }
 #endif
 
-    /* ?????????????????????????????????????? */
+    /* 为了解各模块的启动时间，增加时间戳打印 */
 
 #if defined(_PRE_PRODUCT_ID_HI110X_HOST) && !defined(CONFIG_HI110X_KERNEL_MODULES_BUILD_SUPPORT) && defined(_PRE_CONFIG_CONN_HISI_SYSFS_SUPPORT)
-    /*110X ????build in??????????????????????????????????????????????????*/
+    /*110X 驱动build in，内存池初始化上移到内核完成，保证大片内存申请成功*/
 #else
-    /* ???????????? */
+    /* 内存池初始化 */
     ul_rslt = oal_mem_init_pool_etc();
     if (ul_rslt != OAL_SUCC)
     {
@@ -170,11 +170,11 @@ oal_int32  ATTR_OAL_NO_FUNC_TRACE oal_main_init_etc(oal_void)
 #endif
 
 #if (_PRE_PRODUCT_ID_HI1151 == _PRE_PRODUCT_ID)
-    /* pci???????? */
+    /* pci驱动注册 */
     ul_rslt = oal_pci_init();
     if (OAL_SUCC != ul_rslt)
     {
-        /* ?????????? */
+        /* 内存池卸载 */
         oal_mem_exit_etc();
         return -OAL_EFAIL;//lint !e527
     }
@@ -186,9 +186,9 @@ oal_int32  ATTR_OAL_NO_FUNC_TRACE oal_main_init_etc(oal_void)
         return -OAL_EFAIL;//lint !e527
     }
 #elif ((defined(_PRE_PRODUCT_ID_HI110X_HOST))||(defined(_PRE_PRODUCT_ID_HI110X_DEV)))
-    /* Hi1102 SDIO?????????????? TBD */
+    /* Hi1102 SDIO总线初始化接口 TBD */
 
-    /* ??????: ????????chip????????1 */
+    /* 初始化: 总线上的chip数量增加1 */
     oal_bus_init_chip_num_etc();
     ul_rslt = oal_bus_inc_chip_num_etc();
     if(OAL_SUCC != ul_rslt)
@@ -198,14 +198,14 @@ oal_int32  ATTR_OAL_NO_FUNC_TRACE oal_main_init_etc(oal_void)
     }
 #endif
 
-    /* ???????? */
+    /* 启动成功 */
 #if (_PRE_OS_VERSION_WIN32 == _PRE_OS_VERSION)
     OAL_MEMZERO(g_past_net_device, WLAN_VAP_SUPPORT_MAX_NUM_LIMIT * OAL_SIZEOF(oal_net_device_stru *));
 #endif
 
 #ifndef BFGX_UART_DOWNLOAD_SUPPORT
 #if defined(_PRE_PRODUCT_ID_HI110X_HOST)
-    /* HCC?????? */
+    /* HCC初始化 */
     if (OAL_UNLIKELY(OAL_SUCC !=hcc_dev_init()))
     {
         OAL_IO_PRINT("[ERROR]hcc_module_init_etc return err null\n");
@@ -259,22 +259,22 @@ oal_void  ATTR_OAL_NO_FUNC_TRACE oal_main_exit_etc(oal_void)
 
 #if (_PRE_PRODUCT_ID_HI1151 == _PRE_PRODUCT_ID)
 
-    /* pci???????? */
+    /* pci驱动卸载 */
     oal_pci_exit();
 
     oal_5115_pci_exit();
 
 #elif ((defined(_PRE_PRODUCT_ID_HI110X_HOST))||(defined(_PRE_PRODUCT_ID_HI110X_DEV)))
-    /* Hi1102 SDIO????exit????(??????) TBD */
+    /* Hi1102 SDIO总线exit接口(不下电) TBD */
 
-    /* chip num??????:0 */
+    /* chip num初始化:0 */
     oal_bus_init_chip_num_etc();
 #endif
 
 #if defined(_PRE_PRODUCT_ID_HI110X_HOST) && !defined(CONFIG_HI110X_KERNEL_MODULES_BUILD_SUPPORT) && defined(_PRE_CONFIG_CONN_HISI_SYSFS_SUPPORT)
-    /*110X ????build in??????????????????????????????????????????????????*/
+    /*110X 驱动build in，内存池初始化上移到内核完成，保证大片内存申请成功*/
 #else
-    /* ?????????? */
+    /* 内存池卸载 */
     oal_mem_exit_etc();
 #endif
 
@@ -318,7 +318,7 @@ oal_uint32  oal_chip_get_version_etc(oal_void)
 #if (_PRE_PRODUCT_ID == _PRE_PRODUCT_ID_HI1151)
     ul_chip_ver   = WLAN_CHIP_VERSION_HI1151V100H;
 #elif defined(_PRE_PRODUCT_ID_HI110X_DEV) || defined(_PRE_PRODUCT_ID_HI110X_HOST)
-    /* 1102 02????SOC???????????????? */
+    /* 1102 02需要SOC提供寄存器后实现 */
     ul_chip_ver   = WLAN_CHIP_VERSION_HI1151V100H;
 #endif
 
@@ -327,7 +327,7 @@ oal_uint32  oal_chip_get_version_etc(oal_void)
 #if (_PRE_PRODUCT_ID == _PRE_PRODUCT_ID_HI1151)
     ul_chip_ver   = WLAN_CHIP_VERSION_HI1151V100H;
 #elif defined(_PRE_PRODUCT_ID_HI110X_DEV) || defined(_PRE_PRODUCT_ID_HI110X_HOST)
-    /* 1102 02????SOC???????????????? */
+    /* 1102 02需要SOC提供寄存器后实现 */
     ul_chip_ver   = WLAN_CHIP_VERSION_HI1151V100H;
 #endif
 
@@ -380,7 +380,7 @@ oal_uint8 oal_board_get_service_vap_start_id(oal_void)
 {
     oal_uint8   uc_device_num_per_chip = oal_device_check_enable_num();
 
-    /* ????vap???? = mac device????,vap idx??????????vap,??????vap */
+    /* 配置vap个数 = mac device个数,vap idx分配先配置vap,后业务vap */
     return (oal_uint8)(WLAN_CHIP_MAX_NUM_PER_BOARD * uc_device_num_per_chip);
 }
 
@@ -396,7 +396,7 @@ oal_void hi_wlan_power_off_etc(void)
 
 oal_void save_nfc_lowpower_log_etc(oal_void)
 {
-    /*????nfc????log????,????????*/
+    /*读取nfc低电log数据,然后下电*/
     save_nfc_lowpower_log_2_sdt_etc();
     hi_wlan_power_off_etc();
 }

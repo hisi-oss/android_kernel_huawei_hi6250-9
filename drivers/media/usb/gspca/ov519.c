@@ -1,7 +1,7 @@
 /**
  * OV519 driver
  *
- * Copyright (C) 2008-2011 Jean-Fran??ois Moine <moinejf@free.fr>
+ * Copyright (C) 2008-2011 Jean-François Moine <moinejf@free.fr>
  * Copyright (C) 2009 Hans de Goede <hdegoede@redhat.com>
  *
  * This module is adapted from the ov51x-jpeg package, which itself
@@ -628,7 +628,7 @@ static const struct ov_i2c_regvals norm_3620b[] = {
 	/*
 	 * From the datasheet: "Note that after writing to register COMH
 	 * (0x12) to change the sensor mode, registers related to the
-	 * sensor???s cropping window will be reset back to their default
+	 * sensor’s cropping window will be reset back to their default
 	 * values."
 	 *
 	 * "wait 4096 external clock ... to make sure the sensor is

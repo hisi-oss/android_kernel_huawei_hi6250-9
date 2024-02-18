@@ -1,5 +1,5 @@
 /*
- * (C) 2007 by Sebastian Cla??en <sebastian.classen@freenet.ag>
+ * (C) 2007 by Sebastian Claßen <sebastian.classen@freenet.ag>
  * (C) 2007-2010 by Jan Engelhardt <jengelh@medozas.de>
  *
  * Extracted from xt_TEE.c
@@ -77,7 +77,7 @@ void nf_dup_ipv6(struct net *net, struct sk_buff *skb, unsigned int hooknum,
 }
 EXPORT_SYMBOL_GPL(nf_dup_ipv6);
 
-MODULE_AUTHOR("Sebastian Cla??en <sebastian.classen@freenet.ag>");
+MODULE_AUTHOR("Sebastian Claßen <sebastian.classen@freenet.ag>");
 MODULE_AUTHOR("Jan Engelhardt <jengelh@medozas.de>");
 MODULE_DESCRIPTION("nf_dup_ipv6: IPv6 packet duplication");
 MODULE_LICENSE("GPL");

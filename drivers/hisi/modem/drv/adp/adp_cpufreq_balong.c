@@ -57,20 +57,20 @@
 
 int g_cpufreq_max_profile = 5;
 struct cpufreq_msg debug_msg = {0,0,0,0};
-/*????pm??????????????????????CPU/DDR*/
+/*提供pm流程调用，设置最大频率CPU/DDR*/
 void cpufreq_set_max_freq(void)
 {
 
 }
 /*
- * ????????profile
+ * 获取当前profile
  */
 int cpufreq_dfs_get_profile(void)
 {
 	return 0;
 }
 /*
- * ????profile
+ * 设置profile
  * success: return BSP_OK
  * fail:    return BSP_ERROR
  */
@@ -80,7 +80,7 @@ int cpufreq_dfs_set_profile(int profile)
 }
 
 /*
- * ????profile????
+ * 设置profile下限
  * success: return BSP_OK	
  * fail:    return BSP_ERROR
  */
@@ -90,7 +90,7 @@ int cpufreq_dfs_set_baseprofile(int baseprofile)
 }
 
 /*
- * ???????? lock=0????;lock=1????
+ * 锁定调频 lock=0锁定;lock=1解锁
  */
 void cpufreq_dfs_lock(u32 lock)
 {
@@ -98,7 +98,7 @@ void cpufreq_dfs_lock(u32 lock)
 }
 
 /*
- * ?????????????????? BSP_ERROR ????????;BSP_OK ????????
+ * 调试接口，设置频率 BSP_ERROR 设置失败;BSP_OK 设置成功
  *
  */
 int cpufreq_dfs_target(int a9freq, int ddrfreq, int slowfreq)

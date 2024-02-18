@@ -87,7 +87,7 @@ static void s3c2410_pm_prepare(void)
 	if (machine_is_rx1950()) {
 		/* According to S3C2442 user's manual, page 7-17,
 		 * when the system is operating in NAND boot mode,
-		 * the hardware pin configuration - EINT[23:21] ???
+		 * the hardware pin configuration - EINT[23:21] –
 		 * must be set as input for starting up after
 		 * wakeup from sleep mode
 		 */

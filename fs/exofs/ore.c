@@ -508,7 +508,7 @@ EXPORT_SYMBOL(ore_check_io);
  * O - The component offset coresponding to L
  *	O = L % stripe_unit + N * stripe_unit + M * group_depth * stripe_unit
  *
- * LCMdP ??? Parity cycle: Lowest Common Multiple of group_width, parity
+ * LCMdP – Parity cycle: Lowest Common Multiple of group_width, parity
  *          divide by parity
  *	LCMdP = lcm(group_width, parity) / parity
  *

@@ -10,7 +10,7 @@ extern "C" {
 #ifdef _PRE_WLAN_RF_CALI
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "dmac_auto_cali.h"
 #include "hal_ext_if.h"
@@ -23,12 +23,12 @@ extern "C" {
 #define THIS_FILE_ID OAM_FILE_ID_DMAC_AUTO_CALI_C
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
-oal_workqueue_stru  *g_auto_cali_workqueue;           /* ???????????????????? */
+oal_workqueue_stru  *g_auto_cali_workqueue;           /* 校准工作队列全局变量 */
 
 /*****************************************************************************
-  3 ????????
+  3 函数实现
 *****************************************************************************/
 
 oal_void dmac_rf_auto_cali(oal_work_stru *pst_work)
@@ -38,29 +38,29 @@ oal_void dmac_rf_auto_cali(oal_work_stru *pst_work)
     pst_mac_device = OAL_CONTAINER_OF(pst_work, mac_device_stru, auto_cali_work);
 
     //hal_rf_auto_cali(pst_mac_device->pst_device_stru);
-    /* ????PA??PHY?????? */
+    /* 停止PA和PHY的工作 */
     hal_disable_machw_phy_and_pa(pst_mac_device->pst_device_stru);
 
-    /* ??????MAC???? */
+    /* 初始化MAC硬件 */
     hal_initialize_machw(pst_mac_device->pst_device_stru);
 
-    /* ??????PHY */
+    /* 初始化PHY */
     hal_initialize_phy(pst_mac_device->pst_device_stru);
 
-    /* ??????????chip_id????pcie????????id?????????????? */
+    /* 单芯片修改chip_id导致pcie定时获取id错误，需要关掉 */
 #if (_PRE_TARGET_PRODUCT_TYPE_E5 == _PRE_CONFIG_TARGET_PRODUCT)
     #ifdef _PRE_DEBUG_MODE
         FRW_TIMER_IMMEDIATE_DESTROY_TIMER(&(pst_mac_device->st_exception_report_timer));
     #endif
 #endif
 
-    /* ??????RF???? */
+    /* 初始化RF系统 */
     hal_rf_auto_cali(pst_mac_device->pst_device_stru);
 
-    /* ????pa */
+    /* 使能pa */
     hal_enable_machw_phy_and_pa(pst_mac_device->pst_device_stru);
 
-    /* ?????????? */
+    /* 打开定时器 */
 #if (_PRE_TARGET_PRODUCT_TYPE_E5 == _PRE_CONFIG_TARGET_PRODUCT)
     #ifdef _PRE_DEBUG_MODE
         FRW_TIMER_CREATE_TIMER(&(pst_mac_device->st_exception_report_timer),
@@ -119,7 +119,7 @@ oal_uint32  dmac_auto_cali_init(oal_void)
 
 oal_uint32  dmac_auto_cali_exit(oal_void)
 {
-    /* ???????????? */
+    /* 删除工作队列 */
     oal_destroy_workqueue(g_auto_cali_workqueue);
 
     return OAL_SUCC;

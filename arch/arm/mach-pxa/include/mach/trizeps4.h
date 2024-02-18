@@ -1,6 +1,6 @@
 /************************************************************************
  * Include file for TRIZEPS4 SoM and ConXS eval-board
- * Copyright (c) J??rgen Schindele
+ * Copyright (c) Jürgen Schindele
  * 2006
  ************************************************************************/
 

@@ -1,6 +1,6 @@
 /*
     Copyright (c) 1998 - 2002  Frodo Looijaard <frodol@dds.nl>,
-    Philip Edelbrock <phil@netroedge.com>, Ky??sti M??lkki <kmalkki@cc.hut.fi>,
+    Philip Edelbrock <phil@netroedge.com>, Kyösti Mälkki <kmalkki@cc.hut.fi>,
     Mark D. Studebaker <mdsxyz123@yahoo.com>
     Copyright (C) 2005 - 2008  Jean Delvare <jdelvare@suse.de>
 

@@ -14,7 +14,7 @@
 
 #include <linux/tracepoint.h>
 
-TRACE_EVENT(cpufreq_schedutil_boost,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_schedutil_boost,/* [false alarm]:原生宏定义 */
 	    TP_PROTO(const char *s),
 	    TP_ARGS(s),
 	    TP_STRUCT__entry(
@@ -26,7 +26,7 @@ TRACE_EVENT(cpufreq_schedutil_boost,/* [false alarm]:??????????????? */
 	    TP_printk("%s", __get_str(s))
 );
 
-TRACE_EVENT(cpufreq_schedutil_unboost,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_schedutil_unboost,/* [false alarm]:原生宏定义 */
 	    TP_PROTO(const char *s),
 	    TP_ARGS(s),
 	    TP_STRUCT__entry(
@@ -38,7 +38,7 @@ TRACE_EVENT(cpufreq_schedutil_unboost,/* [false alarm]:??????????????? */
 	    TP_printk("%s", __get_str(s))
 );
 
-TRACE_EVENT(cpufreq_schedutil_eval_target,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_schedutil_eval_target,/* [false alarm]:原生宏定义 */
 	    TP_PROTO(unsigned int cpu,
 		     unsigned long util,
 		     unsigned long max,
@@ -67,7 +67,7 @@ TRACE_EVENT(cpufreq_schedutil_eval_target,/* [false alarm]:??????????????? */
 		      __entry->load, __entry->curr, __entry->target)
 );
 
-TRACE_EVENT(cpufreq_schedutil_get_util,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_schedutil_get_util,/* [false alarm]:原生宏定义 */
 	    TP_PROTO(unsigned int cpu,
 		     unsigned long util,
 		     unsigned long max,
@@ -102,7 +102,7 @@ TRACE_EVENT(cpufreq_schedutil_get_util,/* [false alarm]:??????????????? */
 		      __entry->iowait, __entry->flag, __entry->ed, __entry->od)
 );
 
-TRACE_EVENT(cpufreq_schedutil_notyet,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_schedutil_notyet,/* [false alarm]:原生宏定义 */
 	    TP_PROTO(unsigned int cpu,
 		     const char *reason,
 		     unsigned long long delta,
@@ -128,7 +128,7 @@ TRACE_EVENT(cpufreq_schedutil_notyet,/* [false alarm]:??????????????? */
 		      __entry->delta, __entry->curr, __entry->target)
 );
 
-TRACE_EVENT(cpufreq_schedutil_already,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_schedutil_already,/* [false alarm]:原生宏定义 */
 	    TP_PROTO(unsigned int cpu,
 		     unsigned int curr,
 		     unsigned int target),

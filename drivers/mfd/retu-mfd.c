@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2004, 2005 Nokia Corporation
  *
- * Based on code written by Juha Yrj??l??, David Weinehall and Mikko Ylinen.
+ * Based on code written by Juha Yrjölä, David Weinehall and Mikko Ylinen.
  * Rewritten by Aaro Koskinen.
  *
  * This file is subject to the terms and conditions of the GNU General
@@ -319,7 +319,7 @@ static struct i2c_driver retu_driver = {
 module_i2c_driver(retu_driver);
 
 MODULE_DESCRIPTION("Retu MFD driver");
-MODULE_AUTHOR("Juha Yrj??l??");
+MODULE_AUTHOR("Juha Yrjölä");
 MODULE_AUTHOR("David Weinehall");
 MODULE_AUTHOR("Mikko Ylinen");
 MODULE_AUTHOR("Aaro Koskinen <aaro.koskinen@iki.fi>");

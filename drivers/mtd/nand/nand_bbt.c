@@ -2,7 +2,7 @@
  *  Overview:
  *   Bad block table support for the NAND driver
  *
- *  Copyright ?? 2004 Thomas Gleixner (tglx@linutronix.de)
+ *  Copyright © 2004 Thomas Gleixner (tglx@linutronix.de)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

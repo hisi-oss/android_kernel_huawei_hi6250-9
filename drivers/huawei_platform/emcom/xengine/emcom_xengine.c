@@ -111,7 +111,7 @@ static bool emcom_xengine_mpflow_bm_build(const uint8_t *ptn, uint32_t ptnlen,
 static void emcom_xengine_mpflow_apppriv_deinit(struct emcom_xengine_mpflow_info *uid);
 
 /******************************************************************************
-   6 ????????
+   6 º¯ÊýÊµÏÖ
 ******************************************************************************/
 static inline bool invalid_uid(uid_t uid)
 {

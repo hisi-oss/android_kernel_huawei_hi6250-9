@@ -5,7 +5,7 @@
  * Flexible Static Memory Controller (FSMC)
  * platform data interface and header file
  *
- * Copyright ?? 2010 ST Microelectronics
+ * Copyright © 2010 ST Microelectronics
  * Vipin Kumar <vipin.kumar@st.com>
  *
  * This file is licensed under the terms of the GNU General Public

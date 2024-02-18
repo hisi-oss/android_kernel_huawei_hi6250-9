@@ -217,8 +217,8 @@ static void report_pen_events(struct w8001 *w8001, struct w8001_coord *coord)
 	 * We have 1 bit for proximity (rdy) and 3 bits for tip, side,
 	 * side2/eraser. If rdy && f2 are set, this can be either pen + side2,
 	 * or eraser. Assume:
-	 * - if dev is already in proximity and f2 is toggled ??? pen + side2
-	 * - if dev comes into proximity with f2 set ??? eraser
+	 * - if dev is already in proximity and f2 is toggled → pen + side2
+	 * - if dev comes into proximity with f2 set → eraser
 	 * If f2 disappears after assuming eraser, fake proximity out for
 	 * eraser and in for pen.
 	 */

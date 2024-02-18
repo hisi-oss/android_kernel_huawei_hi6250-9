@@ -3,7 +3,7 @@
  *
  * Extracted from arch/arm/plat-omap/include/plat/dma.h
  *  Copyright (C) 2003 Nokia Corporation
- *  Author: Juha Yrj??l?? <juha.yrjola@nokia.com>
+ *  Author: Juha Yrjölä <juha.yrjola@nokia.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

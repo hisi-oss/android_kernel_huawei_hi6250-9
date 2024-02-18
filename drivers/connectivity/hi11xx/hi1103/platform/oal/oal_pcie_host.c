@@ -71,10 +71,10 @@ char* g_pcie_link_state_str[PCI_WLAN_LINK_BUTT+1] =
  */
 OAL_STATIC oal_pcie_bar_info g_en_bar_table[] =
 {
-    /*1103 4.7a ????BAR [8MB]?? 5.0a ??????BAR[Bar0 8M  BAR1 16KB]
-      (????1103 ??64bit bar,????????bar index??????, ??????bar index=2,
-       ???? __pci_read_base ????????),
-      ??????BAR ??????MEM ???? ????IATU??*/
+    /*1103 4.7a 一个BAR [8MB]， 5.0a 为两个BAR[Bar0 8M  BAR1 16KB]
+      (因为1103 是64bit bar,所以对应bar index寄存器, 是对应bar index=2,
+       参考 __pci_read_base 最后一行),
+      第二个BAR 直接用MEM 方式 访问IATU表*/
     {
         .bar_idx = OAL_PCI_BAR_0,
     },
@@ -89,7 +89,7 @@ oal_debug_module_param(pcie_soft_fifo_enable, int, S_IRUGO | S_IWUSR);
 oal_int32 pcie_ringbuf_bugfix_enable = 1;
 oal_debug_module_param(pcie_ringbuf_bugfix_enable, int, S_IRUGO | S_IWUSR);
 
-oal_int32 pcie_dma_data_check_enable = 0;/*Wi-Fi????????????????????*/
+oal_int32 pcie_dma_data_check_enable = 0;/*Wi-Fi关闭时可以修改此标记*/
 oal_debug_module_param(pcie_dma_data_check_enable, int, S_IRUGO | S_IWUSR);
 
 oal_int32 ft_pcie_wcpu_max_freq_bypass = 0;
@@ -180,8 +180,8 @@ typedef enum _HI1103_REGIONS_
     HI1103_REGION_BUTT
 }HI1103_REGIONS;
 
- /*Region??????????4KB????????iATU????*/
- /*??????????????????iATU inbound*/
+ /*Region大小必须为4KB的倍数，iATU要求*/
+ /*这里的分段都是对应iATU inbound*/
 OAL_STATIC oal_pcie_region g_hi1103_pcie_mpw2_regions[] =
 {
     {
@@ -736,12 +736,12 @@ oal_pcie_res* oal_get_default_pcie_handler(oal_void)
 oal_int32 oal_pcie_edma_get_read_done_fifo(oal_pcie_res* pst_pci_res, edma_paddr_t* addr, oal_uint32* count)
 {
     /*TBD:TBC*/
-    /*?????????????? PCIE??????????????*/
-    /*????FIFO0????????????64bit ??????????*/
+    /*后续考虑优化， PCIE读内存比较耗时*/
+    /*先读FIFO0，分三次读走64bit 数据，读空*/
     oal_uint32 addr_low,addr_high;
     oal_uint32 trans_count;
 
-    /*????fifo0*/
+    /*处理fifo0*/
     trans_count    = oal_readl(pst_pci_res->pst_pci_ctrl_base + PCIE_FIFO_REMOTE_READ_FIFO0_DATA_OFF);
 //#ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
     addr_low       = oal_readl(pst_pci_res->pst_pci_ctrl_base + PCIE_FIFO_REMOTE_READ_FIFO0_DATA_OFF+4);
@@ -758,14 +758,14 @@ oal_int32 oal_pcie_edma_get_read_done_fifo(oal_pcie_res* pst_pci_res, edma_paddr
     }
 
 
-    trans_count = trans_count >> 1;/*??????????????2????????*/
+    trans_count = trans_count >> 1;/*一个数据包对应2个描述符*/
 //#ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
     addr->bits.low_addr = addr_low;
     addr->bits.high_addr = addr_high;
 //#endif
     *count = trans_count;
 
-    /*????fifo1*/
+    /*处理fifo1*/
     addr++;
     count++;
 
@@ -786,7 +786,7 @@ oal_int32 oal_pcie_edma_get_read_done_fifo(oal_pcie_res* pst_pci_res, edma_paddr
                                     addr_low, addr_high, trans_count);
     }
 
-    trans_count = trans_count >> 1;/*??????????????2????????*/
+    trans_count = trans_count >> 1;/*一个数据包对应2个描述符*/
 //#ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
     addr->bits.low_addr = addr_low;
     addr->bits.high_addr = addr_high;
@@ -799,12 +799,12 @@ oal_int32 oal_pcie_edma_get_read_done_fifo(oal_pcie_res* pst_pci_res, edma_paddr
 oal_int32 oal_pcie_edma_get_write_done_fifo(oal_pcie_res* pst_pci_res, edma_paddr_t* addr, oal_uint32* count)
 {
     /*TBD:TBC*/
-    /*?????????????? PCIE??????????????*/
-    /*????FIFO0????????????64bit ??????????*/
+    /*后续考虑优化， PCIE读内存比较耗时*/
+    /*先读FIFO0，分三次读走64bit 数据，读空*/
     oal_uint32 addr_low, addr_high;
     oal_uint32 trans_count;
 
-    /*????fifo0*/
+    /*处理fifo0*/
     trans_count = oal_readl(pst_pci_res->pst_pci_ctrl_base + PCIE_FIFO_REMOTE_WRITE_FIFO0_DATA_OFF);
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
     addr_low    = oal_readl(pst_pci_res->pst_pci_ctrl_base + PCIE_FIFO_REMOTE_WRITE_FIFO0_DATA_OFF+4);
@@ -821,7 +821,7 @@ oal_int32 oal_pcie_edma_get_write_done_fifo(oal_pcie_res* pst_pci_res, edma_padd
                                 addr_low, addr_high, trans_count);
     }
 
-    trans_count = trans_count >> 1;/*??????????????2????????*/
+    trans_count = trans_count >> 1;/*一个数据包对应2个描述符*/
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
     addr->bits.low_addr = addr_low;
     addr->bits.high_addr = addr_high;
@@ -829,7 +829,7 @@ oal_int32 oal_pcie_edma_get_write_done_fifo(oal_pcie_res* pst_pci_res, edma_padd
     *count = trans_count;
 
 
-    /*????fifo1*/
+    /*处理fifo1*/
     addr++;
     count++;
 
@@ -849,7 +849,7 @@ oal_int32 oal_pcie_edma_get_write_done_fifo(oal_pcie_res* pst_pci_res, edma_padd
                                 addr_low, addr_high, trans_count);
     }
 
-    trans_count = trans_count >> 1;/*??????????????2????????*/
+    trans_count = trans_count >> 1;/*一个数据包对应2个描述符*/
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
     addr->bits.low_addr = addr_low;
     addr->bits.high_addr = addr_high;
@@ -1073,7 +1073,7 @@ oal_int32 oal_pcie_set_inbound_by_viewport(oal_pcie_res * pst_pci_res)
         }
 
         /*TBD:TBC*/
-        /*????????????????*/
+        /*是否需要回读等待*/
         ret = oal_pci_read_config_dword(pst_pci_dev, HI_PCI_IATU_VIEWPORT_OFF, &reg);
         if(ret)
         {
@@ -1083,7 +1083,7 @@ oal_int32 oal_pcie_set_inbound_by_viewport(oal_pcie_res * pst_pci_res)
 
         if(reg != vp.AsDword)
         {
-            /*1.viewport ???????????? 2. iatu??????????????Soc??????????*/
+            /*1.viewport 没有切换完成 2. iatu配置个数超过了Soc的最大个数*/
             PCI_PRINT_LOG(PCI_LOG_ERR, "write [0x%8x:0x%8x] pcie viewport failed value still 0x%8x, region's index:%d\n",
                             HI_PCI_IATU_VIEWPORT_OFF, vp.AsDword, reg, index);
             return -OAL_EIO;
@@ -1096,7 +1096,7 @@ oal_int32 oal_pcie_set_inbound_by_viewport(oal_pcie_res * pst_pci_res)
         ctr2.bits.bar_num = region_base->bar_info->bar_idx;
         ret |= oal_pci_write_config_dword(pst_pci_dev, HI_PCI_IATU_REGION_CTRL_2_OFF_INBOUND_I(HI_PCI_IATU_BOUND_BASE_OFF), ctr2.AsDword);
 
-        /*Host??64??????????32??????*/
+        /*Host侧64位地址的低32位地址*/
         start.addr = region_base->bus_addr;
         PCI_PRINT_LOG(PCI_LOG_INFO, "PCIe inbound bus addr:0x%llx",start.addr);
         ret |= oal_pci_write_config_dword(pst_pci_dev, HI_PCI_IATU_LWR_BASE_ADDR_OFF_INBOUND_I(HI_PCI_IATU_BOUND_BASE_OFF),  start.bits.low_addr);
@@ -1107,13 +1107,13 @@ oal_int32 oal_pcie_set_inbound_by_viewport(oal_pcie_res * pst_pci_res)
         if(start.bits.high_addr != end.bits.high_addr)
         {
             /*TBD:TBC*/
-            /*????????4G??????????????????iatu????????????*/
+            /*如果跨了4G地址应该多配置一个iatu表项，待增加*/
             PCI_PRINT_LOG(PCI_LOG_ERR,"iatu high 32 bits must same![start:0x%llx, end:0x%llx]", start.addr, end.addr);
             return -OAL_EIO;
         }
         ret |= oal_pci_write_config_dword(pst_pci_dev, HI_PCI_IATU_LIMIT_ADDR_OFF_INBOUND_I(HI_PCI_IATU_BOUND_BASE_OFF),  end.bits.low_addr);
 
-        /*Device????????????(PCI??????????)*/
+        /*Device侧对应的地址(PCI看到的地址)*/
         target.addr = region_base->pci_start;
         ret |= oal_pci_write_config_dword(pst_pci_dev, HI_PCI_IATU_LWR_TARGET_ADDR_OFF_INBOUND_I(HI_PCI_IATU_BOUND_BASE_OFF),    target.bits.low_addr);
         ret |= oal_pci_write_config_dword(pst_pci_dev, HI_PCI_IATU_UPPER_TARGET_ADDR_OFF_INBOUND_I(HI_PCI_IATU_BOUND_BASE_OFF),  target.bits.high_addr);
@@ -1121,7 +1121,7 @@ oal_int32 oal_pcie_set_inbound_by_viewport(oal_pcie_res * pst_pci_res)
     }
 
     /*TBD:TBC*/
-    /* ??????????????                                                                         */
+    /* 配置命令寄存器                                                                         */
     /* BIT0 = 1(I/O Space Enable), BIT1 = 1(Memory Space Enable), BIT2 = 1(Bus Master Enable) */
     ret |= oal_pci_write_config_word(pst_pci_dev, 0x04, 0x7);
     if(ret)
@@ -1173,7 +1173,7 @@ oal_int32 oal_pcie_set_inbound_by_membar(oal_pcie_res * pst_pci_res)
         ctr2.bits.bar_num = region_base->bar_info->bar_idx;
         oal_writel(ctr2.AsDword, inbound_addr + HI_PCI_IATU_REGION_CTRL_2_OFF_INBOUND_I(HI_PCI_IATU_INBOUND_BASE_OFF(index)));
 
-        /*Host??64??????????32??????*/
+        /*Host侧64位地址的低32位地址*/
         start.addr = region_base->bus_addr;
         PCI_PRINT_LOG(PCI_LOG_INFO, "PCIe inbound bus addr:0x%llx",start.addr);
         oal_writel(start.bits.low_addr, inbound_addr + HI_PCI_IATU_LWR_BASE_ADDR_OFF_INBOUND_I(HI_PCI_IATU_INBOUND_BASE_OFF(index)));
@@ -1184,13 +1184,13 @@ oal_int32 oal_pcie_set_inbound_by_membar(oal_pcie_res * pst_pci_res)
         if(start.bits.high_addr != end.bits.high_addr)
         {
             /*TBD:TBC*/
-            /*????????4G??????????????????iatu????????????*/
+            /*如果跨了4G地址应该多配置一个iatu表项，待增加*/
             PCI_PRINT_LOG(PCI_LOG_ERR,"iatu high 32 bits must same![start:0x%llx, end:0x%llx]", start.addr, end.addr);
             return -OAL_EIO;
         }
         oal_writel(end.bits.low_addr, inbound_addr + HI_PCI_IATU_LIMIT_ADDR_OFF_INBOUND_I(HI_PCI_IATU_INBOUND_BASE_OFF(index)));
 
-        /*Device????????????(PCI??????????)*/
+        /*Device侧对应的地址(PCI看到的地址)*/
         target.addr = region_base->pci_start;
         oal_writel(target.bits.low_addr,  inbound_addr + HI_PCI_IATU_LWR_TARGET_ADDR_OFF_INBOUND_I(HI_PCI_IATU_INBOUND_BASE_OFF(index)));
         oal_writel(target.bits.high_addr, inbound_addr + HI_PCI_IATU_UPPER_TARGET_ADDR_OFF_INBOUND_I(HI_PCI_IATU_INBOUND_BASE_OFF(index)));
@@ -1199,14 +1199,14 @@ oal_int32 oal_pcie_set_inbound_by_membar(oal_pcie_res * pst_pci_res)
 
     if(index)
     {
-        /*??????????????????IATU????????*/
+        /*回读可以保证之前的IATU立刻生效*/
         oal_uint32 callback_read;
         callback_read = oal_readl(inbound_addr + HI_PCI_IATU_REGION_CTRL_1_OFF_INBOUND_I(HI_PCI_IATU_INBOUND_BASE_OFF(0)));
         OAL_REFERENCE(callback_read);
     }
 
     /*TBD:TBC*/
-    /* ??????????????                                                                         */
+    /* 配置命令寄存器                                                                         */
     /* BIT0 = 1(I/O Space Enable), BIT1 = 1(Memory Space Enable), BIT2 = 1(Bus Master Enable) */
     ret |= oal_pci_write_config_word(pst_pci_dev, 0x04, 0x7);
     if(ret)
@@ -1241,7 +1241,7 @@ oal_int32 oal_pcie_set_inbound(oal_pcie_res * pst_pci_res)
 /*set ep outbound, device->host*/
 oal_int32 oal_pcie_set_outbound(oal_pcie_res * pst_pci_res)
 {
-    /*1103 ???? ??????????????????????????????????*/
+    /*1103 暂时 没有这部分需求，数采方案还没有明确*/
 //#ifdef CONFIG_PCIE_1181_TRY
 #if 0
     /* iATU1:512M */
@@ -1254,7 +1254,7 @@ oal_int32 oal_pcie_set_outbound(oal_pcie_res * pst_pci_res)
     oal_pci_write_config_dword(pst_pci_dev, 0x700 + 0x214, 0xfffff);        /* limit */
     oal_pci_write_config_dword(pst_pci_dev, 0x700 + 0x218, 0xbf400000);     /* target lower */
     oal_pci_write_config_dword(pst_pci_dev, 0x700 + 0x21c, 0);              /* target upper */
-    /* ??????????????                                                                         */
+    /* 配置命令寄存器                                                                         */
     /* BIT0 = 1(I/O Space Enable), BIT1 = 1(Memory Space Enable), BIT2 = 1(Bus Master Enable) */
     oal_pci_write_config_word(pst_pci_dev, 0x04, 0x7);
 #endif
@@ -1295,7 +1295,7 @@ oal_int32 oal_pcie_iatu_init(oal_pcie_res* pst_pci_res)
         return ret;
     }
 
-    /*mem????????????*/
+    /*mem方式访问使能*/
     oal_pcie_change_link_state(pst_pci_res, PCI_WLAN_LINK_MEM_UP);
     return OAL_SUCC;
 }
@@ -1358,7 +1358,7 @@ oal_void oal_pcie_regions_exit(oal_pcie_res* pst_pci_res)
     region_num  = pst_pci_res->regions.region_nums;
     region_base = pst_pci_res->regions.pst_regions;
 
-    /*??????????????????*/
+    /*释放申请的地址空间*/
     for(index = 0; index < region_num; index++, region_base++)
     {
         if(NULL != region_base->vaddr)
@@ -1396,9 +1396,9 @@ oal_int32 oal_pcie_iatu_bar_init(oal_pcie_res* pst_pci_res)
     bar_base = &pst_pci_res->st_iatu_bar.st_bar_info;
     region_base= &pst_pci_res->st_iatu_bar.st_region;
 
-    /*Bar1 ???????????? iatu??*/
-    region_base->vaddr = NULL;/*remap ????????????*/
-    region_base->paddr = bar_base->start;/*Host CPU??????????????*/
+    /*Bar1 专门用于配置 iatu表*/
+    region_base->vaddr = NULL;/*remap 后的虚拟地址*/
+    region_base->paddr = bar_base->start;/*Host CPU看到的物理地址*/
     region_base->bus_addr = 0x0;
     region_base->res   = NULL;
     region_base->bar_info = bar_base;
@@ -1415,11 +1415,11 @@ oal_int32 oal_pcie_iatu_bar_init(oal_pcie_res* pst_pci_res)
     /*remap*/
     if(region_base->flag & OAL_IORESOURCE_REG)
     {
-        /*??????????????cache??, ????????cache*/
+        /*寄存器映射成非cache段, 不需要刷cache*/
         region_base->vaddr = oal_ioremap_nocache(region_base->paddr, region_base->size);
 
     }else{
-        /*cache ????????????cache*/
+        /*cache 段，注意要刷cache*/
         region_base->vaddr = oal_ioremap(region_base->paddr, region_base->size);
     }
 
@@ -1446,7 +1446,7 @@ failed_request_region:
 
 oal_int32 oal_pcie_regions_init(oal_pcie_res* pst_pci_res)
 {
-    /*??????DEVICE ????????????HOST????????????????remap*/
+    /*初始化DEVICE 每个段分配的HOST物理地址，然后做remap*/
     oal_void* vaddr;
     oal_int32 index, region_idx, bar_used_size;
     oal_uint32 bar_num, region_num;
@@ -1456,7 +1456,7 @@ oal_int32 oal_pcie_regions_init(oal_pcie_res* pst_pci_res)
 
     if(OAL_WARN_ON(pst_pci_res->regions.inited))
     {
-        /*??????????????*/
+        /*不能重复初始化*/
         return -OAL_EBUSY;
     }
 
@@ -1466,11 +1466,11 @@ oal_int32 oal_pcie_regions_init(oal_pcie_res* pst_pci_res)
     bar_base = pst_pci_res->regions.pst_bars;
     region_base = pst_pci_res->regions.pst_regions;
 
-    /*????regions??????????*/
+    /*清空regions的特定字段*/
     for(index = 0; index < region_num; index++, region_base++)
     {
-        region_base->vaddr = NULL;/*remap ????????????*/
-        region_base->paddr = 0x0;/*Host CPU??????????????*/
+        region_base->vaddr = NULL;/*remap 后的虚拟地址*/
+        region_base->paddr = 0x0;/*Host CPU看到的物理地址*/
         region_base->bus_addr = 0x0;
         region_base->res   = NULL;
         region_base->bar_info = NULL;
@@ -1486,10 +1486,10 @@ oal_int32 oal_pcie_regions_init(oal_pcie_res* pst_pci_res)
     {
         for(; region_idx < region_num; region_idx++, region_base++)
         {
-            /*BAR??????????????*/
+            /*BAR可用的起始地址*/
             if(bar_base->start + bar_used_size + region_base->size - 1  > bar_base->end)
             {
-                /*????BAR????????????*/
+                /*这个BAR地址空间不足*/
                 PCI_PRINT_LOG(PCI_LOG_ERR, "index:%d,region_idx:%d, start:0x%llx ,end:0x%llx, used_size:0x%x, region_size:%u\n",
                                 index, region_idx, bar_base->start, bar_base->end, bar_used_size, region_base->size);
                 break;
@@ -1506,7 +1506,7 @@ oal_int32 oal_pcie_regions_init(oal_pcie_res* pst_pci_res)
 
     if(region_idx < region_num)
     {
-        /*??????????*/
+        /*地址不够用*/
         PCI_PRINT_LOG(PCI_LOG_ERR, "bar address range is too small, region_idx %d < region_num %d\n", region_idx, region_num);
         return -OAL_ENOMEM;
     }
@@ -1528,11 +1528,11 @@ oal_int32 oal_pcie_regions_init(oal_pcie_res* pst_pci_res)
         /*remap*/
         if(region_base->flag & OAL_IORESOURCE_REG)
         {
-            /*??????????????cache??, ????????cache*/
+            /*寄存器映射成非cache段, 不需要刷cache*/
             vaddr = oal_ioremap_nocache(region_base->paddr, region_base->size);
 
         }else{
-            /*cache ????????????cache*/
+            /*cache 段，注意要刷cache*/
             vaddr = oal_ioremap(region_base->paddr, region_base->size);
         }
 
@@ -1545,7 +1545,7 @@ oal_int32 oal_pcie_regions_init(oal_pcie_res* pst_pci_res)
 
         /*remap and request succ.*/
         region_base->res   = pst_res;
-        region_base->vaddr = vaddr;/*Host Cpu ??????????????????*/
+        region_base->vaddr = vaddr;/*Host Cpu 可以访问的虚拟地址*/
 
     }
 
@@ -1601,7 +1601,7 @@ oal_int32 oal_pcie_get_ca_by_pa(oal_pcie_res * pst_pci_res, oal_ulong paddr, oal
 
         if((paddr >= (oal_ulong)region_base->paddr) && (paddr <= end))
         {
-            /*????????????*/
+            /*地址在范围内*/
             offset = paddr - (oal_ulong)region_base->paddr;
             *cpuaddr = region_base->cpu_start + offset;
             return OAL_SUCC;
@@ -1613,10 +1613,10 @@ oal_int32 oal_pcie_get_ca_by_pa(oal_pcie_res * pst_pci_res, oal_ulong paddr, oal
     return -OAL_ENOMEM;
 }
 
-/*??Device Cpu???????????????? Host????????????,
-  ????????????NULL????????????Device Cpu????????????0,
+/*将Device Cpu看到的地址转换为 Host侧的虚拟地址,
+  虚拟地址返回NULL为无效地址，Device Cpu地址有可能为0,
   local ip inbound cpu address to host virtual address,
-  ??????????0??????*/
+  函数返回非0为失败*/
 oal_int32 oal_pcie_inbound_ca_to_va(oal_pcie_res * pst_pci_res, oal_uint64 dev_cpuaddr,
                                                          pci_addr_map* addr_map)
 {
@@ -1654,13 +1654,13 @@ oal_int32 oal_pcie_inbound_ca_to_va(oal_pcie_res * pst_pci_res, oal_uint64 dev_c
 
         if((dev_cpuaddr >= region_base->cpu_start) && (dev_cpuaddr <= region_base->cpu_end))
         {
-            /*????????????*/
+            /*地址在范围内*/
             offset = dev_cpuaddr - region_base->cpu_start;
             if(NULL != addr_map)
             {
-                /*????HOST????????*/
+                /*返回HOST虚拟地址*/
                 addr_map->va = (oal_ulong)(region_base->vaddr + offset);
-                /*????HOST????????*/
+                /*返回HOST物理地址*/
                 addr_map->pa = (oal_ulong)(region_base->paddr + offset);
             }
             return OAL_SUCC;
@@ -1672,7 +1672,7 @@ oal_int32 oal_pcie_inbound_ca_to_va(oal_pcie_res * pst_pci_res, oal_uint64 dev_c
     return -OAL_ENOMEM;
 }
 
-/*????????PCIE??????HOST?????????????????? ????????????*/
+/*检查通过PCIE操作的HOST侧虚拟地址是否合法 ，是否映射过*/
 oal_int32 oal_pcie_vaddr_isvalid(oal_pcie_res * pst_pci_res, oal_void* vaddr)
 {
     oal_int32 index;
@@ -1713,7 +1713,7 @@ oal_int32 oal_pcie_bar_init(oal_pcie_res * pst_pci_res)
 
     oal_pci_dev_stru *pst_pci_dev = PCIE_RES_TO_DEV(pst_pci_res);
 
-    /*??????????1103*/
+    /*暂时只考虑1103*/
     bar_num  = OAL_ARRAY_SIZE(g_en_bar_table);
     bar_base = &g_en_bar_table[0];
 
@@ -1741,12 +1741,12 @@ oal_int32 oal_pcie_bar_init(oal_pcie_res * pst_pci_res)
     pst_pci_res->regions.pst_regions = region_base;
     pst_pci_res->regions.region_nums = region_num;
 
-    /*????????????iatu????????????????????*/
+    /*这里不映射，iatu配置要和映射分段对应*/
     for(index = 0; index < bar_num; index++)
     {
-        /*????Host??????????????????,1103??8M????,
-          1103 4.7a ????????BAR, 5.0a ????2??bar,
-          ??????????bar????????iatu??*/
+        /*获取Host分配的硬件地址资源,1103为8M大小,
+          1103 4.7a 对应一个BAR, 5.0a 对应2个bar,
+          其中第二个bar用于配置iatu表*/
 
         oal_pcie_bar_info* bar_curr = bar_base + index;
         oal_uint8 bar_idx = bar_curr->bar_idx;
@@ -1766,7 +1766,7 @@ oal_int32 oal_pcie_bar_init(oal_pcie_res * pst_pci_res)
                             oal_pci_resource_flags(pst_pci_dev, bar_idx));
     }
 
-    /*????????BAR1*/
+    /*是否支持BAR1*/
     if(PCIE_REVISION_5_00A == pst_pci_res->revision)
     {
         /*Get Bar Address*/
@@ -1818,7 +1818,7 @@ oal_int32 oal_pcie_bar_init(oal_pcie_res * pst_pci_res)
     return OAL_SUCC;
 }
 
-/*????rx netbuf*/
+/*补充rx netbuf*/
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_D2H_BYPASS
 oal_int32 oal_pcie_rx_ringbuf_bypass_supply( oal_pcie_res* pst_pci_res,
                                             oal_int32 is_sync,
@@ -1835,7 +1835,7 @@ oal_int32 oal_pcie_rx_ringbuf_bypass_supply( oal_pcie_res* pst_pci_res,
     oal_pcie_mips_start(PCIE_MIPS_RX_NETBUF_SUPPLY);
     if(OAL_TRUE == is_sync)
     {
-        /*????Dev2Host????????*/
+        /*同步Dev2Host的读指针*/
         oal_pcie_d2h_ringbuf_rd_update(pst_pci_res);
     }
 
@@ -1862,7 +1862,7 @@ oal_int32 oal_pcie_rx_ringbuf_bypass_supply( oal_pcie_res* pst_pci_res,
         cnt++;
     }
 
-    /*????????????HOST/DEVICE????????????*/
+    /*这里需要考虑HOST/DEVICE的初始化顺序*/
     if(cnt && (OAL_TRUE == is_doorbell))
     {
         oal_pcie_d2h_ringbuf_wr_update(pst_pci_res);
@@ -1892,7 +1892,7 @@ oal_int32 oal_pcie_rx_ringbuf_supply( oal_pcie_res* pst_pci_res,
     oal_pcie_mips_start(PCIE_MIPS_RX_NETBUF_SUPPLY);
     if(OAL_TRUE == is_sync)
     {
-        /*????Dev2Host????????*/
+        /*同步Dev2Host的读指针*/
         oal_pcie_d2h_ringbuf_rd_update(pst_pci_res);
     }
 
@@ -1902,8 +1902,8 @@ oal_int32 oal_pcie_rx_ringbuf_supply( oal_pcie_res* pst_pci_res,
         {
             break;
         }
-        /*ringbuf ??????*/
-        /*??????netbuf????????????????*/
+        /*ringbuf 有空间*/
+        /*预申请netbuf都按照大包来申请*/
         oal_pcie_mips_start(PCIE_MIPS_RX_MEM_ALLOC);
         pst_netbuf = oal_pcie_rx_netbuf_alloc(HCC_HDR_TOTAL_LEN + PCIE_EDMA_TRANS_MAX_FRAME_LEN, gflag);
         if(NULL == pst_netbuf)
@@ -1920,7 +1920,7 @@ oal_int32 oal_pcie_rx_ringbuf_supply( oal_pcie_res* pst_pci_res,
         if(pcie_dma_data_check_enable)
         {
             oal_uint32 value;
-            /*??????????????DMA????????????*/
+            /*增加标记，判断DMA是否真的启动*/
             oal_writel(0xffffffff, (oal_void*)OAL_NETBUF_DATA(pst_netbuf));
             value = (oal_uint32)(oal_ulong)OAL_NETBUF_DATA(pst_netbuf) + HCC_HDR_TOTAL_LEN;
             oal_writel(value, ((oal_void*)OAL_NETBUF_DATA(pst_netbuf) + HCC_HDR_TOTAL_LEN));
@@ -1941,7 +1941,7 @@ oal_int32 oal_pcie_rx_ringbuf_supply( oal_pcie_res* pst_pci_res,
             break;
         }
 
-        /*DMA????????CB??, CB??????8????????????????????*/
+        /*DMA地址填到CB中, CB首地址8字节对齐可以直接强转*/
         pst_cb_res = (pcie_cb_dma_res*)OAL_NETBUF_CB(pst_netbuf);
         pst_cb_res->paddr.addr = pci_dma_addr;
         pst_cb_res->len = OAL_NETBUF_LEN(pst_netbuf);
@@ -1950,7 +1950,7 @@ oal_int32 oal_pcie_rx_ringbuf_supply( oal_pcie_res* pst_pci_res,
         //st_write_item.reserved0  = 0x1234;
         //st_write_item.buf_len    = OAL_NETBUF_LEN(pst_netbuf);
 
-        /*????*/
+        /*入队*/
 
         oal_spin_lock_irq_save(&pst_pci_res->st_rx_res.lock, &flags);
         oal_netbuf_list_tail_nolock(&pst_pci_res->st_rx_res.rxq, pst_netbuf);
@@ -1972,11 +1972,11 @@ oal_int32 oal_pcie_rx_ringbuf_supply( oal_pcie_res* pst_pci_res,
         cnt++;
     }
 
-    /*????????????HOST/DEVICE????????????*/
+    /*这里需要考虑HOST/DEVICE的初始化顺序*/
     if(cnt && (OAL_TRUE == is_doorbell))
     {
         oal_pcie_d2h_ringbuf_wr_update(pst_pci_res);
-        /*????????????????D2H Device????????*/
+        /*暂时不需要敲铃，D2H Device是大循环*/
         //oal_pcie_d2h_doorbell(pst_pci_res);/*TBD:TBC*/
     }
 
@@ -1985,11 +1985,11 @@ oal_int32 oal_pcie_rx_ringbuf_supply( oal_pcie_res* pst_pci_res,
     return cnt;
 }
 
-/*????????rx??????buf*/
+/*预先分配rx的接收buf*/
 oal_int32 oal_pcie_rx_ringbuf_build(oal_pcie_res* pst_pci_res)
 {
-    /*??????????????DEVICE ZI??????????????????
-      ??????????????????*/
+    /*走到这里要确保DEVICE ZI区已经初始化完成，
+      中断已经注册和使能*/
     /*TBD:TBC*/
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_D2H_BYPASS
 #else
@@ -2008,13 +2008,13 @@ oal_int32 oal_pcie_rx_ringbuf_build(oal_pcie_res* pst_pci_res)
     return OAL_SUCC;
 }
 
-/*????RX??????????*/
+/*释放RX通路的资源*/
 oal_void oal_pcie_rx_res_clean(oal_pcie_res* pst_pci_res)
 {
     oal_ulong flags;
     oal_netbuf_stru* pst_netbuf;
 
-    /*????RX????????*/
+    /*释放RX补充队列*/
     PCI_PRINT_LOG(PCI_LOG_INFO, "prepare free rxq len=%d", oal_netbuf_list_len(&pst_pci_res->st_rx_res.rxq));
     for(;;)
     {
@@ -2029,7 +2029,7 @@ oal_void oal_pcie_rx_res_clean(oal_pcie_res* pst_pci_res)
     }
 }
 
-/*????tx ringbuf ???????? ??hcc ????*/
+/*归还tx ringbuf 中的报文 回hcc 队列*/
 oal_void oal_pcie_tx_res_restore(oal_pcie_res* pst_pci_res)
 {
     oal_int32 i;
@@ -2037,7 +2037,7 @@ oal_void oal_pcie_tx_res_restore(oal_pcie_res* pst_pci_res)
     oal_netbuf_stru* pst_netbuf;
     oal_pcie_linux_res * pst_pci_lres = (oal_pcie_linux_res*)oal_pci_get_drvdata(PCIE_RES_TO_DEV(pst_pci_res));
     struct hcc_handler* hcc = HBUS_TO_HCC(pst_pci_lres->pst_bus);
-    /*????TX????????, Ringbuf ??DEV?? ??wcpu??????????*/
+    /*归还TX发送队列, Ringbuf 在DEV侧 由wcpu重新初始化*/
     for(i = 0; i < PCIE_H2D_QTYPE_BUTT; i++)
     {
         PCI_PRINT_LOG(PCI_LOG_INFO, "prepare restore txq[%d] len=%d", i ,oal_netbuf_list_len(&pst_pci_res->st_tx_res[i].txq));
@@ -2060,7 +2060,7 @@ oal_void oal_pcie_tx_res_restore(oal_pcie_res* pst_pci_res)
 
 }
 
-/*????TX??????????*/
+/*释放TX通路的资源*/
 oal_void oal_pcie_tx_res_clean(oal_pcie_res* pst_pci_res)
 {
     oal_int32 i;
@@ -2068,7 +2068,7 @@ oal_void oal_pcie_tx_res_clean(oal_pcie_res* pst_pci_res)
     oal_netbuf_stru* pst_netbuf;
 
 
-    /*??????TX????????, Ringbuf ??DEV?? ????????*/
+    /*释放待TX发送队列, Ringbuf 在DEV侧 直接下电*/
     for(i = 0; i < PCIE_H2D_QTYPE_BUTT; i++)
     {
         PCI_PRINT_LOG(PCI_LOG_INFO, "prepare free txq[%d] len=%d", i ,oal_netbuf_list_len(&pst_pci_res->st_tx_res[i].txq));
@@ -2091,8 +2091,8 @@ oal_int32 oal_pcie_transfer_res_init(oal_pcie_res * pst_pci_res)
 {
     oal_int32 ret = OAL_SUCC;
 
-    /*??????PATCH????????????????????,
-      ????????????????SSI????????*/
+    /*下载完PATCH才需要执行下面的操作,
+      芯片验证阶段通过SSI下载代码*/
     /*TBD:TBC*/
     ret = oal_pcie_share_mem_res_map(pst_pci_res);
     if(OAL_SUCC != ret)
@@ -2137,7 +2137,7 @@ oal_void oal_pcie_transfer_res_exit(oal_pcie_res * pst_pci_res)
     oal_pcie_share_mem_res_unmap(pst_pci_res);
 }
 
-/*????BAR,IATU??????????*/
+/*配置BAR,IATU等设备资源*/
 oal_int32 oal_pcie_dev_init(oal_pcie_res * pst_pci_res)
 {
     oal_int32 ret = OAL_SUCC;
@@ -2160,7 +2160,7 @@ oal_int32 oal_pcie_dev_init(oal_pcie_res * pst_pci_res)
     }
 
     /*TBD:TBC*/
-    /*????????????????????????,??Host????????????????*/
+    /*移植到麒麟平台这里要打开,在Host主控上下电后合入*/
 #if 0
     ret = oal_pcie_transfer_res_init(pst_pci_res);
     if(OAL_SUCC != ret)
@@ -2185,10 +2185,10 @@ oal_void oal_pcie_dev_deinit(oal_pcie_res * pst_pci_res)
 /*isr functions*/
 oal_int32 oal_pcie_tx_dma_addr_match(oal_netbuf_stru* pst_netbuf, edma_paddr_t dma_addr)
 {
-    /*dma_addr ??????CB??????*/
+    /*dma_addr 存放在CB字段里*/
     pcie_cb_dma_res st_cb_dma;
 
-    /*??????CB??????????????????????????????????*/
+    /*不是从CB的首地址开始，必须拷贝，对齐问题。*/
     oal_memcopy(&st_cb_dma, (oal_uint8*)OAL_NETBUF_CB(pst_netbuf) + sizeof(struct hcc_tx_cb_stru), sizeof(st_cb_dma));
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "tx dma addr match, cb's addr 0x%llx , dma_addr 0x%llx", st_cb_dma.paddr.addr, dma_addr.addr);
@@ -2200,10 +2200,10 @@ oal_int32 oal_pcie_tx_dma_addr_match(oal_netbuf_stru* pst_netbuf, edma_paddr_t d
 
 oal_int32 oal_pcie_tx_dma_addr_match_low(oal_netbuf_stru* pst_netbuf, oal_uint16 dma_addr)
 {
-    /*dma_addr ??????CB??????*/
+    /*dma_addr 存放在CB字段里*/
     pcie_cb_dma_res st_cb_dma;
 
-    /*??????CB??????????????????????????????????*/
+    /*不是从CB的首地址开始，必须拷贝，对齐问题。*/
     oal_memcopy(&st_cb_dma, (oal_uint8*)OAL_NETBUF_CB(pst_netbuf) + sizeof(struct hcc_tx_cb_stru), sizeof(st_cb_dma));
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "tx dma addr match, cb's addr 0x%llx , dma_addr 0x%x", st_cb_dma.paddr.addr, dma_addr);
@@ -2218,7 +2218,7 @@ oal_int32 oal_pcie_tx_dma_addr_match_low(oal_netbuf_stru* pst_netbuf, oal_uint16
 oal_int32 oal_pcie_rx_dma_addr_match(oal_netbuf_stru* pst_netbuf, edma_paddr_t dma_addr)
 {
     pcie_cb_dma_res* pst_cb_res;
-    /*DMA????????CB??, CB??????8????????????????????*/
+    /*DMA地址填到CB中, CB首地址8字节对齐可以直接强转*/
     pst_cb_res = (pcie_cb_dma_res*)OAL_NETBUF_CB(pst_netbuf);
     if(pst_cb_res->paddr.addr == dma_addr.addr)
         return OAL_TRUE;
@@ -2228,7 +2228,7 @@ oal_int32 oal_pcie_rx_dma_addr_match(oal_netbuf_stru* pst_netbuf, edma_paddr_t d
 oal_int32 oal_pcie_rx_dma_addr_matchlow(oal_netbuf_stru* pst_netbuf, oal_uint32 dma_addr)
 {
     pcie_cb_dma_res* pst_cb_res;
-    /*DMA????????CB??, CB??????8????????????????????*/
+    /*DMA地址填到CB中, CB首地址8字节对齐可以直接强转*/
     pst_cb_res = (pcie_cb_dma_res*)OAL_NETBUF_CB(pst_netbuf);
     if(pst_cb_res->paddr.bits.low_addr == dma_addr)
         return OAL_TRUE;
@@ -2275,7 +2275,7 @@ OAL_STATIC oal_void oal_pcie_release_rx_netbuf(oal_pcie_res* pst_pci_res, oal_ne
 
 }
 
-/*??Hcc????????????netbuf*/
+/*向Hcc层提交收到的netbuf*/
 oal_void oal_pcie_rx_netbuf_submit(oal_pcie_res* pst_pci_res, oal_netbuf_stru* pst_netbuf)
 {
     struct hcc_handler* hcc;
@@ -2358,13 +2358,13 @@ release_netbuf:
 
 oal_int32 oal_pcie_unmap_tx_netbuf(oal_pcie_res* pst_pci_res, oal_netbuf_stru* pst_netbuf)
 {
-    /*dma_addr ??????CB??????*/
+    /*dma_addr 存放在CB字段里*/
     pcie_cb_dma_res st_cb_dma;
     oal_pci_dev_stru *pst_pci_dev;
 
     pst_pci_dev = PCIE_RES_TO_DEV(pst_pci_res);
 
-    /*??????CB??????????????????????????????????*/
+    /*不是从CB的首地址开始，必须拷贝，对齐问题。*/
     oal_memcopy(&st_cb_dma, (oal_uint8*)OAL_NETBUF_CB(pst_netbuf) + sizeof(struct hcc_tx_cb_stru), sizeof(st_cb_dma));
 
 #ifdef _PRE_PLAT_FEATURE_PCIE_DEBUG
@@ -2393,12 +2393,12 @@ oal_void oal_pcie_tx_netbuf_free(oal_pcie_res* pst_pci_res, oal_netbuf_stru* pst
 }
 
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_H2D_BYPASS
-/*????????????*/
+/*发送完成中断*/
 oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
 {
     oal_ulong flags;
     oal_int32  j, flag, cnt, total_cnt;
-    /*tx fifo?????? ????????????????,??????????????????count*/
+    /*tx fifo中获取 发送完成的首地址,双通道，双地址，双count*/
     edma_paddr_t addr[PCIE_EDMA_MAX_CHANNELS];
     oal_uint32 count[PCIE_EDMA_MAX_CHANNELS];
 
@@ -2407,32 +2407,32 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
     if(OAL_TRUE != oal_pcie_edma_get_read_done_fifo(pst_pci_res, addr, count))
     {
         /*TBD:TBC*/
-        /*??????????????*/
+        /*待增加维测计数*/
         return;
     }
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_h2d_transfer_done, cnt:%u", pst_pci_res->stat.intx_tx_count);
 
-    /*????????????????DMA??????????????????,
-      ??????????????????????????????????????????????????
-      ????????????????????????(??FIFO??????????),??????????????????netbuf*/
+    /*获取到发送完成的DMA地址，遍历发送队列,
+      先遍历第一个元素，正常应该队头就是发送完成的元素，
+      如果不在队头说明丢中断了(有FIFO正常不会丢),需要释放元素之前的netbuf*/
     flag = 0;
     total_cnt = 0;
     //for(i = 0; i < PCIE_H2D_QTYPE_BUTT; i++)
     //{
-        /*DMA??????*/
+        /*DMA双通道*/
         for(j = 0; j < PCIE_EDMA_MAX_CHANNELS; j++)
         {
 
             PCI_PRINT_LOG(PCI_LOG_DBG, "tx chan:%d pa 0x%llx, cnt:%d", j, addr[j].addr, count[j]);
 
-            cnt = count[j];/*????????????,count??0*/
+            cnt = count[j];/*无效描述符时,count为0*/
             if(!cnt)
             {
 #if 0
                 if(addr[j].addr)
                 {
-                    /*cnt ?? addr ?????????? 0*/
+                    /*cnt 和 addr 应该同时为 0*/
                     PCI_PRINT_LOG(PCI_LOG_DBG, "tx chan:%d get invalid dma pa 0x%llx", j, addr[j].addr);
                 }
 #endif
@@ -2447,7 +2447,7 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
             if((oal_uint64)g_h2d_pci_dma_addr != (oal_uint64)addr[j].addr)
             {
-                /*??????????????????????????*/
+                /*地址不匹配，遍历下一个队列*/
                 PCI_PRINT_LOG(PCI_LOG_ERR, "unkown bypass netbuf addr:0x%llu, should be :0x%llu",(oal_uint64)g_h2d_pci_dma_addr, addr[j]);
                 break;
             }
@@ -2466,18 +2466,18 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
     {
         pst_pci_res->st_tx_res[PCIE_H2D_QTYPE_NORMAL].stat.tx_burst_cnt[total_cnt]++;
     }
-        /*??????????????????????*/
+        /*未匹配，遍历下一条队列*/
     //}
 }
 #else
-/*????????????*/
+/*发送完成中断*/
 oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
 {
     oal_ulong flags;
     oal_int32 i, j, flag, cnt, total_cnt, netbuf_cnt, curr_cnt;
     oal_netbuf_stru* pst_netbuf;
     oal_netbuf_head_stru* pst_txq;
-    /*tx fifo?????? ????????????????,??????????????????count*/
+    /*tx fifo中获取 发送完成的首地址,双通道，双地址，双count*/
     edma_paddr_t addr[PCIE_EDMA_MAX_CHANNELS];
     oal_uint32 count[PCIE_EDMA_MAX_CHANNELS];
 
@@ -2486,15 +2486,15 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
     if(OAL_TRUE != oal_pcie_edma_get_read_done_fifo(pst_pci_res, addr, count))
     {
         /*TBD:TBC*/
-        /*??????????????*/
+        /*待增加维测计数*/
         return;
     }
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_h2d_transfer_done, cnt:%u", pst_pci_res->stat.intx_tx_count);
 
-    /*????????????????DMA??????????????????,
-      ??????????????????????????????????????????????????
-      ????????????????????????(??FIFO??????????),??????????????????netbuf*/
+    /*获取到发送完成的DMA地址，遍历发送队列,
+      先遍历第一个元素，正常应该队头就是发送完成的元素，
+      如果不在队头说明丢中断了(有FIFO正常不会丢),需要释放元素之前的netbuf*/
     flag = 0;
     netbuf_cnt = 0;
 
@@ -2510,36 +2510,36 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
             continue;
         }
 
-        /*DMA??????*/
+        /*DMA双通道*/
         for(j = 0; j < PCIE_EDMA_MAX_CHANNELS; j++)
         {
             if(oal_netbuf_list_empty(pst_txq))
             {
-                /*????????*/
+                /*队列为空*/
                 break;
             }
 
             PCI_PRINT_LOG(PCI_LOG_DBG, "[q:%d]tx chan:%d pa 0x%llx, cnt:%d",i , j, addr[j].addr, count[j]);
 
-            cnt = count[j];/*????????????,count??0*/
+            cnt = count[j];/*无效描述符时,count为0*/
             if(!cnt)
             {
 #if 0
                 if(addr[j].addr)
                 {
-                    /*cnt ??0 ????addr ????????????*/
+                    /*cnt 为0 时，addr 是上一次的值*/
                     PCI_PRINT_LOG(PCI_LOG_DBG, "tx chan:%d get invalid dma pa 0x%llx", j, addr[j].addr);
                 }
 #endif
                 continue;
             }
 
-            /*??????????????????????????*/
+            /*保证一个地方入队，这里出队*/
             pst_netbuf = (oal_netbuf_stru*)OAL_NETBUF_NEXT(pst_txq);
 //#ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_FIFO_ADDRESS
             if(OAL_TRUE != oal_pcie_tx_dma_addr_match(pst_netbuf, addr[j]))
             {
-                /*??????????????????????????*/
+                /*地址不匹配，遍历下一个队列*/
                 PCI_PRINT_LOG(PCI_LOG_DBG, "[q:%d]tx chan:%d match failed, search next txq",i , j);
                 break;
             }
@@ -2547,12 +2547,12 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
 
             /*match succ.*/
 
-            /*??????????????,????????????????????????0????????????1,
-              2???????????? ??????????????????*/
+            /*找到地址，出队,先入先出，所以先检查通道0，再检查通道1,
+              2个通道的地址 应该在同一个队列中*/
             curr_cnt = oal_netbuf_list_len(pst_txq);
             if(OAL_UNLIKELY(cnt > curr_cnt))
             {
-                /*count ?????*/
+                /*count 出错?*/
                 PCI_PRINT_LOG(PCI_LOG_ERR, "[q:%d]tx chan:%d tx done invalid count cnt %d ,list len %u",i , j,
                                         cnt, curr_cnt);
                 DECLARE_DFT_TRACE_KEY_INFO("pcie tx done count error", OAL_DFT_TRACE_EXCEP);
@@ -2564,15 +2564,15 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
 
             do
             {
-                /*????????????????*/
+                /*这里的锁可以优化*/
                 /*TBD:TBC*/
                 oal_spin_lock_irq_save(&pst_pci_res->st_tx_res[i].lock, &flags);
-                /*????????*/
+                /*头部出队*/
                 pst_netbuf = oal_netbuf_delist_nolock(pst_txq);
                 oal_spin_unlock_irq_restore(&pst_pci_res->st_tx_res[i].lock, &flags);
                 if(NULL == pst_netbuf)
                 {
-                    /*????????????count????????????*/
+                    /*不应该为空，count有可能有问题*/
                     PCI_PRINT_LOG(PCI_LOG_ERR, "[q:%d]tx chan:%d tx netbuf queue underflow[cnt:%d:%d, qlen:%d]",i , j,
                         cnt, count[j], curr_cnt);
                     DECLARE_DFT_TRACE_KEY_INFO("pcie tx done count error2", OAL_DFT_TRACE_EXCEP);
@@ -2594,7 +2594,7 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
 
             if(!cnt)
             {
-                /*??????????????????????*/
+                /*一个通道的地址处理完成*/
                 PCI_PRINT_LOG(PCI_LOG_DBG, "[q:%d]tx chan:%d all bus process done!",i , j);
                 flag = 1;
             }
@@ -2618,7 +2618,7 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
         if(flag)
             break;
 
-        /*??????????????????????*/
+        /*未匹配，遍历下一条队列*/
     }
 
     if(OAL_UNLIKELY(netbuf_cnt != (count[0] + count[1])))
@@ -2632,8 +2632,8 @@ oal_void oal_pcie_h2d_transfer_done(oal_pcie_res* pst_pci_res)
 done:
     if(!flag)
     {
-        /*????,??????FIFO????????????????????????count????,??????????
-          ????????????DFR*/
+        /*维测,未找到FIFO中的地址，地址有错，或者count有错,或者丢中断
+          这里应该触发DFR*/
         /*TBD:TBC*/
         //DECLARE_DFT_TRACE_KEY_INFO("pcie tx done addr error", OAL_DFT_TRACE_EXCEP);
         PCI_PRINT_LOG(PCI_LOG_ERR, "pcie tx done addr error");
@@ -2641,11 +2641,11 @@ done:
     else
     {
         oal_pcie_linux_res * pst_pci_lres = (oal_pcie_linux_res*)oal_pci_get_drvdata(PCIE_RES_TO_DEV(pst_pci_res));
-        /*????????,????????????*/
+        /*发送完成,唤醒发送线程*/
         if(OAL_LIKELY(NULL != pst_pci_lres))
         {
             PCI_PRINT_LOG(PCI_LOG_DBG, "pcie sched hcc thread, qid:%d", i);
-            oal_atomic_set(&pst_pci_res->st_tx_res[i].tx_ringbuf_sync_cond, 1);/*??????????????????????*/
+            oal_atomic_set(&pst_pci_res->st_tx_res[i].tx_ringbuf_sync_cond, 1);/*下半部刷新，保持一致性*/
             hcc_sched_transfer(HBUS_TO_HCC(pst_pci_lres->pst_bus));
         }
     }
@@ -2655,12 +2655,12 @@ done:
 
 extern oal_int32 hcc_send_rx_queue_etc(struct hcc_handler *hcc, hcc_queue_type type);
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_D2H_BYPASS
-/*????????????*/
+/*接收完成中断*/
 oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
 {
     oal_ulong flags;
     oal_int32 i, flag, cnt, total_cnt;
-    /*rx fifo?????? ????????????????,??????????????????count*/
+    /*rx fifo中获取 发送完成的首地址,双通道，双地址，双count*/
     edma_paddr_t addr[PCIE_EDMA_MAX_CHANNELS];
     oal_uint32   count[PCIE_EDMA_MAX_CHANNELS];
 
@@ -2670,38 +2670,38 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
     if(OAL_TRUE != oal_pcie_edma_get_write_done_fifo(pst_pci_res, addr, count))
     {
         /*TBD:TBC*/
-        /*??????????????*/
+        /*待增加维测计数*/
         return;
     }
     oal_pcie_mips_end(PCIE_MIPS_RX_MSG_FIFO);
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_d2h_transfer_done, cnt:%u", pst_pci_res->stat.intx_rx_count);
 
-    /*????????????????DMA??????????????????,
-      ??????????????????????????????????????????????????
-      ????????????????????????(??FIFO??????????),??????????????????netbuf*/
+    /*获取到发送完成的DMA地址，遍历发送队列,
+      先遍历第一个元素，正常应该队头就是发送完成的元素，
+      如果不在队头说明丢中断了(有FIFO正常不会丢),需要释放元素之前的netbuf*/
     flag = 0;
     total_cnt = 0;
 
-    /*DMA??????*/
+    /*DMA双通道*/
     for(i = 0; i < PCIE_EDMA_MAX_CHANNELS; i++)
     {
         PCI_PRINT_LOG(PCI_LOG_DBG, "rx chan:%d pa 0x%llx, cnt:%d",i , addr[i].addr, count[i]);
-        cnt = count[i];/*????????????,count??0*/
+        cnt = count[i];/*无效描述符时,count为0*/
         if(!cnt)
         {
 #if 0
             if(addr[i].addr)
             {
-                /*cnt ?? addr ?????????? 0*/
+                /*cnt 和 addr 应该同时为 0*/
                 PCI_PRINT_LOG(PCI_LOG_DBG, "rx chan:%d get invalid dma pa 0x%llx", i, addr[i].addr);
             }
 #endif
             continue;
         }
 
-        /*??????????????,????????????????????????0????????????1,
-          2???????????? ??????????????????*/
+        /*找到地址，出队,先入先出，所以先检查通道0，再检查通道1,
+          2个通道的地址 应该在同一个队列中*/
         cnt = count[i];
         pst_pci_res->st_rx_res.stat.rx_done_count++;
         g_d2h_bypass_pkt_num += cnt;
@@ -2727,14 +2727,14 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
 }
 #else
 oal_uint32 g_rx_addr_count_err_cnt = 0;
-/*????????????*/
+/*接收完成中断*/
 oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
 {
     oal_ulong flags;
     oal_int32 i, flag, cnt, total_cnt;
     oal_netbuf_stru* pst_netbuf;
     oal_netbuf_head_stru* pst_rxq;
-    /*rx fifo?????? ????????????????,??????????????????count*/
+    /*rx fifo中获取 发送完成的首地址,双通道，双地址，双count*/
     edma_paddr_t addr[PCIE_EDMA_MAX_CHANNELS];
     oal_uint32   count[PCIE_EDMA_MAX_CHANNELS];
 
@@ -2744,16 +2744,16 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
     if(OAL_TRUE != oal_pcie_edma_get_write_done_fifo(pst_pci_res, addr, count))
     {
         /*TBD:TBC*/
-        /*??????????????*/
+        /*待增加维测计数*/
         return;
     }
     oal_pcie_mips_end(PCIE_MIPS_RX_MSG_FIFO);
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_d2h_transfer_done, cnt:%u", pst_pci_res->stat.intx_rx_count);
 
-    /*????????????????DMA??????????????????,
-      ??????????????????????????????????????????????????
-      ????????????????????????(??FIFO??????????),??????????????????netbuf*/
+    /*获取到发送完成的DMA地址，遍历发送队列,
+      先遍历第一个元素，正常应该队头就是发送完成的元素，
+      如果不在队头说明丢中断了(有FIFO正常不会丢),需要释放元素之前的netbuf*/
     flag = 0;
     total_cnt = 0;
 
@@ -2766,30 +2766,30 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
         return;
     }
 
-    /*DMA??????*/
+    /*DMA双通道*/
     for(i = 0; i < PCIE_EDMA_MAX_CHANNELS; i++)
     {
         if(oal_netbuf_list_empty(pst_rxq))
         {
-            /*????????*/
+            /*队列为空*/
             break;
         }
 
         PCI_PRINT_LOG(PCI_LOG_DBG, "rx chan:%d pa 0x%llx, cnt:%d",i , addr[i].addr, count[i]);
-        cnt = count[i];/*????????????,count??0*/
+        cnt = count[i];/*无效描述符时,count为0*/
         if(!cnt)
         {
 #if 0
             if(addr[i].addr)
             {
-                /*cnt ?? addr ?????????? 0*/
+                /*cnt 和 addr 应该同时为 0*/
                 PCI_PRINT_LOG(PCI_LOG_DBG, "rx chan:%d get invalid dma pa 0x%llx", i, addr[i].addr);
             }
 #endif
             continue;
         }
 
-        /*??????????????????????????*/
+        /*保证一个地方入队，这里出队*/
         pst_netbuf = (oal_netbuf_stru*)OAL_NETBUF_NEXT(pst_rxq);
 
         if(OAL_UNLIKELY(NULL == pst_netbuf))
@@ -2804,7 +2804,7 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
             g_rx_addr_count_err_cnt++;
             if(g_rx_addr_count_err_cnt >= 2)
             {
-                /*?????????? ????????*/
+                /*地址不匹配 重试一次*/
                 PCI_PRINT_LOG(PCI_LOG_ERR, "rx chan:%d match failed, rx error, count[i]:%u, errcnt:%d",i, count[i], g_rx_addr_count_err_cnt);
                 PCI_PRINT_LOG(PCI_LOG_ERR, "count0:%u, count1:%u",count[0], count[1]);
                 DECLARE_DFT_TRACE_KEY_INFO("pcie rx addr fatal error", OAL_DFT_TRACE_EXCEP);
@@ -2813,7 +2813,7 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
             }
             else
             {
-                /*????????????????*/
+                /*地址不匹配，出错*/
                 PCI_PRINT_LOG(PCI_LOG_ERR, "rx chan:%d match failed, rx error, count[i]:%u, errcnt:%d",i, count[i], g_rx_addr_count_err_cnt);
                 PCI_PRINT_LOG(PCI_LOG_ERR, "count0:%u, count1:%u",count[0], count[1]);
                 DECLARE_DFT_TRACE_KEY_INFO("pcie rx addr error,retry", OAL_DFT_TRACE_FAIL);
@@ -2827,8 +2827,8 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
         }
 #endif
 
-        /*??????????????,????????????????????????0????????????1,
-          2???????????? ??????????????????*/
+        /*找到地址，出队,先入先出，所以先检查通道0，再检查通道1,
+          2个通道的地址 应该在同一个队列中*/
         cnt = count[i];
         if(OAL_UNLIKELY(cnt > oal_netbuf_list_len(pst_rxq)))
         {
@@ -2843,17 +2843,17 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
         oal_pcie_mips_start(PCIE_MIPS_RX_QUEUE_POP);
         do
         {
-            /*????????????????*/
+            /*这里的锁可以优化*/
             /*TBD:TBC*/
 
             oal_spin_lock_irq_save(&pst_pci_res->st_rx_res.lock, &flags);
-            /*????????*/
+            /*头部出队*/
             pst_netbuf = oal_netbuf_delist_nolock(pst_rxq);
             oal_spin_unlock_irq_restore(&pst_pci_res->st_rx_res.lock, &flags);
             if(NULL == pst_netbuf)
             {
                 oal_pcie_mips_end(PCIE_MIPS_RX_QUEUE_POP);
-                /*????????????count????????????*/
+                /*不应该为空，count有可能有问题*/
                 PCI_PRINT_LOG(PCI_LOG_ERR, "rx chan:%d tx netbuf queue underflow[cnt:%d, qlen:%d]",i ,
                     cnt, oal_netbuf_list_len(pst_rxq));
                 DECLARE_DFT_TRACE_KEY_INFO("pcie rx done count error2", OAL_DFT_TRACE_EXCEP);
@@ -2876,7 +2876,7 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
 
         if(!cnt)
         {
-            /*??????????????????????*/
+            /*一个通道的地址处理完成*/
             PCI_PRINT_LOG(PCI_LOG_DBG, "rx chan:%d all bus process done!",i);
             flag = 1;
         }
@@ -2897,8 +2897,8 @@ oal_void oal_pcie_d2h_transfer_done(oal_pcie_res* pst_pci_res)
 done:
     if(!flag)
     {
-        /*????,??????FIFO????????????????????????count????,??????????
-          ????????????DFR*/
+        /*维测,未找到FIFO中的地址，地址有错，或者count有错,或者丢中断
+          这里应该触发DFR*/
         /*TBD:TBC*/
         //DECLARE_DFT_TRACE_KEY_INFO("pcie rx done addr error", OAL_DFT_TRACE_EXCEP);
         oal_pcie_linux_res * pst_pci_lres = (oal_pcie_linux_res*)oal_pci_get_drvdata(PCIE_RES_TO_DEV(pst_pci_res));
@@ -2924,7 +2924,7 @@ done:
 #endif
 
         pst_pci_lres = (oal_pcie_linux_res*)oal_pci_get_drvdata(PCIE_RES_TO_DEV(pst_pci_res));
-        /*????????,????????????*/
+        /*发送完成,唤醒发送线程*/
         if(OAL_LIKELY(NULL != pst_pci_lres))
         {
             if(OAL_LIKELY(pst_pci_lres->pst_bus))
@@ -2932,7 +2932,7 @@ done:
             else
                 PCI_PRINT_LOG(PCI_LOG_ERR, "lres's bus is null! %p", pst_pci_lres);
 
-            /*??????????????RX????*/
+            /*通知线程，补充RX内存*/
             oal_pcie_shced_rx_hi_thread(pst_pci_res);
         }
     }
@@ -2952,7 +2952,7 @@ oal_void oal_pcie_h2d_edma_isr(oal_pcie_res* pst_pci_res)
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_h2d_edma_isr enter");
 
-    /*????soft fifo*/
+    /*读空soft fifo*/
     for(;;)
     {
         if(OAL_SUCC != oal_pcie_ringbuf_read_wr(pst_pci_res, PCIE_COMM_RINGBUF_DMA_READ_FIFO))
@@ -2989,7 +2989,7 @@ oal_void oal_pcie_h2d_edma_isr(oal_pcie_res* pst_pci_res)
             pst_txq = &pst_pci_res->st_tx_res[soft_rd_item.qid].txq;
             if(OAL_UNLIKELY(oal_netbuf_list_empty(pst_txq)))
             {
-                /*????????*/
+                /*队列为空*/
                 PCI_PRINT_LOG(PCI_LOG_ERR,"invalid read item,qid:%u is empty", soft_rd_item.qid);
                 oal_print_hex_dump((oal_uint8 *)&soft_rd_item, OAL_SIZEOF(soft_rd_item), 32, "read item: ");
                 break;
@@ -3006,13 +3006,13 @@ oal_void oal_pcie_h2d_edma_isr(oal_pcie_res* pst_pci_res)
 
             if(OAL_UNLIKELY( netbuf_cnt < total_cnt))
             {
-                /*????????*/
+                /*队列为空*/
                 PCI_PRINT_LOG(PCI_LOG_ERR, "invalid read item,qid:%u had %u pkts less than %u", soft_rd_item.qid, netbuf_cnt, total_cnt);
                 oal_print_hex_dump((oal_uint8 *)&soft_rd_item, OAL_SIZEOF(soft_rd_item), 32, "read item: ");
                 break;
             }
 
-            /*??????????????????????????*/
+            /*保证一个地方入队，这里出队*/
             pst_netbuf = (oal_netbuf_stru*)OAL_NETBUF_NEXT(pst_txq);
             if(OAL_TRUE != oal_pcie_tx_dma_addr_match_low(pst_netbuf, soft_rd_item.address))
             {
@@ -3025,13 +3025,13 @@ oal_void oal_pcie_h2d_edma_isr(oal_pcie_res* pst_pci_res)
 
             do
             {
-                /*????????*/
+                /*头部出队*/
                 oal_spin_lock_irq_save(&pst_pci_res->st_tx_res[soft_rd_item.qid].lock, &flags);
                 pst_netbuf = oal_netbuf_delist_nolock(pst_txq);
                 oal_spin_unlock_irq_restore(&pst_pci_res->st_tx_res[soft_rd_item.qid].lock, &flags);
                 if(OAL_UNLIKELY(NULL == pst_netbuf))
                 {
-                    /*????????????count????????????*/
+                    /*不应该为空，count有可能有问题*/
                     PCI_PRINT_LOG(PCI_LOG_ERR, "[q:%d]tx netbuf queue underflow[curr_cnt:%d:%d], qlen:%d",soft_rd_item.qid, curr_cnt, total_cnt, netbuf_cnt);
                     DECLARE_DFT_TRACE_KEY_INFO("pcie tx done count error", OAL_DFT_TRACE_EXCEP);
                     return;
@@ -3045,12 +3045,12 @@ oal_void oal_pcie_h2d_edma_isr(oal_pcie_res* pst_pci_res)
             }while(--total_cnt);
 
 
-            /*????????,????????????*/
+            /*发送完成,唤醒发送线程*/
             if(OAL_LIKELY(NULL != pst_pci_lres))
             {
                 PCI_PRINT_LOG(PCI_LOG_DBG, "pcie sched hcc thread, qid:%d", soft_rd_item.qid);
 
-                oal_atomic_set(&pst_pci_res->st_tx_res[soft_rd_item.qid].tx_ringbuf_sync_cond, 1);/*??????????????????????*/
+                oal_atomic_set(&pst_pci_res->st_tx_res[soft_rd_item.qid].tx_ringbuf_sync_cond, 1);/*下半部刷新，保持一致性*/
                 hcc_sched_transfer(HBUS_TO_HCC(pst_pci_lres->pst_bus));
             }
             /*get read item*/
@@ -3086,7 +3086,7 @@ oal_void oal_pcie_d2h_edma_isr(oal_pcie_res* pst_pci_res)
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_d2h_edma_isr enter");
 
-    /*????soft write fifo*/
+    /*读空soft write fifo*/
     for(;;)
     {
         if(OAL_SUCC != oal_pcie_ringbuf_read_wr(pst_pci_res, PCIE_COMM_RINGBUF_DMA_WRITE_FIFO))
@@ -3127,14 +3127,14 @@ oal_void oal_pcie_d2h_edma_isr(oal_pcie_res* pst_pci_res)
 
             if(OAL_UNLIKELY( netbuf_cnt < total_cnt))
             {
-                /*????????*/
+                /*队列为空*/
                 PCI_PRINT_LOG(PCI_LOG_ERR,"invalid write item, had %u pkts less than %u", netbuf_cnt, total_cnt);
                 oal_print_hex_dump((oal_uint8 *)&soft_wr_item, OAL_SIZEOF(soft_wr_item), 32, "write item: ");
                 flag = 0;
                 goto done;
             }
 
-            /*??????????????????????????*/
+            /*保证一个地方入队，这里出队*/
             pst_netbuf = (oal_netbuf_stru*)OAL_NETBUF_NEXT(pst_rxq);
             if(OAL_UNLIKELY(NULL == pst_netbuf))
             {
@@ -3155,16 +3155,16 @@ oal_void oal_pcie_d2h_edma_isr(oal_pcie_res* pst_pci_res)
             /*get the rx netbuf list*/
             do
             {
-                /*????????????????*/
+                /*这里的锁可以优化*/
                 /*TBD:TBC*/
 
                 oal_spin_lock_irq_save(&pst_pci_res->st_rx_res.lock, &flags);
-                /*????????*/
+                /*头部出队*/
                 pst_netbuf = oal_netbuf_delist_nolock(pst_rxq);
                 oal_spin_unlock_irq_restore(&pst_pci_res->st_rx_res.lock, &flags);
                 if(NULL == pst_netbuf)
                 {
-                    /*????????????count????????????*/
+                    /*不应该为空，count有可能有问题*/
                     PCI_PRINT_LOG(PCI_LOG_ERR, "rx  netbuf queue underflow[netbuf_cnt:%d, total_count:%d]",
                         netbuf_cnt, total_cnt);
                     DECLARE_DFT_TRACE_KEY_INFO("pcie rx edma done count error", OAL_DFT_TRACE_EXCEP);
@@ -3208,8 +3208,8 @@ oal_void oal_pcie_d2h_edma_isr(oal_pcie_res* pst_pci_res)
 done:
     if(!flag)
     {
-        /*????,??????FIFO????????????????????????count????,??????????
-          ????????????DFR*/
+        /*维测,未找到FIFO中的地址，地址有错，或者count有错,或者丢中断
+          这里应该触发DFR*/
         /*TBD:TBC*/
         //DECLARE_DFT_TRACE_KEY_INFO("pcie rx done addr error", OAL_DFT_TRACE_EXCEP);
         PCI_PRINT_LOG(PCI_LOG_ERR, "pcie rx done addr error");
@@ -3226,7 +3226,7 @@ done:
     {
         PCI_PRINT_LOG(PCI_LOG_DBG, "d2h trigger hcc_sched_transfer, dev:%p, lres:%p",
                        PCIE_RES_TO_DEV(pst_pci_res),  oal_pci_get_drvdata(PCIE_RES_TO_DEV(pst_pci_res)));
-        /*????????,????????????*/
+        /*发送完成,唤醒发送线程*/
         if(OAL_LIKELY(NULL != pst_pci_lres))
         {
             if(OAL_LIKELY(pst_pci_lres->pst_bus))
@@ -3234,14 +3234,14 @@ done:
             else
                 PCI_PRINT_LOG(PCI_LOG_ERR, "lres's bus is null! %p", pst_pci_lres);
 
-            /*??????????????RX????*/
+            /*通知线程，补充RX内存*/
             oal_pcie_shced_rx_hi_thread(pst_pci_res);
         }
     }
 }
 
 #ifdef _PRE_PLAT_FEATURE_PCIE_EDMA_ORI
-/*????EDMA, Not Finish*/
+/*原生EDMA, Not Finish*/
 oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
 {
     oal_int32 flag, trans_cnt;
@@ -3258,7 +3258,7 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
     pst_pci_res->stat.intx_total_count++;
     PCI_PRINT_LOG(PCI_LOG_DBG, "intx int count:%u", pst_pci_res->stat.intx_total_count);
 
-    /*Host????intx????,????TX/RX FIFO??????*/
+    /*Host收到intx中断,遍历TX/RX FIFO寄存器*/
     if(OAL_UNLIKELY(NULL == pst_pci_res->pst_pci_dma_ctrl_base))
     {
         PCI_PRINT_LOG(PCI_LOG_ERR, "fifo base addr is null!");
@@ -3285,9 +3285,9 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
 
         if(stat.bits.pcie_edma_rx_intr_status)
         {
-            /*????????????????????????,??????????????netbuf*/
+            /*获取当前接收的描述符个数,释放当前队头的netbuf*/
             #error
-            /*device to host edma ????????, ????h2d doorbell????DEVICE ??????*/
+            /*device to host edma 传输完成, 触发h2d doorbell通知DEVICE 查中断*/
             oal_pcie_h2d_doorbell(pst_pci_res);
             trans_cnt++;
         }
@@ -3310,8 +3310,8 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
     oal_int32 trans_cnt, old_cnt;
     MSG_FIFO_STAT msg_fifo_stat;
 
-    /*??????mask ????mask ??????????????mask??????
-      ??????mask??????????????????????????*/
+    /*这里的mask 只是mask 状态位，并不是mask中断，
+      这里的mask只用来标记是否处理这个中断*/
     HOST_INTR_STATUS stat, mask;
 
     if(OAL_UNLIKELY(NULL == pst_pci_res))
@@ -3323,7 +3323,7 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
     pst_pci_res->stat.intx_total_count++;
     PCI_PRINT_LOG(PCI_LOG_DBG, "intx int count:%u", pst_pci_res->stat.intx_total_count);
 
-    /*Host????intx????,????TX/RX FIFO??????*/
+    /*Host收到intx中断,遍历TX/RX FIFO寄存器*/
     if(OAL_UNLIKELY(NULL == pst_pci_res->pst_pci_dma_ctrl_base))
     {
         PCI_PRINT_LOG(PCI_LOG_ERR, "fifo base addr is null!");
@@ -3388,7 +3388,7 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
 
         if((pst_pci_res->revision >= PCIE_REVISION_5_00A) && (pcie_soft_fifo_enable))
         {
-            /*????Soft FIFO*/
+            /*读空Soft FIFO*/
             if(stat.bits.pcie_hw_edma_tx_intr_status)
             {
                 oal_pcie_h2d_edma_isr(pst_pci_res);
@@ -3401,7 +3401,7 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
         }
         else
         {
-            /*????Hardware FIFO*/
+            /*读空Hardware FIFO*/
             for(;;)
             {
                 old_cnt = trans_cnt;
@@ -3437,7 +3437,7 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
                 else
                 {
                     //if(++total_cnt > 20)
-                    //    break;/*???????????????????????? ????????????????*/
+                    //    break;/*防止中断里面循环次数太多 影响系统中断处理*/
                 }
             }
         }
@@ -3446,7 +3446,7 @@ oal_int32 oal_pcie_transfer_done(oal_pcie_res* pst_pci_res)
 
     PCI_PRINT_LOG(PCI_LOG_DBG, "trans done process %u cnt data", trans_cnt);
 
-    /*????????????????*/
+    /*相等说明已经读空*/
     return !(old_cnt == trans_cnt);
 }
 #endif
@@ -3473,7 +3473,7 @@ oal_void oal_pcie_print_ringbuf_info(pcie_ringbuf* pst_ringbuf, PCI_LOG_TYPE lev
 /*ringbuf functions*/
 oal_uint32 oal_pcie_ringbuf_freecount(pcie_ringbuf* pst_ringbuf)
 {
-    /*??????????????????????*/
+    /*无符号，已经考虑了翻转*/
     oal_uint32 len = pst_ringbuf->size - (pst_ringbuf->wr - pst_ringbuf->rd);
     if(0 == len)
     {
@@ -3491,7 +3491,7 @@ oal_uint32 oal_pcie_ringbuf_freecount(pcie_ringbuf* pst_ringbuf)
 
     if(pst_ringbuf->item_mask)
     {
-        /*item len ??????2??N????????????*/
+        /*item len 如果是2的N次幂，则移位*/
         len = len >> pst_ringbuf->item_mask;
     }
     else
@@ -3514,7 +3514,7 @@ oal_int32 oal_pcie_check_link_state(oal_pcie_res* pst_pci_res)
 {
     oal_int32 ret = -OAL_EFAIL;
     pci_addr_map addr_map;
-    pcie_dev_ptr share_mem_address;/*Device cpu????*/
+    pcie_dev_ptr share_mem_address;/*Device cpu地址*/
     oal_pci_dev_stru *pst_pci_dev;
 
     pst_pci_dev = PCIE_RES_TO_DEV(pst_pci_res);
@@ -3522,7 +3522,7 @@ oal_int32 oal_pcie_check_link_state(oal_pcie_res* pst_pci_res)
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, PCIE_DEV_SHARE_MEM_CPU_ADDRESS, &addr_map);
     if(OAL_UNLIKELY(OAL_SUCC != ret))
     {
-        /*share mem ??????????!*/
+        /*share mem 地址未映射!*/
         PCI_PRINT_LOG(PCI_LOG_ERR, "can not found mem map for dev cpu address 0x%x\n", PCIE_DEV_SHARE_MEM_CPU_ADDRESS);
         return OAL_FALSE;
     }
@@ -3578,26 +3578,26 @@ oal_void oal_pcie_share_mem_res_unmap(oal_pcie_res* pst_pci_res)
     OAL_MEMZERO((oal_void*)&pst_pci_res->dev_share_mem, OAL_SIZEOF(pst_pci_res->dev_share_mem));
 }
 
-/*??????????iATU????, pcie device ??????????*/
+/*调用必须在iATU配置, pcie device 使能之后，*/
 oal_int32 oal_pcie_share_mem_res_map(oal_pcie_res* pst_pci_res)
 {
     oal_int32 ret = -OAL_EFAIL;
     oal_void* pst_share_mem_vaddr;
-    pcie_dev_ptr share_mem_address = 0xFFFFFFFF;/*Device cpu????*/
+    pcie_dev_ptr share_mem_address = 0xFFFFFFFF;/*Device cpu地址*/
     pci_addr_map addr_map, share_mem_map;
     unsigned long timeout, timeout1;
     oal_pci_dev_stru *pst_pci_dev;
 
     pst_pci_dev = PCIE_RES_TO_DEV(pst_pci_res);
 
-    /*????50ms ?????? ????10S ????*/
+    /*忙等50ms 若超时 再等10S 超时*/
     timeout  = jiffies + msecs_to_jiffies(50);/*50ms*/
     timeout1 = jiffies + msecs_to_jiffies(10000);/*10s*/
 
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, PCIE_DEV_SHARE_MEM_CPU_ADDRESS, &addr_map);
     if(OAL_SUCC != ret)
     {
-        /*share mem ??????????!*/
+        /*share mem 地址未映射!*/
         PCI_PRINT_LOG(PCI_LOG_ERR, "can not found mem map for dev cpu address 0x%x\n", PCIE_DEV_SHARE_MEM_CPU_ADDRESS);
         return ret;
     }
@@ -3609,18 +3609,18 @@ oal_int32 oal_pcie_share_mem_res_map(oal_pcie_res* pst_pci_res)
     for(;;)
     {
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-        /*cache ??????*/
+        /*cache 无效化*/
         oal_pci_cache_inv(pst_pci_dev, (oal_void*)addr_map.pa, sizeof(pcie_dev_ptr));
 #endif
 
         /*Get sharemem's dev_cpu address*/
         oal_pcie_memcopy((oal_ulong)&share_mem_address, (oal_ulong)pst_share_mem_vaddr, sizeof(share_mem_address));
 
-        /*??????????????????????????????sharemem????????????????*/
+        /*通过检查地址转换可以判断读出的sharemem地址是否是有效值*/
         ret = oal_pcie_inbound_ca_to_va(pst_pci_res, share_mem_address, &share_mem_map);
         if(OAL_SUCC == ret)
         {
-            /*Device ??????????  & PCIE ????????*/
+            /*Device 初始化完成  & PCIE 通信正常*/
             if(share_mem_address != 0)/*TBD:TBC*/
             {
                 /*TBD:TBC*/
@@ -3636,16 +3636,16 @@ oal_int32 oal_pcie_share_mem_res_map(oal_pcie_res* pst_pci_res)
         if(!time_after(jiffies, timeout))
         {
             cpu_relax();
-            continue;/*????????????*/
+            continue;/*未超时，继续*/
         }
 
-        /*50ms ????, ????10S????????*/
+        /*50ms 超时, 开始10S超时探测*/
         if(!time_after(jiffies, timeout1))
         {
             oal_msleep(1);
-            continue;/*????????????*/
+            continue;/*未超时，继续*/
         } else {
-            /*10s+50ms ??????????*/
+            /*10s+50ms 超时，退出*/
             PCI_PRINT_LOG(PCI_LOG_ERR, "share_mem_address 0x%x, jiffies:0x%lx, timeout:0x%lx, timeout1:0x%lx", share_mem_address, jiffies, timeout, timeout1);
             ret = -OAL_ETIMEDOUT;
             break;
@@ -3749,7 +3749,7 @@ oal_int32 oal_pcie_read_dsm32(oal_pcie_res* pst_pci_res, PCIE_SHARED_DEVICE_ADDR
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
     if(NULL != pst_pci_dev)
     {
-        /*cache ??????*/
+        /*cache 无效化*/
         oal_pci_cache_inv(pst_pci_dev, (oal_void*)pst_pci_res->st_device_shared_addr_map[type].pa, sizeof(*val));
     }
 #endif
@@ -3882,10 +3882,10 @@ oal_void oal_pcie_set_voltage_bias_param(oal_uint32 phy_0v9_bias, oal_uint32 phy
     oal_print_hi11xx_log(HI11XX_LOG_INFO, "param 0v9=%u 1v8=%u", phy_0v9_bias, phy_1v8_bias);
 }
 
-/*??????????????*/
+/*电压拉偏初始化*/
 oal_int32 oal_pcie_voltage_bias_init(oal_pcie_res* pst_pci_res)
 {
-    /*vp,vptx,vph ???? 5%*/
+    /*vp,vptx,vph 降压 5%*/
     oal_int32 ret;
     oal_uint32 value, phy_0v9_bias, phy_1v8_bias;
     pci_addr_map addr_map;
@@ -4168,7 +4168,7 @@ oal_int32 oal_pcie_device_changeto_high_cpufreq(oal_pcie_res* pst_pci_res)
         oal_setl_bit(HI1103_W_CTL_W_TCXO_SEL_REG, 0);
 
         oal_print_hi11xx_log(HI11XX_LOG_INFO, "change 640M wait start");
-        oal_msleep(10);/*????????????????????????????????????*/
+        oal_msleep(10);/*防止这里高频切出问题，下面只回读一次*/
         {
             oal_uint32 value = oal_readl(HI1103_W_CTL_CLKMUX_STS_REG);
             if((value & 0x2) != 0x2)
@@ -4210,7 +4210,7 @@ oal_int32 oal_pcie_device_check_alive(oal_pcie_res* pst_pci_res)
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, 0x50000000, &addr_map);
     if(OAL_UNLIKELY(OAL_SUCC != ret))
     {
-        /*share mem ??????????!*/
+        /*share mem 地址未映射!*/
         oal_print_hi11xx_log(HI11XX_LOG_ERR, "can not found mem map for dev cpu address 0x%x\n", 0x50000000);
         return -OAL_EFAIL;
     }
@@ -4259,7 +4259,7 @@ oal_int32 oal_pcie_print_device_aer_cap_reg(oal_pcie_res* pst_pci_res)
         return -OAL_EFAIL;
     }
 
-    /*??????????????*/
+    /*状态寄存器读清*/
     if (oal_pci_read_config_dword(pst_pci_dev, pos_cap_aer + PCI_ERR_UNCOR_STATUS, &uncor))
     {
         oal_print_hi11xx_log(HI11XX_LOG_ERR, "PCI_ERR_UNCOR_STATUS: read fail");
@@ -4323,7 +4323,7 @@ oal_int32 oal_pcie_check_device_link_errors(oal_pcie_res* pst_pci_res)
 
     if(msg_intr_status.bits.soc_pcie_send_f_err_status)
     {
-        /*????????????*/
+        /*链路信号极差*/
         oal_print_hi11xx_log(HI11XX_LOG_ERR, "f_err found, intr_status=0x%8x", msg_intr_status.AsDword);
         oal_pcie_print_device_aer_cap_reg(pst_pci_res);
         /*Clear the int*/
@@ -4342,7 +4342,7 @@ oal_int32 oal_pcie_check_device_link_errors(oal_pcie_res* pst_pci_res)
 
     if(msg_intr_status.bits.soc_pcie_send_nf_err_status)
     {
-        /*??????????*/
+        /*链路信号差*/
         oal_print_hi11xx_log(HI11XX_LOG_ERR, "nf_err found, intr_status=0x%8x", msg_intr_status.AsDword);
         oal_pcie_print_device_aer_cap_reg(pst_pci_res);
         /*Clear the int*/
@@ -4361,7 +4361,7 @@ oal_int32 oal_pcie_check_device_link_errors(oal_pcie_res* pst_pci_res)
 
     if(msg_intr_status.bits.soc_pcie_send_cor_err_status)
     {
-        /*????????????*/
+        /*可忽略的错误*/
         oal_print_hi11xx_log(HI11XX_LOG_WARN, "cor_err found, intr_status=0x%8x", msg_intr_status.AsDword);
         oal_pcie_print_device_aer_cap_reg(pst_pci_res);
         DECLARE_DFT_TRACE_KEY_INFO("soc_pcie_send_cor_err",OAL_DFT_TRACE_SUCC);
@@ -4414,7 +4414,7 @@ oal_int32 oal_pcie_device_mem_check_burst(oal_pcie_res* pst_pci_res, oal_uint32 
 
     oal_memset(pst_ddr_buf, test_value, burst_size);
 
-    /*????????????????????????????????*/
+    /*先连续写再连续读，连续写性能最优*/
     remain_size = length;
     offset = 0;
     total_size = 0;
@@ -4568,7 +4568,7 @@ oal_int32 oal_pcie_device_mem_check(oal_pcie_res* pst_pci_res, oal_ulong start, 
     return OAL_SUCC;
 }
 
-/*??????????????????????*/
+/*一次性写入全部的地址值*/
 oal_int32 oal_pcie_device_mem_write_address_onetime(oal_pcie_res* pst_pci_res, oal_ulong start, oal_ulong length)
 {
     oal_int32 ret;
@@ -4608,7 +4608,7 @@ oal_int32 oal_pcie_device_mem_write_address_onetime(oal_pcie_res* pst_pci_res, o
     remain_size = length;
     offset = 0;
 
-    /*4??????*/
+    /*4字节写*/
     for(;;)
     {
         if(0 == remain_size)
@@ -4620,7 +4620,7 @@ oal_int32 oal_pcie_device_mem_write_address_onetime(oal_pcie_res* pst_pci_res, o
 
         for(i = 0; i < copy_size; i += 4)
         {
-            *(oal_uint32*)(pst_ddr_buf + i) = start + offset + i;/*CPU????*/
+            *(oal_uint32*)(pst_ddr_buf + i) = start + offset + i;/*CPU地址*/
         }
 
         oal_pcie_memcopy((oal_ulong)addr_map.va + offset, (oal_ulong)pst_ddr_buf, copy_size);
@@ -4639,7 +4639,7 @@ oal_int32 oal_pcie_device_mem_write_address_onetime(oal_pcie_res* pst_pci_res, o
     return OAL_SUCC;
 }
 
-/*??????????????????????????????*/
+/*一次性读出全部的地址值并且校验*/
 oal_int32 oal_pcie_device_mem_read_address_onetime(oal_pcie_res* pst_pci_res, oal_ulong start, oal_ulong length)
 {
     oal_int32 ret;
@@ -4679,7 +4679,7 @@ oal_int32 oal_pcie_device_mem_read_address_onetime(oal_pcie_res* pst_pci_res, oa
     remain_size = length;
     offset = 0;
 
-    /*4??????*/
+    /*4字节写*/
     for(;;)
     {
         if(0 == remain_size)
@@ -4694,7 +4694,7 @@ oal_int32 oal_pcie_device_mem_read_address_onetime(oal_pcie_res* pst_pci_res, oa
         for(i = 0; i < copy_size; i += 4)
         {
             oal_uint32 value = *((oal_uint32*)(pst_ddr_buf + i));
-            oal_uint32 cpu_address = start + offset + i;/*CPU????*/
+            oal_uint32 cpu_address = start + offset + i;/*CPU地址*/
             if(OAL_UNLIKELY(value != cpu_address))
             {
                 oal_print_hi11xx_log(HI11XX_LOG_ERR, "mem check address verify failed, [0x%lx--0x%lx] at 0x%x, write 0x%x read 0x%x",
@@ -4769,7 +4769,7 @@ oal_int32 oal_pcie_device_mem_performance(oal_pcie_res* pst_pci_res, oal_ulong s
 
         oal_get_time_cost_start(cost);
 
-        /*??????, ????????????*/
+        /*写性能, 写可以覆盖读*/
         remain_size = 0;
         total_size = 0;
 
@@ -4819,7 +4819,7 @@ oal_int32 oal_pcie_device_mem_performance(oal_pcie_res* pst_pci_res, oal_ulong s
 
         oal_get_time_cost_start(cost);
 
-        /*??????, ????????????*/
+        /*读性能, 写可以覆盖读*/
         remain_size = 0;
         total_size = 0;
 
@@ -4935,7 +4935,7 @@ oal_int32 oal_pcie_device_scan_wmem(oal_pcie_res* pst_pci_res)
     else
     {
         oal_get_time_cost_start(cost);
-        /*????????????????Soc????????????????????*/
+        /*连续写，连续读，Soc要求写入当前地址的值*/
         for(i = 0; i < scan_nums; i++)
         {
             cpu_start = pst_scan_base[i][0];
@@ -5015,7 +5015,7 @@ oal_int32 oal_pcie_device_dereset_bcpu(oal_pcie_res* pst_pci_res)
 
     oal_print_hi11xx_log(HI11XX_LOG_INFO, "bcpu dereset, reg=0x%x", oal_readl(pst_glb_ctrl + 0x94));
 
-    /*bcpu mem??????????????, 1103 32K????, 230us*/
+    /*bcpu mem解复位需要时间, 1103 32K计数, 230us*/
     oal_msleep(1);
 
     return OAL_SUCC;
@@ -5081,7 +5081,7 @@ oal_int32 oal_pcie_device_scan_bmem(oal_pcie_res* pst_pci_res)
     }
     else
     {
-        /*????????????????Soc????????????????????*/
+        /*连续写，连续读，Soc要求写入当前地址的值*/
         for(i = 0; i < scan_nums; i++)
         {
             cpu_start = pst_scan_base[i][0];
@@ -5239,7 +5239,7 @@ oal_int32 oal_pcie_copy_to_device_by_dword(oal_pcie_res* pst_pci_res,
     return (oal_int32)data_size;
 }
 
-/*????????????????????????????*/
+/*时钟分频要在低功耗关闭下配置*/
 oal_int32 oal_pcie_device_auxclk_init(oal_pcie_res* pst_pci_res)
 {
     oal_int32  ret;
@@ -5252,7 +5252,7 @@ oal_int32 oal_pcie_device_auxclk_init(oal_pcie_res* pst_pci_res)
     value |= 0x1;
     oal_writel(value , pst_pci_res->pst_pci_dbi_base + PCIE_AUX_CLK_FREQ_OFF);
 
-    /*tcxo 38.4M 39???? = 0.98M ????1M*/
+    /*tcxo 38.4M 39分频 = 0.98M 接近1M*/
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, (0x50000000 + 0x2c), &st_map);
     if(OAL_SUCC != ret)
     {
@@ -5325,7 +5325,7 @@ oal_int32 oal_pcie_comm_ringbuf_res_map(oal_pcie_res* pst_pci_res)
 {
     oal_int32 i;
     oal_int32 ret;
-    pci_addr_map      st_map;/*DEVICE CPU????*/
+    pci_addr_map      st_map;/*DEVICE CPU地址*/
 
     for(i = 0; i < PCIE_COMM_RINGBUF_BUTT; i++)
     {
@@ -5347,7 +5347,7 @@ oal_int32 oal_pcie_comm_ringbuf_res_map(oal_pcie_res* pst_pci_res)
 
         PCI_PRINT_LOG(PCI_LOG_DBG, "comm ringbuf %d base address is 0x%llx", i, pst_pci_res->st_ringbuf.st_ringbuf[i].base_addr);
 
-        /*comm ringbuf data ????DMA????*/
+        /*comm ringbuf data 所在DMA地址*/
         oal_memcopy((oal_void*)&pst_pci_res->st_ringbuf_res.comm_rb_res[i].data_daddr,
                         (oal_void*)&st_map, sizeof(st_map));
 
@@ -5390,7 +5390,7 @@ oal_int32 oal_pcie_ringbuf_h2d_refresh(oal_pcie_res* pst_pci_res)
     oal_int32 ret;
     oal_int32 i;
     pcie_share_mem_stru st_share_mem;
-    pci_addr_map      st_map;/*DEVICE CPU????*/
+    pci_addr_map      st_map;/*DEVICE CPU地址*/
 
     oal_pcie_memcopy((oal_ulong)&st_share_mem,  (oal_ulong)pst_pci_res->dev_share_mem.va, sizeof(pcie_share_mem_stru));
 
@@ -5405,15 +5405,15 @@ oal_int32 oal_pcie_ringbuf_h2d_refresh(oal_pcie_res* pst_pci_res)
     /*h->h*/
     oal_memcopy(&pst_pci_res->st_ringbuf_map, &st_map, sizeof(pst_pci_res->st_ringbuf_map));
 
-    /*device??ringbuf??????????????Host*/
+    /*device的ringbuf管理结构同步到Host*/
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
     //oal_pci_cache_inv(pst_pci_dev, (oal_void*)pst_pci_res->st_ringbuf_map.pa, sizeof(pst_pci_res->st_ringbuf));
 #endif
 
-    /*????????????h2d ringbuf ????*/
+    /*这里重新刷新h2d ringbuf 指针*/
     oal_pcie_memcopy((oal_ulong)&pst_pci_res->st_ringbuf, (oal_ulong)pst_pci_res->st_ringbuf_map.va, sizeof(pst_pci_res->st_ringbuf));
 
-    /*??????RX BUFF*/
+    /*初始化RX BUFF*/
     for(i = 0 ; i < PCIE_H2D_QTYPE_BUTT; i++)
     {
         oal_ulong offset;
@@ -5433,14 +5433,14 @@ oal_int32 oal_pcie_ringbuf_h2d_refresh(oal_pcie_res* pst_pci_res)
     return OAL_SUCC;
 }
 
-/*??????Host ringbuf ?? Device ringbuf ??????*/
+/*初始化Host ringbuf 和 Device ringbuf 的映射*/
 oal_int32 oal_pcie_ringbuf_res_map(oal_pcie_res* pst_pci_res)
 {
     oal_int32 ret;
     oal_int32 i;
     oal_uint8 reg = 0;
     oal_pci_dev_stru *pst_pci_dev;
-    pci_addr_map      st_map;/*DEVICE CPU????*/
+    pci_addr_map      st_map;/*DEVICE CPU地址*/
     pcie_share_mem_stru st_share_mem;
 
     pst_pci_dev = PCIE_RES_TO_DEV(pst_pci_res);
@@ -5469,19 +5469,19 @@ oal_int32 oal_pcie_ringbuf_res_map(oal_pcie_res* pst_pci_res)
     /*h->h*/
     oal_memcopy(&pst_pci_res->st_ringbuf_map, &st_map, sizeof(pst_pci_res->st_ringbuf_map));
 
-    /*device??ringbuf??????????????Host*/
+    /*device的ringbuf管理结构同步到Host*/
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)pst_pci_res->st_ringbuf_map.pa, sizeof(pst_pci_res->st_ringbuf));
 #endif
     oal_pcie_memcopy((oal_ulong)&pst_pci_res->st_ringbuf, (oal_ulong)pst_pci_res->st_ringbuf_map.va, sizeof(pst_pci_res->st_ringbuf));
 
-    /*??????ringbuf ????????????????*/
+    /*初始化ringbuf 管理结构体的映射*/
     pst_pci_res->st_rx_res.ringbuf_ctrl_dma_addr.pa = pst_pci_res->st_ringbuf_map.pa + OAL_OFFSET_OF(pcie_ringbuf_res,st_d2h_buf);
     pst_pci_res->st_rx_res.ringbuf_ctrl_dma_addr.va = pst_pci_res->st_ringbuf_map.va + OAL_OFFSET_OF(pcie_ringbuf_res,st_d2h_buf);
 
 
     /*TBD:TBC*/
-    /*??????TX BUFF, ??????????????host/dev ????????????????????base_addr????????*/
+    /*初始化TX BUFF, 不考虑大小端，host/dev 都是小端，否者这里的base_addr需要转换*/
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, pst_pci_res->st_ringbuf.st_d2h_buf.base_addr, &st_map);
     if(OAL_SUCC != ret)
     {
@@ -5492,7 +5492,7 @@ oal_int32 oal_pcie_ringbuf_res_map(oal_pcie_res* pst_pci_res)
     oal_memcopy((oal_void*)&pst_pci_res->st_rx_res.ringbuf_data_dma_addr, (oal_void*)&st_map, sizeof(pst_pci_res->st_rx_res.ringbuf_data_dma_addr));
 
 
-    /*??????RX BUFF*/
+    /*初始化RX BUFF*/
     for(i = 0 ; i < PCIE_H2D_QTYPE_BUTT; i++)
     {
         oal_ulong offset;
@@ -5509,7 +5509,7 @@ oal_int32 oal_pcie_ringbuf_res_map(oal_pcie_res* pst_pci_res)
         pst_pci_res->st_tx_res[i].ringbuf_ctrl_dma_addr.va = pst_pci_res->st_ringbuf_map.va + offset;
     }
 
-    /*??????????TX RINGBUFF*/
+    /*初始化消息TX RINGBUFF*/
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, pst_pci_res->st_ringbuf.st_h2d_msg.base_addr, &st_map);
     if(OAL_SUCC != ret)
     {
@@ -5517,15 +5517,15 @@ oal_int32 oal_pcie_ringbuf_res_map(oal_pcie_res* pst_pci_res)
         return -OAL_ENOMEM;
     }
 
-    /*h2d message data ????DMA????*/
+    /*h2d message data 所在DMA地址*/
     oal_memcopy((oal_void*)&pst_pci_res->st_message_res.h2d_res.ringbuf_data_dma_addr,
                     (oal_void*)&st_map, sizeof(st_map));
 
-    /*h2d message ctrl ?????? ????DMA????*/
+    /*h2d message ctrl 结构体 所在DMA地址*/
     pst_pci_res->st_message_res.h2d_res.ringbuf_ctrl_dma_addr.va = pst_pci_res->st_ringbuf_map.va + OAL_OFFSET_OF(pcie_ringbuf_res,st_h2d_msg);
     pst_pci_res->st_message_res.h2d_res.ringbuf_ctrl_dma_addr.pa = pst_pci_res->st_ringbuf_map.pa + OAL_OFFSET_OF(pcie_ringbuf_res,st_h2d_msg);
 
-    /*??????????RX RINGBUFF*/
+    /*初始化消息RX RINGBUFF*/
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, pst_pci_res->st_ringbuf.st_d2h_msg.base_addr, &st_map);
     if(OAL_SUCC != ret)
     {
@@ -5533,11 +5533,11 @@ oal_int32 oal_pcie_ringbuf_res_map(oal_pcie_res* pst_pci_res)
         return -OAL_ENOMEM;
     }
 
-    /*d2h message data ????DMA????*/
+    /*d2h message data 所在DMA地址*/
     oal_memcopy((oal_void*)&pst_pci_res->st_message_res.d2h_res.ringbuf_data_dma_addr,
                     (oal_void*)&st_map, sizeof(st_map));
 
-    /*d2h message ctrl ?????? ????DMA????*/
+    /*d2h message ctrl 结构体 所在DMA地址*/
     pst_pci_res->st_message_res.d2h_res.ringbuf_ctrl_dma_addr.va = pst_pci_res->st_ringbuf_map.va + OAL_OFFSET_OF(pcie_ringbuf_res,st_d2h_msg);
     pst_pci_res->st_message_res.d2h_res.ringbuf_ctrl_dma_addr.pa = pst_pci_res->st_ringbuf_map.pa + OAL_OFFSET_OF(pcie_ringbuf_res,st_d2h_msg);
 
@@ -5575,12 +5575,12 @@ oal_int32 oal_pcie_ringbuf_res_map(oal_pcie_res* pst_pci_res)
 
 }
 
-/*edma read ????device->host, ringbuf_write ????????????*/
+/*edma read 对应device->host, ringbuf_write 指更新写指针*/
 oal_int32 oal_pcie_d2h_ringbuf_write(oal_pcie_res* pst_pci_res,
                                                     pci_addr_map*     pst_map,
                                                     pcie_write_ringbuf_item* pst_item)
 {
-    /*????????????????????????????????*/
+    /*不判断写指针，此函数只执行写操作*/
     oal_pci_dev_stru *pst_pci_dev;
     oal_uint32 real_wr;
 
@@ -5620,7 +5620,7 @@ oal_uint32 oal_pcie_d2h_ringbuf_freecount(oal_pcie_res* pst_pci_res, oal_int32 i
 
     if(OAL_TRUE == is_sync)
     {
-        /*????Dev2Host????????*/
+        /*同步Dev2Host的读指针*/
         oal_pcie_d2h_ringbuf_rd_update(pst_pci_res);
     }
 
@@ -5629,8 +5629,8 @@ oal_uint32 oal_pcie_d2h_ringbuf_freecount(oal_pcie_res* pst_pci_res, oal_int32 i
 
 oal_int32 oal_pcie_d2h_ringbuf_wr_update(oal_pcie_res* pst_pci_res)
 {
-    /*d2h??????????host??ringbuf????????????????????DEVICE??,
-      ??????cache*/
+    /*d2h方向，同步host的ringbuf管理结构体的写指针到DEVICE侧,
+      需要刷cache*/
     pci_addr_map st_map;
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
@@ -5652,8 +5652,8 @@ oal_int32 oal_pcie_d2h_ringbuf_wr_update(oal_pcie_res* pst_pci_res)
 
 oal_int32 oal_pcie_d2h_ringbuf_rd_update(oal_pcie_res* pst_pci_res)
 {
-    /*d2h??????????device??????????HOST ringbuf??????????*/
-    /*??????cache*/
+    /*d2h方向，同步device的读指针到HOST ringbuf管理结构体*/
+    /*需要刷cache*/
     oal_uint32 rd;
     pci_addr_map st_map;
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
@@ -5665,7 +5665,7 @@ oal_int32 oal_pcie_d2h_ringbuf_rd_update(oal_pcie_res* pst_pci_res)
     st_map.pa = pst_pci_res->st_rx_res.ringbuf_ctrl_dma_addr.pa + OAL_OFFSET_OF(pcie_ringbuf, rd);
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-    /*??????cache*/
+    /*无效化cache*/
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)st_map.pa, sizeof(pst_pci_res->st_ringbuf.st_d2h_buf.rd));
 #endif
 
@@ -5681,7 +5681,7 @@ oal_int32 oal_pcie_d2h_ringbuf_rd_update(oal_pcie_res* pst_pci_res)
     PCI_PRINT_LOG(PCI_LOG_DBG, "d2h ringbuf rd update:[0x%lx:rd:%u]", st_map.va, rd);
     if(OAL_UNLIKELY(rd < pst_pci_res->st_ringbuf.st_d2h_buf.rd))
     {
-        /*????rd ????*/
+        /*判断rd 翻转*/
         PCI_PRINT_LOG(PCI_LOG_INFO, "d2h new rd %u over old rd %u, wr:%u",
                                      rd, pst_pci_res->st_ringbuf.st_d2h_buf.rd,
                                     pst_pci_res->st_ringbuf.st_d2h_buf.wr);
@@ -5698,7 +5698,7 @@ oal_int32 oal_pcie_h2d_ringbuf_write(oal_pcie_res* pst_pci_res,
                                                     PCIE_H2D_RINGBUF_QTYPE qtype,
                                                     pcie_read_ringbuf_item* pst_item)
 {
-    /*????????????????????????????????*/
+    /*不判断写指针，此函数只执行写操作*/
     oal_pci_dev_stru *pst_pci_dev;
     oal_uint32 real_wr;
 
@@ -5753,8 +5753,8 @@ oal_int32 oal_pcie_h2d_ringbuf_write(oal_pcie_res* pst_pci_res,
 
 oal_int32 oal_pcie_h2d_ringbuf_wr_update(oal_pcie_res* pst_pci_res, PCIE_H2D_RINGBUF_QTYPE qtype)
 {
-    /*h2d??????????host??ringbuf????????????????????DEVICE??,
-      ??????cache*/
+    /*h2d方向，同步host的ringbuf管理结构体的写指针到DEVICE侧,
+      需要刷cache*/
     pci_addr_map st_map;
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
     oal_pci_dev_stru *pst_pci_dev = PCIE_RES_TO_DEV(pst_pci_res);
@@ -5793,8 +5793,8 @@ oal_int32 oal_pcie_h2d_ringbuf_wr_update(oal_pcie_res* pst_pci_res, PCIE_H2D_RIN
 
 oal_int32 oal_pcie_h2d_ringbuf_rd_update(oal_pcie_res* pst_pci_res, PCIE_H2D_RINGBUF_QTYPE qtype)
 {
-    /*h2d??????????device??????????HOST ringbuf??????????*/
-    /*??????cache*/
+    /*h2d方向，同步device的读指针到HOST ringbuf管理结构体*/
+    /*需要刷cache*/
     oal_uint32 value;
     pci_addr_map st_map;
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
@@ -5838,7 +5838,7 @@ oal_int32 oal_pcie_h2d_ringbuf_rd_update(oal_pcie_res* pst_pci_res, PCIE_H2D_RIN
     PCI_PRINT_LOG(PCI_LOG_DBG, "h2d ringbuf rd upate rd:%u, curr wr:%u", value, pst_pci_res->st_ringbuf.st_h2d_buf[qtype].wr);
     if(OAL_UNLIKELY(value < pst_pci_res->st_ringbuf.st_h2d_buf[qtype].rd))
     {
-        /*????rd ????*/
+        /*判断rd 翻转*/
         PCI_PRINT_LOG(PCI_LOG_INFO, "h2d qtype %d new rd %u over old rd %u, wr:%u", qtype,
                                     value, pst_pci_res->st_ringbuf.st_h2d_buf[qtype].rd,
                                     pst_pci_res->st_ringbuf.st_h2d_buf[qtype].wr);
@@ -5849,14 +5849,14 @@ oal_int32 oal_pcie_h2d_ringbuf_rd_update(oal_pcie_res* pst_pci_res, PCIE_H2D_RIN
     return OAL_SUCC;
 }
 
-/*????ringbuf??????????????is_sync??TRUE?? ????DEVICE????????????????*/
+/*获取ringbuf剩余空间大小，is_sync为TRUE时 先从DEVICE同步读指针再判断*/
 oal_uint32 oal_pcie_h2d_ringbuf_freecount(oal_pcie_res* pst_pci_res, PCIE_H2D_RINGBUF_QTYPE qtype, oal_int32 is_sync)
 {
     pcie_ringbuf* pst_ringbuf = &pst_pci_res->st_ringbuf.st_h2d_buf[qtype];
 
     if(OAL_TRUE == is_sync)
     {
-        /*????Host2Dev????????*/
+        /*同步Host2Dev的读指针*/
         oal_pcie_h2d_ringbuf_rd_update(pst_pci_res, qtype);
     }
 
@@ -5870,7 +5870,7 @@ oal_uint32 oal_pcie_h2d_ringbuf_is_empty(oal_pcie_res* pst_pci_res, PCIE_H2D_RIN
 
     if(OAL_TRUE == is_sync)
     {
-        /*????Host2Dev????????*/
+        /*同步Host2Dev的读指针*/
         oal_pcie_h2d_ringbuf_rd_update(pst_pci_res, qtype);
     }
 
@@ -5880,7 +5880,7 @@ oal_uint32 oal_pcie_h2d_ringbuf_is_empty(oal_pcie_res* pst_pci_res, PCIE_H2D_RIN
 
 oal_int32 oal_pcie_h2d_doorbell(oal_pcie_res* pst_pci_res)
 {
-    /*????,host->device ringbuf ??????????,2??????????????????*/
+    /*敲铃,host->device ringbuf 有数据更新,2个队列共享一个中断*/
     /*TBD:TBC*/
     pst_pci_res->stat.h2d_doorbell_cnt++;
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_h2d_doorbell,cnt:%u", pst_pci_res->stat.h2d_doorbell_cnt);
@@ -5895,7 +5895,7 @@ oal_int32 oal_pcie_h2d_doorbell(oal_pcie_res* pst_pci_res)
 
 oal_int32 oal_pcie_d2h_doorbell(oal_pcie_res* pst_pci_res)
 {
-    /*????,host->device ringbuf ??????????,2??????????????????*/
+    /*敲铃,host->device ringbuf 有数据更新,2个队列共享一个中断*/
     /*TBD:TBC*/
     pst_pci_res->stat.d2h_doorbell_cnt++;
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_d2h_doorbell,cnt:%u", pst_pci_res->stat.d2h_doorbell_cnt);
@@ -5908,7 +5908,7 @@ oal_int32 oal_pcie_d2h_doorbell(oal_pcie_res* pst_pci_res)
     return OAL_SUCC;
 }
 
-/*??????????????*/
+/*队列从队头出队*/
 #ifdef _PRE_PLAT_FEATURE_HI110X_PCIE_H2D_BYPASS
 oal_int32 oal_pcie_send_netbuf(oal_pcie_res* pst_pci_res, oal_netbuf_stru *pst_netbuf, PCIE_H2D_RINGBUF_QTYPE qtype)
 {
@@ -5925,13 +5925,13 @@ oal_int32 oal_pcie_send_netbuf(oal_pcie_res* pst_pci_res, oal_netbuf_stru *pst_n
 
     if(queue_cnt > send_cnt)
     {
-        /*ringbuf ????????, ????rd??????????????*/
+        /*ringbuf 空间不够, 刷新rd指针，重新判断*/
         send_cnt = oal_pcie_h2d_ringbuf_freecount(pst_pci_res, qtype, OAL_TRUE);
     }
 
     if(0 == send_cnt)
     {
-        /*ringbuf ????*/
+        /*ringbuf 为满*/
         return 0;
     }
 
@@ -5943,13 +5943,13 @@ oal_int32 oal_pcie_send_netbuf(oal_pcie_res* pst_pci_res, oal_netbuf_stru *pst_n
     //for(;;)
     //{
 
-        /*64bits ????, ????????????*/
+        /*64bits 传输, 不考虑大小端*/
         st_item.buff_paddr.addr = (oal_uint64)g_h2d_pci_dma_addr;
 
-        /*??????????????64B????*/
+        /*这里的长度包含64B的头*/
         if(OAL_LIKELY(OAL_NETBUF_LEN(pst_netbuf) > HCC_HDR_TOTAL_LEN))
         {
-            /*tx ringbuf????????????????,????????????????????????????????*/
+            /*tx ringbuf中的长度不包含头,就算包含也只是多传输一个头的长度*/
             st_item.buf_len = PADDING((OAL_NETBUF_LEN(pst_netbuf) - HCC_HDR_TOTAL_LEN), 4) ;
         }
         else
@@ -5962,7 +5962,7 @@ oal_int32 oal_pcie_send_netbuf(oal_pcie_res* pst_pci_res, oal_netbuf_stru *pst_n
 
         PCI_PRINT_LOG(PCI_LOG_DBG, "h2d ringbuf write 0x%llx, len:%u", st_item.buff_paddr.addr, st_item.buf_len);
 
-        /*??????????????????????????ringbuf??????*/
+        /*这里直接写，上面已经判断过ringbuf有空间*/
         total_cnt += oal_pcie_h2d_ringbuf_write(pst_pci_res, &pst_pci_res->st_tx_res[qtype].ringbuf_data_dma_addr, qtype, &st_item);
     return total_cnt;
 }
@@ -6022,8 +6022,8 @@ oal_int32 oal_pcie_h2d_message_buf_write(oal_pcie_res* pst_pci_res, pcie_ringbuf
 
 oal_int32 oal_pcie_h2d_message_buf_rd_update(oal_pcie_res* pst_pci_res)
 {
-    /*??????cache*/
-    /*h2d??????????device??????????HOST message ringbuf??????????*/
+    /*需要刷cache*/
+    /*h2d方向，同步device的读指针到HOST message ringbuf管理结构体*/
     oal_uint32 rd;
     pci_addr_map st_map;
 
@@ -6035,7 +6035,7 @@ oal_int32 oal_pcie_h2d_message_buf_rd_update(oal_pcie_res* pst_pci_res)
     st_map.pa = pst_pci_res->st_message_res.h2d_res.ringbuf_ctrl_dma_addr.pa + OAL_OFFSET_OF(pcie_ringbuf, rd);
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-    /*??????cache*/
+    /*无效化cache*/
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)st_map.pa, sizeof(pst_pci_res->st_ringbuf.st_h2d_msg.rd));
 #endif
 
@@ -6056,8 +6056,8 @@ oal_int32 oal_pcie_h2d_message_buf_rd_update(oal_pcie_res* pst_pci_res)
 
 oal_int32 oal_pcie_h2d_message_buf_wr_update(oal_pcie_res* pst_pci_res)
 {
-    /*??????cache*/
-    /*h2d??????????device??????????HOST message ringbuf??????????*/
+    /*需要刷cache*/
+    /*h2d方向，同步device的读指针到HOST message ringbuf管理结构体*/
     oal_uint32 wr_back;
     pci_addr_map st_map;
 
@@ -6098,7 +6098,7 @@ oal_int32 oal_pcie_d2h_message_buf_wr_update(oal_pcie_res* pst_pci_res)
     st_map.pa = pst_pci_res->st_message_res.d2h_res.ringbuf_ctrl_dma_addr.pa + OAL_OFFSET_OF(pcie_ringbuf, wr);
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-    /*??????cache*/
+    /*无效化cache*/
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)st_map.pa, sizeof(pst_pci_res->st_ringbuf.st_d2h_msg.wr));
 #endif
     wr = oal_pcie_read_mem32(st_map.va);
@@ -6159,7 +6159,7 @@ oal_int32 oal_pcie_d2h_message_buf_read(oal_pcie_res* pst_pci_res, pcie_ringbuf*
     real_rd = rd & (pst_ringbuf->size -1);
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-    /*??????cache*/
+    /*无效化cache*/
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)pst_ringbuf_base->pa, pst_ringbuf->item_len);
 #endif
 
@@ -6257,7 +6257,7 @@ oal_int32 oal_pcie_ringbuf_read_rd(oal_pcie_res* pst_pci_res, PCIE_COMM_RINGBUF_
     st_map.pa = pst_pci_res->st_ringbuf_res.comm_rb_res[type].ctrl_daddr.pa + OAL_OFFSET_OF(pcie_ringbuf, rd);
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-    /*??????cache*/
+    /*无效化cache*/
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)st_map.pa, sizeof(pst_ringbuf->rd));
 #endif
 
@@ -6300,7 +6300,7 @@ oal_int32 oal_pcie_ringbuf_read_wr(oal_pcie_res* pst_pci_res, PCIE_COMM_RINGBUF_
     st_map.pa = pst_pci_res->st_ringbuf_res.comm_rb_res[type].ctrl_daddr.pa + OAL_OFFSET_OF(pcie_ringbuf, wr);
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-    /*??????cache*/
+    /*无效化cache*/
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)st_map.pa, sizeof(pst_ringbuf->wr));
 #endif
 
@@ -6366,7 +6366,7 @@ oal_int32 oal_pcie_ringbuf_read(oal_pcie_res* pst_pci_res, PCIE_COMM_RINGBUF_TYP
     real_rd = rd & (pst_ringbuf->size -1);
 
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
-    /*??????cache*/
+    /*无效化cache*/
     oal_pci_cache_inv(pst_pci_dev, (oal_void*)pst_ringbuf_base->pa, pst_ringbuf->item_len);
 #endif
 
@@ -6393,7 +6393,7 @@ oal_int32 oal_pcie_ringbuf_read(oal_pcie_res* pst_pci_res, PCIE_COMM_RINGBUF_TYP
 oal_int32 oal_pcie_ringbuf_write(oal_pcie_res* pst_pci_res,
                                                     PCIE_COMM_RINGBUF_TYPE type, oal_uint8* buf, oal_uint32 len)
 {
-    /*????????????????????????????????*/
+    /*不判断写指针，此函数只执行写操作*/
     oal_pci_dev_stru *pst_pci_dev;
     oal_uint32 real_wr;
 
@@ -6554,10 +6554,10 @@ oal_int32 oal_pcie_send_message_to_dev(oal_pcie_res* pst_pci_res, oal_uint32 mes
         return -OAL_EIO;
     }
 
-    /*??????????*/
+    /*更新写指针*/
     oal_pcie_h2d_message_buf_wr_update(pst_pci_res);
 
-    /*????h2d int*/
+    /*触发h2d int*/
     oal_writel(PCIE_H2D_TRIGGER_VALUE, pst_pci_res->pst_pci_ctrl_base + PCIE_D2H_DOORBELL_OFF);
 
     oal_spin_unlock(&pst_pci_res->st_message_res.h2d_res.lock);
@@ -6590,7 +6590,7 @@ oal_int32 oal_pcie_sleep_request_host_check(oal_pcie_res* pst_pci_res)
     oal_uint32 total_len = 0;
 
 
-    /*????allow sleep ????tx????????*/
+    /*此时allow sleep 应该tx也被释放*/
     for(i = 0; i < PCIE_H2D_QTYPE_BUTT; i++)
     {
         len = oal_netbuf_list_len(&pst_pci_res->st_tx_res[i].txq);
@@ -6634,7 +6634,7 @@ oal_int32 oal_pcie_send_netbuf_list(oal_pcie_res* pst_pci_res, oal_netbuf_head_s
         return 0;
     }
 
-    /*??????,TBD:TBC*/
+    /*待优化,TBD:TBC*/
     pst_pci_dev = PCIE_RES_TO_DEV(pst_pci_res);
     pst_pci_lres = (oal_pcie_linux_res*)oal_pci_get_drvdata(pst_pci_dev);
 
@@ -6659,13 +6659,13 @@ oal_int32 oal_pcie_send_netbuf_list(oal_pcie_res* pst_pci_res, oal_netbuf_head_s
 
     if(queue_cnt > send_cnt)
     {
-        /*ringbuf ????????, ????rd??????????????*/
+        /*ringbuf 空间不够, 刷新rd指针，重新判断*/
         send_cnt = oal_pcie_h2d_ringbuf_freecount(pst_pci_res, qtype, OAL_TRUE);
     }
 
     if(0 == send_cnt)
     {
-        /*ringbuf ????*/
+        /*ringbuf 为满*/
         return 0;
     }
 
@@ -6675,13 +6675,13 @@ oal_int32 oal_pcie_send_netbuf_list(oal_pcie_res* pst_pci_res, oal_netbuf_head_s
 
     for(;;)
     {
-        /*????ringbuf*/
+        /*填充ringbuf*/
         if(0 == oal_pcie_h2d_ringbuf_freecount(pst_pci_res, qtype, OAL_FALSE))
         {
             break;
         }
 
-        /*??netbuf*/
+        /*取netbuf*/
         pst_netbuf = oal_netbuf_delist(pst_head);
         if(NULL == pst_netbuf)
         {
@@ -6700,7 +6700,7 @@ oal_int32 oal_pcie_send_netbuf_list(oal_pcie_res* pst_pci_res, oal_netbuf_head_s
         pci_dma_addr = dma_map_single(&pst_pci_dev->dev, OAL_NETBUF_DATA(pst_netbuf), OAL_NETBUF_LEN(pst_netbuf), PCI_DMA_TODEVICE);
         if (dma_mapping_error(&pst_pci_dev->dev, pci_dma_addr))
         {
-            /*??????????????????????netbuf, dma mask ?????? ??????????Cache*/
+            /*映射失败先简单处理丢掉netbuf, dma mask 范围内 这里只是刷Cache*/
             DECLARE_DFT_TRACE_KEY_INFO("pcie tx map failed", OAL_DFT_TRACE_OTHER);
             hcc_tx_netbuf_free(pst_netbuf);
             continue;
@@ -6714,13 +6714,13 @@ oal_int32 oal_pcie_send_netbuf_list(oal_pcie_res* pst_pci_res, oal_netbuf_head_s
                                 32, "netbuf: ");
         }
 
-        /*64bits ????, ????????????*/
+        /*64bits 传输, 不考虑大小端*/
         st_item.buff_paddr.addr = (oal_uint64)pci_dma_addr;
 
-        /*??????????????64B????*/
+        /*这里的长度包含64B的头*/
         if(OAL_LIKELY(OAL_NETBUF_LEN(pst_netbuf) >= HCC_HDR_TOTAL_LEN))
         {
-            /*tx ringbuf????????????????,????????????????????????????????*/
+            /*tx ringbuf中的长度不包含头,就算包含也只是多传输一个头的长度*/
             st_item.buf_len = PADDING((OAL_NETBUF_LEN(pst_netbuf) - HCC_HDR_TOTAL_LEN), 4) ;
         }
         else
@@ -6734,23 +6734,23 @@ oal_int32 oal_pcie_send_netbuf_list(oal_pcie_res* pst_pci_res, oal_netbuf_head_s
         st_cb_dma.paddr.addr = (oal_uint64)pci_dma_addr;
         st_cb_dma.len   = OAL_NETBUF_LEN(pst_netbuf);
 
-        /*dma??????????????CB??????????????????????DMA????*/
+        /*dma地址和长度存在CB字段中，发送完成后释放DMA地址*/
         oal_memcopy((oal_uint8*)OAL_NETBUF_CB(pst_netbuf) + sizeof(struct hcc_tx_cb_stru), &st_cb_dma, sizeof(st_cb_dma));
 
-        /*netbuf????*/
+        /*netbuf入队*/
         oal_spin_lock_irq_save(&pst_pci_res->st_tx_res[qtype].lock, &flags);
         oal_netbuf_list_tail_nolock(&pst_pci_res->st_tx_res[qtype].txq, pst_netbuf);
         oal_spin_unlock_irq_restore(&pst_pci_res->st_tx_res[qtype].lock, &flags);
 
         PCI_PRINT_LOG(PCI_LOG_DBG, "h2d ringbuf write 0x%llx, len:%u", st_item.buff_paddr.addr, st_item.buf_len);
 
-        /*??????????????????????????ringbuf??????*/
+        /*这里直接写，上面已经判断过ringbuf有空间*/
         total_cnt += oal_pcie_h2d_ringbuf_write(pst_pci_res, &pst_pci_res->st_tx_res[qtype].ringbuf_data_dma_addr, qtype, &st_item);
     }
 
     if(total_cnt)
     {
-        /*????device??wr????,??ringbuf cache*/
+        /*更新device侧wr指针,刷ringbuf cache*/
         oal_pcie_h2d_ringbuf_wr_update(pst_pci_res, qtype);
 
         /*tx doorbell*/
@@ -6776,7 +6776,7 @@ oal_int32 oal_pcie_print_pcie_regs(oal_pcie_res* pst_pci_res, oal_uint32 base, o
     ret = oal_pcie_inbound_ca_to_va(pst_pci_res, base, &addr_map);
     if(OAL_UNLIKELY(OAL_SUCC != ret))
     {
-        /*share mem ??????????!*/
+        /*share mem 地址未映射!*/
         oal_print_hi11xx_log(HI11XX_LOG_ERR, "can not found mem map for dev cpu address 0x%x\n", base);
         return -OAL_EFAIL;
     }
@@ -7568,7 +7568,7 @@ oal_int32 oal_pcie_savemem(oal_pcie_res* pst_pcie_res, char* file_name, oal_uint
 #ifdef CONFIG_PCIE_MEM_WR_CACHE_ENABLE
         oal_pci_cache_inv(pst_pci_dev, (oal_void*)addr_map.pa, sizeof(value));
 #endif
-        /*????????????????????????????????4????????????*/
+        /*这里有可能保存的是寄存器区域，按4字节对齐访问*/
         value = oal_readl((void*)addr_map.va);
         oal_writel(value, pst_buf + index);
     }
@@ -7656,7 +7656,7 @@ oal_int32 oal_pcie_save_hostmem(oal_pcie_res* pst_pcie_res, char* file_name, oal
 
     for(index = 0; index < length; index += 4)
     {
-        /*????????????????????????????????4????????????*/
+        /*这里有可能保存的是寄存器区域，按4字节对齐访问*/
         value = oal_readl(vaddr + index);
         oal_writel(value, pst_buf + index);
     }
@@ -7916,9 +7916,9 @@ oal_int32 oal_pcie_send_test_pkt(oal_int32 num)
     return OAL_SUCC;
 }
 
-/*????outbound??????????????DDR??????
-  ????SSI????WCPU ????Device ??PCIe Slave???? ????DDR??????????,
-  1103 Slave ??????256M*/
+/*测试outbound是否生效，返回DDR地址，
+  通过SSI或者WCPU 读写Device 侧PCIe Slave地址 查看DDR是否有改变,
+  1103 Slave 空间为256M*/
 oal_int32 oal_pcie_outbound_test(oal_pcie_res* pst_pcie_res, char*buf)
 {
     OAL_STATIC dma_addr_t g_outbound_dma_addr = 0;
@@ -8091,7 +8091,7 @@ typedef struct _memcheck_item_
     oal_uint32 size;/*device cpu address*/
 }memcheck_item;
 
-/*????WCPU??????bootloader ????*/
+/*需要WCPU代码在bootloader 阶段*/
 oal_int32 oal_pcie_device_memcheck_auto(oal_pcie_res* pst_pcie_res)
 {
     oal_int32 ret, i;
@@ -8278,7 +8278,7 @@ oal_int32 oal_pci_sm_state_monitor(oal_void)
     unsigned int link_up_stable_counter = 0;
     void* __iomem pcie_sys_base_virt   = NULL;
     OAL_STATIC oal_uint32 old = 0;
-    /*????????*/
+    /*等待建链*/
     pcie_sys_base_virt = ioremap_nocache(0x10100000, 0x1000);
     if(NULL == pcie_sys_base_virt)
     {
@@ -8341,11 +8341,11 @@ oal_int32 oal_pcie_debug_wlan_power_on(struct device *dev, struct device_attribu
 OAL_STATIC oal_int32 oal_pcie_resume_handler(void* data)
 {
     OAL_REFERENCE(data);
-    /*??????????????EP????????efuse????????*/
+    /*这里保证解复位EP控制器时efuse已经稳定*/
     board_host_wakeup_dev_set(1);
     /*TBD:TBC ,
-      dev wakeup host ??????????panic??????????????????*/
-    oal_msleep(25);/*????????GPIO ??ACK ??????????, MPW2 ????????15ms,????6ms*/
+      dev wakeup host 被复用成了panic消息，这里需要处理*/
+    oal_msleep(25);/*这里要用GPIO 做ACK 延迟不可靠, MPW2 硬件唤醒15ms,软件6ms*/
     PCI_PRINT_LOG(PCI_LOG_DBG, "oal_pcie_resume_handler, pull up gpio");
     return 0;
 }
@@ -8435,7 +8435,7 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
     }
     if(!oal_strcmp(casename, "wlan_poweron_2g"))
     {
-        /*FPGA ??????????Gen 1*/
+        /*FPGA 默认切换到Gen 1*/
         OAL_STATIC oal_uint32 change_2g = 0;
         if(!change_2g)
         {
@@ -8581,7 +8581,7 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
 
     if(!oal_strcmp(casename, "ram_memcheck"))
     {
-        /*????itcm,dtcm,pktmem,??????*/
+        /*遍历itcm,dtcm,pktmem,扫内存*/
         oal_pcie_device_memcheck_auto(pst_pcie_res);
     }
 
@@ -8656,26 +8656,26 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
         else
         {
 #if 1
-            /* ????????1???????????? */
-            /*1.??????????????,??????????0x149001a0??7bit??1 */
+            /* 操作芯片1的上下电复位 */
+            /*1.设置成软件模式,配置寄存器0x149001a0第7bit为1 */
             ul_val = oal_readl(pst_gpio_mode + 0x1a0);
             ul_val |= BIT11;
             oal_writel(ul_val, pst_gpio_mode + 0x1a0);
 #endif
 
-            /*2.????????????????????????0x10108004??21bit??1 */
+            /*2.设置数据方向，配置寄存器0x10108004第21bit为1 */
             ul_val =  oal_readl(pst_gpio_base + 0x4);
             ul_val |= BIT23;
             oal_writel(ul_val, pst_gpio_base + 0x4);
 
-            /*3.????GPIO87??????GPIO????1???? */
+            /*3.设置GPIO87拉低，GPIO芯片1下电 */
             ul_val =  oal_readl(pst_gpio_base + 0x0);
             ul_val &= ~BIT23;
             oal_writel(ul_val, pst_gpio_base + 0x0);
 
             oal_udelay(10);
 
-            /*4.????GPIO87??????GPIO????1???? */
+            /*4.设置GPIO87拉高，GPIO芯片1上电 */
             ul_val =  oal_readl(pst_gpio_base + 0x0);
             ul_val |= BIT23;
             oal_writel(ul_val, pst_gpio_base + 0x0);
@@ -8735,7 +8735,7 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
         }
     }
 
-    /*??????????*/
+    /*重新上下电*/
     if(!oal_strcmp(casename, "pcie_powerdown"))
     {
 #ifdef CONFIG_ARCH_SD56XX
@@ -8751,7 +8751,7 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
 #ifdef CONFIG_ARCH_SD56XX
         hcc_bus_power_action(hcc_get_current_110x_bus(), HCC_BUS_POWER_PATCH_LOAD_PREPARE);
         oal_pci_wlan_power_on(1);
-        /*????????????????*/
+        /*检查建链是否完成*/
         if(OAL_SUCC != oal_pcie_check_link_up())
         {
             PCI_PRINT_LOG(PCI_LOG_ERR, "power test relink failed!\n");
@@ -8811,7 +8811,7 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
 
     if(!oal_strcmp(casename, "pcie_enum_download"))
     {
-        /*??????????????PATCH*/
+        /*第一次枚举下载PATCH*/
         hcc_bus_power_action(hcc_get_current_110x_bus(), HCC_BUS_POWER_PATCH_LOAD_PREPARE);
 #ifdef CONFIG_ARCH_SD56XX
         if(OAL_SUCC != oal_pcie_check_link_up())
@@ -8897,9 +8897,9 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
 	if(!oal_strcmp(casename, "turnoff_message"))
 	{
 #ifdef CONFIG_ARCH_KIRIN_PCIE
-        /*????????????wakelock??????????WIFI????????,????RC/EP??????
-      ????TurnOff Message*/
-        /*???????????? PCIE HOST ??????*/
+        /*走到这里说明wakelock已经释放，WIFI已经深睡,通知RC/EP下电，
+      发送TurnOff Message*/
+        /*下电之前关闭 PCIE HOST 控制器*/
         PCI_PRINT_LOG(PCI_LOG_INFO, "turnoff_message kirin");
         kirin_pcie_power_notifiy_register(kirin_rc_idx, NULL, NULL, NULL);
         kirin_pcie_pm_control(0, kirin_rc_idx);
@@ -8910,9 +8910,9 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
 	{
 #ifdef CONFIG_ARCH_KIRIN_PCIE
         oal_int32 ret;
-        /*????????????wakelock??????????WIFI????????,????RC/EP??????
-      ????TurnOff Message*/
-        /*???????????? PCIE HOST ??????*/
+        /*走到这里说明wakelock已经释放，WIFI已经深睡,通知RC/EP下电，
+      发送TurnOff Message*/
+        /*下电之前关闭 PCIE HOST 控制器*/
         PCI_PRINT_LOG(PCI_LOG_INFO, "suspend_test kirin");
 
         oal_pcie_change_link_state(pst_pcie_res, PCI_WLAN_LINK_DOWN);
@@ -8932,9 +8932,9 @@ oal_int32 oal_pcie_debug_testcase(struct device *dev, struct device_attribute *a
 	{
 #ifdef CONFIG_ARCH_KIRIN_PCIE
         oal_int32 ret;
-        /*????????????wakelock??????????WIFI????????,????RC/EP??????
-      ????TurnOff Message*/
-        /*???????????? PCIE HOST ??????*/
+        /*走到这里说明wakelock已经释放，WIFI已经深睡,通知RC/EP下电，
+      发送TurnOff Message*/
+        /*下电之前关闭 PCIE HOST 控制器*/
         PCI_PRINT_LOG(PCI_LOG_INFO, "resume_test kirin");
         kirin_pcie_power_notifiy_register(kirin_rc_idx, oal_pcie_resume_handler, NULL, NULL);
         ret = kirin_pcie_pm_control(1, kirin_rc_idx);
@@ -9152,7 +9152,7 @@ oal_int32 oal_pcie_performance_netbuf_alloc(oal_pcie_res* pst_pcie_res,
         pst_cb_res->len = OAL_NETBUF_LEN(pst_netbuf);
 
 
-        /*????????*/
+        /*释放内存*/
         dma_unmap_single(&pst_pci_dev->dev, (dma_addr_t)pst_cb_res->paddr.addr, pst_cb_res->len, PCI_DMA_FROMDEVICE);
         oal_netbuf_free(pst_netbuf);
 
@@ -9268,7 +9268,7 @@ oal_int32 oal_pcie_performance_netbuf_queue(oal_pcie_res* pst_pcie_res,
             }
 
             pst_cb_res = (pcie_cb_dma_res*)OAL_NETBUF_CB(pst_netbuf);
-            /*????????*/
+            /*释放内存*/
             dma_unmap_single(&pst_pci_dev->dev, (dma_addr_t)pst_cb_res->paddr.addr, pst_cb_res->len, PCI_DMA_FROMDEVICE);
             oal_netbuf_free(pst_netbuf);
             count++;
@@ -9638,7 +9638,7 @@ oal_int32 oal_pcie_performance_h2d_bypass(oal_pcie_res* pst_pcie_res,
             {
                 if(flag)
                 {
-                    /*????device??wr????,??ringbuf cache*/
+                    /*更新device侧wr指针,刷ringbuf cache*/
                     oal_pcie_h2d_ringbuf_wr_update(pst_pcie_res, PCIE_H2D_QTYPE_NORMAL);
 
                     /*tx doorbell*/
@@ -9654,21 +9654,21 @@ oal_int32 oal_pcie_performance_h2d_bypass(oal_pcie_res* pst_pcie_res,
             }
         }
 
-        /*????device??wr????,??ringbuf cache*/
+        /*更新device侧wr指针,刷ringbuf cache*/
         oal_pcie_h2d_ringbuf_wr_update(pst_pcie_res, PCIE_H2D_QTYPE_NORMAL);
 
         /*tx doorbell*/
         oal_pcie_h2d_doorbell(pst_pcie_res);
     }
 
-    /*????device??wr????,??ringbuf cache*/
+    /*更新device侧wr指针,刷ringbuf cache*/
     oal_pcie_h2d_ringbuf_wr_update(pst_pcie_res, PCIE_H2D_QTYPE_NORMAL);
 
     /*tx doorbell*/
     oal_pcie_h2d_doorbell(pst_pcie_res);
 
 
-    /*???? ?????? ?????? */
+    /*等待 回来的 包个数 */
 
     timeout = jiffies + OAL_MSECS_TO_JIFFIES(10000);
     for(;;)
@@ -9794,14 +9794,14 @@ oal_int32 oal_pcie_performance_d2h_bypass(oal_pcie_res* pst_pcie_res,
     oal_pcie_rx_ringbuf_bypass_supply(pst_pcie_res, OAL_TRUE, OAL_TRUE, PCIE_RX_RINGBUF_SUPPLY_ALL);
     //start_time= ktime_get();
 
-    /*????RX*/
+    /*启动RX*/
     g_d2h_bypass_total_pkt_num = pkt_num;
     oal_writel((oal_uint16)pkt_len << 16 | ((oal_uint16) pkt_num ), pst_pcie_res->pst_pci_ctrl_base + PCIE_HOST_DEVICE_REG0);
     oal_writel(PCIE_H2D_TRIGGER_VALUE, pst_pcie_res->pst_pci_ctrl_base + PCIE_D2H_DOORBELL_OFF);
 
     oal_pcie_mips_start(PCIE_MIPS_HCC_RX_TOTAL);
     start_time= ktime_get();
-    /*????????*/
+    /*补充内存*/
 
     ret = wait_for_completion_interruptible(&g_d2h_test_done);
     if(ret < 0)
@@ -10112,7 +10112,7 @@ OAL_STATIC ssize_t  oal_pcie_set_debug_info(struct device *dev, struct device_at
     oal_int32 i;
     oal_pcie_res* pst_pcie_res = oal_get_default_pcie_handler();
 
-    if(buf[count] != '\0') /*????????????buf????????????, count????????????*/
+    if(buf[count] != '\0') /*确保传进来的buf是一个字符串, count不包含结束符*/
     {
         PCI_PRINT_LOG(PCI_LOG_ERR, "invalid pci cmd\n");
         return 0;
@@ -10126,7 +10126,7 @@ OAL_STATIC ssize_t  oal_pcie_set_debug_info(struct device *dev, struct device_at
             if((count >= OAL_STRLEN(g_pci_debug[i].name)) &&
                 !oal_memcmp(g_pci_debug[i].name, buf, OAL_STRLEN(g_pci_debug[i].name)))
             {
-                /*??????????????????????????????*/
+                /*判断最后一个字符是回车还是空格*/
                 char last_c = *(buf + OAL_STRLEN(g_pci_debug[i].name));
                 if(last_c == '\n' || last_c == ' ' || last_c == '\0')
                 {
@@ -10258,7 +10258,7 @@ oal_int32 oal_pcie_rx_hi_thread(oal_void *data)
             supply_num = oal_pcie_rx_ringbuf_supply(pst_pcie_res, OAL_TRUE, OAL_TRUE, PCIE_RX_RINGBUF_SUPPLY_ALL, GFP_ATOMIC|__GFP_NOWARN, &ret);
             if(OAL_SUCC != ret)
             {
-                /*????????????????????????????????????????????????????????????*/
+                /*补充内存失败，成功则忽略，有可能当前不需要补充内存也视为成功*/
                 oal_pcie_shced_rx_normal_thread(pst_pcie_res);
             }
         }
@@ -10320,8 +10320,8 @@ oal_int32 oal_pcie_rx_normal_thread(oal_void *data)
 
         if(resched)
         {
-            /*????????????????????????????????????????????????????????????,
-              ????GFP_KERNEL ????????????????????????,????????*/
+            /*补充内存失败，成功则忽略，有可能当前不需要补充内存也视为成功,
+              如果GFP_KERNEL 方式补充失败，则启动轮询,循环申请*/
             oal_schedule();
             oal_pcie_shced_rx_normal_thread(pst_pcie_res);
         }
@@ -10352,7 +10352,7 @@ oal_int32 oal_pcie_task_init(oal_pcie_res* pst_pcie_res)
     oal_atomic_set(&pst_pcie_res->rx_hi_cond,     0);
     oal_atomic_set(&pst_pcie_res->rx_normal_cond, 0);
 
-    /*???????????????????????? ??????*/
+    /*高优先级内存用于补充内存 低耗时*/
     pst_pcie_res->pst_rx_hi_task = oal_thread_create_etc(oal_pcie_rx_hi_thread,
                                                     (oal_void*)pst_pcie_res,
                                                     NULL,
@@ -10366,7 +10366,7 @@ oal_int32 oal_pcie_task_init(oal_pcie_res* pst_pcie_res)
         return -OAL_EFAIL;
     }
 
-    /*????????????????????????  ??????????????????????*/
+    /*低优先级线程用于补充内存  高耗时，申请不到就轮询*/
     pst_pcie_res->pst_rx_normal_task = oal_thread_create_etc(oal_pcie_rx_normal_thread,
                                                     (oal_void*)pst_pcie_res,
                                                     NULL,
@@ -10393,7 +10393,7 @@ oal_void oal_pcie_sysfs_exit(oal_pcie_res* pst_pcie_res)
     g_conn_syfs_pci_object = NULL;
 }
 
-/*????dma rx????MSI????*/
+/*原生dma rx完成MSI中断*/
 irqreturn_t oal_pcie_edma_rx_intr_status_handler(int irq, void*dev_id)
 {
     /*log for msi bbit, del later*/
@@ -10446,9 +10446,9 @@ OAL_STATIC oal_void oal_pcie_hw_edma_intr_status_handler(oal_pcie_res* pst_pci_r
             break;
         else
         {
-            /*????????break ????????????????*/
+            /*这里不能break 否者会导致丢中断*/
             //if(++total_cnt > 5)
-            //    break;/*????????????????????*/
+            //    break;/*防止中断处理时间过长*/
         }
     }
 }
@@ -10526,7 +10526,7 @@ oal_pcie_res* oal_pcie_host_init(oal_void* data, oal_pcie_msi_stru* pst_msi, oal
     pst_msi->func = g_msi_110x_callback;
     pst_msi->msi_num = (oal_int32)(OAL_SIZEOF(g_msi_110x_callback)/OAL_SIZEOF(oal_irq_handler_t));
 
-    /*??????tx/rx????*/
+    /*初始化tx/rx队列*/
     oal_spin_lock_init(&pst_pci_res->st_rx_res.lock);
     oal_netbuf_list_head_init(&pst_pci_res->st_rx_res.rxq);
 

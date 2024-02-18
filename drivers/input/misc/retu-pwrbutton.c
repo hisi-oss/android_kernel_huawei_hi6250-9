@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2004-2010 Nokia Corporation
  *
- * Original code written by Ari Saastamoinen, Juha Yrj??l?? and Felipe Balbi.
+ * Original code written by Ari Saastamoinen, Juha Yrjölä and Felipe Balbi.
  * Rewritten by Aaro Koskinen.
  *
  * This file is subject to the terms and conditions of the GNU General

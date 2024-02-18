@@ -4,7 +4,7 @@
   IEEE 802.11a/g LP-PHY and radio device data tables
 
   Copyright (c) 2009 Michael Buesch <m@bues.ch>
-  Copyright (c) 2009 G??bor Stefanik <netrolller.3d@gmail.com>
+  Copyright (c) 2009 Gábor Stefanik <netrolller.3d@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

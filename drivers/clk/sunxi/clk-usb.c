@@ -1,7 +1,7 @@
 /*
- * Copyright 2013-2015 Emilio L??pez
+ * Copyright 2013-2015 Emilio López
  *
- * Emilio L??pez <emilio@elopez.com.ar>
+ * Emilio López <emilio@elopez.com.ar>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -59,18 +59,18 @@
 #define  BSP_DIAG_IND_DATA_MAX_LEN         (4096)
 #define  BSP_PRINT_BUF_LEN                 (256)
 
-/* log??????????????buffer????????????200??????????buffer???? */
+/* log缓冲区满阈值，buffer空闲空间小于200字符，认为buffer已满 */
 #define LOG_BUFFER_FULL_THRESHOLD   200
-/* log task??????????2s */
+/* log task调度间隔，2s */
 #define LOG_TASK_SCHED_TIME         200
-/* log buffer???????????? */
+/* log buffer满，输出提示 */
 #define LOG_DROPPED_MESSAGE         "log buffer full, data dropped\n"
-/* ccore log?????? */
+/* ccore log设备名 */
 #define CCORE_LOG_DEV_NAME          "ccorelog"
-/* mcore log?????? */
+/* mcore log设备名 */
 #define MCORE_LOG_DEV_NAME          "mcorelog"
 
-/*??????????*/
+/*错误码定义*/
 #define BSP_ERR_LOG_BASE                (int)(0x80000000 | (BSP_DEF_ERR(BSP_MODU_LOG, 0)))
 #define BSP_ERR_LOG_INVALID_MODULE      (BSP_ERR_LOG_BASE + 0x1)
 #define BSP_ERR_LOG_INVALID_LEVEL       (BSP_ERR_LOG_BASE + 0x2)

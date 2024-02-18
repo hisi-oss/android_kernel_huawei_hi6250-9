@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Christian K??nig.
+ * Copyright 2011 Christian König.
  * All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,7 +25,7 @@
  */
 /*
  * Authors:
- *    Christian K??nig <deathsimple@vodafone.de>
+ *    Christian König <deathsimple@vodafone.de>
  */
 #include <drm/drmP.h>
 #include "radeon.h"

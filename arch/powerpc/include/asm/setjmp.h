@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2008 Michael Neuling IBM Corporation
+ * Copyright © 2008 Michael Neuling IBM Corporation
  *
  *      This program is free software; you can redistribute it and/or
  *      modify it under the terms of the GNU General Public License

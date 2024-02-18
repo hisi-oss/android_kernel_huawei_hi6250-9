@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2014  NXP Semiconductors  All rights reserved.
  *
- * Author: Cl??ment Perrochaud <clement.perrochaud@nxp.com>
+ * Author: Clément Perrochaud <clement.perrochaud@nxp.com>
  *
  * Derived from PN544 device driver:
  * Copyright (C) 2012  Intel Corporation. All rights reserved.

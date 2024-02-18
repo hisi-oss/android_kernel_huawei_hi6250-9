@@ -1,6 +1,6 @@
 /*
  * NAND Flash Controller Device Driver
- * Copyright ?? 2009-2010, Intel Corporation and its suppliers.
+ * Copyright © 2009-2010, Intel Corporation and its suppliers.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,

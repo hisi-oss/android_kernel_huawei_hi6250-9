@@ -1,7 +1,7 @@
 /*
  * MTD device concatenation layer definitions
  *
- * Copyright ?? 2002      Robert Kaiser <rkaiser@sysgo.de>
+ * Copyright © 2002      Robert Kaiser <rkaiser@sysgo.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

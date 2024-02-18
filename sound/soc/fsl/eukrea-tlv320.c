@@ -1,7 +1,7 @@
 /*
  * eukrea-tlv320.c  --  SoC audio for eukrea_cpuimxXX in I2S mode
  *
- * Copyright 2010 Eric B??nard, Eukr??a Electromatique <eric@eukrea.com>
+ * Copyright 2010 Eric Bénard, Eukréa Electromatique <eric@eukrea.com>
  *
  * based on sound/soc/s3c24xx/s3c24xx_simtec_tlv320aic23.c
  * which is Copyright 2009 Simtec Electronics
@@ -229,7 +229,7 @@ static struct platform_driver eukrea_tlv320_driver = {
 
 module_platform_driver(eukrea_tlv320_driver);
 
-MODULE_AUTHOR("Eric B??nard <eric@eukrea.com>");
+MODULE_AUTHOR("Eric Bénard <eric@eukrea.com>");
 MODULE_DESCRIPTION("CPUIMX ALSA SoC driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:eukrea_tlv320");

@@ -3,7 +3,7 @@
  *
  * Support for ATMEL AES HW acceleration.
  *
- * Copyright (c) 2012 Eukr??a Electromatique - ATMEL
+ * Copyright (c) 2012 Eukréa Electromatique - ATMEL
  * Author: Nicolas Royer <nicolas@eukrea.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -2173,4 +2173,4 @@ module_platform_driver(atmel_aes_driver);
 
 MODULE_DESCRIPTION("Atmel AES hw acceleration support.");
 MODULE_LICENSE("GPL v2");
-MODULE_AUTHOR("Nicolas Royer - Eukr??a Electromatique");
+MODULE_AUTHOR("Nicolas Royer - Eukréa Electromatique");

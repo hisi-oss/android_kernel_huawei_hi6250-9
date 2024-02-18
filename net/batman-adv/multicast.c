@@ -1,6 +1,6 @@
 /* Copyright (C) 2014-2016  B.A.T.M.A.N. contributors:
  *
- * Linus L??ssing
+ * Linus Lüssing
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 2 of the GNU General Public
@@ -564,7 +564,7 @@ out:
 }
 
 /**
- * batadv_mcast_is_report_ipv4 -???check for IGMP reports
+ * batadv_mcast_is_report_ipv4 - check for IGMP reports
  * @skb: the ethernet frame destined for the mesh
  *
  * This call might reallocate skb data.

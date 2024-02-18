@@ -108,10 +108,10 @@ static int ak5386_hw_params(struct snd_pcm_substream *substream,
 	 * From the datasheet:
 	 *
 	 * All external clocks (MCLK, SCLK and LRCK) must be present unless
-	 * PDN pin = ???L???. If these clocks are not provided, the AK5386 may
+	 * PDN pin = “L”. If these clocks are not provided, the AK5386 may
 	 * draw excess current due to its use of internal dynamically
 	 * refreshed logic. If the external clocks are not present, place
-	 * the AK5386 in power-down mode (PDN pin = ???L???).
+	 * the AK5386 in power-down mode (PDN pin = “L”).
 	 */
 
 	if (gpio_is_valid(priv->reset_gpio))

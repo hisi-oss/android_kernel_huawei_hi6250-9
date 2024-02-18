@@ -9,7 +9,7 @@ extern "C" {
 
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "oam_ext_if.h"
 #include "wlan_spec.h"
@@ -24,12 +24,12 @@ extern "C" {
 #define THIS_FILE_ID OAM_FILE_ID_DMAC_RX_FILTER_C
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  3 ????????
+  3 函数实现
 *****************************************************************************/
 
 
@@ -46,12 +46,12 @@ oal_uint32 dmac_set_rx_filter_value(frw_event_mem_stru *pst_event_mem)
         return OAL_ERR_CODE_PTR_NULL;
     }
 
-    /* ????????????????????????payload?????? */
+    /* 获取事件、事件头以及事件payload结构体 */
     pst_event               = (frw_event_stru *)pst_event_mem->puc_data;
     pst_event_hdr           = &(pst_event->st_event_hdr);
     pul_rx_filter_value     = (oal_uint32 *)pst_event->auc_event_data;
 
-    /* ????device?????????? */
+    /* 获取device结构的信息 */
     pst_device = mac_res_get_dev(pst_event_hdr->uc_device_id);
 
     if (OAL_PTR_NULL == pst_device)

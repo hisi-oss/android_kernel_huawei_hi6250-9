@@ -272,7 +272,7 @@ static int is_geode(void)
 	     boot_cpu_data.x86_vendor == X86_VENDOR_CYRIX) &&
 	    boot_cpu_data.x86 == 5 &&
 	    boot_cpu_data.x86_model == 5)
-		return 1; /* Geode GX (n??e GX2) */
+		return 1; /* Geode GX (née GX2) */
 
 	return 0;
 }

@@ -655,7 +655,7 @@ static ssize_t mxt_fw_version_show(struct device *dev,
 	}
 
 	return scnprintf(buf, PAGE_SIZE, "%u.%u.%02X\n",
-			 data->info->version >> 4, data->info->version & 0xf,	/*save versoin high-4bit??low-4bit to buf */
+			 data->info->version >> 4, data->info->version & 0xf,	/*save versoin high-4bit¡¢low-4bit to buf */
 			 data->info->build);
 }
 

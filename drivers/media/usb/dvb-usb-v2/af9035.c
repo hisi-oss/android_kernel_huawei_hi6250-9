@@ -593,7 +593,7 @@ static int af9035_download_firmware_old(struct dvb_usb_device *d,
 	#define HDR_SIZE 7
 
 	/*
-	 * Thanks to Daniel Gl??ckner <daniel-gl@gmx.net> about that info!
+	 * Thanks to Daniel Glöckner <daniel-gl@gmx.net> about that info!
 	 *
 	 * byte 0: MCS 51 core
 	 *  There are two inside the AF9035 (1=Link and 2=OFDM) with separate

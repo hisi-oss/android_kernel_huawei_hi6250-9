@@ -1,7 +1,7 @@
 /*
  * Interface for NOR flash driver whose high address lines are latched
  *
- * Copyright ?? 2008 MontaVista Software, Inc. <source@mvista.com>
+ * Copyright © 2008 MontaVista Software, Inc. <source@mvista.com>
  *
  * This file is licensed under the terms of the GNU General Public License
  * version 2. This program is licensed "as is" without any warranty of any

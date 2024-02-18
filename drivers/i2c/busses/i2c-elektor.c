@@ -15,7 +15,7 @@
     GNU General Public License for more details.			     */
 /* ------------------------------------------------------------------------- */
 
-/* With some changes from Ky??sti M??lkki <kmalkki@cc.hut.fi> and even
+/* With some changes from Kyösti Mälkki <kmalkki@cc.hut.fi> and even
    Frodo Looijaard <frodol@dds.nl> */
 
 /* Partially rewriten by Oleg I. Vdovikin for mmapped support of

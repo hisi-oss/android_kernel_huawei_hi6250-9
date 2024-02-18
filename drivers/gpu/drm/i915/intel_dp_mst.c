@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2008 Intel Corporation
+ * Copyright © 2008 Intel Corporation
  *             2014 Red Hat Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a

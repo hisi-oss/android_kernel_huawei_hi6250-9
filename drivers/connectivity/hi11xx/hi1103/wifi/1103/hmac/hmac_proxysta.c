@@ -9,7 +9,7 @@ extern "C" {
 
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "wlan_spec.h"
 #include "mac_vap.h"
@@ -102,14 +102,14 @@ oal_uint32 hmac_psta_tx_process(oal_netbuf_stru *pst_buf, mac_vap_stru **ppst_va
         return OAL_FAIL;
     }
 
-    /* ??skb??data???????????????????? */
+    /* 将skb的data指针指向以太网的帧头 */
     pst_ether_header = (mac_ether_header_stru *)OAL_NETBUF_HEADER(pst_buf);
 
     if (mac_vap_is_vsta(*ppst_vap))
     {
         if (ETHER_IS_MULTICAST(pst_ether_header->auc_ether_dhost))
         {
-            /* vsta??????????mcast?????????????? */
+            /* vsta端口不处理mcast，正常返回丢弃 */
             OAM_INFO_LOG0((*ppst_vap)->uc_vap_id, OAM_SF_PROXYSTA, "{hmac_psta_tx_process::drop mcast pkt via vsta}");
             return OAL_FAIL;
         }
@@ -151,12 +151,12 @@ oal_uint32  hmac_psta_rx_process(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hm
         return OAL_FAIL;
     }
 
-    /* ??skb??data???????????????????? */
+    /* 将skb的data指针指向以太网的帧头 */
     oal_netbuf_push(pst_buf, ETHER_HDR_LEN);
 
     pst_ether_header = (mac_ether_header_stru *)OAL_NETBUF_HEADER(pst_buf);
 
-    /* ????skb??data???? */
+    /* 还原skb的data指针 */
     oal_netbuf_pull(pst_buf, ETHER_HDR_LEN);
 
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_PAE) == pst_ether_header->us_ether_type)
@@ -173,9 +173,9 @@ oal_uint32  hmac_psta_rx_process(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hm
 
     en_is_mcast   = ETHER_IS_MULTICAST(pst_ether_header->auc_ether_dhost);
 
-    /* main sta??proxysta??root ap????????????root ap??????????????????????????????????????????????
-       ??????main sta??????root ap????????????????????????????????????main sta??????????????device????
-       sta?????????????????????????????????????????????? */
+    /* main sta和proxysta向root ap发送广播包，root ap会将收到的广播包向与其关联的所有用户转发此包，
+       因此，main sta会收到root ap所发送的广播包，当收到这些广播包后，main sta会判断是否为本device上的
+       sta发送的广播包，如果是将其丢弃，否则不做任何处理 */
     if (OAL_TRUE == en_is_mcast)
     {
         pst_rep = hmac_psta_get_rep(pst_hmac_vap);
@@ -195,7 +195,7 @@ oal_uint32  hmac_psta_rx_process(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hm
             pst_tmp_hvap = OAL_DLIST_GET_ENTRY(pst_list, hmac_vap_stru, st_psta.st_xsta_entry);
             if (pst_tmp_hvap != pst_hmac_vap && !oal_compare_mac_addr(pst_ether_header->auc_ether_shost, mac_mib_get_StationID(&pst_tmp_hvap->st_vap_base_info)))
             {
-                /* vsta??????????mcast?????????? */
+                /* vsta端口不处理mcast，正常丢弃 */
                 OAM_INFO_LOG0(pst_hmac_vap->st_vap_base_info.uc_vap_id, OAM_SF_PROXYSTA, "{hmac_psta_rx_mat::drop pkt to vsta}");
                 return OAL_FAIL;
             }
@@ -262,7 +262,7 @@ oal_uint32  hmac_psta_add_vap(hmac_vap_stru *pst_hmac_vap)
         return OAL_SUCC;
     }
 
-    /* ????????????Proxy STA?? ???????????? */
+    /* 如果是第一个Proxy STA， 注册钩子函数 */
     if (0 == mac_dev_xsta_num(pst_mac_device))
     {
         oam_netlink_ops_register_etc(OAM_NL_CMD_PSTA, hmac_psta_receive_msg);
@@ -273,7 +273,7 @@ oal_uint32  hmac_psta_add_vap(hmac_vap_stru *pst_hmac_vap)
 #endif
     }
 
-    /* ????Proxy STA?? hash????*/
+    /* 添加Proxy STA到 hash表中*/
     uc_hash_value  = MAC_PROXYSTA_CALCULATE_HASH_VALUE(hmac_vap_psta_oma(pst_hmac_vap));
     oal_rw_lock_write_lock(&pst_rep->st_lock);
     oal_dlist_add_head(&pst_hmac_vap->st_psta.st_hash_entry, &pst_rep->ast_hash[uc_hash_value]);
@@ -320,7 +320,7 @@ oal_uint32  hmac_psta_del_vap(hmac_vap_stru *pst_hmac_vap)
         return OAL_SUCC;
     }
 
-    /* ????mac_device_stru */
+    /* 获取mac_device_stru */
     pst_mac_device = mac_res_get_dev_etc(pst_mac_vap->uc_device_id);
     if (OAL_PTR_NULL == pst_mac_device)
     {
@@ -329,7 +329,7 @@ oal_uint32  hmac_psta_del_vap(hmac_vap_stru *pst_hmac_vap)
         return OAL_ERR_CODE_PTR_NULL;
     }
 
-    /* ??????????????proxysta oma???? */
+    /* 获取需要删除的proxysta oma地址 */
     oal_memcopy(auc_proxysta_oma, hmac_vap_psta_oma(pst_hmac_vap), WLAN_MAC_ADDR_LEN);
 
     uc_hash_value  = MAC_PROXYSTA_CALCULATE_HASH_VALUE(auc_proxysta_oma);
@@ -558,18 +558,18 @@ OAL_STATIC oal_uint32 hmac_psta_rx_arp_mat(mac_vap_stru            *pst_mac_vap,
     /***************************************************************************/
     /*                      ARP Frame Format                                   */
     /* ----------------------------------------------------------------------- */
-    /* |??????????????|????????????|??????|????????|????????|????????????|     */
+    /* |以太网目的地址|以太网源地址|帧类型|硬件类型|协议类型|硬件地址长度|     */
     /* ----------------------------------------------------------------------- */
-    /* | 6 (??????)   |6           |2     |2       |2       |1           |     */
+    /* | 6 (待替换)   |6           |2     |2       |2       |1           |     */
     /* ----------------------------------------------------------------------- */
-    /* |????????????|op|????????????????|??????IP????|??????????????|????IP????*/
+    /* |协议地址长度|op|发送端以太网地址|发送端IP地址|目的以太网地址|目的IP地址*/
     /* ----------------------------------------------------------------------- */
-    /* | 1          |2 |6               |4           |6 (??????)    |4         */
+    /* | 1          |2 |6               |4           |6 (待替换)    |4         */
     /* ----------------------------------------------------------------------- */
     /*                                                                         */
     /***************************************************************************/
 
-    /* ?????????????? */
+    /* 参数合法性检查 */
     if ((OAL_PTR_NULL == pst_mac_vap) || (OAL_PTR_NULL == pst_ether_header) || (OAL_PTR_NULL == pst_mac_device))
     {
         OAM_ERROR_LOG0(0, OAM_SF_PROXYSTA,
@@ -580,14 +580,14 @@ OAL_STATIC oal_uint32 hmac_psta_rx_arp_mat(mac_vap_stru            *pst_mac_vap,
 
     ul_contig_len = OAL_SIZEOF(mac_ether_header_stru);
 
-    /* ??????????????mac???????? */
+    /* 获取以太网目的mac和数据段 */
     puc_des_mac = pst_ether_header->auc_ether_dhost;
     puc_eth_body = (oal_uint8 *)(pst_ether_header + 1);
 
-    /* ?????????????????????????????????? */
+    /* 获取以太网帧目的地址是否为多播地址 */
     en_is_mcast = ETHER_IS_MULTICAST(puc_des_mac);
 
-    /* ARP ?????????? */
+    /* ARP 包地址转换 */
     pst_arp = (oal_eth_arphdr_stru *)puc_eth_body;
     ul_contig_len += OAL_SIZEOF(oal_eth_arphdr_stru);
 
@@ -617,7 +617,7 @@ OAL_STATIC oal_uint32 hmac_psta_rx_arp_mat(mac_vap_stru            *pst_mac_vap,
             {
                 case OAL_ARPOP_REQUEST:
                 case OAL_ARPOP_REPLY:
-                    /* ????mac??????out vap??mac???? */
+                    /* 替换mac地址为out vap的mac地址 */
                     oal_set_mac_addr(puc_arp_dmac, hmac_vap_psta_oma(pst_hmac_vap));
 
                     break;
@@ -630,13 +630,13 @@ OAL_STATIC oal_uint32 hmac_psta_rx_arp_mat(mac_vap_stru            *pst_mac_vap,
             OAM_INFO_LOG0(pst_mac_vap->uc_vap_id, OAM_SF_PROXYSTA,
                        "{hmac_psta_rx_arp_mat::received arp broadcast packet, start process.}");
 
-            /* root ap????????????????????????sta0????????????arp????arp_dmac??stax??????????????stax??,??????????????oma???? */
+            /* root ap发过来的下行广播包，只有sta0可以收到，但arp包的arp_dmac为stax‘的地址，找到stax’,替换为其代理的oma地址 */
             if (OAL_FALSE != oal_compare_mac_addr(puc_arp_dmac, hmac_vap_psta_oma(pst_hmac_vap)))
             {
                 OAM_INFO_LOG0(pst_mac_vap->uc_vap_id, OAM_SF_PROXYSTA,
                                    "{hmac_psta_rx_arp_mat::start into if.}");
 
-               /* ????Device????vap(STA????)????????????????vap??????????????????????oma???????????????????? */
+               /* 遍历Device下的vap(STA模式)，当目的地址为与vap自己的地址相同时，用其oma地址替换帧的目的地址 */
                for (uc_vap_idx = 0; uc_vap_idx < pst_mac_device->uc_vap_num; uc_vap_idx++)
                {
                    pst_hmac_temp_vap = mac_res_get_hmac_vap(pst_mac_device->auc_vap_id[uc_vap_idx]);
@@ -648,7 +648,7 @@ OAL_STATIC oal_uint32 hmac_psta_rx_arp_mat(mac_vap_stru            *pst_mac_vap,
 
                    if (OAL_FALSE == oal_compare_mac_addr(puc_arp_dmac, mac_mib_get_StationID(&pst_hmac_temp_vap->st_vap_base_info)))
                    {
-                       /* ????mac??????out vap??mac???? */
+                       /* 替换mac地址为out vap的mac地址 */
                        oal_set_mac_addr(puc_arp_dmac, hmac_vap_psta_oma(pst_hmac_temp_vap));
 
                        OAM_INFO_LOG0(pst_mac_vap->uc_vap_id, OAM_SF_PROXYSTA,
@@ -659,7 +659,7 @@ OAL_STATIC oal_uint32 hmac_psta_rx_arp_mat(mac_vap_stru            *pst_mac_vap,
                    }
                }
 
-               /* ????arm mac????????????????????arp???????????????????????????? */
+               /* 如果arm mac没有改变，如果是下行arp广播包，无需换地址，直接返回 */
                if (OAL_FALSE == en_is_arp_mac_changed)
                {
                     OAM_INFO_LOG0(pst_mac_vap->uc_vap_id, OAM_SF_PROXYSTA,
@@ -692,7 +692,7 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
     oal_bool_enum_uint8  en_is_mcast;
     oal_uint32           ul_contig_len;
     hmac_vap_stru       *pst_hmac_vap;
-    /* ?????????????? */
+    /* 参数合法性检查 */
     if ((OAL_PTR_NULL == pst_mac_vap) || (OAL_PTR_NULL == pst_ether_header) || (OAL_PTR_NULL == pst_mac_device))
     {
         OAM_ERROR_LOG0(0, OAM_SF_PROXYSTA, "{hmac_psta_rx_ip_mat::The input parameter of hmac_psta_rx_ip_mat is OAL_PTR_NULL.}");
@@ -706,19 +706,19 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
 
     ul_contig_len = OAL_SIZEOF(mac_ether_header_stru);
 
-    /* ??????????????mac???????? */
+    /* 获取以太网目的mac和数据段 */
     puc_des_mac = pst_ether_header->auc_ether_dhost;
     puc_eth_body = (oal_uint8 *)(pst_ether_header + 1);
 
-    /* ?????????????????????????????????? */
+    /* 获取以太网帧目的地址是否为多播地址 */
     en_is_mcast = ETHER_IS_MULTICAST(puc_des_mac);
 
     /*************************************************************************/
     /*                      DHCP Frame Format                                */
     /* --------------------------------------------------------------------- */
-    /* |????????        |   IP??         | UDP??           |DHCP????       | */
+    /* |以太网头        |   IP头         | UDP头           |DHCP报文       | */
     /* --------------------------------------------------------------------- */
-    /* | 14             |20              |8                | ????          | */
+    /* | 14             |20              |8                | 不定          | */
     /* --------------------------------------------------------------------- */
     /*                                                                       */
     /*************************************************************************/
@@ -726,17 +726,17 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
     pst_ip_header = (oal_ip_header_stru *)puc_eth_body;
 
     /*************************************************************************/
-    /*                    IP?????? (oal_ip_header_stru)                      */
+    /*                    IP头格式 (oal_ip_header_stru)                      */
     /* --------------------------------------------------------------------- */
-    /* | ???? | ???????? | ???????? | ??????  |????  |????  |????????
+    /* | 版本 | 报头长度 | 服务类型 | 总长度  |标识  |标志  |段偏移量
 |      */
     /* --------------------------------------------------------------------- */
     /* | 4bits|  4bits   | 1        | 2       | 2    |3bits | 13bits  |      */
     /* --------------------------------------------------------------------- */
     /* --------------------------------------------------------------------- */
-    /* | ?????? | ????        | ??????????| ????????SrcIp??|??????????DstIp??*/
+    /* | 生存期 | 协议        | 头部校验和| 源地址（SrcIp）|目的地址（DstIp）*/
     /* --------------------------------------------------------------------- */
-    /* | 1      |  1 (17??UDP)| 2         | 4              | 4               */
+    /* | 1      |  1 (17为UDP)| 2         | 4              | 4               */
     /* --------------------------------------------------------------------- */
     /*************************************************************************/
 
@@ -750,7 +750,7 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
 
     us_ip_header_len = pst_ip_header->us_ihl * 4;
 
-    /* ??????UDP??????????DHCP?????????????????? */
+    /* 如果是UDP包，并且是DHCP协议的报文地址转换 */
     if (OAL_IPPROTO_UDP == pst_ip_header->uc_protocol)
     {
         pst_udp_header  = (oal_udp_header_stru *)((oal_uint8 *)pst_ip_header + us_ip_header_len);
@@ -764,9 +764,9 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
         }
 
         /*************************************************************************/
-        /*                      UDP ?? (oal_udp_header_stru)                     */
+        /*                      UDP 头 (oal_udp_header_stru)                     */
         /* --------------------------------------------------------------------- */
-        /* |??????????SrcPort??|????????????DstPort??| UDP????    | UDP??????  | */
+        /* |源端口号（SrcPort）|目的端口号（DstPort）| UDP长度    | UDP检验和  | */
         /* --------------------------------------------------------------------- */
         /* | 2                 | 2                   |2           | 2          | */
         /* --------------------------------------------------------------------- */
@@ -782,18 +782,18 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
 /*lint +e778*/
 /*lint +e572*/
             /*************************************************************************/
-            /*                    DHCP ???????? (oal_dhcp_packet_stru)               */
+            /*                    DHCP 报文格式 (oal_dhcp_packet_stru)               */
             /* --------------------------------------------------------------------- */
-            /* | op | htpe | hlen | hops  |xid(????IP)  |secs(????)   |flags(????)|  */
+            /* | op | htpe | hlen | hops  |xid(事务IP)  |secs(秒数)   |flags(标志)|  */
             /* --------------------------------------------------------------------- */
             /* | 1  | 1    | 1    | 1     | 4           | 2           | 2          | */
             /* --------------------------------------------------------------------- */
             /* --------------------------------------------------------------------- */
-            /* | ciaddr(4)????ip???? | yiaddr??4??????IP???? |siaddr(4)??????IP????| */
+            /* | ciaddr(4)客户ip地址 | yiaddr（4）你的IP地址 |siaddr(4)服务器IP地址| */
             /* --------------------------------------------------------------------- */
-            /* | giaddr??4??????????IP????      | chaddr??16????????????????(??????)|*/
+            /* | giaddr（4）中继代理IP地址      | chaddr（16）客户机硬件地址(待替换)|*/
             /* --------------------------------------------------------------------- */
-            /* |sname??64????????????????|file??128????????????|option??????????????|*/
+            /* |sname（64）服务器的主机名|file（128）启动文件名|option（不定长）选项|*/
             /* --------------------------------------------------------------------- */
             /*************************************************************************/
             pst_dhcp_packet = (oal_dhcp_packet_stru *)(((oal_uint8 *)pst_udp_header) + OAL_SIZEOF(oal_udp_header_stru));
@@ -806,18 +806,18 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
 
             if (OAL_FALSE == en_is_mcast)
             {
-                /* ?????? */
+                /* 单播包 */
                 if (OAL_FALSE == oal_compare_mac_addr(pst_dhcp_packet->chaddr, mac_mib_get_StationID(pst_mac_vap)))
                 {
-                    /* ??UDP?????????????????????????? */
+                    /* 把UDP包中的地址替换为自己的地址 */
                     oal_set_mac_addr(pst_dhcp_packet->chaddr, hmac_vap_psta_oma(pst_hmac_vap));
 
-                    /* ????????udp checksum */
+                    /* 重新计算udp checksum */
                     pst_udp_header->check = hmac_psta_rx_checksum(pst_udp_header->check,
                                                                                   mac_mib_get_StationID(pst_mac_vap),
                                                                                   hmac_vap_psta_oma(pst_hmac_vap));
 
-                    /* ???????? */
+                    /* 维持单播 */
                     oal_set_mac_addr(puc_des_mac, hmac_vap_psta_oma(pst_hmac_vap));
                 }
                 else
@@ -827,12 +827,12 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
             }
             else
             {
-                /* main sta????????DHCP????????dhcp????????????mac??????????????????????????????????????vap(??proxysta)??
-                   ??????dhcp??????????????mac??????????vap mac(??proxysta)??????????????mac??????????proxysta??oma??????
-                   ??????udp check */
+                /* main sta收到广播DHCP数据帧，dhcp报文中客户端mac地址和接收端口的地址不同，则遍历所有的vap(即proxysta)，
+                   找到和dhcp报文中的客户端mac地址相同的vap mac(即proxysta)地址，并客户端mac地址替换为proxysta的oma地址，
+                   并更新udp check */
                 if (OAL_FALSE != oal_compare_mac_addr(pst_dhcp_packet->chaddr, mac_mib_get_StationID(pst_mac_vap)))
                 {
-                   /* ????Device????vap(STA????)????????????????vap??????????????????????oma???????????????????? */
+                   /* 遍历Device下的vap(STA模式)，当目的地址为与vap自己的地址相同时，用其oma地址替换帧的目的地址 */
                    for (uc_vap_idx = 0; uc_vap_idx < pst_mac_device->uc_vap_num; uc_vap_idx++)
                    {
                        pst_hmac_temp_vap = mac_res_get_hmac_vap(pst_mac_device->auc_vap_id[uc_vap_idx]);
@@ -845,10 +845,10 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
 
                        if (OAL_FALSE == oal_compare_mac_addr(pst_dhcp_packet->chaddr, mac_mib_get_StationID(&pst_hmac_temp_vap->st_vap_base_info)))
                        {
-                           /* ????mac??????out vap??mac???? */
+                           /* 替换mac地址为out vap的mac地址 */
                            oal_set_mac_addr(pst_dhcp_packet->chaddr, hmac_vap_psta_oma(pst_hmac_temp_vap));
 
-                           /* ????????udp checksum */
+                           /* 重新计算udp checksum */
                            pst_udp_header->check = hmac_psta_rx_checksum(pst_udp_header->check,
                                                                                          mac_mib_get_StationID(&pst_hmac_temp_vap->st_vap_base_info),
                                                                                          hmac_vap_psta_oma(pst_hmac_temp_vap));
@@ -861,14 +861,14 @@ OAL_STATIC oal_uint32 hmac_psta_rx_ip_mat(mac_vap_stru           *pst_mac_vap,
         }
         else
         {
-            /* ????DHCP??????UDP??????????????????????????????proxysta??vma */
+            /* 不是DHCP的其它UDP包，也需要更新以太网目的地址为proxysta的vma */
             oal_set_mac_addr(puc_des_mac, hmac_vap_psta_oma(pst_hmac_vap));
         }
     }
-    /* ????????IP?????????????????? */
+    /* 其它类型IP报文的地址转换处理 */
     else
     {
-        /* ????????????????????proxysta??vma */
+        /* 更新以太网目的地址为proxysta的vma */
         oal_set_mac_addr(puc_des_mac, hmac_vap_psta_oma(pst_hmac_vap));
     }
 
@@ -892,12 +892,12 @@ oal_uint32  hmac_psta_rx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
         return OAL_FAIL;
     }
 
-    /* ??skb??data???????????????????? */
+    /* 将skb的data指针指向以太网的帧头 */
     oal_netbuf_push(pst_buf, ETHER_HDR_LEN);
 
     pst_ether_header = (mac_ether_header_stru *)OAL_NETBUF_HEADER(pst_buf);
 
-    /* ????skb??data???? */
+    /* 还原skb的data指针 */
     oal_netbuf_pull(pst_buf, ETHER_HDR_LEN);
 
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_PAE) == pst_ether_header->us_ether_type)
@@ -914,7 +914,7 @@ oal_uint32  hmac_psta_rx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
 
     ul_pkt_len = OAL_NETBUF_LEN(pst_buf) + ETHER_HDR_LEN;
 
-    /* ????VAP?????? */
+    /* 获取VAP结构体 */
     pst_mac_vap = &pst_hmac_vap->st_vap_base_info;
 
     if (ul_pkt_len < ul_contig_len)
@@ -927,7 +927,7 @@ oal_uint32  hmac_psta_rx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
     us_ether_type = pst_ether_header->us_ether_type;
     puc_des_mac   = pst_ether_header->auc_ether_dhost;
 
-    /* ARP ?????????? */
+    /* ARP 包地址转换 */
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_ARP) == us_ether_type)
     {
         ul_ret = hmac_psta_rx_arp_mat(pst_mac_vap,
@@ -943,7 +943,7 @@ oal_uint32  hmac_psta_rx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
     }
 
 /*lint -e778*/
-    /* IP?????????? */
+    /* IP包地址转换 */
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_IP) == us_ether_type)
     {
 /*lint +e778*/
@@ -959,10 +959,10 @@ oal_uint32  hmac_psta_rx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
         return ul_ret;
     }
 
-    /*icmpv6 ?????????? */
+    /*icmpv6 包地址转换 */
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_IPV6) == us_ether_type)
     {
-        /*TBD A????????????todo */
+        /*TBD A公司代码中是todo */
     }
 
     oal_set_mac_addr(puc_des_mac, hmac_vap_psta_oma(pst_hmac_vap));
@@ -1041,18 +1041,18 @@ OAL_STATIC oal_uint32 hmac_psta_tx_arp_mat(mac_vap_stru *pst_mac_vap,
    /***************************************************************************/
    /*                      ARP Frame Format                                   */
    /* ----------------------------------------------------------------------- */
-   /* |??????????????|????????????|??????|????????|????????|????????????|     */
+   /* |以太网目的地址|以太网源地址|帧类型|硬件类型|协议类型|硬件地址长度|     */
    /* ----------------------------------------------------------------------- */
-   /* | 6            |6(??????)   |2     |2       |2       |1           |     */
+   /* | 6            |6(待替换)   |2     |2       |2       |1           |     */
    /* ----------------------------------------------------------------------- */
-   /* |????????????|op|????????????????|??????IP????|??????????????|????IP????*/
+   /* |协议地址长度|op|发送端以太网地址|发送端IP地址|目的以太网地址|目的IP地址*/
    /* ----------------------------------------------------------------------- */
-   /* | 1          |2 |6(??????)       |4           |6             |4         */
+   /* | 1          |2 |6(待替换)       |4           |6             |4         */
    /* ----------------------------------------------------------------------- */
    /*                                                                         */
    /***************************************************************************/
 
-    /* ?????????????? */
+    /* 参数合法性检查 */
     if ((OAL_PTR_NULL == pst_mac_vap) || (OAL_PTR_NULL == puc_eth_body))
     {
         OAM_ERROR_LOG0(0, OAM_SF_PROXYSTA,
@@ -1088,7 +1088,7 @@ OAL_STATIC oal_uint32 hmac_psta_tx_arp_mat(mac_vap_stru *pst_mac_vap,
             case OAL_ARPOP_REQUEST:
             case OAL_ARPOP_REPLY:
 
-            // ????mac??????out vap??mac????
+            // 替换mac地址为out vap的mac地址
             oal_set_mac_addr(puc_arp_smac,  mac_mib_get_StationID(pst_mac_vap));
             break;
             default:
@@ -1117,14 +1117,14 @@ OAL_STATIC oal_uint32 hmac_psta_tx_ip_mat(mac_vap_stru           *pst_mac_vap,
     /*************************************************************************/
     /*                      DHCP Frame Format                                */
     /* --------------------------------------------------------------------- */
-    /* |????????        |   IP??         | UDP??           |DHCP????       | */
+    /* |以太网头        |   IP头         | UDP头           |DHCP报文       | */
     /* --------------------------------------------------------------------- */
-    /* | 14             |20              |8                | ????          | */
+    /* | 14             |20              |8                | 不定          | */
     /* --------------------------------------------------------------------- */
     /*                                                                       */
     /*************************************************************************/
 
-    /* ?????????????? */
+    /* 参数合法性检查 */
     if ((OAL_PTR_NULL == pst_mac_vap) || (OAL_PTR_NULL == pst_ether_header) || (OAL_PTR_NULL == puc_eth_body))
     {
         OAM_ERROR_LOG0(0, OAM_SF_PROXYSTA,
@@ -1135,17 +1135,17 @@ OAL_STATIC oal_uint32 hmac_psta_tx_ip_mat(mac_vap_stru           *pst_mac_vap,
     pst_ip_header =  (oal_ip_header_stru *)puc_eth_body;
 
     /*************************************************************************/
-    /*                    IP?????? (oal_ip_header_stru)                      */
+    /*                    IP头格式 (oal_ip_header_stru)                      */
     /* --------------------------------------------------------------------- */
-    /* | ???? | ???????? | ???????? | ??????  |????  |????  |????????
+    /* | 版本 | 报头长度 | 服务类型 | 总长度  |标识  |标志  |段偏移量
 |      */
     /* --------------------------------------------------------------------- */
     /* | 4bits|  4bits   | 1        | 2       | 2    |3bits | 13bits  |      */
     /* --------------------------------------------------------------------- */
     /* --------------------------------------------------------------------- */
-    /* | ?????? | ????        | ??????????| ????????SrcIp??|??????????DstIp??*/
+    /* | 生存期 | 协议        | 头部校验和| 源地址（SrcIp）|目的地址（DstIp）*/
     /* --------------------------------------------------------------------- */
-    /* | 1      |  1 (17??UDP)| 2         | 4              | 4               */
+    /* | 1      |  1 (17为UDP)| 2         | 4              | 4               */
     /* --------------------------------------------------------------------- */
     /*************************************************************************/
 
@@ -1159,7 +1159,7 @@ OAL_STATIC oal_uint32 hmac_psta_tx_ip_mat(mac_vap_stru           *pst_mac_vap,
 
     us_ip_header_len = pst_ip_header->us_ihl * 4;
 
-    /* ??????UDP */
+    /* 如果是UDP */
     if (OAL_IPPROTO_UDP == pst_ip_header->uc_protocol)
     {
         pst_udp_header  = (oal_udp_header_stru *)((oal_uint8 *)pst_ip_header + us_ip_header_len);
@@ -1173,9 +1173,9 @@ OAL_STATIC oal_uint32 hmac_psta_tx_ip_mat(mac_vap_stru           *pst_mac_vap,
         }
 
         /*************************************************************************/
-        /*                      UDP ?? (oal_udp_header_stru)                     */
+        /*                      UDP 头 (oal_udp_header_stru)                     */
         /* --------------------------------------------------------------------- */
-        /* |??????????SrcPort??|????????????DstPort??| UDP????    | UDP??????  | */
+        /* |源端口号（SrcPort）|目的端口号（DstPort）| UDP长度    | UDP检验和  | */
         /* --------------------------------------------------------------------- */
         /* | 2                 | 2                   |2           | 2          | */
         /* --------------------------------------------------------------------- */
@@ -1193,18 +1193,18 @@ OAL_STATIC oal_uint32 hmac_psta_tx_ip_mat(mac_vap_stru           *pst_mac_vap,
 /*lint +e572*/
 
             /*************************************************************************/
-            /*                    DHCP ???????? (oal_dhcp_packet_stru)               */
+            /*                    DHCP 报文格式 (oal_dhcp_packet_stru)               */
             /* --------------------------------------------------------------------- */
-            /* | op | htpe | hlen | hops  |xid(????IP)  |secs(????)   |flags(????)|  */
+            /* | op | htpe | hlen | hops  |xid(事务IP)  |secs(秒数)   |flags(标志)|  */
             /* --------------------------------------------------------------------- */
             /* | 1  | 1    | 1    | 1     | 4           | 2           | 2          | */
             /* --------------------------------------------------------------------- */
             /* --------------------------------------------------------------------- */
-            /* | ciaddr(4)????ip???? | yiaddr??4??????IP???? |siaddr(4)??????IP????| */
+            /* | ciaddr(4)客户ip地址 | yiaddr（4）你的IP地址 |siaddr(4)服务器IP地址| */
             /* --------------------------------------------------------------------- */
-            /* | giaddr??4??????????IP????      | chaddr??16????????????????(??????)|*/
+            /* | giaddr（4）中继代理IP地址      | chaddr（16）客户机硬件地址(待替换)|*/
             /* --------------------------------------------------------------------- */
-            /* |sname??64????????????????|file??128????????????|option??????????????|*/
+            /* |sname（64）服务器的主机名|file（128）启动文件名|option（不定长）选项|*/
             /* --------------------------------------------------------------------- */
             /*************************************************************************/
 
@@ -1222,10 +1222,10 @@ OAL_STATIC oal_uint32 hmac_psta_tx_ip_mat(mac_vap_stru           *pst_mac_vap,
 
             if (OAL_FALSE == oal_compare_mac_addr(pst_dhcp_packet->chaddr, pst_ether_header->auc_ether_shost))
             {
-                /* ??UDP?????????????????????????? */
+                /* 把UDP包中的地址替换为自己的地址 */
                 oal_set_mac_addr(pst_dhcp_packet->chaddr, mac_mib_get_StationID(pst_mac_vap));
 
-                /* ??????????????????????????????????UDP ????checksum */
+                /* 由于包内容已经被改写，所以要重新写UDP 帧的checksum */
                 pst_udp_header->check = hmac_psta_rx_checksum(pst_udp_header->check,
                                                                               puc_scr_mac,
                                                                               mac_mib_get_StationID(pst_mac_vap));
@@ -1250,7 +1250,7 @@ OAL_STATIC oal_uint32 hmac_psta_tx_icmpv6_mat(mac_vap_stru *pst_mac_vap,
     oal_bool_enum_uint8        en_packet_changed = OAL_TRUE;
     oal_uint16                 us_check_sum = 0;
 
-    /* ?????????????? */
+    /* 参数合法性检查 */
     if ((OAL_PTR_NULL == pst_mac_vap) || (OAL_PTR_NULL == puc_eth_body))
     {
         OAM_ERROR_LOG0(0, OAM_SF_PROXYSTA,
@@ -1292,7 +1292,7 @@ OAL_STATIC oal_uint32 hmac_psta_tx_icmpv6_mat(mac_vap_stru *pst_mac_vap,
             case OAL_NDISC_NEIGHBOUR_ADVERTISEMENT:
             {
                 ul_contig_len += OAL_IPV6_MAC_ADDR_LEN;
-                /* ??????IcmpV6 option,???????????????????????? */
+                /* 不存在IcmpV6 option,源地址不存在，不需要转换 */
                 if (ul_pkt_len == ul_contig_len)
                 {
                     OAM_WARNING_LOG0(pst_mac_vap->uc_vap_id, OAM_SF_PROXYSTA,
@@ -1300,7 +1300,7 @@ OAL_STATIC oal_uint32 hmac_psta_tx_icmpv6_mat(mac_vap_stru *pst_mac_vap,
                     return OAL_SUCC;
                 }
 
-                /* ???????????????????? */
+                /* 存在源地址，进行转换 */
                 ul_contig_len += OAL_SIZEOF(oal_eth_icmp6_lladdr_stru);
                 if (ul_pkt_len < ul_contig_len)
                 {
@@ -1311,7 +1311,7 @@ OAL_STATIC oal_uint32 hmac_psta_tx_icmpv6_mat(mac_vap_stru *pst_mac_vap,
 
                 pst_eth_icmp6_lladdr = (oal_eth_icmp6_lladdr_stru *)((oal_uint8 *)(pst_icmp6hdr + 1) + 16);
 
-                /* ???????? */
+                /* 替换地址 */
                 oal_set_mac_addr(pst_eth_icmp6_lladdr->uc_addr, mac_mib_get_StationID(pst_mac_vap));
 
                 us_check_sum = hmac_psta_tx_checksum((oal_uint16)OAL_IPPROTO_ICMPV6,us_icmp6len,
@@ -1364,7 +1364,7 @@ oal_uint32  hmac_psta_tx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
     oal_uint32              ul_pkt_len;
     oal_uint32              ul_ret = OAL_SUCC;
 
-    /* ?????????????? */
+    /* 参数合法性检查 */
     if (OAL_UNLIKELY((OAL_PTR_NULL == pst_buf) || (OAL_PTR_NULL == pst_hmac_vap)))
     {
         OAM_ERROR_LOG0(0, OAM_SF_PROXYSTA,
@@ -1374,7 +1374,7 @@ oal_uint32  hmac_psta_tx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
 
     pst_mac_vap = &pst_hmac_vap->st_vap_base_info;
 
-    /* ??????????????????????pst_buf?????? */
+    /* 参数合法性检查后，获取pst_buf的长度 */
     ul_pkt_len = OAL_NETBUF_LEN(pst_buf);
 
     if (ul_pkt_len < ul_contig_len)
@@ -1396,7 +1396,7 @@ oal_uint32  hmac_psta_tx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
         return OAL_SUCC;
     }
 
-    /* ARP?????????? */
+    /* ARP包地址转换 */
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_ARP)  == us_ether_type)
     {
         ul_ret = hmac_psta_tx_arp_mat(pst_mac_vap, puc_eth_body, ul_pkt_len, ul_contig_len);
@@ -1409,7 +1409,7 @@ oal_uint32  hmac_psta_tx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
     }
 
 /*lint -e778*/
-    /*DHCP ?????????? */
+    /*DHCP 包地址转换 */
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_IP) == us_ether_type)
     {
 /*lint +e778*/
@@ -1426,7 +1426,7 @@ oal_uint32  hmac_psta_tx_mat(oal_netbuf_stru *pst_buf, hmac_vap_stru *pst_hmac_v
         }
     }
 
-    /*icmpv6 ?????????? */
+    /*icmpv6 包地址转换 */
     if (OAL_HOST2NET_SHORT(ETHER_TYPE_IPV6) == us_ether_type)
     {
         ul_ret = hmac_psta_tx_icmpv6_mat(pst_mac_vap, puc_eth_body, ul_pkt_len, ul_contig_len);
@@ -1453,7 +1453,7 @@ oal_uint32 hmac_psta_pause_bss(hmac_vap_stru *pst_hmac_vap)
 
     hmac_ap_clean_bss_etc(pst_hmac_vap);
 
-    /* ????AP?????????? WAIT_START */
+    /* 设置AP侧状态机为 WAIT_START */
     hmac_fsm_change_state_etc(pst_hmac_vap, MAC_VAP_STATE_AP_WAIT_START);
 
     return OAL_SUCC;
@@ -1494,14 +1494,14 @@ oal_uint32  hmac_psta_proc_wait_join(hmac_vap_stru *pst_hmac_sta, hmac_join_req_
 
     pst_rep = hmac_psta_get_rep(pst_hmac_sta);
 
-    // ????main sta????????????down/up??????
+    // 只有main sta入网时才需要down/up操作。
     if (!mac_is_proxysta_enabled(pst_mac_device)
     || (!mac_vap_is_msta(&pst_hmac_sta->st_vap_base_info)))
     {
         return OAL_SUCC;
     }
 
-    // ??device??????bss??????????????
+    // 同device下所有bss的信道需要改变
     for (uc_vap_idx = 0; uc_vap_idx < pst_mac_device->uc_vap_num; uc_vap_idx++)
     {
         pst_hmac_vap_temp = mac_res_get_hmac_vap(pst_mac_device->auc_vap_id[uc_vap_idx]);
@@ -1514,7 +1514,7 @@ oal_uint32  hmac_psta_proc_wait_join(hmac_vap_stru *pst_hmac_sta, hmac_join_req_
         }
     }
 
-    // ??repeater??????BSS??????down??????????????
+    // 同repeater下其他BSS也需要down掉，以删除用户
     OAL_DLIST_SEARCH_FOR_EACH(pst_list, &pst_rep->st_pbss_list)
     {
         pst_hmac_vap_temp = OAL_DLIST_GET_ENTRY(pst_list, hmac_vap_stru, st_psta.st_hash_entry);
@@ -1554,14 +1554,14 @@ oal_uint32  hmac_psta_proc_join_result(hmac_vap_stru *pst_hmac_sta, oal_bool_enu
 
     pst_rep = hmac_psta_get_rep(pst_hmac_sta);
 
-    // ????main sta????????????down/up??????
+    // 只有main sta入网时才需要down/up操作。
     if (!mac_is_proxysta_enabled(pst_mac_device)
     || (!mac_vap_is_msta(&pst_hmac_sta->st_vap_base_info)))
     {
         return OAL_SUCC;
     }
 
-    // ??device??????bss????????????????
+    // 同device下所有bss的信道都需要改变
     for (uc_vap_idx = 0; uc_vap_idx < pst_mac_device->uc_vap_num; uc_vap_idx++)
     {
         pst_hmac_vap_temp = mac_res_get_hmac_vap(pst_mac_device->auc_vap_id[uc_vap_idx]);
@@ -1576,7 +1576,7 @@ oal_uint32  hmac_psta_proc_join_result(hmac_vap_stru *pst_hmac_sta, oal_bool_enu
         }
     }
 
-    // ??repeater??????bss??????????????
+    // 同repeater下其他bss信道不需要改变
     OAL_DLIST_SEARCH_FOR_EACH(pst_list, &pst_rep->st_pbss_list)
     {
         pst_hmac_vap_temp = OAL_DLIST_GET_ENTRY(pst_list, hmac_vap_stru, st_psta.st_hash_entry);

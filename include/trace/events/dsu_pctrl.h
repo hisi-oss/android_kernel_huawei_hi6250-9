@@ -6,7 +6,7 @@
 
 #include <linux/tracepoint.h>
 
-TRACE_EVENT(dsu_pctrl_dev_status,/* [false alarm]:??????????????? */
+TRACE_EVENT(dsu_pctrl_dev_status,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int dsu_id, unsigned long hits, unsigned long misses,
 		 unsigned long freq, unsigned long busy_time,
 		 unsigned long total_time),
@@ -34,7 +34,7 @@ TRACE_EVENT(dsu_pctrl_dev_status,/* [false alarm]:??????????????? */
 );
 
 
-TRACE_EVENT(dsu_pctrl_set_active_portions,/* [false alarm]:??????????????? */
+TRACE_EVENT(dsu_pctrl_set_active_portions,/* [false alarm]:原生宏定义 */
 	TP_PROTO(unsigned long portions, unsigned long portion_active),
 	TP_ARGS(portions, portion_active),
 	TP_STRUCT__entry(
@@ -50,7 +50,7 @@ TRACE_EVENT(dsu_pctrl_set_active_portions,/* [false alarm]:??????????????? */
 		  __entry->portions, __entry->portion_active)
 );
 
-TRACE_EVENT(dsu_pctrl_read_perf_counters,/* [false alarm]:??????????????? */
+TRACE_EVENT(dsu_pctrl_read_perf_counters,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int cpu, unsigned long l3d_refill_cnt, unsigned long l3d_cnt),
 	TP_ARGS(cpu, l3d_refill_cnt, l3d_cnt),
 	TP_STRUCT__entry(
@@ -68,7 +68,7 @@ TRACE_EVENT(dsu_pctrl_read_perf_counters,/* [false alarm]:??????????????? */
 		  __entry->cpu, __entry->l3d_refill_cnt, __entry->l3d_cnt)
 );
 
-TRACE_EVENT(dsu_pctrl_get_cnt,/* [false alarm]:??????????????? */
+TRACE_EVENT(dsu_pctrl_get_cnt,/* [false alarm]:原生宏定义 */
 	TP_PROTO(unsigned long total_refill, unsigned long total_access),
 	TP_ARGS(total_refill, total_access),
 	TP_STRUCT__entry(
@@ -85,7 +85,7 @@ TRACE_EVENT(dsu_pctrl_get_cnt,/* [false alarm]:??????????????? */
 );
 
 
-TRACE_EVENT(dsu_pctrl_target_acp,/* [false alarm]:??????????????? */
+TRACE_EVENT(dsu_pctrl_target_acp,/* [false alarm]:原生宏定义 */
 	TP_PROTO(const char *acp, int id),
 	TP_ARGS(acp, id),
 	TP_STRUCT__entry(

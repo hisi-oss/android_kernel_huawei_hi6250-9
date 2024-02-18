@@ -1,7 +1,7 @@
 /*
  * Clocksource using the Low Power Timer found in the Low Power Controller (LPC)
  *
- * Copyright (C) 2015 STMicroelectronics ??? All Rights Reserved
+ * Copyright (C) 2015 STMicroelectronics – All Rights Reserved
  *
  * Author(s): Francesco Virlinzi <francesco.virlinzi@st.com>
  *	      Ajit Pal Singh <ajitpal.singh@st.com>

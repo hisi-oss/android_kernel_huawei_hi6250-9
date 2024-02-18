@@ -11,14 +11,14 @@ extern "C" {
 
 
 /*****************************************************************************
-  1 ??????????????
+  1 其他头文件包含
 *****************************************************************************/
 #include "oal_types.h"
 #include "oal_mm.h"
 #include "arch/oal_util.h"
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
 
 #define OAL_VA_START            va_start
@@ -26,28 +26,28 @@ extern "C" {
 
 #define OAL_VA_LIST             va_list
 
-/* ??????16 bit???? 32bit */
+/* 拼接为16 bit或者 32bit */
 #define OAL_MAKE_WORD16(lsb, msb) ((((oal_uint16)(msb) << 8) & 0xFF00) | (lsb))
 #define OAL_MAKE_WORD32(lsw, msw) ((((oal_uint32)(msw) << 16) & 0xFFFF0000) | (lsw))
 
 
-/* ???????????????????????????? */
+/* 计算为字节对齐后填充后的长度 */
 #define OAL_ROUNDUP(_old_len, _align)  ((((_old_len) + ((_align) - 1)) / (_align)) * (_align))
 
 /* increment with wrap-around */
 #define OAL_INCR(_l, _sz)   (_l)++; (_l) &= ((_sz) - 1)
 #define OAL_DECR(_l, _sz)   (_l)--; (_l) &= ((_sz) - 1)
 
-/* ???????? */
+/* 获取大小 */
 #define OAL_SIZEOF                                  sizeof
 
-/* ???????????? */
+/* 获取数组大小 */
 #define OAL_ARRAY_SIZE(_ast_array)                  (sizeof(_ast_array) / sizeof((_ast_array)[0]))
 
-/* ?????????? */
+/* 四字节对齐 */
 #define OAL_GET_4BYTE_ALIGN_VALUE(_ul_size)         (((_ul_size) + 0x03) & (~0x03))
 
-/* ???????????????? */
+/* 获取当前线程信息 */
 #define OAL_CURRENT_TASK     (current_thread_info()->task)
 
 #define OAL_SWAP_BYTEORDER_16(_val) ((((_val) & 0x00FF) << 8) + (((_val) & 0xFF00) >> 8))
@@ -82,30 +82,30 @@ extern "C" {
 #define oal_atomic_inc_return   atomic_inc_return
 #endif
 
-#if 0  /* ?????? */
+#if 0  /* 编不过 */
 #ifndef current
 #define current (0)
 #endif
 #endif
 
-/* ?????? */
+/* 比较宏 */
 #define OAL_MIN(_A, _B) (((_A) < (_B))? (_A) : (_B))
 
-/* ?????? */
+/* 比较宏 */
 #define OAL_MAX(_A, _B) (((_A) > (_B))? (_A) : (_B))
 
 #define OAL_SUB(_A, _B) (((_A) > (_B))? ((_A) - (_B)) : (0))
 
 #define OAL_ABSOLUTE_SUB(_A, _B) (((_A) > (_B))? ((_A) - (_B)) : ((_B) - (_A)))
 
-/* ??????????????????????????????32-bit????????????*/
+/* 从某个设备读取某个寄存器地址的32-bit寄存器的值。*/
 #define OAL_REG_READ32(_addr)    \
         *((OAL_VOLATILE oal_uint32 *)(_addr))
 
 #define OAL_REG_READ16(_addr)    \
     *((OAL_VOLATILE oal_uint16 *)(_addr))
 
-/* ??????????????32-bit???????????????????? */
+/* 往某个设备某个32-bit寄存器地址写入某个值 */
 #define OAL_REG_WRITE32(_addr, _val)    \
     (*((OAL_VOLATILE oal_uint32 *)(_addr)) = (_val))
 #define OAL_REG_WRITE16(_addr, _val)    \
@@ -157,10 +157,10 @@ extern "C" {
 
 #define BIT(nr)                 (1UL << (nr))
 
-#define OAL_BITS_PER_BYTE       8   /* ????????????????bit???? */
+#define OAL_BITS_PER_BYTE       8   /* 一个字节中包含的bit数目 */
 
 
-/* ?????? */
+/* 位操作 */
 #define OAL_WRITE_BITS(_data, _val, _bits, _pos)    do{\
         (_data) &= ~((((oal_uint32)1 << (_bits)) - 1) << (_pos));\
         (_data) |= (((_val) & (((oal_uint32)1 << (_bits)) - 1)) << (_pos));\
@@ -170,26 +170,26 @@ extern "C" {
 
 
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
 
 /*****************************************************************************
-  4 ????????????
-*****************************************************************************/
-
-
-/*****************************************************************************
-  5 ??????????
+  4 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 ????????
+  5 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  7 STRUCT????
+  6 消息定义
+*****************************************************************************/
+
+
+/*****************************************************************************
+  7 STRUCT定义
 *****************************************************************************/
 #ifdef _PRE_CONFIG_HISI_PANIC_DUMP_SUPPORT
 typedef  struct _hwifi_panic_log_   hwifi_panic_log;
@@ -211,17 +211,17 @@ struct _hwifi_panic_log_
 #endif
 
 /*****************************************************************************
-  8 UNION????
+  8 UNION定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  9 OTHERS????
+  9 OTHERS定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  10 ????????
+  10 函数声明
 *****************************************************************************/
 #ifdef _PRE_CONFIG_HISI_PANIC_DUMP_SUPPORT
 
@@ -260,7 +260,7 @@ OAL_STATIC OAL_INLINE oal_void  oal_strtoaddr(const oal_int8 *pc_param, oal_uint
 {
     oal_uint8   uc_char_index;
 
-    /* ????mac????,16???????? */
+    /* 获取mac地址,16进制转换 */
     for (uc_char_index = 0; uc_char_index < 12; uc_char_index++)
     {
         if ((':' == *pc_param) || ('-' == *pc_param))
@@ -714,7 +714,7 @@ OAL_STATIC OAL_INLINE oal_void  oal_del_lut_index(oal_uint8 *puc_lut_index_table
 
 OAL_STATIC OAL_INLINE oal_uint32* oal_get_virt_addr(oal_uint32 *pul_phy_addr)
 {
-    /* ?????????????? */
+    /* 空指针无需转化 */
     if (OAL_PTR_NULL == pul_phy_addr)
     {
         return pul_phy_addr;

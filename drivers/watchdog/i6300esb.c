@@ -2,7 +2,7 @@
  *	i6300esb:	Watchdog timer driver for Intel 6300ESB chipset
  *
  *	(c) Copyright 2004 Google Inc.
- *	(c) Copyright 2005 David H??rdeman <david@2gen.com>
+ *	(c) Copyright 2005 David Härdeman <david@2gen.com>
  *
  *	This program is free software; you can redistribute it and/or
  *	modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
  *	Initial version 0.01
  *  2004YYZZ Ross Biro
  *	Version 0.02
- *  20050210 David H??rdeman <david@2gen.com>
+ *  20050210 David Härdeman <david@2gen.com>
  *	Ported driver to kernel 2.6
  */
 
@@ -493,6 +493,6 @@ static struct pci_driver esb_driver = {
 
 module_pci_driver(esb_driver);
 
-MODULE_AUTHOR("Ross Biro and David H??rdeman");
+MODULE_AUTHOR("Ross Biro and David Härdeman");
 MODULE_DESCRIPTION("Watchdog driver for Intel 6300ESB chipsets");
 MODULE_LICENSE("GPL");

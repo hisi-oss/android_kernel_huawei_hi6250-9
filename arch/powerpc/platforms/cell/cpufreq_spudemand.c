@@ -1,7 +1,7 @@
 /*
  * spu aware cpufreq governor for the cell processor
  *
- * ?? Copyright IBM Corporation 2006-2008
+ * © Copyright IBM Corporation 2006-2008
  *
  * Author: Christian Krafft <krafft@de.ibm.com>
  *
@@ -29,14 +29,14 @@
 #include <asm/machdep.h>
 #include <asm/spu.h>
 
-#define POLL_TIME	100000		/* in ??s */
+#define POLL_TIME	100000		/* in µs */
 #define EXP		753		/* exp(-1) in fixed-point */
 
 struct spu_gov_info_struct {
 	unsigned long busy_spus;	/* fixed-point */
 	struct cpufreq_policy *policy;
 	struct delayed_work work;
-	unsigned int poll_int;		/* ??s */
+	unsigned int poll_int;		/* µs */
 };
 static DEFINE_PER_CPU(struct spu_gov_info_struct, spu_gov_info);
 

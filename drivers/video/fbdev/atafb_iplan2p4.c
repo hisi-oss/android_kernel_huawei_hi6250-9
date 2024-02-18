@@ -1,6 +1,6 @@
 /*
  *  linux/drivers/video/iplan2p4.c -- Low level frame buffer operations for
- *				      interleaved bitplanes ?? la Atari (4
+ *				      interleaved bitplanes à la Atari (4
  *				      planes, 2 bytes interleave)
  *
  *	Created 5 Apr 1997 by Geert Uytterhoeven

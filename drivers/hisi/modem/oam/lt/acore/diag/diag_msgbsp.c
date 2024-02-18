@@ -101,7 +101,7 @@ VOS_UINT32 diag_NvRdProc(VOS_UINT8* pstReq)
     
     for(i = 0; i < pstNVQryReq->ulCount; i++)
     {
-        /*????????ID????NV??????*/
+        /*根据请求ID获取NV项长度*/
         ret = NV_GetLength(pstNVQryReq->ulNVId[i], &ulNVLen);
         if(ERR_MSP_SUCCESS != ret)
         {
@@ -109,10 +109,10 @@ VOS_UINT32 diag_NvRdProc(VOS_UINT8* pstReq)
             return ERR_MSP_FAILURE;
         }
 
-        ulTotalSize += ulNVLen + sizeof(VOS_UINT32) + sizeof(VOS_UINT32); /* NV??????????????(NVID??len????????????) */
+        ulTotalSize += ulNVLen + sizeof(VOS_UINT32) + sizeof(VOS_UINT32); /* NV内容的长度加上(NVID和len各占用四字节) */
     }
 
-    /* DIAG_CMD_NV_QRY_CNF_STRU?????????? */
+    /* DIAG_CMD_NV_QRY_CNF_STRU的实际长度 */
     ulTotalSize += (sizeof(DIAG_CMD_NV_QRY_CNF_STRU) - sizeof(VOS_UINT32) - sizeof(VOS_UINT32));
     
     pstNVQryCnf = VOS_MemAlloc(MSP_PID_DIAG_APP_AGENT, DYNAMIC_MEM_PT, ulTotalSize);
@@ -132,7 +132,7 @@ VOS_UINT32 diag_NvRdProc(VOS_UINT8* pstReq)
     
     for(i = 0; i < pstNVQryReq->ulCount; i++)
     {
-        /*????????ID????NV??????*/
+        /*根据请求ID获取NV项长度*/
         ret = NV_GetLength(pstNVQryReq->ulNVId[i], &ulNVLen);
         if(ERR_MSP_SUCCESS != ret)
         {
@@ -140,10 +140,10 @@ VOS_UINT32 diag_NvRdProc(VOS_UINT8* pstReq)
             goto DIAG_ERROR;
         }
 
-        *(VOS_UINT32*)(pData + ulOffset) = pstNVQryReq->ulNVId[i]; /* [false alarm]:????Fortify */
+        *(VOS_UINT32*)(pData + ulOffset) = pstNVQryReq->ulNVId[i]; /* [false alarm]:屏蔽Fortify */
         ulOffset += sizeof(VOS_UINT32);
 
-        *(VOS_UINT32*)(pData + ulOffset) = ulNVLen; /* [false alarm]:????Fortify */
+        *(VOS_UINT32*)(pData + ulOffset) = ulNVLen; /* [false alarm]:屏蔽Fortify */
         ulOffset += sizeof(VOS_UINT32);
 
         /*lint -save -e662 */   
@@ -213,7 +213,7 @@ VOS_UINT32 diag_GetNvListProc(VOS_UINT8* pstReq)
         goto DIAG_ERROR;
     }
 
-    /*????????NV????ID??????*/
+    /*获取每个NV项的ID和长度*/
     ret = NV_GetNVIdList(pstNVCnf->astNvList);
     if (NV_OK != ret)
     {
@@ -318,7 +318,7 @@ VOS_VOID diag_InitAuthVariable(VOS_VOID)
     IMEI_STRU stIMEI;
     VOS_UINT8 aucDefaultIMEI[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-    /*????IMEI??????????????????????*/
+    /*假如IMEI为默认值，则不需要鉴权*/
     if (NV_OK == NV_Read(en_NV_Item_IMEI, (VOS_VOID*)&stIMEI, sizeof(stIMEI)))
     {
         if (0 == VOS_MemCmp((VOS_CHAR*)aucDefaultIMEI, &stIMEI, sizeof(stIMEI)))
@@ -386,7 +386,7 @@ VOS_UINT32 diag_NvWrProc(VOS_UINT8* pstReq)
 
         printk(KERN_ERR "NV Write ulNVId=0x%x\n", ulNvid);
       
-        /*????NV??*/
+        /*写入NV项*/
         /*lint -save -e662 */
         ret = NV_WriteEx(pstNVWRReq->ulModemid, ulNvid, (pData + ulOffset), ulLen);
         /*lint -restore  */  
@@ -395,7 +395,7 @@ VOS_UINT32 diag_NvWrProc(VOS_UINT8* pstReq)
            printk(KERN_ERR "[%s]:NV Write ERR 0x%x,ulNVId=0x%x\n",__FUNCTION__, ret, ulNvid);
            goto DIAG_ERROR2;
         }
-        /*??Nv????????flash??*/
+        /*将Nv项刷写到flash中*/
         ret = mdrv_nv_flush();
         if(ret)
         {
@@ -591,13 +591,13 @@ VOS_UINT32 diag_BspMsgProc(DIAG_FRAME_INFO_STRU *pData)
     }
     else if ((VOS_FALSE == acmd_flag) && (VOS_TRUE == ccmd_flag))
     {
-        /*????ccore*/
+        /*通知ccore*/
         DIAG_MSG_BSP_ACORE_CFG_PROC(ulLen, pData, pstInfo, ulRet);
         return VOS_OK;
     }
     else if ((VOS_TRUE == acmd_flag) && (VOS_TRUE == ccmd_flag))
     {
-        /*A????????????????ccore??A??????????????????????????*/
+        /*A核处理成功后通知ccore，A核处理不成功直接向工具回复*/
         ulRet = mdrv_hds_msg_proc((VOS_VOID*)pData);
         if(ulRet != 0)
         {
@@ -631,7 +631,7 @@ DIAG_ERROR:
 
 /*****************************************************************************
  Function Name   : diag_BspMsgInit
- Description     : MSP dsp??????????
+ Description     : MSP dsp部分初始化
  Input           : None
  Output          : None
  Return          : None
@@ -640,7 +640,7 @@ DIAG_ERROR:
 *****************************************************************************/
 VOS_VOID diag_BspMsgInit(VOS_VOID)
 {
-    /*????message????????*/
+    /*注册message消息回调*/
     DIAG_MsgProcReg(DIAG_MSG_TYPE_BSP,diag_BspMsgProc);
     mdrv_hds_cnf_register((hds_cnf_func)DIAG_MsgReport);
     diag_nvInit();

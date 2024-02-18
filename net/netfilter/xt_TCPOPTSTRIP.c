@@ -2,7 +2,7 @@
  * A module for stripping a specific TCP option from TCP packets.
  *
  * Copyright (C) 2007 Sven Schnelle <svens@bitebene.org>
- * Copyright ?? CC Computer Consultants GmbH, 2007
+ * Copyright © CC Computer Consultants GmbH, 2007
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

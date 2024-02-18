@@ -6,7 +6,7 @@
 
 #include <linux/tracepoint.h>
 
-TRACE_EVENT(thermal_power_allocator,/* [false alarm]:??????????????? */
+TRACE_EVENT(thermal_power_allocator,/* [false alarm]:原生宏定义 */
 	TP_PROTO(struct thermal_zone_device *tz, u32 *req_power,
 		 u32 total_req_power, u32 *granted_power,
 		 u32 total_granted_power, size_t num_actors,
@@ -52,7 +52,7 @@ TRACE_EVENT(thermal_power_allocator,/* [false alarm]:??????????????? */
 		__entry->delta_temp)
 );
 
-TRACE_EVENT(thermal_power_allocator_pid,/* [false alarm]:??????????????? */
+TRACE_EVENT(thermal_power_allocator_pid,/* [false alarm]:原生宏定义 */
 	TP_PROTO(struct thermal_zone_device *tz, s32 err, s32 err_integral,
 		 s64 p, s64 i, s64 d, s32 output),
 	TP_ARGS(tz, err, err_integral, p, i, d, output),
@@ -80,7 +80,7 @@ TRACE_EVENT(thermal_power_allocator_pid,/* [false alarm]:??????????????? */
 		  __entry->p, __entry->i, __entry->d, __entry->output)
 );
 
-TRACE_EVENT(thermal_power_actor_cpu_limit,/* [false alarm]:??????????????? */
+TRACE_EVENT(thermal_power_actor_cpu_limit,/* [false alarm]:原生宏定义 */
 	TP_PROTO(const struct cpumask *cpus, unsigned int freq,
 		unsigned long cdev_state, u32 power),
 
@@ -370,7 +370,7 @@ TRACE_EVENT(IPA_actor_gpu_get_power,
 );/* [false alarm]:fortify */
 
 
-TRACE_EVENT(IPA_get_tsens_value,/* [false alarm]:??????????????? */
+TRACE_EVENT(IPA_get_tsens_value,/* [false alarm]:原生宏定义 */
 	TP_PROTO(u32 tsens_num, int *tsens_value, int tsens_value_max),
 
 	TP_ARGS(tsens_num, tsens_value, tsens_value_max),

@@ -4026,7 +4026,7 @@ out:
     soc_new = bound_soc(soc_new);
     return soc_new;
 }
-/* ????????????*/
+/* 电量平滑修正*/
 /*******************************************************
   Function:        limit_soc
   Description:     limt soc
@@ -4350,7 +4350,7 @@ static int calculate_state_of_charge(struct smartstar_coul_device *di)
     /* calculate remaining usable charge */
     //eco_leak_uah = calculate_eco_leak_uah();
 
-	/* ????ECO?????? */
+	/* 退出ECO模式后 */
     //remaining_charge_uah = remaining_charge_uah - eco_leak_uah;
 
     remaining_usable_charge_uah = remaining_charge_uah
@@ -7676,7 +7676,7 @@ static void update_polar_ocv(struct smartstar_coul_device *di,
     unsigned long sample_time_rtc = 0;
     if (NULL == di)
         return;
-    /*????eco??????????????*/
+    /*判断eco数据是否被清空*/
     di->coul_dev_ops->get_eco_sample_flag(&eco_sample_flag);
     current_sec = di->coul_dev_ops->get_coul_time();
     coul_core_debug("[%s]vbat:0x%x, ibat:0x%x\n",

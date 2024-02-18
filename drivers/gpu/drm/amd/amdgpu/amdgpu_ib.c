@@ -24,7 +24,7 @@
  * Authors: Dave Airlie
  *          Alex Deucher
  *          Jerome Glisse
- *          Christian K??nig
+ *          Christian König
  */
 #include <linux/seq_file.h>
 #include <linux/slab.h>

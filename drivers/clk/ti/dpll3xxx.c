@@ -5,7 +5,7 @@
  * Copyright (C) 2009-2010 Nokia Corporation
  *
  * Written by Paul Walmsley
- * Testing and integration fixes by Jouni H??gander
+ * Testing and integration fixes by Jouni Högander
  *
  * 36xx support added by Vishwanath BS, Richard Woodruff, and Nishanth
  * Menon

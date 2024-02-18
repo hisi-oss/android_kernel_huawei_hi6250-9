@@ -1,6 +1,6 @@
 /*
  * platform device definitions for the iop3xx dma/xor engines
- * Copyright ?? 2006, Intel Corporation.
+ * Copyright © 2006, Intel Corporation.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,

@@ -821,7 +821,7 @@ change_okay:
 }
 
 /*
- * Samma p?? svenska..
+ * Samma på svenska..
  */
 SYSCALL_DEFINE1(setfsgid, gid_t, gid)
 {

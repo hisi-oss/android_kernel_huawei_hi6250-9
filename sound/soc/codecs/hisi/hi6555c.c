@@ -826,64 +826,64 @@ static int classd_voltage_put(struct snd_kcontrol *kcontrol,
 /*****************************************************************************
   Sound Controls
  *****************************************************************************/
-/* LINEPGAL GAIN(LINEPGAL_GAIN<3:0>)??
- * range:-14dB~16dB??
- * step:2dB??
- * 0000:-14dB??
- * 0001:-12dB??
- * 0010:-10dB??
- * ????
- * 0111:0dB??
- * ????
- * 1110:14dB??
- * 1111:16dB?? */
+/* LINEPGAL GAIN(LINEPGAL_GAIN<3:0>)£»
+ * range:-14dB~16dB¡£
+ * step:2dB¡£
+ * 0000:-14dB£»
+ * 0001:-12dB£»
+ * 0010:-10dB£»
+ * ¡­¡­
+ * 0111:0dB£»
+ * ¡­¡­
+ * 1110:14dB£»
+ * 1111:16dB£» */
 static DECLARE_TLV_DB_SCALE(hi6555c_smt_linepgal_gain_tlv, -1400, 200, 0);
 
-/* LINEPGAR GAIN(LINEPGAR_GAIN<3:0>)??
- * range:-14dB~16dB??
- * step:2dB??
- * 0000:-14dB??
- * 0001:-12dB??
- * 0010:-10dB??
- * ????
- * 0111:0dB??
- * ????
- * 1110:14dB??
- * 1111:16dB?? */
+/* LINEPGAR GAIN(LINEPGAR_GAIN<3:0>)£»
+ * range:-14dB~16dB¡£
+ * step:2dB¡£
+ * 0000:-14dB£»
+ * 0001:-12dB£»
+ * 0010:-10dB£»
+ * ¡­¡­
+ * 0111:0dB£»
+ * ¡­¡­
+ * 1110:14dB£»
+ * 1111:16dB£» */
 static DECLARE_TLV_DB_SCALE(hi6555c_smt_linepgar_gain_tlv, -1400, 200, 0);
 
-/* AUXPGA GAIN(AUXPGA_GAIN<2:0>)??
- * range:0dB~14dB??
- * step:2dB??
- * 000: 0dB??
- * 001: 2dB??
- * 010: 4dB??
- * 011: 6dB??
- * 100: 8dB??
- * 101: 10dB??
- * 110: 12dB??
- * 111: 14dB?? */
+/* AUXPGA GAIN(AUXPGA_GAIN<2:0>)£»
+ * range:0dB~14dB¡£
+ * step:2dB¡£
+ * 000: 0dB£»
+ * 001: 2dB£»
+ * 010: 4dB£»
+ * 011: 6dB£»
+ * 100: 8dB£»
+ * 101: 10dB£»
+ * 110: 12dB£»
+ * 111: 14dB£» */
 static DECLARE_TLV_DB_SCALE(hi6555c_smt_auxpga_gain_tlv, 0, 200, 0);
 
-/* MAINPGA GAIN(MAINPGA_GAIN<2:0>)??
- * range:0dB~14dB??
- * step:2dB??
- * 000: 0dB??
- * 001: 2dB??
- * 010: 4dB??
- * 011: 6dB??
- * 100: 8dB??
- * 101: 10dB??
- * 110: 12dB??
- * 111: 14dB?? */
+/* MAINPGA GAIN(MAINPGA_GAIN<2:0>)£»
+ * range:0dB~14dB¡£
+ * step:2dB¡£
+ * 000: 0dB£»
+ * 001: 2dB£»
+ * 010: 4dB£»
+ * 011: 6dB£»
+ * 100: 8dB£»
+ * 101: 10dB£»
+ * 110: 12dB£»
+ * 111: 14dB£» */
 static DECLARE_TLV_DB_SCALE(hi6555c_smt_mainpga_gain_tlv, 0, 200, 0);
 
-/* HeadphoneL GAIN(HSL_GAIN<3:0>)??
- * range:-20dB~-0dB??
- * step:1.5dB??
- * 0000:-20dB??
- * 0001:-18dB??
- * 0010:-16.5dB??
+/* HeadphoneL GAIN(HSL_GAIN<3:0>)£»
+ * range:-20dB~-0dB¡£
+ * step:1.5dB¡£
+ * 0000:-20dB£»
+ * 0001:-18dB£»
+ * 0010:-16.5dB£»
  * 0011: -15dB;
  * 0100:-13.5dB;
  * 0101:-12dB;
@@ -899,12 +899,12 @@ static DECLARE_TLV_DB_SCALE(hi6555c_smt_mainpga_gain_tlv, 0, 200, 0);
  * 1111:0dB; */
 static DECLARE_TLV_DB_SCALE(hi6555c_smt_hsl_gain_tlv, -2000, 150, 0);
 
-/* HeadphoneR GAIN(HSR_GAIN<3:0>)??
- * range:-20dB~-0dB??
- * step:1.5dB??
- * 0000:-20dB??
- * 0001:-18dB??
- * 0010:-16.5dB??
+/* HeadphoneR GAIN(HSR_GAIN<3:0>)£»
+ * range:-20dB~-0dB¡£
+ * step:1.5dB¡£
+ * 0000:-20dB£»
+ * 0001:-18dB£»
+ * 0010:-16.5dB£»
  * 0011: -15dB;
  * 0100:-13.5dB;
  * 0101:-12dB;
@@ -920,12 +920,12 @@ static DECLARE_TLV_DB_SCALE(hi6555c_smt_hsl_gain_tlv, -2000, 150, 0);
  * 1111:0dB; */
 static DECLARE_TLV_DB_SCALE(hi6555c_smt_hsr_gain_tlv, -2000, 150, 0);
 
-/* EAR GAIN(EAR_GAIN<5:0>)??
- * range:-20dB~-6dB??
- * step:2dB??
- * 0000:-20dB??
- * 0001:-18dB??
- * 0010:-16dB??
+/* EAR GAIN(EAR_GAIN<5:0>)£»
+ * range:-20dB~-6dB¡£
+ * step:2dB¡£
+ * 0000:-20dB£»
+ * 0001:-18dB£»
+ * 0010:-16dB£»
  * 0011: -14dB;
  * 0100:-12dB;
  * 0101:-10dB;
@@ -2030,13 +2030,13 @@ static int hi6555c_smt_hsmicb_power_mode_event(struct snd_soc_dapm_widget *w,
 
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
-		/* to avoid irq while MBHD_COMP power up??mask the irq then clean it */
+		/* to avoid irq while MBHD_COMP power up£¬mask the irq then clean it */
 		irq_mask = hi6555c_reg_read(g_codec, HI6555C_SMT_ANA_IRQM_REG0_ADDR);
 		hi6555c_irqs_mask_set(irq_mask | IRQ_MSK_COMP);
 		hi6555c_hs_micbias_work_enable(g_codec, true);
 		msleep(25);
 
-		/* to avoid irq while MBHD_COMP power up??mask the irq then clean it */
+		/* to avoid irq while MBHD_COMP power up£¬mask the irq then clean it */
 		hi6555c_irqs_clr(IRQ_MSK_COMP);
 		hi6555c_irqs_mask_clr(IRQ_MSK_BTN_NOR);
 		break;
@@ -4130,7 +4130,7 @@ static void hi6555c_hs_micbias_pd(struct snd_soc_codec *codec, bool enable)
 {
 	unsigned int irq_mask = 0;
 
-	/* to avoid irq while MBHD_COMP power up??mask the irq then clean it */
+	/* to avoid irq while MBHD_COMP power up£¬mask the irq then clean it */
 	irq_mask = hi6555c_reg_read(codec, HI6555C_SMT_ANA_IRQM_REG0_ADDR);
 	hi6555c_irqs_mask_set(irq_mask | IRQ_MSK_COMP);
 
@@ -4556,7 +4556,7 @@ static void hs_plug_in_detect_func(struct snd_soc_codec *codec)
 		loge("hs status=%d(old=%d) not changed\n", priv->hs_status, priv->old_hs_status);
 	}
 
-	/* to avoid irq while MBHD_COMP power up??mask the irq then clean it */
+	/* to avoid irq while MBHD_COMP power up£¬mask the irq then clean it */
 	hi6555c_irqs_clr(IRQ_MSK_COMP);
 	hi6555c_irqs_mask_clr(IRQ_MSK_BTN_NOR);
 	mutex_unlock(&priv->plug_mutex);
@@ -4649,7 +4649,7 @@ static int hs_btn_down_detect_func(struct snd_soc_codec *codec)
 	}
 	mutex_unlock(&priv->hkadc_mutex);
 	msleep(30);
-	/* to avoid irq while MBHD_COMP power up??mask the irq then clean it */
+	/* to avoid irq while MBHD_COMP power up£¬mask the irq then clean it */
 	hi6555c_irqs_clr(IRQ_MSK_COMP);
 	hi6555c_irqs_mask_clr(IRQ_MSK_BTN_NOR);
 	logi("mask clean\n");
@@ -5450,7 +5450,7 @@ static int hi6555c_headset_init(struct snd_soc_codec *codec)
 	priv->pressed_btn_type = 0;
 	priv->pre_status_is_lineout = false;
 
-	/*VREF PD ??MICBIAS PD  */
+	/*VREF PD ú»MICBIAS PD  */
 	hi6555c_set_reg_bits(HI6555C_SMT_CODEC_ANA_RW02_ADDR, 0x1 << HI6555C_SMT_HSMICB_PD_BIT_START);
 	hi6555c_set_reg_bits(HI6555C_SMT_CODEC_ANA_RW24_ADDR, 0x1 << HI6555C_SMT_MBHD_VREF_PD_BIT_START);
 

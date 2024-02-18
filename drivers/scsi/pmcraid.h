@@ -848,7 +848,7 @@ struct pmcraid_ioasc_error {
 /* Initial log_level assignments for various IOASCs */
 #define IOASC_LOG_LEVEL_NONE	    0x0 /* no logging */
 #define IOASC_LOG_LEVEL_MUST        0x1	/* must log: all high-severity errors */
-#define IOASC_LOG_LEVEL_HARD        0x2	/* optional ??? low severity errors */
+#define IOASC_LOG_LEVEL_HARD        0x2	/* optional – low severity errors */
 
 /* Error information maintained by LLD. LLD initializes the pmcraid_error_table
  * statically.

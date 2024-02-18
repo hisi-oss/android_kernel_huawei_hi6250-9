@@ -22,7 +22,7 @@
  *
  * CMI8788:
  *
- *   I??C <-> CS4398 (addr 1001111) (front)
+ *   I²C <-> CS4398 (addr 1001111) (front)
  *       <-> CS4362A (addr 0011000) (surround, center/LFE, back)
  *
  *   GPI 0 <- external power present (DX only)

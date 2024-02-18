@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2006-2015, Intel Corporation.
+ * Copyright © 2006-2015, Intel Corporation.
  *
  * Authors: Ashok Raj <ashok.raj@intel.com>
  *          Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>

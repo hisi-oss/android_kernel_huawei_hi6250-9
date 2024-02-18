@@ -10,7 +10,7 @@
  * a separate /dev/ entry to allow for direct access to the random
  * bit stream.
  *
- * Copyright ?? 2015 Keith Packard <keithp@keithp.com>
+ * Copyright © 2015 Keith Packard <keithp@keithp.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

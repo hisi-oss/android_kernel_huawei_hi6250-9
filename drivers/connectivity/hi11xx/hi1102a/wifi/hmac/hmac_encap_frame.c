@@ -9,7 +9,7 @@ extern "C" {
 
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "wlan_spec.h"
 #include "mac_resource.h"
@@ -17,12 +17,12 @@ extern "C" {
 #undef  THIS_FILE_ID
 #define THIS_FILE_ID OAM_FILE_ID_HMAC_ENCAP_FRAME_C
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  3 ????????
+  3 函数实现
 *****************************************************************************/
 
 
@@ -172,7 +172,7 @@ oal_uint16  hmac_mgmt_encap_deauth(mac_vap_stru *pst_mac_vap, oal_uint8 *puc_dat
         ul_ret = mac_device_find_2up_vap(pst_mac_device, &pst_up_vap1, &pst_up_vap2);
         if (OAL_SUCC == ul_ret)
         {
-            /* ????????????VAP????????????????2??????1??VAP??MAC???? */
+            /* 获取另外一个VAP，组帧时修改地址2为另外1个VAP的MAC地址 */
             if (pst_mac_vap->uc_vap_id != pst_up_vap1->uc_vap_id)
             {
                 pst_up_vap2 = pst_up_vap1;
@@ -243,10 +243,10 @@ oal_uint16  hmac_mgmt_encap_disassoc(mac_vap_stru *pst_mac_vap, oal_uint8 *puc_d
     /*************************************************************************/
 
     /*************************************************************************/
-    /*                            ????????                                   */
+    /*                            设置帧头                                   */
     /*************************************************************************/
 
-    /* ????subtype   */
+    /* 设置subtype   */
     mac_hdr_set_frame_control(puc_data, WLAN_FC0_SUBTYPE_DISASSOC);
 
     if (OAL_PTR_NULL == pst_mac_vap->pst_mib_info)
@@ -255,20 +255,20 @@ oal_uint16  hmac_mgmt_encap_disassoc(mac_vap_stru *pst_mac_vap, oal_uint8 *puc_d
         OAM_ERROR_LOG0(pst_mac_vap->uc_vap_id, OAM_SF_AUTH, "hmac_mgmt_encap_disassoc: pst_mac_vap mib ptr null.");
         return us_disassoc_len;
     }
-    /* ????DA */
+    /* 设置DA */
     oal_set_mac_addr(((mac_ieee80211_frame_stru *)puc_data)->auc_address1, puc_da);
 
-    /* ????SA */
+    /* 设置SA */
     oal_set_mac_addr(((mac_ieee80211_frame_stru *)puc_data)->auc_address2, pst_mac_vap->pst_mib_info->st_wlan_mib_sta_config.auc_dot11StationID);
 
-    /* ????bssid */
+    /* 设置bssid */
     oal_set_mac_addr(((mac_ieee80211_frame_stru *)puc_data)->auc_address3, pst_mac_vap->en_vap_mode == WLAN_VAP_MODE_BSS_AP ?
                                                             pst_mac_vap->pst_mib_info->st_wlan_mib_sta_config.auc_dot11StationID : pst_mac_vap->auc_bssid);
 
 
 
     /*************************************************************************/
-    /*                  Disassociation ?? - ????                  */
+    /*                  Disassociation 帧 - 帧体                  */
     /* --------------------------------------------------------------------- */
     /* |                           Reason Code                             | */
     /* --------------------------------------------------------------------- */
@@ -277,7 +277,7 @@ oal_uint16  hmac_mgmt_encap_disassoc(mac_vap_stru *pst_mac_vap, oal_uint8 *puc_d
     /*                                                                       */
     /*************************************************************************/
 
-    /* ????reason code*/
+    /* 设置reason code*/
     puc_data[MAC_80211_FRAME_LEN]     = (us_err_code & 0x00FF);
     puc_data[MAC_80211_FRAME_LEN + 1] = (us_err_code & 0xFF00) >> 8;
 
@@ -300,7 +300,7 @@ oal_void  hmac_check_sta_base_rate(oal_uint8 *pst_user, mac_status_code_enum_uin
 
     pst_hmac_user = (hmac_user_stru *)pst_user;
 
-    /* ????VAP */
+    /* 获取VAP */
     pst_mac_vap = (mac_vap_stru *)mac_res_get_mac_vap(pst_hmac_user->st_user_base_info.uc_vap_id);
 
     if (OAL_PTR_NULL == pst_mac_vap)
@@ -326,7 +326,7 @@ oal_void  hmac_check_sta_base_rate(oal_uint8 *pst_user, mac_status_code_enum_uin
             }
         }
 
-        /* ??????????????????????false  */
+        /* 不支持某基本速率，返回false  */
         if (OAL_FALSE == en_found)
         {
             *pen_status_code = MAC_UNSUP_RATE;

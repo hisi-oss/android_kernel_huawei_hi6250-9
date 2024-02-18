@@ -1,8 +1,8 @@
 /*
  * Read flash partition table from command line
  *
- * Copyright ?? 2002      SYSGO Real-Time Solutions GmbH
- * Copyright ?? 2002-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright © 2002      SYSGO Real-Time Solutions GmbH
+ * Copyright © 2002-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

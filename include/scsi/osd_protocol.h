@@ -371,7 +371,7 @@ static inline unsigned osdv2_attr_list_elem_size(unsigned len)
 }
 
 /*
- * osd2r03: 7.1.3 OSD attributes lists (Table 184) ??? List type values
+ * osd2r03: 7.1.3 OSD attributes lists (Table 184) — List type values
  */
 enum osd_attr_list_types {
 	OSD_ATTR_LIST_GET = 0x1, 	/* descriptors only */

@@ -1758,7 +1758,7 @@ static int rtl2832u_rc_query(struct dvb_usb_device *d)
 		ir_raw_event_store_with_filter(d->rc_dev, &ev);
 	}
 
-	/* 'flush'??ir_raw_event_store_with_filter() */
+	/* 'flush' ir_raw_event_store_with_filter() */
 	ir_raw_event_set_idle(d->rc_dev, true);
 	ir_raw_event_handle(d->rc_dev);
 exit:

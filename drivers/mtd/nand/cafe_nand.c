@@ -1,11 +1,11 @@
 /*
- * Driver for One Laptop Per Child ???CAF????? controller, aka Marvell 88ALP01
+ * Driver for One Laptop Per Child ‘CAFÉ’ controller, aka Marvell 88ALP01
  *
  * The data sheet for this device can be found at:
  *    http://wiki.laptop.org/go/Datasheets 
  *
- * Copyright ?? 2006 Red Hat, Inc.
- * Copyright ?? 2006 David Woodhouse <dwmw2@infradead.org>
+ * Copyright © 2006 Red Hat, Inc.
+ * Copyright © 2006 David Woodhouse <dwmw2@infradead.org>
  */
 
 #define DEBUG
@@ -884,7 +884,7 @@ static int cafe_nand_resume(struct pci_dev *pdev)
 }
 
 static struct pci_driver cafe_nand_pci_driver = {
-	.name = "CAF?? NAND",
+	.name = "CAFÉ NAND",
 	.id_table = cafe_nand_tbl,
 	.probe = cafe_nand_probe,
 	.remove = cafe_nand_remove,
@@ -895,4 +895,4 @@ module_pci_driver(cafe_nand_pci_driver);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
-MODULE_DESCRIPTION("NAND flash driver for OLPC CAF?? chip");
+MODULE_DESCRIPTION("NAND flash driver for OLPC CAFÉ chip");

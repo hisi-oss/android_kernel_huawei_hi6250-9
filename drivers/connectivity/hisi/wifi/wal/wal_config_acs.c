@@ -9,7 +9,7 @@ extern "C" {
 #ifdef _PRE_SUPPORT_ACS
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "oam_ext_if.h"
 #include "frw_ext_if.h"
@@ -27,7 +27,7 @@ extern "C" {
 #define THIS_FILE_ID OAM_FILE_ID_WAL_CONFIG_ACS_C
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
 extern oal_void  oam_netlink_ops_register(oam_nl_cmd_enum_uint8 en_type, oal_uint32 (*p_func)(oal_uint8 *puc_data, oal_uint32 ul_len));
 extern oal_void  oam_netlink_ops_unregister(oam_nl_cmd_enum_uint8 en_type);
@@ -37,7 +37,7 @@ frw_timeout_stru g_st_acs_timer;
 
 
 /*****************************************************************************
-  3 ????????
+  3 函数实现
 *****************************************************************************/
 
 oal_uint32  wal_acs_netlink_recv(oal_uint8 *puc_data, oal_uint32 ul_len)
@@ -50,30 +50,30 @@ oal_uint32  wal_acs_netlink_recv(oal_uint8 *puc_data, oal_uint32 ul_len)
 
     pst_acs_cmd_hdr = (mac_acs_cmd_stru *)puc_data;
 
-    /* ??????DEVICE???????? */
+    /* 向所有DEVICE广播一份 */
     for (ul_device_num = 0; ul_device_num < MAC_RES_MAX_DEV_NUM; ul_device_num++)
     {
         pst_mac_dev = mac_res_get_dev(ul_device_num);
 
-        /* ?????????? */
+        /* 设备不存在 */
         if (OAL_PTR_NULL == pst_mac_dev)
         {
             continue;
         }
 
-        /* ???????????? */
+        /* 设备未初始化 */
         if (OAL_FALSE == pst_mac_dev->en_device_state)
         {
             continue;
         }
 
-        /* ACS?????? */
+        /* ACS未使能 */
         if (OAL_PTR_NULL == pst_mac_dev->pst_acs)
         {
             continue;
         }
 
-        // note:????????????????VAP????????????????????????????
+        // note:假如没有任何业务VAP，则驱动收不到应用层的请求。
         pst_mac_vap = (mac_vap_stru *)mac_res_get_mac_vap(pst_mac_dev->auc_vap_id[0]);
         if (OAL_PTR_NULL == pst_mac_vap)
         {
@@ -134,13 +134,13 @@ oal_uint32  wal_acs_timer_handler(void *p_arg)
 oal_uint32  wal_acs_init(oal_void)
 {
     oam_netlink_ops_register(OAM_NL_CMD_ACS, wal_acs_netlink_recv);
-    /* ???????? */
+    /* 测试使用 */
 #if 0
     FRW_TIMER_CREATE_TIMER(&g_st_acs_timer,
                            wal_acs_timer_handler,
-                           2000,                    /* 2000ms???????? */
-                           OAL_PTR_NULL,            /* ???????????? */
-                           OAL_TRUE,                /* ???????? */
+                           2000,                    /* 2000ms触发一次 */
+                           OAL_PTR_NULL,            /* 无需传入参数 */
+                           OAL_TRUE,                /* 周期调用 */
                            OAM_MODULE_ID_WAL);
 #endif
 

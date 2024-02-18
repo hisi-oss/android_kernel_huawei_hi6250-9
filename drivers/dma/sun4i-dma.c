@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2014 Emilio L??pez
- * Emilio L??pez <emilio@elopez.com.ar>
+ * Copyright (C) 2014 Emilio López
+ * Emilio López <emilio@elopez.com.ar>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1285,5 +1285,5 @@ static struct platform_driver sun4i_dma_driver = {
 module_platform_driver(sun4i_dma_driver);
 
 MODULE_DESCRIPTION("Allwinner A10 Dedicated DMA Controller Driver");
-MODULE_AUTHOR("Emilio L??pez <emilio@elopez.com.ar>");
+MODULE_AUTHOR("Emilio López <emilio@elopez.com.ar>");
 MODULE_LICENSE("GPL");

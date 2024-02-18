@@ -321,12 +321,12 @@ struct dw_mci {
 	int						sd_reinit;
 	int						sd_hw_timeout;
 
-    /*??????DT??D??? begin*/
+    /*那那??DT??D??? begin*/
 	u32           		    clock;		      /* Current clock (MHz) */
 	u32          		    clock_to_restore; /* Saved clock for dynamic clock gating (MHz) */
 	bool                    tuning_done;
 	bool					tuning_needed;	  /* tuning move start flag */
-    /*??????DT??D??? end  */
+    /*那那??DT??D??? end  */
 	int			sdio_id0;
 
 	struct timer_list       cmd11_timer;

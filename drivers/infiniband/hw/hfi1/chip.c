@@ -9967,7 +9967,7 @@ static const char *state_completed_string(u32 completed)
 }
 
 static const char all_lanes_dead_timeout_expired[] =
-	"All lanes were inactive ??? was the interconnect media removed?";
+	"All lanes were inactive – was the interconnect media removed?";
 static const char tx_out_of_policy[] =
 	"Passing lanes on local port do not meet the local link width policy";
 static const char no_state_complete[] =

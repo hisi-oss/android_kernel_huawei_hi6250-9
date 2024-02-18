@@ -5,17 +5,17 @@
 
 #define UDI_BUILD_DEV_ID(dev, type) (((dev) << 8) | ((type) & 0x00ff))
 
-/* ?????????? */
+/* 主设备定义 */
 typedef enum tagUDI_DEVICE_MAIN_ID {
 	UDI_DEV_USB_ACM = 0,
 	UDI_DEV_USB_NCM,
 	UDI_DEV_ICC,
 	UDI_DEV_UART,
 	UDI_DEV_HSUART,
-	UDI_DEV_MAX                 /* ??????????, ?????????? */
+	UDI_DEV_MAX                 /* 必须在最后, 用于边界值 */
 } UDI_DEVICE_MAIN_ID;
 
-/* ??????????????(???? usb ??????????????????) */
+/* 各设备类型定义(要和 usb 多设备形态统一起来) */
 /* ACM */
 typedef enum tagUDI_ACM_DEV_TYPE {
 	UDI_USB_ACM_CTRL,
@@ -26,8 +26,8 @@ typedef enum tagUDI_ACM_DEV_TYPE {
 	UDI_USB_ACM_MODEM,
 	UDI_USB_ACM_GPS,	/*HISO*/
 	UDI_USB_ACM_3G_GPS,	/*ashell*/
-	UDI_USB_ACM_3G_PCVOICE,	/*????*/
-	UDI_USB_ACM_PCVOICE,	/*????*/
+	UDI_USB_ACM_3G_PCVOICE,	/*预留*/
+	UDI_USB_ACM_PCVOICE,	/*预留*/
 	UDI_USB_ACM_SKYTONE,
 	UDI_USB_HSIC_ACM0,
 	UDI_USB_HSIC_ACM1,
@@ -44,7 +44,7 @@ typedef enum tagUDI_ACM_DEV_TYPE {
 	UDI_USB_HSIC_ACM12,
 	UDI_USB_HSIC_ACM13,
 	UDI_USB_HSIC_ACM14,
-	UDI_USB_ACM_MAX		/* ??????????, ?????????? */
+	UDI_USB_ACM_MAX		/* 必须在最后, 用于边界值 */
 } UDI_ACM_DEV_TYPE;
 
 /* NCM */
@@ -54,7 +54,7 @@ typedef enum tagUDI_NCM_DEV_TYPE {
 	UDI_USB_HSIC_NCM0,
 	UDI_USB_HSIC_NCM1,
 	UDI_USB_HSIC_NCM2,
-	UDI_USB_NCM_MAX		/* ??????????, ?????????? */
+	UDI_USB_NCM_MAX		/* 必须在最后, 用于边界值 */
 } UDI_NCM_DEV_TYPE;
 
 /* ICC */
@@ -64,10 +64,10 @@ typedef enum tagUDI_ICC_DEV_TYPE {
 	UDI_ICC_GUOM2,
 	UDI_ICC_GUOM3,
 	UDI_ICC_GUOM4,
-	UDI_ICC_MAX		/* ??????????, ?????????? */
+	UDI_ICC_MAX		/* 必须在最后, 用于边界值 */
 } UDI_ICC_DEV_TYPE;
 
-/* ????ID?????? */
+/* 设备ID号定义 */
 typedef enum tagUDI_DEVICE_ID {
 	/* USB ACM */
 	UDI_ACM_CTRL_ID		= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_CTRL),
@@ -78,8 +78,8 @@ typedef enum tagUDI_DEVICE_ID {
 	UDI_ACM_MODEM_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_MODEM),
 	UDI_ACM_GPS_ID		= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_GPS),     /*HISO*/
 	UDI_ACM_3G_GPS_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_GPS),  /*ashell*/
-	UDI_ACM_3G_PCVOICE_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_PCVOICE), /*????*/
-	UDI_ACM_PCVOICE_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_PCVOICE),    /*????*/
+	UDI_ACM_3G_PCVOICE_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_3G_PCVOICE), /*预留*/
+	UDI_ACM_PCVOICE_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_PCVOICE),    /*预留*/
 	UDI_ACM_SKYTONE_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_ACM_SKYTONE),
 	UDI_ACM_HSIC_ACM0_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_HSIC_ACM0),
 	UDI_ACM_HSIC_ACM1_ID	= UDI_BUILD_DEV_ID(UDI_DEV_USB_ACM, UDI_USB_HSIC_ACM1),
@@ -127,15 +127,15 @@ typedef enum tagUDI_DEVICE_ID {
 	UDI_INVAL_DEV_ID	= 0xFFFF
 } UDI_DEVICE_ID;
 
-/* ?????????????? */
+/* 设备的打开参数 */
 typedef struct tagUDI_OPEN_PARAM {
-	UDI_DEVICE_ID	devid;		/* ????ID */
-	void		*pPrivate;	/* ?????????????? */
+	UDI_DEVICE_ID	devid;		/* 设备ID */
+	void		*pPrivate;	/* 模块特有的数据 */
 } UDI_OPEN_PARAM;
 
-/* IOCTL ??????,???????????????????? */
+/* IOCTL 命令码,需要的命令码在此添加 */
 typedef enum tagUDI_IOCTL_CMD_TYPE {
-	UDI_IOCTL_SET_WRITE_CB = 0xF001, /* ?????????????????????????????????? */
+	UDI_IOCTL_SET_WRITE_CB = 0xF001, /* 设置一个起始码值防止与系统定义冲突 */
 	UDI_IOCTL_SET_READ_CB,
 	UDI_IOCTL_INVAL_CMD = 0xFFFFFFFF
 } UDI_IOCTL_CMD_TYPE;

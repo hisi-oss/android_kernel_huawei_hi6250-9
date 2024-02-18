@@ -2,7 +2,7 @@
  *	MPTCP implementation
  *
  *	Initial Design & Implementation:
- *	S??bastien Barr?? <sebastien.barre@uclouvain.be>
+ *	Sébastien Barré <sebastien.barre@uclouvain.be>
  *
  *	Current Maintainer & Author:
  *	Christoph Paasch <christoph.paasch@uclouvain.be>
@@ -10,7 +10,7 @@
  *	Additional authors:
  *	Jaakko Korkeaniemi <jaakko.korkeaniemi@aalto.fi>
  *	Gregory Detal <gregory.detal@uclouvain.be>
- *	Fabien Duch??ne <fabien.duchene@uclouvain.be>
+ *	Fabien Duchêne <fabien.duchene@uclouvain.be>
  *	Andreas Seelinger <Andreas.Seelinger@rwth-aachen.de>
  *	Lavkesh Lahngir <lavkesh51@gmail.com>
  *	Andreas Ripke <ripke@neclab.eu>

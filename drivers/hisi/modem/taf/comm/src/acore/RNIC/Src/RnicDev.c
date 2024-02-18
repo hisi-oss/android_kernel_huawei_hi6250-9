@@ -47,7 +47,7 @@
 */
 
 /******************************************************************************
-   1 ??????????
+   1 头文件包含
 ******************************************************************************/
 #include "RnicEntity.h"
 #include "RnicDebug.h"
@@ -57,23 +57,23 @@
 #include <net/sock.h>
 
 /*****************************************************************************
-    ??????????????????????.C??????????
+    协议栈打印打点方式下的.C文件宏定义
 *****************************************************************************/
 
 #define THIS_FILE_ID PS_FILE_ID_RNIC_DEV_C
 
 /******************************************************************************
-   2 ????????????????
+   2 外部函数变量声明
 ******************************************************************************/
 
 /******************************************************************************
-   3 ????????
+   3 私有定义
 ******************************************************************************/
 
 /******************************************************************************
-   4 ????????????
+   4 全局变量定义
 *****************************************************************************/
-/* ???????????????????????? */
+/* 将网卡的操作进行静态映射 */
     static const struct net_device_ops rnic_ops = {
            .ndo_stop                = RNIC_StopNetCard,
            .ndo_open                = RNIC_OpenNetCard,
@@ -197,7 +197,7 @@ const RNIC_NETCARD_ELEMENT_TAB_STRU           g_astRnicManageTbl[RNIC_NET_ID_MAX
 
 
 /******************************************************************************
-   5 ????????
+   5 函数实现
 ******************************************************************************/
 
 VOS_INT RNIC_StopNetCard(
@@ -206,14 +206,14 @@ VOS_INT RNIC_StopNetCard(
 {
     RNIC_NETCARD_DEV_INFO_STRU         *pstPriv = VOS_NULL_PTR;
 
-    /* ???????????????? */
+    /* 获取网卡私有数据 */
     pstPriv = (RNIC_NETCARD_DEV_INFO_STRU *)netdev_priv(pstNetDev);
 
 
-    /* ????netif_stop_queue()?????????????????? */
+    /* 使用netif_stop_queue()停止网卡的数据收发 */
     netif_stop_queue(pstNetDev);
 
-    /* ?????????????????????????????????? */
+    /* 将私有数据中的网卡状态标志置为关闭 */
     pstPriv->enStatus = RNIC_NETCARD_STATUS_CLOSED;
 
     return 0;
@@ -226,14 +226,14 @@ VOS_INT RNIC_OpenNetCard(
 {
     RNIC_NETCARD_DEV_INFO_STRU         *pstPriv = VOS_NULL_PTR;
 
-    /* ???????????????? */
+    /* 获取网卡私有数据 */
     pstPriv = (RNIC_NETCARD_DEV_INFO_STRU *)netdev_priv(pstNetDev);
 
 
-    /* ???????????????? */
+    /* 启动网卡接收数据 */
     netif_start_queue(pstNetDev);
 
-    /* ?????????????????????????????????? */
+    /* 将私有数据中的网卡状态标志置为打开 */
     pstPriv->enStatus = RNIC_NETCARD_STATUS_OPENED;
 
     return 0;
@@ -266,7 +266,7 @@ netdev_tx_t RNIC_StartXmit(
     sk_pacing_shift_update(pstSkb->sk, 4);
 #endif
 
-    /* ??MODEM???????????????? */
+    /* 按MODEM类型分发处理数据 */
     RNIC_ProcessTxDataByModemType(pstNetCntxt, pstSkb);
 
     return NETDEV_TX_OK;
@@ -281,10 +281,10 @@ VOS_INT RNIC_SetMacAddress(
     struct sockaddr                    *pstAddr;
     VOS_INT                             lValid;
 
-    /* ???????? */
+    /* 类型转换 */
     pstAddr = (struct sockaddr *)pMacAddr;
 
-    /* MAC???????????? */
+    /* MAC地址为无效值 */
     lValid = is_valid_ether_addr((VOS_UINT8 *)pstAddr->sa_data);
     if (VOS_FALSE == lValid)
     {
@@ -292,7 +292,7 @@ VOS_INT RNIC_SetMacAddress(
         return -EINVAL;
     }
 
-    /* ??MAC?????????????? */
+    /* 将MAC地址赋值到网卡 */
     memcpy(pstNetDev->dev_addr, pstAddr->sa_data, pstNetDev->addr_len);/* unsafe_function_ignore: memcpy */
 
     return 0;
@@ -325,7 +325,7 @@ VOS_INT RNIC_ChangeMtu(
         }
     }
 
-    /* ????mtu???????? */
+    /* 网卡mtu完成赋值 */
     pstNetDev->mtu = (VOS_UINT)lNewMtu;
 
     return 0;
@@ -357,10 +357,10 @@ struct net_device_stats *RNIC_GetNetCardStats(
 {
     RNIC_NETCARD_DEV_INFO_STRU         *pstPriv = VOS_NULL_PTR;
 
-    /* ???????????? */
+    /* 获取私有数据 */
     pstPriv = (RNIC_NETCARD_DEV_INFO_STRU *)netdev_priv(pstNetDev);
 
-    /* ???????????????????? */
+    /* 将设备的统计信息返回 */
     return &pstPriv->stStats;
 }
 
@@ -372,23 +372,23 @@ VOS_VOID RNIC_DeinitNetCard(
     RNIC_NETCARD_DEV_INFO_STRU         *pstPriv     = VOS_NULL_PTR;
     RNIC_SPEC_CTX_STRU                 *pstNetCntxt = VOS_NULL_PTR;
 
-    /* ???????????????? */
+    /* 获取网卡私有数据 */
     pstPriv     = (RNIC_NETCARD_DEV_INFO_STRU *)netdev_priv(pstNetDev);
     pstNetCntxt = RNIC_GET_SPEC_NET_CTX(pstPriv->enRmNetId);
 
-    /* ???????? */
+    /* 关闭载波 */
     netif_carrier_off(pstNetDev);
 
-    /* ???????????????? */
+    /* 停止网卡接收数据 */
     netif_stop_queue(pstNetDev);
 
-    /* ?????????????? */
+    /* 去注册网卡设备 */
     unregister_netdev(pstNetDev);
 
-    /* ???????????? */
+    /* 释放网卡设备 */
     free_netdev(pstNetDev);
 
-    /* ???????????????? */
+    /* 清除网卡设备信息 */
     pstNetCntxt->pstPriv = VOS_NULL_PTR;
 
     return;
@@ -407,13 +407,13 @@ VOS_INT __init RNIC_InitNetCard(VOS_VOID)
 
     for (ucIndex = 0 ; ucIndex < RNIC_NET_ID_MAX_NUM ; ucIndex++)
     {
-        /* ?????????????????? */
+        /* 初始化网卡私有信息 */
         pstNetCntxt = RNIC_GET_SPEC_NET_CTX(ucIndex);
         pstNetCntxt->pstPriv = VOS_NULL_PTR;
 
-        /* ????????????netdev?????????? */
-        /* alloc_etherdev??????????????net_device?? RNIC_NETCARD_DEV_INFO_STRU??????????????
-           RNIC_NETCARD_DEV_INFO_STRU??????????net_device?????? */
+        /* 创建网卡设备netdev和私有数据 */
+        /* alloc_etherdev这个接口分配了net_device和 RNIC_NETCARD_DEV_INFO_STRU两个接口的内存
+           RNIC_NETCARD_DEV_INFO_STRU结构挂接在net_device的后面 */
         pstDev = alloc_etherdev(sizeof(RNIC_NETCARD_DEV_INFO_STRU));
         if (VOS_NULL_PTR == pstDev)
         {
@@ -421,50 +421,50 @@ VOS_INT __init RNIC_InitNetCard(VOS_VOID)
             continue;
         }
 
-        /* ??????????MAC????,???????????????? */
+        /* 给设备配置MAC地址,以后需要填固定值 */
         memcpy(pstDev->dev_addr, RNIC_GET_DST_MAC_ADDR(ucIndex), RNIC_MAC_ADDR_LEN);/* unsafe_function_ignore: memcpy */
 
         pstDev->flags &= ~(IFF_BROADCAST | IFF_MULTICAST);
 
-        /* ??????????MTU?? */
+        /* 设置默认的MTU值 */
         pstDev->mtu = RNIC_DEFAULT_MTU;
 
         snprintf(pstDev->name, sizeof(pstDev->name),/* unsafe_function_ignore: snprintf */
             "%s%s",
             RNIC_DEV_NAME_PREFIX, g_astRnicManageTbl[ucIndex].pucRnicNetCardName);
 
-        /* ??????????net_device?????????????????????????????? */
+        /* 对申请到的net_device结构的设备指针的函数域进行赋值 */
         pstDev->netdev_ops = &rnic_ops;
 
-        /* ?????????????????? */
+        /* 网卡私有数据初始化 */
         pstPriv = (RNIC_NETCARD_DEV_INFO_STRU *)netdev_priv(pstDev);
         pstPriv->pstDev    = pstDev;
         pstPriv->enRmNetId = ucIndex;
 
 
-        /* ???????? */
+        /* 关闭载波 */
         netif_carrier_off(pstDev);
 
-        /* ???????????????? */
+        /* 停止网卡接收数据 */
         netif_stop_queue(pstDev);
 
-        /* ????register_netdev??????Netcard???????? */
+        /* 调用register_netdev函数对Netcard进行注册 */
         lRegRst = register_netdev(pstDev);
         if (VOS_OK != lRegRst)
         {
-            /* ??????????????????RNIC???? */
+            /* 注册失败释放创建的RNIC设备 */
             RNIC_DEV_ERR_PRINTK("RNIC_InitNetCard:Register netdev failed!");
             free_netdev(pstDev);
             continue;
         }
 
-        /* ???????????????? */
+        /* 保存网卡私有数据 */
         pstNetCntxt->pstPriv = pstPriv;
 
-        /* ???????? */
+        /* 打开载波 */
         netif_carrier_on(pstDev);
 
-        /* ???????????????? */
+        /* 启动网卡接收数据 */
         netif_start_queue(pstDev);
     }
 

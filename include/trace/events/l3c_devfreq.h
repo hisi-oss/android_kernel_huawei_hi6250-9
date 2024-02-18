@@ -6,7 +6,7 @@
 
 #include <linux/tracepoint.h>
 
-TRACE_EVENT(l3c_devfreq_counter_info,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3c_devfreq_counter_info,/* [false alarm]:原生宏定义 */
 	TP_PROTO(unsigned long l3_count, unsigned long ba_count, unsigned long acp_count),
 	TP_ARGS(l3_count, ba_count, acp_count),
 	TP_STRUCT__entry(
@@ -25,7 +25,7 @@ TRACE_EVENT(l3c_devfreq_counter_info,/* [false alarm]:??????????????? */
 );
 
 
-TRACE_EVENT(l3c_devfreq_bw_info,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3c_devfreq_bw_info,/* [false alarm]:原生宏定义 */
 	TP_PROTO(unsigned long usec_delta, unsigned long cur_freq,
 		 unsigned long l3c_bw, unsigned long hit_bw),
 	TP_ARGS(usec_delta, cur_freq, l3c_bw, hit_bw),
@@ -48,7 +48,7 @@ TRACE_EVENT(l3c_devfreq_bw_info,/* [false alarm]:??????????????? */
 );
 
 
-TRACE_EVENT(l3c_cpufreq_transition,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3c_cpufreq_transition,/* [false alarm]:原生宏定义 */
 	TP_PROTO(unsigned int cpu, unsigned int old_freq, unsigned int new_freq, int flag),
 	TP_ARGS(cpu, old_freq, new_freq, flag),
 	TP_STRUCT__entry(
@@ -68,7 +68,7 @@ TRACE_EVENT(l3c_cpufreq_transition,/* [false alarm]:??????????????? */
 		  __entry->cpu, __entry->old_freq, __entry->new_freq, __entry->flag)
 );
 
-TRACE_EVENT(l3c_devfreq_target,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3c_devfreq_target,/* [false alarm]:原生宏定义 */
 	TP_PROTO(unsigned long taget_freq),
 	TP_ARGS(taget_freq),
 	TP_STRUCT__entry(
@@ -82,7 +82,7 @@ TRACE_EVENT(l3c_devfreq_target,/* [false alarm]:??????????????? */
 		  __entry->taget_freq)
 );
 
-TRACE_EVENT(l3c_devfreq_read_event,/* [false alarm]:??????????????? */
+TRACE_EVENT(l3c_devfreq_read_event,/* [false alarm]:原生宏定义 */
 	TP_PROTO(u64 total),
 	TP_ARGS(total),
 	TP_STRUCT__entry(

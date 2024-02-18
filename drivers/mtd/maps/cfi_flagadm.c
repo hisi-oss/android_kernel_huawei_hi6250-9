@@ -1,5 +1,5 @@
 /*
- *  Copyright ?? 2001 Flaga hf. Medical Devices, K??ri Dav????sson <kd@flaga.is>
+ *  Copyright © 2001 Flaga hf. Medical Devices, Kári Davíðsson <kd@flaga.is>
  *
  *  This program is free software; you can redistribute  it and/or modify it
  *  under  the terms of  the GNU General  Public License as published by the
@@ -133,5 +133,5 @@ module_exit(cleanup_flagadm);
 
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("K??ri Dav????sson <kd@flaga.is>");
+MODULE_AUTHOR("Kári Davíðsson <kd@flaga.is>");
 MODULE_DESCRIPTION("MTD map driver for Flaga digital module");

@@ -5,7 +5,7 @@
  *  Fixes the HID report descriptor by removing a non-existent axis and
  *  clearing the constant bit on the input reports for buttons and d-pad.
  *  (This module is based on "hid-ortek".)
- *  Copyright (c) 2012 Andreas H??bner
+ *  Copyright (c) 2012 Andreas Hübner
  *
  *  R.A.T.7, R.A.T.9, M.M.O.7 (USB gaming mice):
  *  Fixes the mode button which cycles through three constantly pressed

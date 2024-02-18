@@ -47,7 +47,7 @@
 */
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 *****************************************************************************/
 #include "RnicCtx.h"
 #include "RnicProcMsg.h"
@@ -70,17 +70,17 @@
 
 
 /*****************************************************************************
-    ??????????????????????.C??????????
+    协议栈打印打点方式下的.C文件宏定义
 *****************************************************************************/
 #define    THIS_FILE_ID        PS_FILE_ID_RNIC_PROCMSG_C
 
 /*****************************************************************************
-  2 ????????????
+  2 全局变量定义
 *****************************************************************************/
-/* RNIC???????????????????????????????? */
+/* RNIC模块定时器超时消息处理函数对应表 */
 const RNIC_RCV_TI_EXPRIED_PROC_STRU g_astRnicTiExpriedProcTab[]=
 {
-    /* ????ID */                            /* ?????????????????? */
+    /* 消息ID */                            /* 定时器超时处理函数 */
     {TI_RNIC_DSFLOW_STATS_0,                RNIC_RcvTiDsflowStatsExpired},
     {TI_RNIC_DSFLOW_STATS_1,                RNIC_RcvTiDsflowStatsExpired},
     {TI_RNIC_DSFLOW_STATS_2,                RNIC_RcvTiDsflowStatsExpired},
@@ -92,7 +92,7 @@ const RNIC_RCV_TI_EXPRIED_PROC_STRU g_astRnicTiExpriedProcTab[]=
 
 
 /*****************************************************************************
-  3 ????????
+  3 函数实现
 *****************************************************************************/
 
 
@@ -100,7 +100,7 @@ VOS_VOID RNIC_MNTN_TraceDialConnEvt(VOS_VOID)
 {
     RNIC_MNTN_DIAL_CONN_EVT_STRU       *pstDialEvt = VOS_NULL_PTR;
 
-    /* ???????? */
+    /* 构造消息 */
     pstDialEvt = (RNIC_MNTN_DIAL_CONN_EVT_STRU*)PS_ALLOC_MSG_WITH_HEADER_LEN(
                         ACPU_PID_RNIC,
                         sizeof(RNIC_MNTN_DIAL_CONN_EVT_STRU));
@@ -110,12 +110,12 @@ VOS_VOID RNIC_MNTN_TraceDialConnEvt(VOS_VOID)
         return;
     }
 
-    /* ???????? */
+    /* 填写消息 */
     pstDialEvt->ulReceiverCpuId = VOS_LOCAL_CPUID;
     pstDialEvt->ulReceiverPid   = ACPU_PID_RNIC;
     pstDialEvt->enMsgId         = ID_RNIC_MNTN_EVT_DIAL_CONNECT;
 
-    /* ???????????????? */
+    /* 钩出可维可测消息 */
     if (VOS_OK != PS_SEND_MSG(ACPU_PID_RNIC, pstDialEvt))
     {
         RNIC_ERROR_LOG(ACPU_PID_RNIC, "RNIC_MNTN_TraceDialConnEvt():WARNING:SEND MSG FIAL");
@@ -132,7 +132,7 @@ VOS_VOID RNIC_MNTN_TraceDialDisconnEvt(
 {
     RNIC_MNTN_DIAL_DISCONN_EVT_STRU    *pstDialEvt = VOS_NULL_PTR;
 
-    /* ???????? */
+    /* 构造消息 */
     pstDialEvt = (RNIC_MNTN_DIAL_DISCONN_EVT_STRU*)PS_ALLOC_MSG_WITH_HEADER_LEN(
                         ACPU_PID_RNIC,
                         sizeof(RNIC_MNTN_DIAL_DISCONN_EVT_STRU));
@@ -142,16 +142,16 @@ VOS_VOID RNIC_MNTN_TraceDialDisconnEvt(
         return;
     }
 
-    /* ?????????? */
+    /* 填写消息头 */
     pstDialEvt->ulReceiverCpuId = VOS_LOCAL_CPUID;
     pstDialEvt->ulReceiverPid   = ACPU_PID_RNIC;
     pstDialEvt->enMsgId         = ID_RNIC_MNTN_EVT_DIAL_DISCONNECT;
 
-    /* ???????????? */
+    /* 填写消息内容 */
     pstDialEvt->ulPktNum        = ulPktNum;
     pstDialEvt->ulUsrExistFlg   = ulUsrExistFlg;
 
-    /* ???????????????? */
+    /* 钩出可维可测消息 */
     if (VOS_OK != PS_SEND_MSG(ACPU_PID_RNIC, pstDialEvt))
     {
         RNIC_ERROR_LOG(ACPU_PID_RNIC, "RNIC_MNTN_TraceDialDisconnEvt():WARNING:SEND MSG FIAL");
@@ -175,7 +175,7 @@ VOS_UINT32 RNIC_SendDialEvent(
     stEvent.event_code                  = (VOS_INT)ulEventId;
     stEvent.len                         = 0;
 
-    /* ????????????????*/
+    /* 上报按需拨号事件*/
     ulRet = (VOS_UINT32)device_event_report(&stEvent, (VOS_INT)ulSize);
 
     if (VOS_OK != ulRet)
@@ -274,22 +274,22 @@ VOS_UINT32 RNIC_BuildRabIdByModemId(
 {
     if (MODEM_ID_0 == enModemId)
     {
-        /* Modem0??RABID??????????00???? */
+        /* Modem0的RABID的高两位用00表示 */
         *pucRabId = ucRabId;
     }
     else if (MODEM_ID_1 == enModemId)
     {
-        /* Modem1??RABID??????????01???? */
+        /* Modem1的RABID的高两位用01表示 */
         *pucRabId = ucRabId | RNIC_RABID_TAKE_MODEM_1_MASK;
     }
     else if (MODEM_ID_2 == enModemId)
     {
-        /* Modem2??RABID??????????10???? */
+        /* Modem2的RABID的高两位用10表示 */
         *pucRabId = ucRabId | RNIC_RABID_TAKE_MODEM_2_MASK;
     }
     else
     {
-        /* ??????Modem0??????Modem1???????????? */
+        /* 既不是Modem0也不是Modem1的，返回失败 */
         return VOS_ERR;
     }
 
@@ -311,7 +311,7 @@ VOS_UINT32 RNIC_SaveNetIdByRabId(
         return VOS_ERR;
     }
 
-    /* ????????Modem??RABID???? */
+    /* 获取指定Modem的RABID信息 */
     pstRabIdInfo = RNIC_GET_SPEC_MODEM_RABID_INFO(enModemId);
 
     pstRabIdInfo->aucRmNetId[ucRabId - RNIC_RAB_ID_OFFSET] = ucRmNetId;
@@ -336,13 +336,13 @@ VOS_UINT32 RNIC_RcvAtIpv4PdpActInd(
     pstRcvInd                           = (AT_RNIC_IPV4_PDP_ACT_IND_STRU *)pstMsg;
     ucRmNetId                           = pstRcvInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpAddr                          = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
     ucRabid                             = RNIC_RAB_ID_INVALID;
 
-    /* ????modem id??????id??????Rabid */
+    /* 根据modem id和网卡id，填充Rabid */
     if (VOS_OK != RNIC_BuildRabIdByModemId(pstSpecNetCardCtx->enModemId,
                                            pstRcvInd->ucRabId,
                                            &ucRabid))
@@ -351,7 +351,7 @@ VOS_UINT32 RNIC_RcvAtIpv4PdpActInd(
         return VOS_ERR;
     }
 
-    /* ????RABID??????????ID */
+    /* 存储RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstRcvInd->ucRabId,
                                         ucRmNetId))
@@ -360,31 +360,31 @@ VOS_UINT32 RNIC_RcvAtIpv4PdpActInd(
         return VOS_ERR;
     }
 
-    /* Modified by l60609 for L-C??????????, 2014-1-14, begin */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, begin */
     pstSpecNetCardCtx->enModemType        = RNIC_MODEM_TYPE_INSIDE;
-    /* Modified by l60609 for L-C??????????, 2014-1-14, end */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, end */
 
-    /* ????PDP?????????? */
+    /* 更新PDP上下文信息 */
     pstPdpAddr->stIpv4PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
     pstPdpAddr->stIpv4PdpInfo.ucRabId     = pstRcvInd->ucRabId;
     pstPdpAddr->stIpv4PdpInfo.ulIpv4Addr  = pstRcvInd->ulIpv4Addr;
 
 
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ?????????????????? */
+    /* 启动流量统计定时器 */
     RNIC_StartTimer(enTimerId, TI_RNIC_DSFLOW_STATS_LEN);
 
-    /* ?????????????????????? */
+    /* 停止按需拨号保护定时器 */
     if (RNIC_RMNET_ID_0 == ucRmNetId)
     {
         RNIC_StopTimer(TI_RNIC_DEMAND_DIAL_PROTECT);
     }
 
 
-    /* ??????????????????ADS?????????????????????????? */
+    /* 注册下行发送函数，ADS调用注册的函数发送下行数据 */
     ADS_DL_RegDlDataCallback(ucRabid, RNIC_RcvAdsDlData, ucRmNetId);
 
 
@@ -407,13 +407,13 @@ VOS_UINT32 RNIC_RcvAtIpv6PdpActInd(
     pstRcvInd                           = (AT_RNIC_IPV6_PDP_ACT_IND_STRU *)pstMsg;
     ucRmNetId                           = pstRcvInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpAddr                          = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
     ucRabid                             = RNIC_RAB_ID_INVALID;
 
-    /* ????modem id??????id??????Rabid */
+    /* 根据modem id和网卡id，填充Rabid */
     if (VOS_OK != RNIC_BuildRabIdByModemId(pstSpecNetCardCtx->enModemId,
                                            pstRcvInd->ucRabId,
                                            &ucRabid))
@@ -422,7 +422,7 @@ VOS_UINT32 RNIC_RcvAtIpv6PdpActInd(
         return VOS_ERR;
     }
 
-    /* ????RABID??????????ID */
+    /* 存储RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstRcvInd->ucRabId,
                                         ucRmNetId))
@@ -431,11 +431,11 @@ VOS_UINT32 RNIC_RcvAtIpv6PdpActInd(
         return VOS_ERR;
     }
 
-    /* Modified by l60609 for L-C??????????, 2014-1-14, begin */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, begin */
     pstSpecNetCardCtx->enModemType        = RNIC_MODEM_TYPE_INSIDE;
-    /* Modified by l60609 for L-C??????????, 2014-1-14, end */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, end */
 
-    /* ????PDP?????????? */
+    /* 更新PDP上下文信息 */
     pstPdpAddr->stIpv6PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
     pstPdpAddr->stIpv6PdpInfo.ucRabId     = pstRcvInd->ucRabId;
     TAF_MEM_CPY_S(pstPdpAddr->stIpv6PdpInfo.aucIpv6Addr,
@@ -444,13 +444,13 @@ VOS_UINT32 RNIC_RcvAtIpv6PdpActInd(
                RNICITF_MAX_IPV6_ADDR_LEN);
 
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ?????????????????? */
+    /* 启动流量统计定时器 */
     RNIC_StartTimer(enTimerId, TI_RNIC_DSFLOW_STATS_LEN);
 
-    /* ??????????????????ADS?????????????????????????? */
+    /* 注册下行发送函数，ADS调用注册的函数发送下行数据 */
 
 
     ADS_DL_RegDlDataCallback(ucRabid, RNIC_RcvAdsDlData, ucRmNetId);
@@ -477,13 +477,13 @@ VOS_UINT32 RNIC_RcvAtIpv4v6PdpActInd(
     pstRcvInd                           = (AT_RNIC_IPV4V6_PDP_ACT_IND_STRU *)pstMsg;
     ucRmNetId                           = pstRcvInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpAddr                          = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
     ucRabid                             = RNIC_RAB_ID_INVALID;
 
-    /* ????modem id??????id??????Rabid */
+    /* 根据modem id和网卡id，填充Rabid */
     if (VOS_OK != RNIC_BuildRabIdByModemId(pstSpecNetCardCtx->enModemId,
                                            pstRcvInd->ucRabId,
                                            &ucRabid))
@@ -492,7 +492,7 @@ VOS_UINT32 RNIC_RcvAtIpv4v6PdpActInd(
         return VOS_ERR;
     }
 
-    /* ????RABID??????????ID */
+    /* 存储RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstRcvInd->ucRabId,
                                         ucRmNetId))
@@ -501,11 +501,11 @@ VOS_UINT32 RNIC_RcvAtIpv4v6PdpActInd(
         return VOS_ERR;
     }
 
-    /* Modified by l60609 for L-C??????????, 2014-1-14, begin */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, begin */
     pstSpecNetCardCtx->enModemType          = RNIC_MODEM_TYPE_INSIDE;
-    /* Modified by l60609 for L-C??????????, 2014-1-14, end */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, end */
 
-    /* ????PDP?????????? */
+    /* 更新PDP上下文信息 */
     pstPdpAddr->stIpv4v6PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
     pstPdpAddr->stIpv4v6PdpInfo.ucRabId     = pstRcvInd->ucRabId;
     pstPdpAddr->stIpv4PdpInfo.ucRabId       = pstRcvInd->ucRabId;
@@ -513,17 +513,17 @@ VOS_UINT32 RNIC_RcvAtIpv4v6PdpActInd(
 
 
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ?????????????????? */
+    /* 启动流量统计定时器 */
     RNIC_StartTimer(enTimerId, TI_RNIC_DSFLOW_STATS_LEN);
 
-    /* ?????????????????????? */
+    /* 停止按需拨号保护定时器 */
     RNIC_StopTimer(TI_RNIC_DEMAND_DIAL_PROTECT);
 
 
-    /* ??????????????????ADS?????????????????????????? */
+    /* 注册下行发送函数，ADS调用注册的函数发送下行数据 */
     ADS_DL_RegDlDataCallback(ucRabid, RNIC_RcvAdsDlData, ucRmNetId);
 
 
@@ -547,27 +547,27 @@ VOS_UINT32 RNIC_RcvAtPdpDeactInd(
     pstRcvInd                           = (AT_RNIC_PDP_DEACT_IND_STRU *)pstMsg;
     ucRmNetId                           = pstRcvInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpCtxAddr                       = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ??????IPV4 PDP?????? */
+    /* 如果是IPV4 PDP去激活 */
     if ((pstPdpCtxAddr->stIpv4PdpInfo.ucRabId == pstRcvInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv4PdpInfo.enRegStatus))
     {
-        /* ????IPV4 PDP?????????? */
+        /* 清空IPV4 PDP上下文信息 */
         RNIC_InitIpv4PdpCtx(&pstPdpCtxAddr->stIpv4PdpInfo);
 
-        /* ??????0???????????????????? */
+        /* 在网卡0上才有按需拨号的功能 */
         if (RNIC_RMNET_ID_0 == ucRmNetId)
         {
-            /* ?????????????????????? */
+            /* 停止按需拨号断开定时器 */
             RNIC_StopTimer(TI_RNIC_DEMAND_DIAL_DISCONNECT);
 
-            /* ?????????????????????????? */
+            /* 清空拨号断开定时器超时统计 */
             RNIC_ClearTiDialDownExpCount();
         }
     }
@@ -575,37 +575,37 @@ VOS_UINT32 RNIC_RcvAtPdpDeactInd(
     if ((pstPdpCtxAddr->stIpv6PdpInfo.ucRabId == pstRcvInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv6PdpInfo.enRegStatus))
     {
-        /* ????IPV6 PDP?????????? */
+        /* 清空IPV6 PDP上下文信息 */
         RNIC_InitIpv6PdpCtx(&pstPdpCtxAddr->stIpv6PdpInfo);
     }
 
     if ((pstPdpCtxAddr->stIpv4v6PdpInfo.ucRabId == pstRcvInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv4v6PdpInfo.enRegStatus))
     {
-        /* ????IPV4V6 PDP?????????? */
+        /* 清空IPV4V6 PDP上下文信息 */
         RNIC_InitIpv4v6PdpCtx(&pstPdpCtxAddr->stIpv4v6PdpInfo, ucRmNetId);
     }
 
-    /* PDP?????????????? */
+    /* PDP都未激活的时候 */
     if ((RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv4PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv6PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv4v6PdpInfo.enRegStatus))
     {
-        /* ?????????????????? */
+        /* 停止流量统计定时器 */
         RNIC_StopTimer(enTimerId);
 
-        /* ???????????????? */
+        /* 清除流量统计信息 */
         RNIC_ClearNetDsFlowStats(ucRmNetId);
 
-        /* Modified by l60609 for L-C??????????, 2014-1-14, begin */
+        /* Modified by l60609 for L-C互操作项目, 2014-1-14, begin */
         pstSpecNetCardCtx->enModemType = RNIC_MODEM_TYPE_INSIDE;
-        /* Modified by l60609 for L-C??????????, 2014-1-14, end */
+        /* Modified by l60609 for L-C互操作项目, 2014-1-14, end */
     }
 
-    /* ???????????????????????????????????????????? */
+    /* 在断开拨号成功时解除投票睡眠，以便能进入深睡 */
     DRV_PWRCTRL_SLEEPVOTE_UNLOCK(PWRCTRL_SLEEP_RNIC);
 
-    /* ????RABID??????????ID */
+    /* 清除RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstRcvInd->ucRabId,
                                         RNIC_RMNET_ID_BUTT))
@@ -625,7 +625,7 @@ VOS_UINT32 RNIC_RcvAtDialModeReq(
     RNIC_DIAL_MODE_STRU                *pstDialMode;
     RNIC_AT_DIAL_MODE_CNF_STRU         *pstSndMsg;
 
-    /* ???????? */
+    /* 内存分配 */
     pstSndMsg = (RNIC_AT_DIAL_MODE_CNF_STRU *)PS_ALLOC_MSG(ACPU_PID_RNIC,
                         sizeof(RNIC_AT_DIAL_MODE_CNF_STRU) - VOS_MSG_HEAD_LENGTH);
     if (VOS_NULL_PTR == pstSndMsg)
@@ -636,22 +636,22 @@ VOS_UINT32 RNIC_RcvAtDialModeReq(
 
     pstRcvInd                           = (AT_RNIC_DIAL_MODE_REQ_STRU *)pstMsg;
 
-    /* ???????????????????????????????? */
+    /* 获取按需拨号的模式以及时长的地址 */
     pstDialMode                         = RNIC_GetDialModeAddr();
     pstSndMsg->clientId                 = pstRcvInd->clientId;
     pstSndMsg->ulDialMode               = pstDialMode->enDialMode;
     pstSndMsg->ulIdleTime               = pstDialMode->ulIdleTime;
     pstSndMsg->ulEventReportFlag        = pstDialMode->enEventReportFlag;
 
-    /* ????ID_RNIC_AT_DIAL_MODE_CNF??????????AT???? */
-    /* ???????? */
+    /* 通过ID_RNIC_AT_DIAL_MODE_CNF消息发送给AT模块 */
+    /* 填充消息 */
     pstSndMsg->ulSenderCpuId            = VOS_LOCAL_CPUID;
     pstSndMsg->ulSenderPid              = ACPU_PID_RNIC;
     pstSndMsg->ulReceiverCpuId          = VOS_LOCAL_CPUID;
     pstSndMsg->ulReceiverPid            = WUEPS_PID_AT;
     pstSndMsg->enMsgId                  = ID_RNIC_AT_DIAL_MODE_CNF;
 
-    /* ???????? */
+    /* 发送消息 */
     if (VOS_OK != PS_SEND_MSG(ACPU_PID_RNIC, pstSndMsg))
     {
         RNIC_ERROR_LOG(ACPU_PID_RNIC, "RNIC_RcvAtDialModeReq: Send msg failed!");
@@ -670,7 +670,7 @@ VOS_UINT32 RNIC_RcvAtDsflowInd(
     RNIC_PDP_CTX_STRU                  *pstPdpAddr;
     RNIC_AT_DSFLOW_RSP_STRU            *pstDsflowRsp;
 
-    /* ???????? */
+    /* 内存分配 */
     pstDsflowRsp = (RNIC_AT_DSFLOW_RSP_STRU *)PS_ALLOC_MSG(ACPU_PID_RNIC,
                         sizeof(RNIC_AT_DSFLOW_RSP_STRU) - VOS_MSG_HEAD_LENGTH);
     if (VOS_NULL_PTR == pstDsflowRsp)
@@ -684,11 +684,11 @@ VOS_UINT32 RNIC_RcvAtDsflowInd(
 
     pstPdpAddr                              = RNIC_GetPdpCtxAddr(pstRcvInd->enRnicRmNetId);
 
-    /* ????????????????????????0 */
+    /* 产品要求未拨上号，速率为0 */
     pstDsflowRsp->stRnicDataRate.ulDLDataRate = 0;
     pstDsflowRsp->stRnicDataRate.ulULDataRate = 0;
 
-    /* PDP???????????????????????????????? */
+    /* PDP激活的时候，获取当前的上下行速率 */
     if ((RNIC_PDP_REG_STATUS_ACTIVE == pstPdpAddr->stIpv4PdpInfo.enRegStatus)
      || (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpAddr->stIpv6PdpInfo.enRegStatus)
      || (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpAddr->stIpv4v6PdpInfo.enRegStatus))
@@ -697,15 +697,15 @@ VOS_UINT32 RNIC_RcvAtDsflowInd(
         pstDsflowRsp->stRnicDataRate.ulULDataRate = RNIC_GetCurrentUlRate(pstRcvInd->enRnicRmNetId);
     }
 
-    /* ????ID_RNIC_AT_DSFLOW_RSP??????????AT???? */
-    /* ???????? */
+    /* 通过ID_RNIC_AT_DSFLOW_RSP消息发送给AT模块 */
+    /* 填充消息 */
     pstDsflowRsp->ulSenderCpuId               = VOS_LOCAL_CPUID;
     pstDsflowRsp->ulSenderPid                 = ACPU_PID_RNIC;
     pstDsflowRsp->ulReceiverCpuId             = VOS_LOCAL_CPUID;
     pstDsflowRsp->ulReceiverPid               = WUEPS_PID_AT;
     pstDsflowRsp->enMsgId                     = ID_RNIC_AT_DSFLOW_RSP;
 
-    /* ???????? */
+    /* 发送消息 */
     if (VOS_OK != PS_SEND_MSG(ACPU_PID_RNIC, pstDsflowRsp))
     {
         RNIC_ERROR_LOG(ACPU_PID_RNIC, "RNIC_RcvAtDsflowInd: Send msg failed!");
@@ -732,12 +732,12 @@ VOS_UINT32 RNIC_RcvAtPdnInfoCfgInd(
     pstRnicPdnCfgInd = (AT_RNIC_PDN_INFO_CFG_IND_STRU *)pstMsg;
     ucRmNetId        = pstRnicPdnCfgInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpAddr                          = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
     ucRabid                             = RNIC_RAB_ID_INVALID;
 
-    /* ????modem id????Rabid */
+    /* 根据modem id填充Rabid */
     if (VOS_OK != RNIC_BuildRabIdByModemId(pstSpecNetCardCtx->enModemId,
                                            pstRnicPdnCfgInd->ucRabId,
                                            &ucRabid))
@@ -746,7 +746,7 @@ VOS_UINT32 RNIC_RcvAtPdnInfoCfgInd(
         return VOS_ERR;
     }
 
-    /* ????RABID??????????ID */
+    /* 存储RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstRnicPdnCfgInd->ucRabId,
                                         ucRmNetId))
@@ -755,18 +755,18 @@ VOS_UINT32 RNIC_RcvAtPdnInfoCfgInd(
         return VOS_ERR;
     }
 
-    /* Modified by l60609 for L-C??????????, 2014-1-14, begin */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, begin */
     pstSpecNetCardCtx->enModemType        = RNIC_MODEM_TYPE_INSIDE;
-    /* Modified by l60609 for L-C??????????, 2014-1-14, end */
+    /* Modified by l60609 for L-C互操作项目, 2014-1-14, end */
 
     if (VOS_TRUE == pstRnicPdnCfgInd->bitOpIpv4PdnInfo)
     {
-        /* ????PDP?????????? */
+        /* 更新PDP上下文信息 */
         pstPdpAddr->stIpv4PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
         pstPdpAddr->stIpv4PdpInfo.ucRabId     = pstRnicPdnCfgInd->ucRabId;
         pstPdpAddr->stIpv4PdpInfo.ulIpv4Addr  = pstRnicPdnCfgInd->stIpv4PdnInfo.ulPdnAddr;
 
-        /* ????????IP???????? */
+        /* 更新过滤IP地址信息 */
         stFilterIpAddr.bitOpIpv4Addr          = VOS_TRUE;
         TAF_MEM_CPY_S(stFilterIpAddr.aucIpv4Addr,
                    sizeof(stFilterIpAddr.aucIpv4Addr),
@@ -776,7 +776,7 @@ VOS_UINT32 RNIC_RcvAtPdnInfoCfgInd(
 
     if (VOS_TRUE == pstRnicPdnCfgInd->bitOpIpv6PdnInfo)
     {
-        /* ????PDP?????????? */
+        /* 更新PDP上下文信息 */
         pstPdpAddr->stIpv6PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
         pstPdpAddr->stIpv6PdpInfo.ucRabId     = pstRnicPdnCfgInd->ucRabId;
         TAF_MEM_CPY_S(pstPdpAddr->stIpv6PdpInfo.aucIpv6Addr,
@@ -784,7 +784,7 @@ VOS_UINT32 RNIC_RcvAtPdnInfoCfgInd(
                    pstRnicPdnCfgInd->stIpv6PdnInfo.aucPdnAddr,
                    RNICITF_MAX_IPV6_ADDR_LEN);
 
-        /* ????????IP???????? */
+        /* 更新过滤IP地址信息 */
         stFilterIpAddr.bitOpIpv6Addr          = VOS_TRUE;
         TAF_MEM_CPY_S(stFilterIpAddr.aucIpv6Addr,
                    sizeof(pstPdpAddr->stIpv6PdpInfo.aucIpv6Addr),
@@ -792,13 +792,13 @@ VOS_UINT32 RNIC_RcvAtPdnInfoCfgInd(
                    RNIC_IPV6_ADDR_LEN);
     }
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ?????????????????? */
+    /* 启动流量统计定时器 */
     RNIC_StartTimer(enTimerId, TI_RNIC_DSFLOW_STATS_LEN);
 
-    /* ??????????????????????ADS?????????????????????????? */
+    /* 注册下行过滤回调函数，ADS调用注册的函数发送下行数据 */
     ADS_DL_RegFilterDataCallback(ucRabid, &stFilterIpAddr, (RCV_DL_DATA_FUNC)RNIC_RcvAdsDlData);
 
 
@@ -820,52 +820,52 @@ VOS_UINT32 RNIC_RcvAtPdnInfoRelInd(
 
     ucRmNetId                           = pstRnicPdnRelInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpCtxAddr                       = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ????PDP?????????? */
+    /* 更新PDP上下文信息 */
     if ((pstPdpCtxAddr->stIpv4PdpInfo.ucRabId == pstRnicPdnRelInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv4PdpInfo.enRegStatus))
     {
-        /* ????IPV4 PDP?????????? */
+        /* 清空IPV4 PDP上下文信息 */
         RNIC_InitIpv4PdpCtx(&pstPdpCtxAddr->stIpv4PdpInfo);
     }
 
     if ((pstPdpCtxAddr->stIpv6PdpInfo.ucRabId == pstRnicPdnRelInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv6PdpInfo.enRegStatus))
     {
-        /* ????IPV6 PDP?????????? */
+        /* 清空IPV6 PDP上下文信息 */
         RNIC_InitIpv6PdpCtx(&pstPdpCtxAddr->stIpv6PdpInfo);
     }
 
     if ((pstPdpCtxAddr->stIpv4v6PdpInfo.ucRabId == pstRnicPdnRelInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv4v6PdpInfo.enRegStatus))
     {
-        /* ????IPV4V6 PDP?????????? */
+        /* 清空IPV4V6 PDP上下文信息 */
         RNIC_InitIpv4v6PdpCtx(&pstPdpCtxAddr->stIpv4v6PdpInfo, ucRmNetId);
     }
 
-    /* PDP?????????????? */
+    /* PDP都未激活的时候 */
     if ((RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv4PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv6PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv4v6PdpInfo.enRegStatus))
     {
-        /* ?????????????????? */
+        /* 停止流量统计定时器 */
         RNIC_StopTimer(enTimerId);
 
-        /* Modified by l60609 for L-C??????????, 2014-1-14, begin */
+        /* Modified by l60609 for L-C互操作项目, 2014-1-14, begin */
         pstSpecNetCardCtx->enModemType        = RNIC_MODEM_TYPE_INSIDE;
-        /* Modified by l60609 for L-C??????????, 2014-1-14, end */
+        /* Modified by l60609 for L-C互操作项目, 2014-1-14, end */
 
-        /* ???????????????? */
+        /* 清除流量统计信息 */
         RNIC_ClearNetDsFlowStats(ucRmNetId);
     }
 
-    /* ????RABID??????????ID */
+    /* 清除RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstRnicPdnRelInd->ucRabId,
                                         RNIC_RMNET_ID_BUTT))
@@ -873,7 +873,7 @@ VOS_UINT32 RNIC_RcvAtPdnInfoRelInd(
         return VOS_ERR;
     }
 
-    /* ?????????????????????? */
+    /* 去注册下行过滤回调函数 */
     ADS_DL_DeregFilterDataCallback(pstRnicPdnRelInd->ucRabId);
 
     return VOS_OK;
@@ -890,29 +890,29 @@ VOS_UINT32  RNIC_RcvTiDsflowStatsExpired(
     VOS_UINT32                          ulRate;
     RNIC_TIMER_ID_ENUM_UINT16           enTimerId;
 
-    /* ?????????????? */
+    /* 获取上下文地址 */
     pstNetCntxt = RNIC_GET_SPEC_NET_CTX(ucRmNetId);
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId   = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
     RNIC_StopTimer(enTimerId);
 
-    /* ????2???????????? */
+    /* 获取2秒的下行流量 */
     ulTaBytes   = pstNetCntxt->stDsFlowStats.ulTotalRecvFluxLow;
 
-    /* ??????????2????????????,??????:byte/s */
+    /* 产品要求每2秒钟计算一次,单位为:byte/s */
     ulRate = ulTaBytes>>1;
     RNIC_SetCurrentDlRate(ulRate, ucRmNetId);
 
-    /* ????2???????????? */
+    /* 获取2秒的上行流量 */
     ulTaBytes   = pstNetCntxt->stDsFlowStats.ulTotalSendFluxLow;
 
-    /* ??????????2????????????,??????:byte/s */
+    /* 产品要求每2秒钟计算一次,单位为:byte/s */
     ulRate      = ulTaBytes>>1;
     RNIC_SetCurrentUlRate(ulRate, ucRmNetId);
 
-    /* ??????????????????????????????????????Byte?????? */
+    /* 每个流量统计周期结束后，需要将周期统计Byte数清除 */
     pstNetCntxt->stDsFlowStats.ulTotalRecvFluxLow = 0;
     pstNetCntxt->stDsFlowStats.ulTotalSendFluxLow = 0;
 
@@ -934,36 +934,36 @@ VOS_UINT32 RNIC_RcvTiDemandDialDisconnectExpired(
     VOS_UINT32                          ulUserExistFlg;
     VOS_UINT32                          ulExpiredCount;
 
-    /* ?????????????? */
+    /* 获取上下文地址 */
     pstNetCntxt     = RNIC_GET_SPEC_NET_CTX(ucRmNetId);
 
-    /* ???????????????????????????????? */
+    /* 获取按需拨号的模式以及时长的地址 */
     pstDialMode     = RNIC_GetDialModeAddr();
 
-    /* ???????????????????????????????? */
+    /* 将用户设置的时长按定时器时长等分 */
     ulExpiredCount  = (pstDialMode->ulIdleTime * TI_RNIC_UNIT) / TI_RNIC_DEMAND_DIAL_DISCONNECT_LEN;
 
     RNIC_StopTimer(TI_RNIC_DEMAND_DIAL_DISCONNECT);
 
-    /* ??????????????????,??????????,?????????? */
+    /* 如果当前是手动拨号,则直接返回,不需要通知 */
     if (RNIC_DIAL_MODE_DEMAND_CONNECT != pstDialMode->enDialMode)
     {
         RNIC_NORMAL_LOG(ACPU_PID_RNIC, "RNIC_RcvTiDemandDialDisconnectExpired: Dialmode is manual!");
         return VOS_OK;
     }
 
-    /* ?????????????????????????????????????????????????????????? */
+    /* 获取在定时器启动后上下行统计的数据包数以及当前用户连接状态 */
     ulPktsNum = pstNetCntxt->stDsFlowStats.ulPeriodSendPktNum;
     ulUserExistFlg  = DRV_AT_GET_USER_EXIST_FLAG();
 
-    /* ????????????????????:
-         ????????????????????:
-             ??????????
-         ????????:
-             ??????++
-       ????????????????:
-          ????????USB??????????????????????????????????????????????????
-          ????????????????????????????????????
+    /* 按需拨号断开逻辑如下:
+         有用户连接且有数据包:
+             计数器清零
+         其他情况:
+             计数器++
+       以下场景无法识别:
+          当前连接USB，但用户无数据发送，而网络有数据下发，导致也会认为
+          是有用户连接且有数据包，而重新计数。
     */
     if ((0 != ulPktsNum)
      && (VOS_TRUE == ulUserExistFlg))
@@ -975,16 +975,16 @@ VOS_UINT32 RNIC_RcvTiDemandDialDisconnectExpired(
         RNIC_IncTiDialDownExpCount();
     }
 
-    /* ?????????????????????????????????????????????????????????????? */
+    /* 判断统计计数器是否大于等于用户设置断开拨号时长与定时器时长等分 */
     ulCount = RNIC_GetTiDialDownExpCount();
 
     if ((ulCount >= ulExpiredCount)
        &&(RNIC_ALLOW_EVENT_REPORT == pstDialMode->enEventReportFlag))
     {
-        /*???????????????? */
+        /*通知应用断开拨号 */
         if (VOS_OK == RNIC_SendDialEvent(DEVICE_ID_WAN, RNIC_DAIL_EVENT_DOWN))
         {
-            /* ?????????????????????????????????????????????????????? */
+            /* 上报断开拨号事件后投票不进入睡眠，在断开拨号成功时解除 */
             DRV_PWRCTRL_SLEEPVOTE_LOCK(PWRCTRL_SLEEP_RNIC);
             RNIC_DBG_SEND_APP_DIALDOWN_SUCC_NUM(1, ucRmNetId);
 
@@ -1009,7 +1009,7 @@ VOS_UINT32 RNIC_RcvTiDemandDialProtectExpired(
     VOS_UINT8                           ucRmNetId
 )
 {
-    /* ?????????????????????? */
+    /* 停止按需拨号保护定时器 */
     RNIC_StopTimer(TI_RNIC_DEMAND_DIAL_PROTECT);
 
     return VOS_OK;
@@ -1021,10 +1021,10 @@ RNIC_RCV_TI_EXPRIED_PROC_FUNC RNIC_GetTiExpiredFuncByMsgId(VOS_UINT32 ulMsgId)
     VOS_UINT8                           i;
     VOS_UINT32                          ulTableSize;
 
-    /* ??g_astRnicTiExpriedProcTab?????????????? */
+    /* 从g_astRnicTiExpriedProcTab中获取操作个数 */
     ulTableSize = sizeof(g_astRnicTiExpriedProcTab)/sizeof(RNIC_RCV_TI_EXPRIED_PROC_STRU);
 
-    /* g_astRnicTiExpriedProcTab???????????????????????? */
+    /* g_astRnicTiExpriedProcTab查表，进行消息处理的分发 */
     for (i = 0; i < ulTableSize; i++)
     {
         if (g_astRnicTiExpriedProcTab[i].ulMsgId== ulMsgId)
@@ -1048,52 +1048,52 @@ VOS_UINT32 RNIC_RcvCcpuResetStartInd(
 
     printk("\n RNIC_RcvCcpuResetStartInd enter, %u \n", VOS_GetSlice());
 
-    /* ???????????????????? */
+    /* 停止所有启动的定时器 */
     RNIC_StopAllTimer();
 
     for (ucIndex = 0 ; ucIndex < RNIC_NET_ID_MAX_NUM ; ucIndex++)
     {
-        /* ???????????????? */
+        /* 清除流量统计信息 */
         RNIC_ClearNetDsFlowStats(ucIndex);
 
-        /* ??????RNIC PDP?????? */
+        /* 初始化RNIC PDP上下文 */
         RNIC_InitPdpCtx(&(pstRnicCtx->astSpecCtx[ucIndex].stPdpCtx), ucIndex);
 
-        /* ?????????????? */
+        /* 初始化流控状态 */
         pstRnicCtx->astSpecCtx[ucIndex].enFlowCtrlStatus = RNIC_FLOW_CTRL_STATUS_STOP;
 
-        /* ??????????ID */
-        /* ????????????????????????????????????????MODEM */
+        /* 初始化模块ID */
+        /* 初始化的时候就已经确定了哪张网卡对应哪个MODEM */
         pstRnicCtx->astSpecCtx[ucIndex].enModemId        = RNIC_GET_MODEM_ID_BY_NET_ID(ucIndex);
 
         pstRnicCtx->astSpecCtx[ucIndex].enModemType      = RNIC_MODEM_TYPE_INSIDE;
     }
 
-    /* ??????RABID???? */
+    /* 初始化RABID信息 */
     for (ucIndex = 0 ; ucIndex < RNIC_MODEM_ID_MAX_NUM ; ucIndex++)
     {
         RNIC_InitRabidInfo(&pstRnicCtx->astRabIdInfo[ucIndex]);
     }
 
-    /* ??????PDNID???? */
+    /* 初始化PDNID信息 */
     RNIC_InitPdnIdInfo(&(pstRnicCtx->stPdnIdInfo));
 
-    /* ??????RNIC???????????? */
+    /* 初始化RNIC定时器上下文 */
     RNIC_InitAllTimers(pstRnicCtx->astTimerCtx);
 
-    /* ?????????????????? */
+    /* 初始化拨号模式信息 */
     RNIC_ResetDialMode(&(pstRnicCtx->stDialMode));
 
-    /* ???????????????????????????????????? */
+    /* 初始化拨号断开定时器超时次数参数统计 */
     RNIC_ClearTiDialDownExpCount();
 
-    /* ??????TIMER4???????? */
+    /* 初始化TIMER4唤醒标志 */
     RNIC_SetTimer4WakeFlg(VOS_FALSE);
 
-    /* ????????????????????API???????????? */
+    /* 释放信号量，使得调用API任务继续运行 */
     VOS_SmV(RNIC_GetResetSem());
 
-    /* ??????????????sdio???????????? */
+    /* 此处是否要清空sdio下行注册函数 */
     printk("\n RNIC_RcvCcpuResetStartInd leave, %u \n", VOS_GetSlice());
     return VOS_OK;
 }
@@ -1106,7 +1106,7 @@ VOS_UINT32 RNIC_ProcImsaPdnActInd_Wifi(
     RNIC_SPEC_CTX_STRU                 *pstNetCntxt = VOS_NULL_PTR;
     VOS_UINT8                           ucRmNetId;
 
-    /* ??????????????????????VT???????????? */
+    /* 指定一张专门的网卡用于VT视频数据传输 */
     ucRmNetId = RNIC_GetImsRmnetId(IMSA_RNIC_IMS_RAT_TYPE_WIFI, pstPdnInfo->enModemId, IMSA_RNIC_PDN_NOT_FOR_EMC);
 
     if (RNIC_RMNET_ID_BUTT == ucRmNetId)
@@ -1120,13 +1120,13 @@ VOS_UINT32 RNIC_ProcImsaPdnActInd_Wifi(
     pstNetCntxt->enRatType      = pstPdnInfo->enRatType;
     pstNetCntxt->enModemType    = RNIC_MODEM_TYPE_INSIDE;
 
-    /* IPV4???? */
+    /* IPV4激活 */
     if (VOS_TRUE == pstPdnInfo->bitOpIpv4PdnInfo)
     {
         pstNetCntxt->stPdpCtx.stIpv4PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
     }
 
-    /* IPV6???? */
+    /* IPV6激活 */
     if (VOS_TRUE == pstPdnInfo->bitOpIpv6PdnInfo)
     {
         pstNetCntxt->stPdpCtx.stIpv6PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
@@ -1150,7 +1150,7 @@ VOS_UINT32 RNIC_ProcImsaPdnActInd_Lte(
     VOS_UINT8                           ucRmNetId;
     VOS_UINT8                           ucExRabId;
 
-    /* ??????????????????????VT???????????? */
+    /* 指定一张专门的网卡用于VT视频数据传输 */
     ucRmNetId = RNIC_GetImsRmnetId(IMSA_RNIC_IMS_RAT_TYPE_LTE, pstPdnInfo->enModemId, pstPdnInfo->enEmcInd);
 
     if (RNIC_RMNET_ID_BUTT == ucRmNetId)
@@ -1159,7 +1159,7 @@ VOS_UINT32 RNIC_ProcImsaPdnActInd_Lte(
         return VOS_ERR;
     }
 
-    /* ????RABID */
+    /* 检查RABID */
     if (!RNIC_RAB_ID_IS_VALID(pstPdnInfo->ucRabId))
     {
         RNIC_INFO_LOG(ACPU_PID_RNIC,
@@ -1171,21 +1171,21 @@ VOS_UINT32 RNIC_ProcImsaPdnActInd_Lte(
     pstNetCntxt->enRatType      = pstPdnInfo->enRatType;
     pstNetCntxt->enModemType    = RNIC_MODEM_TYPE_INSIDE;
 
-    /* IPV4???? */
+    /* IPV4激活 */
     if (VOS_TRUE == pstPdnInfo->bitOpIpv4PdnInfo)
     {
         pstNetCntxt->stPdpCtx.stIpv4PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
         pstNetCntxt->stPdpCtx.stIpv4PdpInfo.ucRabId     = pstPdnInfo->ucRabId;
     }
 
-    /* IPV6???? */
+    /* IPV6激活 */
     if (VOS_TRUE == pstPdnInfo->bitOpIpv6PdnInfo)
     {
         pstNetCntxt->stPdpCtx.stIpv6PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
         pstNetCntxt->stPdpCtx.stIpv6PdpInfo.ucRabId     = pstPdnInfo->ucRabId;
     }
 
-    /* IPV4V6???? */
+    /* IPV4V6激活 */
     if ( (VOS_TRUE == pstPdnInfo->bitOpIpv4PdnInfo)
       && (VOS_TRUE == pstPdnInfo->bitOpIpv6PdnInfo) )
     {
@@ -1193,7 +1193,7 @@ VOS_UINT32 RNIC_ProcImsaPdnActInd_Lte(
         pstNetCntxt->stPdpCtx.stIpv4v6PdpInfo.ucRabId     = pstPdnInfo->ucRabId;
     }
 
-    /* ??????????????????ADS?????????????????????????? */
+    /* 注册下行发送函数，ADS调用注册的函数发送下行数据 */
     ucExRabId = RNIC_BUILD_EXRABID(pstPdnInfo->enModemId, pstPdnInfo->ucRabId);
     ADS_DL_RegDlDataCallback(ucExRabId, RNIC_RcvAdsDlData, ucRmNetId);
 
@@ -1245,7 +1245,7 @@ VOS_UINT32 RNIC_ProcImsaPdnDeactInd_Wifi(
     RNIC_SPEC_CTX_STRU                 *pstNetCntxt = VOS_NULL_PTR;
     VOS_UINT8                           ucRmNetId;
 
-    /* ??????????????????????VT???????????? */
+    /* 指定一张专门的网卡用于VT视频数据传输 */
     ucRmNetId = RNIC_GetImsRmnetId(IMSA_RNIC_IMS_RAT_TYPE_WIFI, enModemId, enEmcInd);
 
     if (RNIC_RMNET_ID_BUTT == ucRmNetId)
@@ -1254,34 +1254,34 @@ VOS_UINT32 RNIC_ProcImsaPdnDeactInd_Wifi(
         return VOS_ERR;
     }
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstNetCntxt = RNIC_GET_SPEC_NET_CTX(ucRmNetId);
 
-    /* ??????IPV4 PDP?????? */
+    /* 如果是IPV4 PDP去激活 */
     if (RNIC_PDP_REG_STATUS_ACTIVE == pstNetCntxt->stPdpCtx.stIpv4PdpInfo.enRegStatus)
     {
-        /* ????IPV4 PDP?????????? */
+        /* 清空IPV4 PDP上下文信息 */
         RNIC_InitIpv4PdpCtx(&pstNetCntxt->stPdpCtx.stIpv4PdpInfo);
     }
 
     if (RNIC_PDP_REG_STATUS_ACTIVE == pstNetCntxt->stPdpCtx.stIpv6PdpInfo.enRegStatus)
     {
-        /* ????IPV6 PDP?????????? */
+        /* 清空IPV6 PDP上下文信息 */
         RNIC_InitIpv6PdpCtx(&pstNetCntxt->stPdpCtx.stIpv6PdpInfo);
     }
 
     if (RNIC_PDP_REG_STATUS_ACTIVE == pstNetCntxt->stPdpCtx.stIpv4v6PdpInfo.enRegStatus)
     {
-        /* ????IPV4V6 PDP?????????? */
+        /* 清空IPV4V6 PDP上下文信息 */
         RNIC_InitIpv4v6PdpCtx(&pstNetCntxt->stPdpCtx.stIpv4v6PdpInfo, ucRmNetId);
     }
 
-    /* ??????????PDP?????????????????????????????????????? */
+    /* 该网卡上面PDP都去激活的时候，清空该网卡的上下文信息 */
     if ((RNIC_PDP_REG_STATUS_ACTIVE != pstNetCntxt->stPdpCtx.stIpv4PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstNetCntxt->stPdpCtx.stIpv6PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstNetCntxt->stPdpCtx.stIpv4v6PdpInfo.enRegStatus))
     {
-        /* ???????????????? */
+        /* 清除流量统计信息 */
         RNIC_ClearNetDsFlowStats(ucRmNetId);
         pstNetCntxt->enRatType      = IMSA_RNIC_IMS_RAT_TYPE_BUTT;
         pstNetCntxt->enModemType    = RNIC_MODEM_TYPE_INSIDE;
@@ -1299,7 +1299,7 @@ VOS_UINT32 RNIC_ProcImsaPdnDeactInd_Lte(
     RNIC_SPEC_CTX_STRU                 *pstNetCntxt = VOS_NULL_PTR;
     VOS_UINT8                           ucRmNetId;
 
-    /* ??????????????????????VT???????????? */
+    /* 指定一张专门的网卡用于VT视频数据传输 */
     ucRmNetId = RNIC_GetImsRmnetId(IMSA_RNIC_IMS_RAT_TYPE_LTE, enModemId, enEmcInd);
 
     if (RNIC_RMNET_ID_BUTT == ucRmNetId)
@@ -1309,31 +1309,31 @@ VOS_UINT32 RNIC_ProcImsaPdnDeactInd_Lte(
     }
     pstNetCntxt = RNIC_GET_SPEC_NET_CTX(ucRmNetId);
 
-    /* ??????IPV4 PDP?????? */
+    /* 如果是IPV4 PDP去激活 */
     if (RNIC_PDP_REG_STATUS_ACTIVE == pstNetCntxt->stPdpCtx.stIpv4PdpInfo.enRegStatus)
     {
-        /* ????IPV4 PDP?????????? */
+        /* 清空IPV4 PDP上下文信息 */
         RNIC_InitIpv4PdpCtx(&(pstNetCntxt->stPdpCtx.stIpv4PdpInfo));
     }
 
     if (RNIC_PDP_REG_STATUS_ACTIVE == pstNetCntxt->stPdpCtx.stIpv6PdpInfo.enRegStatus)
     {
-        /* ????IPV6 PDP?????????? */
+        /* 清空IPV6 PDP上下文信息 */
         RNIC_InitIpv6PdpCtx(&(pstNetCntxt->stPdpCtx.stIpv6PdpInfo));
     }
 
     if (RNIC_PDP_REG_STATUS_ACTIVE == pstNetCntxt->stPdpCtx.stIpv4v6PdpInfo.enRegStatus)
     {
-        /* ????IPV4V6 PDP?????????? */
+        /* 清空IPV4V6 PDP上下文信息 */
         RNIC_InitIpv4v6PdpCtx(&(pstNetCntxt->stPdpCtx.stIpv4v6PdpInfo), ucRmNetId);
     }
 
-    /* ??????????PDP?????????????????????????????????????? */
+    /* 该网卡上面PDP都去激活的时候，清空该网卡的上下文信息 */
     if ( (RNIC_PDP_REG_STATUS_ACTIVE != pstNetCntxt->stPdpCtx.stIpv4PdpInfo.enRegStatus)
       && (RNIC_PDP_REG_STATUS_ACTIVE != pstNetCntxt->stPdpCtx.stIpv6PdpInfo.enRegStatus)
       && (RNIC_PDP_REG_STATUS_ACTIVE != pstNetCntxt->stPdpCtx.stIpv4v6PdpInfo.enRegStatus) )
     {
-        /* ???????????????? */
+        /* 清除流量统计信息 */
         RNIC_ClearNetDsFlowStats(ucRmNetId);
         pstNetCntxt->enModemType    = RNIC_MODEM_TYPE_INSIDE;
         pstNetCntxt->enRatType      = IMSA_RNIC_IMS_RAT_TYPE_BUTT;
@@ -1389,8 +1389,8 @@ VOS_UINT32 RNIC_RcvImsaPdnModifyInd(
     pstRcvInd   = (IMSA_RNIC_PDN_MODIFY_IND_STRU *)pstMsg;
     pstPdnInfo  = &(pstRcvInd->stPdnInfo);
 
-    /* ????RNIC_RMNET_ID_EMC0????????lte????????????????????????????,
-       ??modify??????Emc???????????????????? */
+    /* 当前RNIC_RMNET_ID_EMC0只提供给lte使用，且紧急呼当前不涉及切换,
+       当modify消息中Emc标志存在时，认为异常 */
     if (IMSA_RNIC_PDN_FOR_EMC == pstPdnInfo->enEmcInd)
     {
         RNIC_ERROR_LOG(ACPU_PID_RNIC, "RNIC_RcvImsaPdnModifyInd: abnormal rcv emc modify ind.");
@@ -1433,7 +1433,7 @@ VOS_UINT8 RNIC_GetImsRmnetId(
 {
     RNIC_NORMAL_LOG3(ACPU_PID_RNIC, "RNIC_GetImsRmnetId: rat modemid emc is ", enRatType, enModemId, enEmcInd);
 
-    /* ????RNIC_RMNET_ID_EMC0????????lte??????????????????????????????lte????EmcInd???? */
+    /* 当前RNIC_RMNET_ID_EMC0只提供给lte使用，所以只需要判断接入技术为lte的时EmcInd标志 */
     if ((IMSA_RNIC_PDN_FOR_EMC == enEmcInd)
      && (IMSA_RNIC_IMS_RAT_TYPE_LTE == enRatType)
      && (enModemId < MODEM_ID_BUTT))
@@ -1441,7 +1441,7 @@ VOS_UINT8 RNIC_GetImsRmnetId(
         return RNIC_RMNET_ID_EMC0;
     }
 
-    /* vowifi????????????????????volte????vt???? */
+    /* vowifi时为数据包转发网卡，volte时为vt网卡 */
     if ((MODEM_ID_0 == enModemId)
      && (IMSA_RNIC_IMS_RAT_TYPE_LTE == enRatType))
     {
@@ -1458,7 +1458,7 @@ VOS_UINT8 RNIC_GetImsRmnetId(
 }
 
 
-/* Modified by l60609 for L-C??????????, 2014-01-06, Begin */
+/* Modified by l60609 for L-C互操作项目, 2014-01-06, Begin */
 
 VOS_VOID RNIC_ProcInsideModemIpv4ActInd(
     RNIC_RMNET_CONFIG_REQ_STRU         *pstPdpStatusInd
@@ -1472,13 +1472,13 @@ VOS_VOID RNIC_ProcInsideModemIpv4ActInd(
 
     ucRmNetId                           = pstPdpStatusInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpAddr                          = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
     ucRabid                             = RNIC_RAB_ID_INVALID;
 
-    /* ????modem id??????id??????Rabid */
+    /* 根据modem id和网卡id，填充Rabid */
     if (VOS_OK != RNIC_BuildRabIdByModemId(pstSpecNetCardCtx->enModemId,
                                            pstPdpStatusInd->ucRabId,
                                            &ucRabid))
@@ -1487,7 +1487,7 @@ VOS_VOID RNIC_ProcInsideModemIpv4ActInd(
         return;
     }
 
-    /* ????RABID??????????ID */
+    /* 存储RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstPdpStatusInd->ucRabId,
                                         ucRmNetId))
@@ -1498,23 +1498,23 @@ VOS_VOID RNIC_ProcInsideModemIpv4ActInd(
 
     pstSpecNetCardCtx->enModemType        = RNIC_MODEM_TYPE_INSIDE;
 
-    /* ????PDP?????????? */
+    /* 更新PDP上下文信息 */
     pstPdpAddr->stIpv4PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
     pstPdpAddr->stIpv4PdpInfo.ucRabId     = pstPdpStatusInd->ucRabId;
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ?????????????????? */
+    /* 启动流量统计定时器 */
     RNIC_StartTimer(enTimerId, TI_RNIC_DSFLOW_STATS_LEN);
 
-    /* ?????????????????????? */
+    /* 停止按需拨号保护定时器 */
     if (RNIC_RMNET_ID_0 == ucRmNetId)
     {
         RNIC_StopTimer(TI_RNIC_DEMAND_DIAL_PROTECT);
     }
 
-    /* ??????????????????ADS?????????????????????????? */
+    /* 注册下行发送函数，ADS调用注册的函数发送下行数据 */
     ADS_DL_RegDlDataCallback(ucRabid, RNIC_RcvAdsDlData, ucRmNetId);
 
     return;
@@ -1534,13 +1534,13 @@ VOS_VOID RNIC_ProcInsideModemIpv6ActInd(
 
     ucRmNetId                           = pstPdpStatusInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpAddr                          = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
     ucRabid                             = RNIC_RAB_ID_INVALID;
 
-    /* ????modem id??????id??????Rabid */
+    /* 根据modem id和网卡id，填充Rabid */
     if (VOS_OK != RNIC_BuildRabIdByModemId(pstSpecNetCardCtx->enModemId,
                                            pstPdpStatusInd->ucRabId,
                                            &ucRabid))
@@ -1549,7 +1549,7 @@ VOS_VOID RNIC_ProcInsideModemIpv6ActInd(
         return;
     }
 
-    /* ????RABID??????????ID */
+    /* 存储RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstPdpStatusInd->ucRabId,
                                         ucRmNetId))
@@ -1560,17 +1560,17 @@ VOS_VOID RNIC_ProcInsideModemIpv6ActInd(
 
     pstSpecNetCardCtx->enModemType        = RNIC_MODEM_TYPE_INSIDE;
 
-    /* ????PDP?????????? */
+    /* 更新PDP上下文信息 */
     pstPdpAddr->stIpv6PdpInfo.enRegStatus = RNIC_PDP_REG_STATUS_ACTIVE;
     pstPdpAddr->stIpv6PdpInfo.ucRabId     = pstPdpStatusInd->ucRabId;
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ?????????????????? */
+    /* 启动流量统计定时器 */
     RNIC_StartTimer(enTimerId, TI_RNIC_DSFLOW_STATS_LEN);
 
-    /* ??????????????????ADS?????????????????????????? */
+    /* 注册下行发送函数，ADS调用注册的函数发送下行数据 */
     ADS_DL_RegDlDataCallback(ucRabid, RNIC_RcvAdsDlData, ucRmNetId);
 
     return;
@@ -1581,18 +1581,18 @@ VOS_VOID RNIC_ProcRnicPdpActInd(
     RNIC_RMNET_CONFIG_REQ_STRU           *pstPdpStatusInd
 )
 {
-    /* ????ipv4??ipv6?????????????????? */
+    /* 默认ipv4和ipv6激活成功分两次下发 */
     if (RNIC_MODEM_TYPE_INSIDE == pstPdpStatusInd->enModemType)
     {
         if (RNIC_IP_TYPE_IPV4 == pstPdpStatusInd->enIpType)
         {
-            /* balong modem ipv4???? */
+            /* balong modem ipv4激活 */
             RNIC_ProcInsideModemIpv4ActInd(pstPdpStatusInd);
         }
 
         if (RNIC_IP_TYPE_IPV6 == pstPdpStatusInd->enIpType)
         {
-            /* balong modem ipv6???? */
+            /* balong modem ipv6激活 */
             RNIC_ProcInsideModemIpv6ActInd(pstPdpStatusInd);
         }
     }
@@ -1614,27 +1614,27 @@ VOS_VOID RNIC_ProcInsideModemDeactInd(
 
     ucRmNetId                           = pstPdpStatusInd->ucRmNetId;
 
-    /* ????PDP?????????? */
+    /* 获取PDP上下文地址 */
     pstPdpCtxAddr                       = RNIC_GetPdpCtxAddr(ucRmNetId);
     pstSpecNetCardCtx                   = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
-    /* ????????ID????????????????????ID */
+    /* 根据网卡ID获取流量统计的定时器ID */
     enTimerId = RNIC_GetDsflowTimerIdByNetId(ucRmNetId);
 
-    /* ??????IPV4 PDP?????? */
+    /* 如果是IPV4 PDP去激活 */
     if ((pstPdpCtxAddr->stIpv4PdpInfo.ucRabId == pstPdpStatusInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv4PdpInfo.enRegStatus))
     {
-        /* ????IPV4 PDP?????????? */
+        /* 清空IPV4 PDP上下文信息 */
         RNIC_InitIpv4PdpCtx(&pstPdpCtxAddr->stIpv4PdpInfo);
 
-        /* ??????0???????????????????? */
+        /* 在网卡0上才有按需拨号的功能 */
         if (RNIC_RMNET_ID_0 == ucRmNetId)
         {
-            /* ?????????????????????? */
+            /* 停止按需拨号断开定时器 */
             RNIC_StopTimer(TI_RNIC_DEMAND_DIAL_DISCONNECT);
 
-            /* ?????????????????????????? */
+            /* 清空拨号断开定时器超时统计 */
             RNIC_ClearTiDialDownExpCount();
         }
     }
@@ -1642,35 +1642,35 @@ VOS_VOID RNIC_ProcInsideModemDeactInd(
     if ((pstPdpCtxAddr->stIpv6PdpInfo.ucRabId == pstPdpStatusInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv6PdpInfo.enRegStatus))
     {
-        /* ????IPV6 PDP?????????? */
+        /* 清空IPV6 PDP上下文信息 */
         RNIC_InitIpv6PdpCtx(&pstPdpCtxAddr->stIpv6PdpInfo);
     }
 
     if ((pstPdpCtxAddr->stIpv4v6PdpInfo.ucRabId == pstPdpStatusInd->ucRabId)
      && (RNIC_PDP_REG_STATUS_ACTIVE == pstPdpCtxAddr->stIpv4v6PdpInfo.enRegStatus))
     {
-        /* ????IPV4V6 PDP?????????? */
+        /* 清空IPV4V6 PDP上下文信息 */
         RNIC_InitIpv4v6PdpCtx(&pstPdpCtxAddr->stIpv4v6PdpInfo, ucRmNetId);
     }
 
-    /* PDP?????????????? */
+    /* PDP都未激活的时候 */
     if ((RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv4PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv6PdpInfo.enRegStatus)
      && (RNIC_PDP_REG_STATUS_ACTIVE != pstPdpCtxAddr->stIpv4v6PdpInfo.enRegStatus))
     {
-        /* ?????????????????? */
+        /* 停止流量统计定时器 */
         RNIC_StopTimer(enTimerId);
 
-        /* ???????????????? */
+        /* 清除流量统计信息 */
         RNIC_ClearNetDsFlowStats(ucRmNetId);
 
         pstSpecNetCardCtx->enModemType = RNIC_MODEM_TYPE_INSIDE;
     }
 
-    /* ???????????????????????????????????????????? */
+    /* 在断开拨号成功时解除投票睡眠，以便能进入深睡 */
     DRV_PWRCTRL_SLEEPVOTE_UNLOCK(PWRCTRL_SLEEP_RNIC);
 
-    /* ????RABID??????????ID */
+    /* 清除RABID对应的网卡ID */
     if (VOS_OK != RNIC_SaveNetIdByRabId(pstSpecNetCardCtx->enModemId,
                                         pstPdpStatusInd->ucRabId,
                                         RNIC_RMNET_ID_BUTT))
@@ -1686,10 +1686,10 @@ VOS_VOID RNIC_ProcRnicPdpDeactInd(
     RNIC_RMNET_CONFIG_REQ_STRU           *pstPdpStatusInd
 )
 {
-    /* ??????????????PDP?????? */
+    /* 清空对应网卡的PDP上下文 */
     if (RNIC_MODEM_TYPE_INSIDE == pstPdpStatusInd->enModemType)
     {
-        /* ????????modem PDP???????????????? */
+        /* 清除内部modem PDP去激活相关上下文 */
         RNIC_ProcInsideModemDeactInd(pstPdpStatusInd);
     }
     return;
@@ -1709,17 +1709,17 @@ VOS_UINT32 RNIC_RcvRnicRmnetConfigReq(
     ucRmNetId               = pstRmnetConfigReq->ucRmNetId;
     pstSpecNetCardCtx       = RNIC_GetSpecNetCardCtxAddr(ucRmNetId);
 
-    /* pdp??????????rnic????up */
+    /* pdp激活成功，rnic网卡up */
     if (RNIC_RMNET_STATUS_UP == pstRmnetConfigReq->enRmnetStatus)
     {
-        /* RNIC_MODEM_TYPE_BUTT??????RNIC_MODEM_TYPE_INSIDE??????????????v3r3???????????? */
+        /* RNIC_MODEM_TYPE_BUTT修改为RNIC_MODEM_TYPE_INSIDE，主要为了适配v3r3按需拨号功能 */
         if ((pstSpecNetCardCtx->enModemType == pstRmnetConfigReq->enModemType)
          || (RNIC_MODEM_TYPE_INSIDE == pstSpecNetCardCtx->enModemType))
         {
             RNIC_ProcRnicPdpActInd(pstRmnetConfigReq);
         }
     }
-    /* pdp????????????rnic????down */
+    /* pdp去激活成功，rnic网卡down */
     else
     {
         if (pstSpecNetCardCtx->enModemType == pstRmnetConfigReq->enModemType)
@@ -1730,7 +1730,7 @@ VOS_UINT32 RNIC_RcvRnicRmnetConfigReq(
 
     return VOS_OK;
 }
-/* Modified by l60609 for L-C??????????, 2014-01-06, End */
+/* Modified by l60609 for L-C互操作项目, 2014-01-06, End */
 
 
 
@@ -1793,10 +1793,10 @@ VOS_UINT32 RNIC_RcvTimerMsg(MsgBlock *pstMsg)
     pTiExpriedProcFunc = VOS_NULL_PTR;
     pstRcvMsg = (REL_TIMER_MSG *)pstMsg;
 
-    /* ??????????ID????????ID */
+    /* 根据定时器ID获取网卡ID */
     ucRmNetId = RNIC_GetNetIdByTimerId(pstRcvMsg->ulName);
 
-    /* ?????????????????????????????????? */
+    /* 查找定时器超时处理表中消息处理操作 */
     pTiExpriedProcFunc = RNIC_GetTiExpiredFuncByMsgId(pstRcvMsg->ulName);
     if (VOS_NULL_PTR != pTiExpriedProcFunc)
     {
@@ -1865,12 +1865,12 @@ VOS_UINT32 RNIC_RcvRnicMsg(MsgBlock *pstMsg)
             RNIC_ProcImsData(pstMsg);
             break;
 
-        /* Modified by l60609 for L-C??????????, 2014-01-06, Begin */
+        /* Modified by l60609 for L-C互操作项目, 2014-01-06, Begin */
         case ID_RNIC_RMNET_CONFIG_REQ:
             RNIC_RcvRnicRmnetConfigReq(pstMsg);
             break;
 
-        /* Modified by l60609 for L-C??????????, 2014-01-06, End */
+        /* Modified by l60609 for L-C互操作项目, 2014-01-06, End */
 
         default:
             RNIC_NORMAL_LOG1(ACPU_PID_RNIC, "RNIC_RcvRnicMsg: rcv error msg id %d\r\n", pstMsgHeader->ulMsgName);
@@ -1932,7 +1932,7 @@ VOS_VOID RNIC_RcvCdsImsDataInd(
     }
 
 
-    /* ????A?????? */
+    /* 分配A核内存 */
     pstImmZc = IMM_ZcStaticAlloc(pstImsDataInd->usDataLen + IMM_MAC_HEADER_RES_LEN);
     if (VOS_NULL_PTR == pstImmZc)
     {
@@ -1942,12 +1942,12 @@ VOS_VOID RNIC_RcvCdsImsDataInd(
 
     IMM_ZcReserve(pstImmZc, IMM_MAC_HEADER_RES_LEN);
 
-    /* ????IP?????? */
+    /* 拷贝IP数据包 */
     TAF_MEM_CPY_S(pstImmZc->data, pstImsDataInd->usDataLen, pstImsDataInd->aucData, pstImsDataInd->usDataLen);
 
     IMM_ZcPut(pstImmZc, pstImsDataInd->usDataLen);
 
-    /* ????IP version */
+    /* 获取IP version */
     ucIpType = ((RNIC_IPFIXHDR_STRU *)(pstImsDataInd->aucData))->ucIpVer;
 
     if (RNIC_IPV4_VERSION == ucIpType)
@@ -1958,7 +1958,7 @@ VOS_VOID RNIC_RcvCdsImsDataInd(
     {
         enPktType = ADS_PKT_TYPE_IPV6;
     }
-    else    /* ?????????????????????????????? */
+    else    /* 数据包类型与承载支持类型不一致 */
     {
         IMM_ZcFreeAny(pstImmZc);
         RNIC_DBG_RECV_DL_ERR_PKT_NUM(1, pstNetCntxt->enRmNetId);
@@ -2002,37 +2002,37 @@ VOS_UINT32 RNIC_ProcMsg (MsgBlock *pstMsg)
         return VOS_ERR;
     }
 
-    /* ?????????????? */
+    /* 消息的分发处理 */
     switch (pstMsg->ulSenderPid)
     {
         case WUEPS_PID_AT:
 
-            /* ????AT???? */
+            /* 接收AT消息 */
             RNIC_RcvAtMsg(pstMsg);
             break;
 
         case VOS_PID_TIMER:
 
-            /* ?????????????????? */
+            /* 接收定时器超时消息 */
             RNIC_RcvTimerMsg(pstMsg);
             break;
 
         case ACPU_PID_RNIC:
 
-            /* ????RNIC??????*/
+            /* 接收RNIC的消息*/
             RNIC_RcvRnicMsg(pstMsg);
             break;
 
         case I0_PS_PID_IMSA:
         case I1_PS_PID_IMSA:
 
-            /* ????IMSA??????*/
+            /* 接收IMSA的消息*/
             RNIC_RcvImsaMsg(pstMsg);
             break;
 
         case UEPS_PID_CDS:
 
-            /* ????CDS??????*/
+            /* 接收CDS的消息*/
             RNIC_RcvCdsMsg(pstMsg);
             break;
 

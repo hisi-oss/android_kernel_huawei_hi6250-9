@@ -1580,7 +1580,7 @@ MODULE_PARM_DESC(otg_ver, "OTG revision supported 0=OTG 1.3 1=OTG 2.0");
  <td>dev_out_nak</td>
  <td>Specifies whether  Device OUT NAK enhancement enabled or no.
  The driver will automatically detect the value for this parameter if
- none is specified. This parameter is valid only when OTG_EN_DESC_DMA == 1?b1.
+ none is specified. This parameter is valid only when OTG_EN_DESC_DMA == 1’b1.
  - 0: The core does not set NAK after Bulk OUT transfer complete (default)
  - 1: The core sets NAK after Bulk OUT transfer complete
  </td></tr>
@@ -1592,7 +1592,7 @@ MODULE_PARM_DESC(otg_ver, "OTG revision supported 0=OTG 1.3 1=OTG 2.0");
  endpoint is re-enabled by the application the
  - 0: Core starts processing from the DOEPDMA descriptor (default)
  - 1: Core starts processing from the descriptor which received the BNA.
- This parameter is valid only when OTG_EN_DESC_DMA == 1?b1.
+ This parameter is valid only when OTG_EN_DESC_DMA == 1’b1.
  </td></tr>
 
  <tr>

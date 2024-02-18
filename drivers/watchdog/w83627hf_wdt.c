@@ -7,7 +7,7 @@
  *	(c) Copyright 2007 Vlad Drukker <vlad@storewiz.com>
  *		added support for W83627THF.
  *
- *	(c) Copyright 2003,2007 P??draig Brady <P@draigBrady.com>
+ *	(c) Copyright 2003,2007 Pádraig Brady <P@draigBrady.com>
  *
  *	Based on advantechwdt.c which is based on wdt.c.
  *	Original copyright messages:
@@ -481,5 +481,5 @@ module_init(wdt_init);
 module_exit(wdt_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("P??draig  Brady <P@draigBrady.com>");
+MODULE_AUTHOR("Pádraig  Brady <P@draigBrady.com>");
 MODULE_DESCRIPTION("w83627hf/thf WDT driver");

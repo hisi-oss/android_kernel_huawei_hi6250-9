@@ -4,7 +4,7 @@
  * Copyright (C) 2014  NXP Semiconductors  All rights reserved.
  * Copyright (C) 2012-2015  Intel Corporation. All rights reserved.
  *
- * Authors: Cl??ment Perrochaud <clement.perrochaud@nxp.com>
+ * Authors: Clément Perrochaud <clement.perrochaud@nxp.com>
  * Authors: Oleg Zhurakivskyy <oleg.zhurakivskyy@intel.com>
  *
  * Derived from PN544 device driver:
@@ -430,5 +430,5 @@ module_i2c_driver(nxp_nci_i2c_driver);
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("I2C driver for NXP NCI NFC controllers");
-MODULE_AUTHOR("Cl??ment Perrochaud <clement.perrochaud@nxp.com>");
+MODULE_AUTHOR("Clément Perrochaud <clement.perrochaud@nxp.com>");
 MODULE_AUTHOR("Oleg Zhurakivskyy <oleg.zhurakivskyy@intel.com>");

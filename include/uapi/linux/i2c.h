@@ -21,7 +21,7 @@
     MA 02110-1301 USA.							     */
 /* ------------------------------------------------------------------------- */
 
-/* With some changes from Ky??sti M??lkki <kmalkki@cc.hut.fi> and
+/* With some changes from Kyösti Mälkki <kmalkki@cc.hut.fi> and
    Frodo Looijaard <frodol@dds.nl> */
 
 #ifndef _UAPI_LINUX_I2C_H

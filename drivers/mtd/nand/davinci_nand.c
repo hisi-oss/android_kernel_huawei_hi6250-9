@@ -1,9 +1,9 @@
 /*
  * davinci_nand.c - NAND Flash Driver for DaVinci family chips
  *
- * Copyright ?? 2006 Texas Instruments.
+ * Copyright © 2006 Texas Instruments.
  *
- * Port to 2.6.23 Copyright ?? 2008 by:
+ * Port to 2.6.23 Copyright © 2008 by:
  *   Sander Huijsen <Shuijsen@optelecom-nkf.com>
  *   Troy Kisky <troy.kisky@boundarydevices.com>
  *   Dirk Behme <Dirk.Behme@gmail.com>

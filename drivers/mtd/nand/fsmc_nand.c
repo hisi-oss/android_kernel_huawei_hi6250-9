@@ -5,7 +5,7 @@
  * Flexible Static Memory Controller (FSMC)
  * Driver for NAND portions
  *
- * Copyright ?? 2010 ST Microelectronics
+ * Copyright © 2010 ST Microelectronics
  * Vipin Kumar <vipin.kumar@st.com>
  * Ashish Priyadarshi
  *

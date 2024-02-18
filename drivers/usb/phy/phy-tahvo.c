@@ -7,7 +7,7 @@
  * Copyright (C) 2004 Texas Instruments
  * Copyright (C) 2004 David Brownell
  *
- * Original driver written by Juha Yrj??l??, Tony Lindgren and Timo Ter??s.
+ * Original driver written by Juha Yrjölä, Tony Lindgren and Timo Teräs.
  * Modified for Retu/Tahvo MFD by Aaro Koskinen.
  *
  * This file is subject to the terms and conditions of the GNU General
@@ -458,5 +458,5 @@ module_platform_driver(tahvo_usb_driver);
 
 MODULE_DESCRIPTION("Tahvo USB transceiver driver");
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Juha Yrj??l??, Tony Lindgren, and Timo Ter??s");
+MODULE_AUTHOR("Juha Yrjölä, Tony Lindgren, and Timo Teräs");
 MODULE_AUTHOR("Aaro Koskinen <aaro.koskinen@iki.fi>");

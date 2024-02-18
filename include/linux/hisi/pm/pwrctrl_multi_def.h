@@ -1,7 +1,7 @@
 
 
 /*****************************************************************************
-  1 ??????????????
+  1 其他头文件包含
 *****************************************************************************/
 
 #ifndef __PWRCTRL_MULTI_DEF_H__
@@ -18,7 +18,7 @@ extern "C" {
 
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
 /*just for temp stub*/
 /*
@@ -99,12 +99,12 @@ extern "C" {
 #define PWRCTRL_FALSE               (0)
 #define PWRCTRL_TRUE                (1)
 
-#define PWRCTRL_BOOT_SYN_TIME       (100)            /*????: slice timer 33us*/
+#define PWRCTRL_BOOT_SYN_TIME       (100)            /*单位: slice timer 33us*/
 #define PWRCTRL_BOOT_SYNC_BIT       (BIT(16))
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-#define PWRCTRL_DELAY_TCXO_1US(x)       (x*19)              /*????-???? 1us    (19200000/1000000)*/
-#define PWRCTRL_DELAY_32K_100US(x)      (x*3)               /*????-???? 100 us  (32768/1000000)*100 */
+#define PWRCTRL_DELAY_TCXO_1US(x)       (x*19)              /*单位-近似 1us    (19200000/1000000)*/
+#define PWRCTRL_DELAY_32K_100US(x)      (x*3)               /*单位-近似 100 us  (32768/1000000)*100 */
 
 #define PWRCTRL_REG_MAX_VALUE       (0xFFFFFFFF)
 
@@ -122,7 +122,7 @@ extern "C" {
 #define MCA_OBJ_CCPU (3)
 #define MCA_OBJ_BUS (4)
 #define MCA_OBJ_BUSLOW (5)
-#define MCA_OBJ_END MCA_OBJ_BUSLOW /*????????OBJ????????END*/
+#define MCA_OBJ_END MCA_OBJ_BUSLOW /*如果增加OBJ，请更新END*/
 #define MCA_OBJ_NUM (MCA_OBJ_END + 1)
 
 #define MCA_PARAM_BEGIN (0)
@@ -130,7 +130,7 @@ extern "C" {
 #define MCA_PARAM_MIN (1)
 #define MCA_PARAM_LOCK (2)
 #define MCA_PARAM_SAFE (3)
-#define MCA_PARAM_END MCA_PARAM_SAFE /*????????PARAM????????END*/
+#define MCA_PARAM_END MCA_PARAM_SAFE /*如果增加PARAM，请更新END*/
 #define MCA_PARAM_NUM (MCA_PARAM_END + 1)
 
 #define CPU_IDLE_STAT_VALID 0x55aa
@@ -144,7 +144,7 @@ extern "C" {
 
 #define BYTES_PER_UINT32 (4)
 
-/*????profile size????????????PROFILE_MAX_TOTAL_SIZE????*/
+/*更改profile size时请注意更新PROFILE_MAX_TOTAL_SIZE的值*/
 #define ACPU_PROFILE_LEN (20)
 #define ACPU_PROFILE_NUM (6)
 
@@ -162,9 +162,9 @@ extern "C" {
 
 #define HPM_SEARCH_VOLT_ENABLE
 #define HPM_SEARCH_VOLT_ACPU_ENABLE
-#if 0/*V8R1 ASIC????????*/
+#if 0/*V8R1 ASIC回片使用*/
 #define HPM_SEARCH_VOLT_DDR_ENABLE
-#define HPM_SEARCH_VOLT_PERIPH_ENABLE /*y_todo:????????????*/
+#define HPM_SEARCH_VOLT_PERIPH_ENABLE /*y_todo:回片先不打开*/
 #endif
 
 #define FREQ_MAX_NUM 6
@@ -196,9 +196,9 @@ extern "C" {
 #define  DDR_PD_PRD_256 0x100
 #define  DDR_PD_PRD_CHANGE_FLAG (0x5F5F5F5F)
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
-/* ?????????? */
+/* 返回值定义 */
 typedef enum
 {
     RET_ERR_PARAM_NULL = -0xF000,
@@ -217,58 +217,58 @@ typedef enum
 } EM_PWC_RET;
 
 
-/* ???????????????? */
+/* 打印通道选择定义 */
 typedef enum
 {
     PWC_DEBUG_UART = 0,     /* 0x0:UART                                  */
     PWC_DEBUG_LOG,          /* 0x1:trace log                             */
-    PWC_DEBUG_BUG,          /* 0x2:????????                              */
-    PWC_DEBUG_DRX,          /* 0x3:????????                              */
-    PWC_DEBUG_OFF = 0xff    /* 0x4:????                                  */
+    PWC_DEBUG_BUG,          /* 0x2:定位使用                              */
+    PWC_DEBUG_DRX,          /* 0x3:通信模块                              */
+    PWC_DEBUG_OFF = 0xff    /* 0x4:关闭                                  */
 } EM_PWC_LOG_CHAN;
 
 
-/* ?????????????????? */
+/* 低功耗特性开关定义 */
 typedef enum
 {
-    PWC_SWITCH_CSLEEP = 0,      /* 0x0: C????????   */
-    PWC_SWITCH_ASLEEP,          /* 0x1: A????????   */
-    PWC_SWITCH_MSLEEP,          /* 0x2: ????????????????     */
-    PWC_SWITCH_HIFI,            /* 0x3: hifi ??????          */
+    PWC_SWITCH_CSLEEP = 0,      /* 0x0: C核上下电   */
+    PWC_SWITCH_ASLEEP,          /* 0x1: A核上下电   */
+    PWC_SWITCH_MSLEEP,          /* 0x2: 系统外设区上下电     */
+    PWC_SWITCH_HIFI,            /* 0x3: hifi 上下电          */
 
-    PWC_SWITCH_CDFS,            /* 0x4: C??????????          */
-    PWC_SWITCH_ADFS,            /* 0x5: A????????????????AVS */
-    PWC_SWITCH_DDFS,            /* 0x6: DDR ????????         */
-    PWC_SWITCH_DAFS,            /* 0x7: DDR ????????       */
+    PWC_SWITCH_CDFS,            /* 0x4: C核动态调频          */
+    PWC_SWITCH_ADFS,            /* 0x5: A核动态调频调压、AVS */
+    PWC_SWITCH_DDFS,            /* 0x6: DDR 静态调频         */
+    PWC_SWITCH_DAFS,            /* 0x7: DDR 自动调频       */
 
-    PWC_SWITCH_CAVS,            /* 0x8: C??????????          */
-    PWC_SWITCH_AAVS,            /* 0x9: A?????????? */
-    PWC_SWITCH_DAVS,            /* 0xA: DDR ????????         */
-    PWC_SWITCH_GAVS,            /* 0xB: GPU????????          */
+    PWC_SWITCH_CAVS,            /* 0x8: C核动态调压          */
+    PWC_SWITCH_AAVS,            /* 0x9: A核动态调压 */
+    PWC_SWITCH_DAVS,            /* 0xA: DDR 动态调压         */
+    PWC_SWITCH_GAVS,            /* 0xB: GPU动态调压          */
 
     PWC_SWITCH_CPUIDLE,         /* 0xC: ACPU cpu IDLE        */
-    PWC_SWITCH_BDFS,            /* 0xD: bus????              */
+    PWC_SWITCH_BDFS,            /* 0xD: bus调频              */
     PWC_SWITCH_AUTOHOTPLUG,     /* 0xE: AUTO PLUG            */
     PWC_SWITCH_QOS,             /* 0xF: dvfs qos             */
 
-    PWC_SWITCH_MNTN = 16,       /* bit16: ????????           */
-    PWC_SWITCH_DEBPT,           /* bit17: ????????           */
-    PWC_SWITCH_APNTFLAG,        /* bit18: ??????A??          */
-    PWC_SWITCH_PMQOS,           /* bit19: ??????Qos          */
+    PWC_SWITCH_MNTN = 16,       /* bit16: 可维可测           */
+    PWC_SWITCH_DEBPT,           /* bit17: 调试开关           */
+    PWC_SWITCH_APNTFLAG,        /* bit18: 打印至A核          */
+    PWC_SWITCH_PMQOS,           /* bit19: 上下电Qos          */
 
-    PWC_SWITCH_BLOWDFS,         /* bit20: BUS100M????        */
-    PWC_SWITCH_BIDLE,           /* bit21: BUS IDLE????????   */
-    PWC_SWITCH_BLOWIDLE,        /* bit22: BUS100M IDLE????????*/
+    PWC_SWITCH_BLOWDFS,         /* bit20: BUS100M调频        */
+    PWC_SWITCH_BIDLE,           /* bit21: BUS IDLE自动降频   */
+    PWC_SWITCH_BLOWIDLE,        /* bit22: BUS100M IDLE自动降频*/
     PWC_SWITCH_MNOCDFS,         /* bit23: MODEM NOC DFS      */
 
-    PWC_SWITCH_MNOCIDLE,        /* bit24: MODEM NOC IDLE????????*/
-    PWC_SWITCH_MGENERAL,        /* bit25: MCU????????????    */
-    PWC_SWITCH_CGENERAL,        /* bit26: CCPU????????????   */
-    PWC_SWITCH_AGENERAL,        /* bit27: ACPU????????????   */
+    PWC_SWITCH_MNOCIDLE,        /* bit24: MODEM NOC IDLE自动降频*/
+    PWC_SWITCH_MGENERAL,        /* bit25: MCU低功耗总开关    */
+    PWC_SWITCH_CGENERAL,        /* bit26: CCPU低功耗总开关   */
+    PWC_SWITCH_AGENERAL,        /* bit27: ACPU低功耗总开关   */
 
-    PWC_SWITCH_MCUSHELL,        /* bit28: ACPU????MCU???????? */
+    PWC_SWITCH_MCUSHELL,        /* bit28: ACPU调用MCU命令接口 */
 
-    PWC_SWITCH_BUTT = 32        /* ?????? */
+    PWC_SWITCH_BUTT = 32        /* 边界值 */
 
 } EM_PWC_SWITCH;
 
@@ -283,13 +283,13 @@ typedef enum {
     PWC_FUNC_BUTT
 }EM_PWC_FUNC;
 
-/* ?????????????? */
+/* 模块的上电状态 */
 typedef enum
 {
-    PWC_STATUS_ACORE = 0,       /* 0x0: A??????????   */
-    PWC_STATUS_CCORE = 1,       /* 0x1: C??????????   */
-    PWC_STATUS_HIFI =  2,       /* 0x2: HIFI??????????   */
-    PWC_STATUS_BUTT = 32        /* ?????? */
+    PWC_STATUS_ACORE = 0,       /* 0x0: A核上电标志   */
+    PWC_STATUS_CCORE = 1,       /* 0x1: C核上电标志   */
+    PWC_STATUS_HIFI =  2,       /* 0x2: HIFI核上电标志   */
+    PWC_STATUS_BUTT = 32        /* 边界值 */
 
 } EM_PWC_STATUS;
 
@@ -300,12 +300,12 @@ typedef enum
     CPU_IDLE_C0,
     CPU_IDLE_C1,
     CPU_IDLE_C2,
-    CPU_IDLE_C3, /*??????IDLE????*/
-    CPU_IDLE_C4, /*??????????????*/
+    CPU_IDLE_C3, /*以上为IDLE状态*/
+    CPU_IDLE_C4, /*表示全系统下电*/
     CPU_IDLE_MAX
 } CPU_IDLE_STAT;
 
-/*mediapll ??????????*/
+/*mediapll 使用者列表*/
 typedef enum
 {
     MEDIAPLL_HIFI = 0,
@@ -313,17 +313,17 @@ typedef enum
 } MEDIAPLL_CLASS_ID;
 
 /*****************************************************************************
-  4 ??????????
+  4 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  5 ????????
+  5 消息定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 STRUCT????
+  6 STRUCT定义
 *****************************************************************************/
 typedef struct ST_PWC_SWITCH_STRU_S
 {
@@ -380,8 +380,8 @@ struct acpu_freq_volt_stru
     unsigned int support_freq_num;
     unsigned int support_freq_max;
     unsigned int start_prof;
-    unsigned int vol[FREQ_MAX_NUM + 1]; /*??????????????*/
-    unsigned int hpm_dly_threshold[FREQ_MAX_NUM + 1];/*????????????????????????????: bit0~bit15,??????????bit16:32??????????*/
+    unsigned int vol[FREQ_MAX_NUM + 1]; /*每个频点的电压*/
+    unsigned int hpm_dly_threshold[FREQ_MAX_NUM + 1];/*积分检测电压模块电压控制门限: bit0~bit15,进入门限；bit16:32，退出门限*/
 };
 
 struct ddr_freq_volt_stru
@@ -390,7 +390,7 @@ struct ddr_freq_volt_stru
     unsigned int support_freq_num;
     unsigned int support_freq_max;
     unsigned int start_prof;
-    unsigned int vol[FREQ_MAX_NUM + 1]; /*??????????????*/
+    unsigned int vol[FREQ_MAX_NUM + 1]; /*每个频点的电压*/
 };
 
 struct freqdump
@@ -428,12 +428,12 @@ struct medpllstate
     unsigned int hifi_medpll_state;
 };
 /*****************************************************************************
-  7 UNION????
+  7 UNION定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  8 OTHERS????
+  8 OTHERS定义
 *****************************************************************************/
 typedef void_t          (*PWCVFUNCPTRV)(void_t);
 typedef s32_t           (*PWCFUNCPTR0)(void_t);
@@ -442,12 +442,12 @@ typedef s32_t           (*PWCFUNCPTR3)(u32_t arg1, u32_t arg2, u32_t arg3);
 
 
 /*****************************************************************************
-  9 ????????????
+  9 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  10 ????????
+  10 函数声明
 *****************************************************************************/
 
 

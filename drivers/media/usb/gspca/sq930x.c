@@ -1,7 +1,7 @@
 /*
  * SQ930x subdriver
  *
- * Copyright (C) 2010 Jean-Fran??ois Moine <http://moinejf.free.fr>
+ * Copyright (C) 2010 Jean-François Moine <http://moinejf.free.fr>
  * Copyright (C) 2006 -2008 Gerard Klaver <gerard at gkall dot hobby dot nl>
  * Copyright (C) 2007 Sam Revitch <samr7@cs.washington.edu>
  *

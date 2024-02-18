@@ -2106,7 +2106,7 @@ UNUSUAL_DEV(  0x14cd, 0x6600, 0x0201, 0x0201,
 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
 		US_FL_IGNORE_RESIDUE ),
 
-/* Reported by Michael B??sch <m@bues.ch> */
+/* Reported by Michael Büsch <m@bues.ch> */
 UNUSUAL_DEV(  0x152d, 0x0567, 0x0114, 0x0116,
 		"JMicron",
 		"USB to ATA/ATAPI Bridge",
@@ -2249,7 +2249,7 @@ UNUSUAL_DEV( 0x1de1, 0xc102, 0x0000, 0xffff,
 		US_FL_IGNORE_DEVICE ),
 
 /*
- * Patch by Richard Sch??tz <r.schtz@t-online.de>
+ * Patch by Richard Schütz <r.schtz@t-online.de>
  * This external hard drive enclosure uses a JMicron chip which
  * needs the US_FL_IGNORE_RESIDUE flag to work properly.
  */
@@ -2339,7 +2339,7 @@ UNUSUAL_DEV(  0x4102, 0x1059, 0x0000,  0x0000,
                US_FL_MAX_SECTORS_64 ),
 
 /*
- * David H??rdeman <david@2gen.com>
+ * David Härdeman <david@2gen.com>
  * The key makes the SCSI stack print confusing (but harmless) messages
  */
 UNUSUAL_DEV(  0x4146, 0xba01, 0x0100, 0x0100,

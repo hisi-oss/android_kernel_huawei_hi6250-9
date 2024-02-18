@@ -1,5 +1,5 @@
 /*
- * Copyright ?? 2015 Intel Corporation.
+ * Copyright © 2015 Intel Corporation.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -408,7 +408,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
 		wmb();
 		/* In caching mode, we still have to flush with PASID 0 when
 		 * a PASID table entry becomes present. Not entirely clear
-		 * *why* that would be the case ??? surely we could just issue
+		 * *why* that would be the case — surely we could just issue
 		 * a flush with the PASID value that we've changed? The PASID
 		 * is the index into the table, after all. It's not like domain
 		 * IDs in the case of the equivalent context-entry change in

@@ -3,8 +3,8 @@
  *
  * Author: Roland Stigge <stigge@antcom.de>
  *
- * Copyright ?? 2011 WORK Microwave GmbH
- * Copyright ?? 2011, 2012 Roland Stigge
+ * Copyright © 2011 WORK Microwave GmbH
+ * Copyright © 2011, 2012 Roland Stigge
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

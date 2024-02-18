@@ -1,6 +1,6 @@
 /*
- * Copyright 2013 Emilio L??pez
- * Emilio L??pez <emilio@elopez.com.ar>
+ * Copyright 2013 Emilio López
+ * Emilio López <emilio@elopez.com.ar>
  *
  * Copyright 2015 Maxime Ripard
  * Maxime Ripard <maxime.ripard@free-electrons.com>

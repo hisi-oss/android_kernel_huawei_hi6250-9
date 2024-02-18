@@ -1,7 +1,7 @@
 
 
 /*****************************************************************************
-  1 ??????????????
+  1 其他头文件包含
 *****************************************************************************/
 #ifndef __PWRCTRL_MULTI_MEMCFG_H__
 #define __PWRCTRL_MULTI_MEMCFG_H__
@@ -20,7 +20,7 @@ extern "C" {
 #include  "global_sram_map.h"
 
 /*****************************************************************************
-  2 ??????
+  2 宏定义
 *****************************************************************************/
 #ifndef __PWRCTRL_MULTI_MEMCFG_MCU__
 #define __PWRCTRL_MULTI_MEMCFG_MCU__
@@ -75,7 +75,7 @@ extern "C" {
 #define     MCU_DDR_ACORE_BK_PMCTRL_ADDR  (MCU_DDR_BK_PMCTRL_ADDR + MCU_DDR_BK_PMCTRL_SIZE)
 #define     MCU_DDR_ACORE_BK_PMCTRL_SIZE  (0x100)
 #define     MCU_DDR_BK_IPF_REG          (MCU_DDR_ACORE_BK_PMCTRL_ADDR + MCU_DDR_ACORE_BK_PMCTRL_SIZE)
-#define     MCU_DDR_BK_IPF_REG_SIZE     (4 * 40)    /* 40???????? */
+#define     MCU_DDR_BK_IPF_REG_SIZE     (4 * 40)    /* 40个寄存器 */
 
 #define     MCU_DDR_BK_SOC_USED_SIZE    (MCU_DDR_BK_NOR_V_SIZE \
                                         + MCU_DDR_ACORE_BK_NOR_V_SIZE \
@@ -102,10 +102,10 @@ extern "C" {
 #define __PWRCTRL_MULTI_MEMCFG_ACPU__
 
 /**************  SRAM  ***************/
-/*A?? SRAM ????*/
+/*A核 SRAM 地址*/
 #define PWRCTRL_ACPU_ASM_SPACE_ADDR         (PM_SRAM_ADDR)
 #define PWRCTRL_ACPU_ASM_SPACE_SIZE         (PM_SRAM_SIZE)
-/*??????????????????*/
+/*睡眠空间地址分配表*/
 #define PWRCTRL_ACPU_ASM_MEM_BASE           (PWRCTRL_ACPU_ASM_SPACE_ADDR)   /*sum size: 8k*/
 #define PWRCTRL_ACPU_ASM_MEM_SIZE           (PWRCTRL_ACPU_ASM_SPACE_SIZE)                        /*8k*/
 #define PWRCTRL_ACPU_ASM_CODE_BASE          (PWRCTRL_ACPU_ASM_MEM_BASE + 0x200)
@@ -123,7 +123,7 @@ extern "C" {
 
 #define PWRCTRL_ACPU_ASM_D_COMM_ADDR        (PWRCTRL_ACPU_ASM_DATA_BASE + 0x700)/*0x3800*/
 
-/*----------A?????????????? start--------------*/
+/*----------A核低功耗标志区 start--------------*/
 #define PWRCTRL_ACPU_REBOOT                 (PWRCTRL_ACPU_ASM_D_COMM_ADDR)                                          /*0x3800 size 0x200*/
 #define PWRCTRL_ACPU_REBOOT_SIZE            (0x200)                                                                 /*for exc*/
 #define PWRCTRL_ACPU_ASM_SLICE_BAK_ADDR     (PWRCTRL_ACPU_REBOOT + PWRCTRL_ACPU_REBOOT_SIZE)                        /*0x3a00*/
@@ -133,11 +133,11 @@ extern "C" {
 #define EXCH_A_CORE_POWRCTRL_CONV_ADDR      (PWRCTRL_ACPU_ASM_DEBUG_FLAG_ADDR + PWRCTRL_ACPU_ASM_DEBUG_FLAG_SIZE)   /*0x3a08*/
 #define EXCH_A_CORE_POWRCTRL_CONV_SIZE      (4)
 
-/* CPU IDLE?????????? */
+/* CPU IDLE状态标志区 */
 #define MEMORY_AXI_CPU_IDLE_ADDR            (EXCH_A_CORE_POWRCTRL_CONV_ADDR + EXCH_A_CORE_POWRCTRL_CONV_SIZE)
 #define MEMORY_AXI_CPU_IDLE_SIZE            (4)
 
-/* ??????????????,?????????????????? 0-3????:acpu 4-7????:DDR 8-11????:GPU*/
+/* 当前频率值保存,避免频繁发消息获取 0-3字节:acpu 4-7字节:DDR 8-11字节:GPU*/
 #define MEMORY_AXI_CUR_FREQ_ADDR            (MEMORY_AXI_CPU_IDLE_ADDR + MEMORY_AXI_CPU_IDLE_SIZE)
 #define MEMORY_AXI_CUR_FREQ_SIZE            (12)
 
@@ -243,11 +243,11 @@ extern "C" {
 #define ACPU_DFS_FREQ_ADDR                      (DDR_PASR_ADDR + DDR_PASR_SIZE)
 #define ACPU_DFS_FREQ_ADDR_SIZE                 (12)
 
-/*????????????????hw_config??efuse??????????????*/
+/*仅为产线工位判断hw_config和efuse中最高频率使用*/
 #define ACPU_CHIP_MAX_FREQ                      (ACPU_DFS_FREQ_ADDR + ACPU_DFS_FREQ_ADDR_SIZE)
 #define ACPU_CHIP_MAX_FREQ_SIZE                 (4)
 
-/*MCU&CCPU????MEDPLL????????*/
+/*MCU&CCPU控制MEDPLL状态标志*/
 #define MEMORY_MEDPLL_STATE_ADDR              (ACPU_CHIP_MAX_FREQ + ACPU_CHIP_MAX_FREQ_SIZE)
 #define MEMORY_MEDPLL_STATE_SIZE              (8)
 
@@ -299,7 +299,7 @@ extern "C" {
 
 
 
-/*----------A?????????????? end--------------*/
+/*----------A核低功耗标志区 end--------------*/
 
 
 /**************  DDR  ***************/
@@ -326,7 +326,7 @@ extern "C" {
 
 /**************  DDR  ***************/
 
-/*??????????????????*/
+/*睡眠空间地址分配表*/
 #define PWRCTRL_ASM_MEM_SPACE_BASE      (0x1000)                        /*DDR 0x1000-0x3fff      -- Pw_platform*/
 #define PWRCTRL_ASM_MEM_SPACE_SIZE      (0x3000)                        /*DDR 0x1000-0x3fff      -- Pw_platform*/
 
@@ -366,42 +366,42 @@ extern "C" {
 
 
 /*****************************************************************************
-  3 ????????
+  3 枚举定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  4 ??????????
+  4 消息头定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  5 ????????
+  5 消息定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  6 STRUCT????
+  6 STRUCT定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  7 UNION????
+  7 UNION定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  8 OTHERS????
+  8 OTHERS定义
 *****************************************************************************/
 
 
 /*****************************************************************************
-  9 ????????????
+  9 全局变量声明
 *****************************************************************************/
 
 
 /*****************************************************************************
-  10 ????????
+  10 函数声明
 *****************************************************************************/
 
 

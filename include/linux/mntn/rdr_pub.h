@@ -30,9 +30,9 @@
 #define INT_IN_FLAG             0xAAAAUL
 #define INT_EXIT_FLAG           0xBBBBUL
 
-#define BBOX_SAVE_DONE_FILENAME "/DONE"    /*????????????log??????????????????????*/
+#define BBOX_SAVE_DONE_FILENAME "/DONE"    /*异常文件目录log保存完毕的标志文件名字*/
 
-/*????????log??????????????*/
+/*异常时，log保存完毕的标志*/
 enum SAVE_STEP {
     BBOX_SAVE_STEP1     = 0x1,
     BBOX_SAVE_STEP2     = 0x2,
@@ -52,24 +52,24 @@ enum rdr_except_reason_e {
 };
 
 enum PROCESS_PRI {
-    RDR_OTHER      = 0x0,            /* ???????? */
-    RDR_NOTICE     = 0x1,            /* ???? */
-    RDR_WARN,                           /* ???? */
-    RDR_ERR,                              /* ???? */   
-    RDR_DEAD,                            /* ???? */ 
+    RDR_OTHER      = 0x0,            /* 不分类别 */
+    RDR_NOTICE     = 0x1,            /* 提示 */
+    RDR_WARN,                           /* 一般 */
+    RDR_ERR,                              /* 严重 */   
+    RDR_DEAD,                            /* 致命 */ 
     RDR_PPRI_MAX
 };
 
 enum REBOOT_PRI {
-    RDR_REBOOT_NOW  = 0x01,     /* ???????? */
-    RDR_REBOOT_WAIT,                /* ???????? */
-    RDR_REBOOT_NO,                    /* ?????? */
+    RDR_REBOOT_NOW  = 0x01,     /* 立即重启 */
+    RDR_REBOOT_WAIT,                /* 稍后重启 */
+    RDR_REBOOT_NO,                    /* 不重启 */
     RDR_REBOOT_MAX
 };
 
 enum REENTRANT {
-    RDR_REENTRANT_ALLOW = 0x01,   /* ???????????????? */
-    RDR_REENTRANT_DISALLOW          /* ?????????????????? */
+    RDR_REENTRANT_ALLOW = 0x01,   /* 可重复触发的异常 */
+    RDR_REENTRANT_DISALLOW          /* 不可重复触发的异常 */
 };
 
 enum UPLOAD_FLAG {
@@ -172,9 +172,9 @@ struct rdr_module_ops_pub {
 };
 
 struct rdr_register_module_result {
-    u64   log_addr;         /* ???????????? */
-    u32   log_len;            /* ???????????? */
-    u64   log_vaddr;        /* ???????? */
+    u64   log_addr;         /* 预留物理地址 */
+    u32   log_len;            /* 预留地址长度 */
+    u64   log_vaddr;        /* 虚拟地址 */
     RDR_NVE nve;
 };
 

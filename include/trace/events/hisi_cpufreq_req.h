@@ -6,7 +6,7 @@
 
 #include <linux/tracepoint.h>
 
-TRACE_EVENT(cpufreq_req_notify,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_req_notify,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int cpu, void *req, unsigned int freq,
 		 unsigned int min, unsigned int max),
 	TP_ARGS(cpu, req, freq, min, max),
@@ -32,7 +32,7 @@ TRACE_EVENT(cpufreq_req_notify,/* [false alarm]:??????????????? */
 		  __entry->min, __entry->max)
 );
 
-TRACE_EVENT(cpufreq_req_update,/* [false alarm]:??????????????? */
+TRACE_EVENT(cpufreq_req_update,/* [false alarm]:原生宏定义 */
 	TP_PROTO(int cpu, void *req, unsigned int freq),
 	TP_ARGS(cpu, req, freq),
 

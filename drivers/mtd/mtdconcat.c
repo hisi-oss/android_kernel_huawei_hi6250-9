@@ -1,8 +1,8 @@
 /*
  * MTD device concatenation layer
  *
- * Copyright ?? 2002 Robert Kaiser <rkaiser@sysgo.de>
- * Copyright ?? 2002-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright © 2002 Robert Kaiser <rkaiser@sysgo.de>
+ * Copyright © 2002-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * NAND support by Christian Gan <cgan@iders.ca>
  *

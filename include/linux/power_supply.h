@@ -1,9 +1,9 @@
 /*
  *  Universal power supply monitor class
  *
- *  Copyright ?? 2007  Anton Vorontsov <cbou@mail.ru>
- *  Copyright ?? 2004  Szabolcs Gyurko
- *  Copyright ?? 2003  Ian Molton <spyro@f2s.com>
+ *  Copyright © 2007  Anton Vorontsov <cbou@mail.ru>
+ *  Copyright © 2004  Szabolcs Gyurko
+ *  Copyright © 2003  Ian Molton <spyro@f2s.com>
  *
  *  Modified: 2004, Oct     Szabolcs Gyurko
  *
@@ -22,7 +22,7 @@
 
 /*
  * All voltages, currents, charges, energies, time and temperatures in uV,
- * ??A, ??Ah, ??Wh, seconds and tenths of degree Celsius unless otherwise
+ * µA, µAh, µWh, seconds and tenths of degree Celsius unless otherwise
  * stated. It's driver's job to convert its raw values to units in which
  * this class operates.
  */

@@ -2,7 +2,7 @@
  * Generic implementation of 64-bit atomics using spinlocks,
  * useful on processors that don't have 64-bit atomic instructions.
  *
- * Copyright ?? 2009 Paul Mackerras, IBM Corp. <paulus@au1.ibm.com>
+ * Copyright © 2009 Paul Mackerras, IBM Corp. <paulus@au1.ibm.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

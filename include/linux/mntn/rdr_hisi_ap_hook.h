@@ -18,7 +18,7 @@ typedef enum{
     HK_WORKER,
     HK_MEM_ALLOCATOR,
     HK_ION_ALLOCATOR,
-    HK_PERCPU_TAG, /*percpu??????????HK_PERCPU_TAG????*/
+    HK_PERCPU_TAG, /*percpu的轨迹加在HK_PERCPU_TAG以上*/
     HK_CPU_ONOFF = HK_PERCPU_TAG,
     HK_SYSCALL,
     HK_HUNGTASK,

@@ -49,7 +49,7 @@
 
 
 /*****************************************************************************
-  1 ??????????
+  1 头文件包含
 **************************************************************************** */
 #include "omprivate.h"
 #include "PamOamSpecTaskDef.h"
@@ -62,30 +62,30 @@
 #define    THIS_FILE_ID        PS_FILE_ID_CBT_SCM_SOFT_DECODE_C
 
 /* ****************************************************************************
-  2 ????????????
+  2 全局变量定义
 **************************************************************************** */
-/* ??????????????CBT?????????????????????? */
+/* 自旋锁，用来作CBT数据接收的临界资源保护 */
 VOS_SPINLOCK             g_stCbtScmDataRcvSpinLock;
 
-/* HDLC???????? */
+/* HDLC控制结构 */
 OM_HDLC_STRU             g_stCbtScmHdlcSoftDecodeEntity;
 
-/* SCM?????????????????? */
+/* SCM数据接收数据缓冲区 */
 VOS_CHAR                 g_aucCbtScmDataRcvBuffer[CBTSCM_DATA_RCV_PKT_SIZE];
 
-/* SCM???????????????????? */
+/* SCM数据接收任务控制结构 */
 CBTSCM_DATA_RCV_CTRL_STRU   g_stCbtScmDataRcvTaskCtrlInfo;
 
 CBTSCM_SOFTDECODE_INFO_STRU   g_stCbtScmSoftDecodeInfo;
 
 
 /*****************************************************************************
-  3 ????????????
+  3 外部引用声明
 *****************************************************************************/
 extern VOS_UINT32 CBT_AcpuRcvData(VOS_UINT8 *pucData, VOS_UINT32 ulSize);
 
 /*****************************************************************************
-  4 ????????
+  4 函数实现
 *****************************************************************************/
 
 
@@ -159,7 +159,7 @@ VOS_UINT32 CBTSCM_SoftDecodeAcpuRcvData(
             g_stCbtScmSoftDecodeInfo.stHdlcDecapData.ulDataLen += pstHdlcCtrl->ulInfoLen;
             g_stCbtScmSoftDecodeInfo.stHdlcDecapData.ulNum++;
 
-            /* GU CBT??????????DATATYPE?????????? */
+            /* GU CBT数据不需要DATATYPE字段，删除 */
             if (VOS_OK != CBT_AcpuRcvData(pstHdlcCtrl->pucDecapBuff + 1,
                             pstHdlcCtrl->ulInfoLen - 1))
             {
@@ -167,7 +167,7 @@ VOS_UINT32 CBTSCM_SoftDecodeAcpuRcvData(
         }
         else if (HDLC_NOT_HDLC_FRAME == ulResult)
         {
-            /*????????????,????HDLC??????*/
+            /*不是完整分帧,继续HDLC解封装*/
         }
         else
         {
@@ -181,7 +181,7 @@ VOS_UINT32 CBTSCM_SoftDecodeAcpuRcvData(
 
 VOS_UINT32 CBTSCM_SoftDecodeHdlcInit(OM_HDLC_STRU *pstHdlc)
 {
-    /* ????????HDLC???????????? */
+    /* 申请用于HDLC解封装的缓存 */
     pstHdlc->pucDecapBuff    = (VOS_UINT8 *)VOS_MemAlloc(ACPU_PID_CBT, STATIC_MEM_PT, CBTSCM_DATA_RCV_PKT_SIZE);
 
     if (VOS_NULL_PTR == pstHdlc->pucDecapBuff)
@@ -191,10 +191,10 @@ VOS_UINT32 CBTSCM_SoftDecodeHdlcInit(OM_HDLC_STRU *pstHdlc)
         return VOS_ERR;
     }
 
-    /* HDLC?????????????????? */
+    /* HDLC解封装缓存长度赋值 */
     pstHdlc->ulDecapBuffSize = CBTSCM_DATA_RCV_PKT_SIZE;
 
-    /* ??????HDLC???????????????? */
+    /* 初始化HDLC解封装控制上下文 */
     Om_HdlcInit(pstHdlc);
 
     return VOS_OK;
@@ -273,7 +273,7 @@ VOS_VOID CBTSCM_SoftDecodeReqRcvSelfTask(
 
             lRemainlen -= lReadLen;
 
-            /* ????HDLC?????????? */
+            /* 调用HDLC解封装函数 */
             if (VOS_OK != CBTSCM_SoftDecodeAcpuRcvData(&g_stCbtScmHdlcSoftDecodeEntity,
                                                         (VOS_UINT8 *)g_stCbtScmDataRcvTaskCtrlInfo.pucBuffer,
                                                         (VOS_UINT32)lReadLen))
@@ -291,7 +291,7 @@ VOS_UINT32 CBTSCM_SoftDecodeReqRcvTaskInit(VOS_VOID)
 {
     VOS_UINT32                              ulRslt;
 
-    /* ????CBT?????????????????? */
+    /* 注册CBT数据接收自处理任务 */
     ulRslt = VOS_RegisterSelfTaskPrio(ACPU_FID_CBT,
                                       (VOS_TASK_ENTRY_TYPE)CBTSCM_SoftDecodeReqRcvSelfTask,
                                       SCM_DATA_RCV_SELFTASK_PRIO,
