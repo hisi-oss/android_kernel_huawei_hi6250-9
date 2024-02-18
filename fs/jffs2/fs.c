@@ -1,8 +1,8 @@
 /*
  * JFFS2 -- Journalling Flash File System, Version 2.
  *
- * Copyright © 2001-2007 Red Hat, Inc.
- * Copyright © 2004-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright ?? 2001-2007 Red Hat, Inc.
+ * Copyright ?? 2004-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * Created by David Woodhouse <dwmw2@infradead.org>
  *
@@ -361,6 +361,7 @@ error_io:
 	ret = -EIO;
 error:
 	mutex_unlock(&f->sem);
+	jffs2_do_clear_inode(c, f);
 	iget_failed(inode);
 	return ERR_PTR(ret);
 }

@@ -1,18 +1,18 @@
 /* Block- or MTD-based romfs
  *
- * Copyright © 2007 Red Hat, Inc. All Rights Reserved.
+ * Copyright ?? 2007 Red Hat, Inc. All Rights Reserved.
  * Written by David Howells (dhowells@redhat.com)
  *
  * Derived from: ROMFS file system, Linux implementation
  *
- * Copyright © 1997-1999  Janos Farkas <chexum@shadow.banki.hu>
+ * Copyright ?? 1997-1999  Janos Farkas <chexum@shadow.banki.hu>
  *
  * Using parts of the minix filesystem
- * Copyright © 1991, 1992  Linus Torvalds
+ * Copyright ?? 1991, 1992  Linus Torvalds
  *
  * and parts of the affs filesystem additionally
- * Copyright © 1993  Ray Burr
- * Copyright © 1996  Hans-Joachim Widmaier
+ * Copyright ?? 1993  Ray Burr
+ * Copyright ?? 1996  Hans-Joachim Widmaier
  *
  * Changes
  *					Changed for 2.1.19 modules

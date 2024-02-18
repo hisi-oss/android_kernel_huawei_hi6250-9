@@ -1,7 +1,7 @@
 /*
  * JFFS2 -- Journalling Flash File System, Version 2.
  *
- * Copyright © 2001-2007 Red Hat, Inc.
+ * Copyright ?? 2001-2007 Red Hat, Inc.
  *
  * Created by David Woodhouse <dwmw2@infradead.org>
  *
@@ -394,7 +394,7 @@ static int jffs2_add_tn_to_tree(struct jffs2_sb_info *c,
 }
 
 /* Trivial function to remove the last node in the tree. Which by definition
-   has no right-hand child — so can be removed just by making its left-hand
+   has no right-hand child ??? so can be removed just by making its left-hand
    child (if any) take its place under its parent. Since this is only done
    when we're consuming the whole tree, there's no need to use rb_erase()
    and let it worry about adjusting colours and balancing the tree. That
@@ -959,7 +959,7 @@ static int read_more(struct jffs2_sb_info *c, struct jffs2_raw_node_ref *ref,
 
 /* Get tmp_dnode_info and full_dirent for all non-obsolete nodes associated
    with this ino. Perform a preliminary ordering on data nodes, throwing away
-   those which are completely obsoleted by newer ones. The naïve approach we
+   those which are completely obsoleted by newer ones. The na??ve approach we
    use to take of just returning them _all_ in version order will cause us to
    run out of memory in certain degenerate cases. */
 static int jffs2_get_inode_nodes(struct jffs2_sb_info *c, struct jffs2_inode_info *f,

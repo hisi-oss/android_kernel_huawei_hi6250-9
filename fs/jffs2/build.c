@@ -1,8 +1,8 @@
 /*
  * JFFS2 -- Journalling Flash File System, Version 2.
  *
- * Copyright © 2001-2007 Red Hat, Inc.
- * Copyright © 2004-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright ?? 2001-2007 Red Hat, Inc.
+ * Copyright ?? 2004-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * Created by David Woodhouse <dwmw2@infradead.org>
  *
@@ -193,7 +193,7 @@ static int jffs2_build_filesystem(struct jffs2_sb_info *c)
 				/* We *have* to have set this in jffs2_build_inode_pass1() */
 				BUG_ON(!(fd->ic->flags & INO_FLAGS_IS_DIR));
 
-				/* We clear ic->pino_nlink ∀ directories' ic *only* if dir_hardlinks
+				/* We clear ic->pino_nlink ??? directories' ic *only* if dir_hardlinks
 				 * is set. Otherwise, we know this should never trigger anyway, so
 				 * we don't do the check. And ic->pino_nlink still contains the nlink
 				 * value (which is 1). */
