@@ -10,7 +10,7 @@
  *
  * Based on code:
  *
- * Copyright (c) 1995 - 2000 Kungliga Tekniska Högskolan
+ * Copyright (c) 1995 - 2000 Kungliga Tekniska H??gskolan
  * (Royal Institute of Technology, Stockholm, Sweden).
  * All rights reserved.
  *

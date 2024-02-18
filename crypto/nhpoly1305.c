@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * NHPoly1305 - ε-almost-∆-universal hash function for Adiantum
+ * NHPoly1305 - ??-almost-???-universal hash function for Adiantum
  *
  * Copyright 2018 Google LLC
  */
@@ -9,15 +9,15 @@
  * "NHPoly1305" is the main component of Adiantum hashing.
  * Specifically, it is the calculation
  *
- *	H_M ← Poly1305_{K_M}(NH_{K_N}(pad_{128}(M)))
+ *	H_M ??? Poly1305_{K_M}(NH_{K_N}(pad_{128}(M)))
  *
  * from the procedure in section A.5 of the Adiantum paper [1].  It is an
- * ε-almost-∆-universal (εA∆U) hash function for equal-length inputs over
- * Z/(2^{128}Z), where the "∆" operation is addition.  It hashes 1024-byte
+ * ??-almost-???-universal (??A???U) hash function for equal-length inputs over
+ * Z/(2^{128}Z), where the "???" operation is addition.  It hashes 1024-byte
  * chunks of the input with the NH hash function [2], reducing the input length
  * by 32x.  The resulting NH digests are evaluated as a polynomial in
  * GF(2^{130}-5), like in the Poly1305 MAC [3].  Note that the polynomial
- * evaluation by itself would suffice to achieve the εA∆U property; NH is used
+ * evaluation by itself would suffice to achieve the ??A???U property; NH is used
  * for performance since it's over twice as fast as Poly1305.
  *
  * This is *not* a cryptographic hash function; do not use it as such!
@@ -247,7 +247,7 @@ static void __exit nhpoly1305_mod_exit(void)
 module_init(nhpoly1305_mod_init);
 module_exit(nhpoly1305_mod_exit);
 
-MODULE_DESCRIPTION("NHPoly1305 ε-almost-∆-universal hash function");
+MODULE_DESCRIPTION("NHPoly1305 ??-almost-???-universal hash function");
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Eric Biggers <ebiggers@google.com>");
 MODULE_ALIAS_CRYPTO("nhpoly1305");

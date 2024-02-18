@@ -249,15 +249,6 @@ int x509_note_signature(void *context, size_t hdrlen,
 		return -EINVAL;
 	}
 
-	if (strcmp(ctx->cert->sig->pkey_algo, "rsa") == 0) {
-		/* Discard the BIT STRING metadata */
-		if (vlen < 1 || *(const u8 *)value != 0)
-			return -EBADMSG;
-
-		value++;
-		vlen--;
-	}
-
 	ctx->cert->raw_sig = value;
 	ctx->cert->raw_sig_size = vlen;
 	return 0;
@@ -481,7 +472,7 @@ int x509_process_extension(void *context, size_t hdrlen,
  * Decode an ASN.1 universal time or generalised time field into a struct the
  * kernel can handle and check it for validity.  The time is decoded thus:
  *
- *	[RFC5280 §4.1.2.5]
+ *	[RFC5280 ??4.1.2.5]
  *	CAs conforming to this profile MUST always encode certificate validity
  *	dates through the year 2049 as UTCTime; certificate validity dates in
  *	2050 or later MUST be encoded as GeneralizedTime.  Conforming

@@ -9,7 +9,7 @@
  * Adiantum is a tweakable, length-preserving encryption mode designed for fast
  * and secure disk encryption, especially on CPUs without dedicated crypto
  * instructions.  Adiantum encrypts each sector using the XChaCha12 stream
- * cipher, two passes of an ε-almost-∆-universal (εA∆U) hash function based on
+ * cipher, two passes of an ??-almost-???-universal (??A???U) hash function based on
  * NH and Poly1305, and an invocation of the AES-256 block cipher on a single
  * 16-byte block.  See the paper for details:
  *
@@ -21,12 +21,12 @@
  *	- Stream cipher: XChaCha12 or XChaCha20
  *	- Block cipher: any with a 128-bit block size and 256-bit key
  *
- * This implementation doesn't currently allow other εA∆U hash functions, i.e.
+ * This implementation doesn't currently allow other ??A???U hash functions, i.e.
  * HPolyC is not supported.  This is because Adiantum is ~20% faster than HPolyC
- * but still provably as secure, and also the εA∆U hash function of HBSH is
+ * but still provably as secure, and also the ??A???U hash function of HBSH is
  * formally defined to take two inputs (tweak, message) which makes it difficult
  * to wrap with the crypto_shash API.  Rather, some details need to be handled
- * here.  Nevertheless, if needed in the future, support for other εA∆U hash
+ * here.  Nevertheless, if needed in the future, support for other ??A???U hash
  * functions could be added here.
  */
 
@@ -93,7 +93,7 @@ struct adiantum_request_ctx {
 	bool enc; /* true if encrypting, false if decrypting */
 
 	/*
-	 * The result of the Poly1305 εA∆U hash function applied to
+	 * The result of the Poly1305 ??A???U hash function applied to
 	 * (message length, tweak).
 	 */
 	le128 header_hash;
@@ -213,11 +213,11 @@ static inline void le128_sub(le128 *r, const le128 *v1, const le128 *v2)
 }
 
 /*
- * Apply the Poly1305 εA∆U hash function to (message length, tweak) and save the
+ * Apply the Poly1305 ??A???U hash function to (message length, tweak) and save the
  * result to rctx->header_hash.
  *
  * This value is reused in both the first and second hash steps.  Specifically,
- * it's added to the result of an independently keyed εA∆U hash function (for
+ * it's added to the result of an independently keyed ??A???U hash function (for
  * equal length inputs only) taken over the message.  This gives the overall
  * Adiantum hash of the (tweak, message) pair.
  */
@@ -550,7 +550,7 @@ static int adiantum_create(struct crypto_template *tmpl, struct rtattr **tb)
 		goto out_drop_streamcipher;
 	blockcipher_alg = ictx->blockcipher_spawn.alg;
 
-	/* NHPoly1305 εA∆U hash function */
+	/* NHPoly1305 ??A???U hash function */
 	_hash_alg = crypto_alg_mod_lookup(nhpoly1305_name,
 					  CRYPTO_ALG_TYPE_SHASH,
 					  CRYPTO_ALG_TYPE_MASK);

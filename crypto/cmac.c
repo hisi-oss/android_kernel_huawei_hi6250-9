@@ -1,12 +1,12 @@
 /*
  * CMAC: Cipher Block Mode for Authentication
  *
- * Copyright © 2013 Jussi Kivilinna <jussi.kivilinna@iki.fi>
+ * Copyright ?? 2013 Jussi Kivilinna <jussi.kivilinna@iki.fi>
  *
  * Based on work by:
- *  Copyright © 2013 Tom St Denis <tstdenis@elliptictech.com>
+ *  Copyright ?? 2013 Tom St Denis <tstdenis@elliptictech.com>
  * Based on crypto/xcbc.c:
- *  Copyright © 2006 USAGI/WIDE Project,
+ *  Copyright ?? 2006 USAGI/WIDE Project,
  *   Author: Kazunori Miyazawa <miyazawa@linux-ipv6.org>
  *
  * This program is free software; you can redistribute it and/or modify
