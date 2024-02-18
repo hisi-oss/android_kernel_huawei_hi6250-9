@@ -81,7 +81,7 @@ static int pcm_set_speed(int arg)
 	 * come from the SDK found on ftp.uwp.edu:/pub/msdos/proaudio/.
 	 *
 	 * I cleared bit 5 of these values, since that bit controls the master
-	 * mute flag. (Olav Wölfelschneider)
+	 * mute flag. (Olav W??lfelschneider)
 	 *
 	 */
 #if !defined NO_AUTO_FILTER_SET

@@ -437,7 +437,7 @@ static struct snd_kcontrol_new stac_controls[] = {
  * CSN  (pin 35) -- GPIO8 pin 75
  */
 #define AK4114_ADDR	0x00 /* C1-C0: Chip Address
-			      * (According to datasheet fixed to “00”)
+			      * (According to datasheet fixed to ???00???)
 			      */
 
 /*

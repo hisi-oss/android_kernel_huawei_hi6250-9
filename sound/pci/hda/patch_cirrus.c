@@ -245,8 +245,8 @@ static const struct hda_verb cs4208_coef_init_verbs[] = {
  *
  * http://www.cirrus.com/en/pubs/errata/ER880C3.pdf
  *
- * 6. At high temperature (TA > +85°C), the digital supply current (IVD)
- * may be excessive (up to an additional 200 μA), which is most easily
+ * 6. At high temperature (TA > +85??C), the digital supply current (IVD)
+ * may be excessive (up to an additional 200 ??A), which is most easily
  * observed while the part is being held in reset (RESET# active low).
  *
  * Root Cause: At initial powerup of the device, the logic that drives
@@ -408,7 +408,6 @@ static const struct snd_pci_quirk cs420x_fixup_tbl[] = {
 	/*SND_PCI_QUIRK(0x8086, 0x7270, "IMac 27 Inch", CS420X_IMAC27),*/
 
 	/* codec SSID */
-	SND_PCI_QUIRK(0x106b, 0x0600, "iMac 14,1", CS420X_IMAC27_122),
 	SND_PCI_QUIRK(0x106b, 0x1c00, "MacBookPro 8,1", CS420X_MBP81),
 	SND_PCI_QUIRK(0x106b, 0x2000, "iMac 12,2", CS420X_IMAC27_122),
 	SND_PCI_QUIRK(0x106b, 0x2800, "MacBookPro 10,1", CS420X_MBP101),

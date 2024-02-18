@@ -355,9 +355,9 @@ static snd_pcm_uframes_t azx_pcm_pointer(struct snd_pcm_substream *substream)
  * 48000 secs, which is pretty large!
  *
  * In caln below:
- *	base may overflow, but since there isn’t any additional division
- *	performed on base it’s OK
- *	rem can’t overflow because both are 32-bit values
+ *	base may overflow, but since there isn???t any additional division
+ *	performed on base it???s OK
+ *	rem can???t overflow because both are 32-bit values
  */
 
 #ifdef CONFIG_X86
@@ -748,10 +748,8 @@ int snd_hda_attach_pcm_stream(struct hda_bus *_bus, struct hda_codec *codec,
 		return err;
 	strlcpy(pcm->name, cpcm->name, sizeof(pcm->name));
 	apcm = kzalloc(sizeof(*apcm), GFP_KERNEL);
-	if (apcm == NULL) {
-		snd_device_free(chip->card, pcm);
+	if (apcm == NULL)
 		return -ENOMEM;
-	}
 	apcm->chip = chip;
 	apcm->pcm = pcm;
 	apcm->codec = codec;

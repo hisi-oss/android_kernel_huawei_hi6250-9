@@ -28,12 +28,12 @@
  *   SPI 0 -> CS4245
  *
  *   Playback:
- *   I²S 1 -> CS4245
- *   I²S 2 -> CS4361 (center/LFE)
- *   I²S 3 -> CS4361 (surround)
- *   I²S 4 -> CS4361 (front)
+ *   I??S 1 -> CS4245
+ *   I??S 2 -> CS4361 (center/LFE)
+ *   I??S 3 -> CS4361 (surround)
+ *   I??S 4 -> CS4361 (front)
  *   Capture:
- *   I²S ADC 1 <- CS4245
+ *   I??S ADC 1 <- CS4245
  *
  *   GPIO 3 <- ?
  *   GPIO 4 <- headphone detect

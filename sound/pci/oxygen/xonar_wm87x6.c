@@ -44,12 +44,12 @@
  *
  * CMI8788:
  *
- *   I²C <-> WM8776 (addr 0011010)
+ *   I??C <-> WM8776 (addr 0011010)
  *
  *   GPIO 0  -> disable HDMI output
  *   GPIO 1  -> enable HP output
- *   GPIO 6  -> firmware EEPROM I²C clock
- *   GPIO 7 <-> firmware EEPROM I²C data
+ *   GPIO 6  -> firmware EEPROM I??C clock
+ *   GPIO 7 <-> firmware EEPROM I??C data
  *
  *   UART <-> HDMI controller
  *

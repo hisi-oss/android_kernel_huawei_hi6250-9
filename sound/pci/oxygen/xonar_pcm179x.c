@@ -50,7 +50,7 @@
  *
  * CMI8788:
  *
- *   I²C <-> PCM1796 (addr 1001100) (front)
+ *   I??C <-> PCM1796 (addr 1001100) (front)
  *
  *   GPI 0 <- external power present
  *
@@ -86,7 +86,7 @@
  *   GPIO 4 <- 0
  *   GPIO 5 <- 0
  *
- *   I²C <-> PCM1796 (addr 1001101) (surround)
+ *   I??C <-> PCM1796 (addr 1001101) (surround)
  *       <-> PCM1796 (addr 1001110) (center/LFE)
  *       <-> PCM1796 (addr 1001111) (back)
  *
@@ -96,7 +96,7 @@
  *   GPIO 4 <- 0
  *   GPIO 5 <- 1
  *
- *   I²C <-> CS4362A (addr 0011000) (surround, center/LFE, back)
+ *   I??C <-> CS4362A (addr 0011000) (surround, center/LFE, back)
  */
 
 /*
@@ -105,7 +105,7 @@
  *
  * CMI8788:
  *
- *   I²C <-> PCM1792A (addr 1001100)
+ *   I??C <-> PCM1792A (addr 1001100)
  *       <-> CS2000 (addr 1001110) (ST only)
  *
  *   ADC1 MCLK -> REF_CLK of CS2000 (ST only)
@@ -148,7 +148,7 @@
  *
  * CMI8788:
  *
- *   I²C <-> PCM1796 (addr 1001100) (front)
+ *   I??C <-> PCM1796 (addr 1001100) (front)
  *       <-> CS4362A (addr 0011000) (surround, center/LFE, back)
  *       <-> CS2000 (addr 1001110)
  *
@@ -996,7 +996,7 @@ static int xonar_d2_control_filter(struct snd_kcontrol_new *template)
 static int xonar_st_h6_control_filter(struct snd_kcontrol_new *template)
 {
 	if (!strncmp(template->name, "Master Playback ", 16))
-		/* no volume/mute, as I²C to the third DAC does not work */
+		/* no volume/mute, as I??C to the third DAC does not work */
 		return 1;
 	return 0;
 }

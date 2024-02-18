@@ -1,6 +1,6 @@
 /*     
  *   ALSA Driver for Ego Systems Inc. (ESI) Miditerminal 4140
- *   Copyright (c) 2006 by Matthias König <mk@phasorlab.de>
+ *   Copyright (c) 2006 by Matthias K??nig <mk@phasorlab.de>
  *
  *   This program is free software; you can redistribute it and/or modify 
  *   it under the terms of the GNU General Public License as published by 

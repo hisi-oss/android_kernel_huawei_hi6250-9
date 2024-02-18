@@ -492,7 +492,7 @@ static int snd_mixart_prepare(struct snd_pcm_substream *subs)
 	struct snd_mixart *chip = snd_pcm_substream_chip(subs);
 	struct mixart_stream *stream = subs->runtime->private_data;
 
-	/* TODO de façon non bloquante, réappliquer les hw_params (rate, bits, codec) */
+	/* TODO de fa??on non bloquante, r??appliquer les hw_params (rate, bits, codec) */
 
 	dev_dbg(chip->card->dev, "snd_mixart_prepare\n");
 

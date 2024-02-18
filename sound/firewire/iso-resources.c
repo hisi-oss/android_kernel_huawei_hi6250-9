@@ -65,7 +65,7 @@ static int current_bandwidth_overhead(struct fw_card *card)
 {
 	/*
 	 * Under the usual pessimistic assumption (cable length 4.5 m), the
-	 * isochronous overhead for N cables is 1.797 µs + N * 0.494 µs, or
+	 * isochronous overhead for N cables is 1.797 ??s + N * 0.494 ??s, or
 	 * 88.3 + N * 24.3 in bandwidth units.
 	 *
 	 * The calculation below tries to deduce N from the current gap count.

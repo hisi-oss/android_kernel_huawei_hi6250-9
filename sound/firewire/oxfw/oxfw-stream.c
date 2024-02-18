@@ -27,7 +27,7 @@ static const unsigned int oxfw_rate_table[] = {
 };
 
 /*
- * See Table 5.7 – Sampling frequency for Multi-bit Audio
+ * See Table 5.7 ??? Sampling frequency for Multi-bit Audio
  * in AV/C Stream Format Information Specification 1.1 (Apr 2005, 1394TA)
  */
 static const unsigned int avc_stream_rate_table[] = {

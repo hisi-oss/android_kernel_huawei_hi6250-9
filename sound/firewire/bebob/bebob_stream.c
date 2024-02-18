@@ -34,7 +34,7 @@ const unsigned int snd_bebob_rate_table[SND_BEBOB_STRM_FMT_ENTRIES] = {
 };
 
 /*
- * See: Table 51: Extended Stream Format Info ‘Sampling Frequency’
+ * See: Table 51: Extended Stream Format Info ???Sampling Frequency???
  * in Additional AVC commands (Nov 2003, BridgeCo)
  */
 static const unsigned int bridgeco_freq_table[] = {
@@ -710,7 +710,7 @@ void snd_bebob_stream_destroy_duplex(struct snd_bebob *bebob)
 }
 
 /*
- * See: Table 50: Extended Stream Format Info Format Hierarchy Level 2’
+ * See: Table 50: Extended Stream Format Info Format Hierarchy Level 2???
  * in Additional AVC commands (Nov 2003, BridgeCo)
  * Also 'Clause 12 AM824 sequence adaption layers' in IEC 61883-6:2005
  */
