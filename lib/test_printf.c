@@ -168,8 +168,8 @@ test_number(void)
 	test("0|1|1|-128|-1", "%hhd|%hhd|%hhd|%hhd|%hhd", 0, 1, 257, 128, -1);
 	test("2015122420151225", "%ho%ho%#ho", 1037, 5282, -11627);
 	/*
-	 * POSIX/C99: »The result of converting zero with an explicit
-	 * precision of zero shall be no characters.« Hence the output
+	 * POSIX/C99: ??The result of converting zero with an explicit
+	 * precision of zero shall be no characters.?? Hence the output
 	 * from the below test should really be "00|0||| ". However,
 	 * the kernel's printf also produces a single 0 in that
 	 * case. This test case simply documents the current
