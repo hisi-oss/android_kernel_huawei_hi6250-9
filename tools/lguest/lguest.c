@@ -1885,7 +1885,7 @@ static void emulate_mmio_write(struct device *d, u32 off, u32 val, u32 mask)
 		 * 4.1.4.3.1:
 		 *
 		 * The device MUST present the feature bits it is offering in
-		 * device_feature, starting at bit device_feature_select ∗ 32
+		 * device_feature, starting at bit device_feature_select ??? 32
 		 * for any device_feature_select written by the driver
 		 */
 		if (val == 0)
@@ -1973,10 +1973,10 @@ static void emulate_mmio_write(struct device *d, u32 off, u32 val, u32 mask)
 		 *   - Perform device-specific setup, including
 		 *     discovery of virtqueues for the device,
 		 *     optional per-bus setup, reading and possibly
-		 *     writing the device’s virtio configuration
+		 *     writing the device???s virtio configuration
 		 *     space, and population of virtqueues.
 		 *   - Set the DRIVER_OK status bit. At this point the
-                 *     device is “live”.
+                 *     device is ???live???.
 		 */
 		prev = 0;
 		switch (val & ~d->mmio->cfg.device_status) {
@@ -2057,7 +2057,7 @@ static void emulate_mmio_write(struct device *d, u32 off, u32 val, u32 mask)
 		 *
 		 *  7. Perform device-specific setup, including discovery of
 		 *     virtqueues for the device, optional per-bus setup,
-		 *     reading and possibly writing the device’s virtio
+		 *     reading and possibly writing the device???s virtio
 		 *     configuration space, and population of virtqueues.
 		 *  8. Set the DRIVER_OK status bit.
 		 *
@@ -2159,7 +2159,7 @@ feature_write_through32:
 	/*
 	 * 4.1.3.1:
 	 *
-	 *  The driver MUST access each field using the “natural” access
+	 *  The driver MUST access each field using the ???natural??? access
 	 *  method, i.e. 32-bit accesses for 32-bit fields, 16-bit accesses for
 	 *  16-bit fields and 8-bit accesses for 8-bit fields.
 	 */
@@ -2289,7 +2289,7 @@ static u32 emulate_mmio_read(struct device *d, u32 off, u32 mask)
 	/*
 	 * 4.1.3.1:
 	 *
-	 *  The driver MUST access each field using the “natural” access
+	 *  The driver MUST access each field using the ???natural??? access
 	 *  method, i.e. 32-bit accesses for 32-bit fields, 16-bit accesses for
 	 *  16-bit fields and 8-bit accesses for 8-bit fields.
 	 */

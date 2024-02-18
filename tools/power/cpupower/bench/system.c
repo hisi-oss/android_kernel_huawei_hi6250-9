@@ -32,7 +32,7 @@
 #include "system.h"
 
 /**
- * returns time since epoch in µs
+ * returns time since epoch in ??s
  *
  * @retval time
  **/

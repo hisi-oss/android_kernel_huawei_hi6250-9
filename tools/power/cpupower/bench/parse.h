@@ -20,12 +20,12 @@
 /* struct that holds the required config parameters */
 struct config
 {
-	long sleep;		/* sleep time in µs */
-	long load;		/* load time in µs */
+	long sleep;		/* sleep time in ??s */
+	long load;		/* load time in ??s */
 	long sleep_step;	/* time value which changes the
-				 * sleep time after every round in µs */
+				 * sleep time after every round in ??s */
 	long load_step;		/* time value which changes the
-				 * load time after every round in µs */
+				 * load time after every round in ??s */
 	unsigned int cycles;	/* calculation cycles with the same sleep/load time */
 	unsigned int rounds;	/* calculation rounds with iterated sleep/load time */
 	unsigned int cpu;	/* cpu for which the affinity is set */
