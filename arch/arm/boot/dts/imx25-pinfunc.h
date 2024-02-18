@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Eukréa Electromatique <denis@eukrea.com>
+ * Copyright 2013 Eukr??a Electromatique <denis@eukrea.com>
  * Based on imx35-pinfunc.h in the same directory Which is:
  * Copyright 2013 Freescale Semiconductor, Inc.
  *

@@ -4,7 +4,7 @@
  * Copyright (C) 2008-2011 Texas Instruments, Inc.
  * Copyright (C) 2008-2011 Nokia Corporation
  *
- * Written by Paul Walmsley and Jouni Högander
+ * Written by Paul Walmsley and Jouni H??gander
  * Added OMAP4 specific support by Abhijit Pagare <abhijitpagare@ti.com>
  *
  * This program is free software; you can redistribute it and/or modify

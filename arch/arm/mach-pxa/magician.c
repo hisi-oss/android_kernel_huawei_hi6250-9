@@ -395,7 +395,7 @@ static void magician_backlight_exit(struct device *dev)
  * LCD PWM backlight (main)
  *
  * MP1521 frequency should be:
- *	100-400 Hz = 2 .5*10^6 - 10 *10^6 ns
+ *	100-400 Hz = 2???.5*10^6 - 10???*10^6 ns
  */
 
 static struct platform_pwm_backlight_data backlight_data = {

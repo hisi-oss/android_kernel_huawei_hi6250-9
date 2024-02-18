@@ -6,7 +6,7 @@
  * Paul Walmsley
  *
  * Interface developed by (in alphabetical order): Karthik Dasu, Jouni
- * Högander, Tony Lindgren, Rajendra Nayak, Sakari Poussa,
+ * H??gander, Tony Lindgren, Rajendra Nayak, Sakari Poussa,
  * Veeramanikandan Raju, Anand Sawant, Igor Stoppa, Paul Walmsley,
  * Richard Woodruff
  */

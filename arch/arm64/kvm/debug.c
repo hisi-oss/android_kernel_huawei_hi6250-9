@@ -2,7 +2,7 @@
  * Debug and Guest Debug support
  *
  * Copyright (C) 2015 - Linaro Ltd
- * Author: Alex Bennée <alex.bennee@linaro.org>
+ * Author: Alex Benn??e <alex.bennee@linaro.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

@@ -8,7 +8,7 @@
  *	Macintosh Technology in the Common Hardware Reference Platform
  *	Apple Computer, Inc.
  *
- *	© Copyright 1995 Apple Computer, Inc. All rights reserved.
+ *	?? Copyright 1995 Apple Computer, Inc. All rights reserved.
  *
  *  It's available online from http://www.cpu.lu/~mlan/ftp/MacTech.pdf
  *  You can obtain paper copies of this book from computer bookstores or by

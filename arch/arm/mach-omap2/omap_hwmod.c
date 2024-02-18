@@ -4,7 +4,7 @@
  * Copyright (C) 2009-2011 Nokia Corporation
  * Copyright (C) 2011-2012 Texas Instruments, Inc.
  *
- * Paul Walmsley, Benoît Cousson, Kevin Hilman
+ * Paul Walmsley, Beno??t Cousson, Kevin Hilman
  *
  * Created in collaboration with (alphabetical order): Thara Gopinath,
  * Tony Lindgren, Rajendra Nayak, Vikram Pandita, Sakari Poussa, Anand

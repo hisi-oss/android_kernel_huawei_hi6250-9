@@ -5,7 +5,7 @@
  * Copyright (C) 2011-2012 Texas Instruments, Inc.
  * Paul Walmsley
  *
- * Created in collaboration with (alphabetical order): Benoît Cousson,
+ * Created in collaboration with (alphabetical order): Beno??t Cousson,
  * Kevin Hilman, Tony Lindgren, Rajendra Nayak, Vikram Pandita, Sakari
  * Poussa, Anand Sawant, Santosh Shilimkar, Richard Woodruff
  *

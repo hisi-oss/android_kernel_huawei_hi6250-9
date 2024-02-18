@@ -1,7 +1,7 @@
 /*
  * Performance counter callchain support - powerpc architecture code
  *
- * Copyright © 2009 Paul Mackerras, IBM Corporation.
+ * Copyright ?? 2009 Paul Mackerras, IBM Corporation.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

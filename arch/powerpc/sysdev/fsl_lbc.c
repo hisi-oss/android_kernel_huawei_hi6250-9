@@ -1,8 +1,8 @@
 /*
  * Freescale LBC and UPM routines.
  *
- * Copyright © 2007-2008  MontaVista Software, Inc.
- * Copyright © 2010 Freescale Semiconductor
+ * Copyright ?? 2007-2008  MontaVista Software, Inc.
+ * Copyright ?? 2010 Freescale Semiconductor
  *
  * Author: Anton Vorontsov <avorontsov@ru.mvista.com>
  * Author: Jack Lan <Jack.Lan@freescale.com>

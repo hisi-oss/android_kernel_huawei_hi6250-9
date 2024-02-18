@@ -4,7 +4,7 @@
  * Eurobraille's Iris machine is a PC with no APM or ACPI support.
  * It is shutdown by a special I/O sequence which this module provides.
  *
- *  Copyright (C) Shérab <Sebastien.Hinderer@ens-lyon.org>
+ *  Copyright (C) Sh??rab <Sebastien.Hinderer@ens-lyon.org>
  *
  * This program is free software ; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 #define IRIS_GIO_NODEV		0xff /* Likely not an Iris */
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Sébastien Hinderer <Sebastien.Hinderer@ens-lyon.org>");
+MODULE_AUTHOR("S??bastien Hinderer <Sebastien.Hinderer@ens-lyon.org>");
 MODULE_DESCRIPTION("A power_off handler for Iris devices from EuroBraille");
 MODULE_SUPPORTED_DEVICE("Eurobraille/Iris");
 

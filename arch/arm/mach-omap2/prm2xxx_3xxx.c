@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2010-2011 Texas Instruments, Inc.
  * Copyright (C) 2010 Nokia Corporation
- * Benoît Cousson
+ * Beno??t Cousson
  * Paul Walmsley
  *
  * This program is free software; you can redistribute it and/or modify

@@ -1,8 +1,8 @@
 /*
  * PowerPC 476FPE board specific routines
  *
- * Copyright © 2013 Tony Breeds IBM Corporation
- * Copyright © 2013 Alistair Popple IBM Corporation
+ * Copyright ?? 2013 Tony Breeds IBM Corporation
+ * Copyright ?? 2013 Alistair Popple IBM Corporation
  *
  * Based on earlier code:
  *    Matt Porter <mporter@kernel.crashing.org>
@@ -13,7 +13,7 @@
  *
  *    Rewritten and ported to the merged powerpc tree:
  *    Copyright 2007 David Gibson <dwg@au1.ibm.com>, IBM Corporation.
- *    Copyright © 2011 David Kliekamp IBM Corporation
+ *    Copyright ?? 2011 David Kliekamp IBM Corporation
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the

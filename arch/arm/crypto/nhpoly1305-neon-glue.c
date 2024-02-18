@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * NHPoly1305 - ε-almost-∆-universal hash function for Adiantum
+ * NHPoly1305 - ??-almost-???-universal hash function for Adiantum
  * (NEON accelerated version)
  *
  * Copyright 2018 Google LLC
@@ -70,7 +70,7 @@ static void __exit nhpoly1305_mod_exit(void)
 module_init(nhpoly1305_mod_init);
 module_exit(nhpoly1305_mod_exit);
 
-MODULE_DESCRIPTION("NHPoly1305 ε-almost-∆-universal hash function (NEON-accelerated)");
+MODULE_DESCRIPTION("NHPoly1305 ??-almost-???-universal hash function (NEON-accelerated)");
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Eric Biggers <ebiggers@google.com>");
 MODULE_ALIAS_CRYPTO("nhpoly1305");

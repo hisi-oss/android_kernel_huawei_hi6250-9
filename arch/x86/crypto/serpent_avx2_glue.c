@@ -1,7 +1,7 @@
 /*
  * Glue Code for x86_64/AVX2 assembler optimized version of Serpent
  *
- * Copyright © 2012-2013 Jussi Kivilinna <jussi.kivilinna@mbnet.fi>
+ * Copyright ?? 2012-2013 Jussi Kivilinna <jussi.kivilinna@mbnet.fi>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

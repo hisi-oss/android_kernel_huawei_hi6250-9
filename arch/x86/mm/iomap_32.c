@@ -1,5 +1,5 @@
 /*
- * Copyright © 2008 Ingo Molnar
+ * Copyright ?? 2008 Ingo Molnar
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

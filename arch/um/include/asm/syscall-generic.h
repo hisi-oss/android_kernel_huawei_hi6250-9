@@ -3,7 +3,7 @@
  *
  * See asm-generic/syscall.h for function descriptions.
  *
- * Copyright (C) 2015 Mickaël Salaün <mic@digikod.net>
+ * Copyright (C) 2015 Micka??l Sala??n <mic@digikod.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

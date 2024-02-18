@@ -1,7 +1,7 @@
 /*
  * Shared glue code for 128bit block ciphers
  *
- * Copyright © 2012-2013 Jussi Kivilinna <jussi.kivilinna@iki.fi>
+ * Copyright ?? 2012-2013 Jussi Kivilinna <jussi.kivilinna@iki.fi>
  *
  * CBC & ECB parts based on code (crypto/cbc.c,ecb.c) by:
  *   Copyright (c) 2006 Herbert Xu <herbert@gondor.apana.org.au>
