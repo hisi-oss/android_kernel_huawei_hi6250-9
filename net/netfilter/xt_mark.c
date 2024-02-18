@@ -2,7 +2,7 @@
  *	xt_mark - Netfilter module to match NFMARK value
  *
  *	(C) 1999-2001 Marc Boucher <marc@mbsi.ca>
- *	Copyright © CC Computer Consultants GmbH, 2007 - 2008
+ *	Copyright ?? CC Computer Consultants GmbH, 2007 - 2008
  *	Jan Engelhardt <jengelh@medozas.de>
  *
  *	This program is free software; you can redistribute it and/or modify

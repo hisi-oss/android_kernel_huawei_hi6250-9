@@ -1,6 +1,6 @@
 /* Copyright (C) 2014-2016  B.A.T.M.A.N. contributors:
  *
- * Linus Lüssing
+ * Linus L??ssing
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of version 2 of the GNU General Public
@@ -527,8 +527,8 @@ update:
 		bat_priv->mcast.enabled = true;
 	}
 
-	return !(mcast_data.flags & BATADV_MCAST_WANT_ALL_IPV4 &&
-		 mcast_data.flags & BATADV_MCAST_WANT_ALL_IPV6);
+	return !(mcast_data.flags &
+		 (BATADV_MCAST_WANT_ALL_IPV4 | BATADV_MCAST_WANT_ALL_IPV6));
 }
 
 /**
@@ -564,7 +564,7 @@ out:
 }
 
 /**
- * batadv_mcast_is_report_ipv4 - check for IGMP reports
+ * batadv_mcast_is_report_ipv4 -???check for IGMP reports
  * @skb: the ethernet frame destined for the mesh
  *
  * This call might reallocate skb data.
@@ -769,8 +769,8 @@ static struct batadv_orig_node *
 batadv_mcast_forw_tt_node_get(struct batadv_priv *bat_priv,
 			      struct ethhdr *ethhdr)
 {
-	return batadv_transtable_search(bat_priv, NULL, ethhdr->h_dest,
-					BATADV_NO_FLAGS);
+	return batadv_transtable_search(bat_priv, ethhdr->h_source,
+					ethhdr->h_dest, BATADV_NO_FLAGS);
 }
 
 /**

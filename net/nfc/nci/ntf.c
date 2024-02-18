@@ -731,7 +731,7 @@ static void nci_nfcee_discover_ntf_packet(struct nci_dev *ndev,
 	/* NFCForum NCI 9.2.1 HCI Network Specific Handling
 	 * If the NFCC supports the HCI Network, it SHALL return one,
 	 * and only one, NFCEE_DISCOVER_NTF with a Protocol type of
-	 * “HCI Access”, even if the HCI Network contains multiple NFCEEs.
+	 * ???HCI Access???, even if the HCI Network contains multiple NFCEEs.
 	 */
 	ndev->hci_dev->nfcee_id = nfcee_ntf->nfcee_id;
 	ndev->cur_params.id = nfcee_ntf->nfcee_id;
