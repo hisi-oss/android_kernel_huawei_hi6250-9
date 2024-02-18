@@ -1,7 +1,7 @@
 /* Extract X.509 certificate in DER form from PKCS#11 or PEM.
  *
- * Copyright © 2014-2015 Red Hat, Inc. All Rights Reserved.
- * Copyright © 2015      Intel Corporation.
+ * Copyright ?? 2014-2015 Red Hat, Inc. All Rights Reserved.
+ * Copyright ?? 2015      Intel Corporation.
  *
  * Authors: David Howells <dhowells@redhat.com>
  *          David Woodhouse <dwmw2@infradead.org>

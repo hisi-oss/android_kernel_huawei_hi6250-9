@@ -1,8 +1,8 @@
 /* Sign a module file using the given key.
  *
- * Copyright © 2014-2016 Red Hat, Inc. All Rights Reserved.
- * Copyright © 2015      Intel Corporation.
- * Copyright © 2016      Hewlett Packard Enterprise Development LP
+ * Copyright ?? 2014-2016 Red Hat, Inc. All Rights Reserved.
+ * Copyright ?? 2015      Intel Corporation.
+ * Copyright ?? 2016      Hewlett Packard Enterprise Development LP
  *
  * Authors: David Howells <dhowells@redhat.com>
  *          David Woodhouse <dwmw2@infradead.org>
