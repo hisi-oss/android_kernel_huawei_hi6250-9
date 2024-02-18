@@ -1,7 +1,7 @@
 /*
  * LEDs driver for Freescale MC13783/MC13892/MC34708
  *
- * Copyright (C) 2010 Philippe Rétornaz
+ * Copyright (C) 2010 Philippe R??tornaz
  *
  * Based on leds-da903x:
  * Copyright (C) 2008 Compulab, Ltd.

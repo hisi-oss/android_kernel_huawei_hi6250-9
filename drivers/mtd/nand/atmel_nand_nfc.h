@@ -2,7 +2,7 @@
  * Atmel Nand Flash Controller (NFC) - System peripherals regsters.
  * Based on SAMA5D3 datasheet.
  *
- * © Copyright 2013 Atmel Corporation.
+ * ?? Copyright 2013 Atmel Corporation.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the

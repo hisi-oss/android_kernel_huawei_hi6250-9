@@ -45,7 +45,8 @@
 static void ffs_data_get(struct ffs_data *ffs);
 static void ffs_data_put(struct ffs_data *ffs);
 /* Creates new ffs_data object. */
-static struct ffs_data *__must_check ffs_data_new(void) __attribute__((malloc));
+static struct ffs_data *__must_check ffs_data_new(const char *dev_name)
+	__attribute__((malloc));
 
 /* Opened counter handling. */
 static void ffs_data_opened(struct ffs_data *ffs);
@@ -135,7 +136,7 @@ struct ffs_epfile {
 
 	/*
 	 * Buffer for holding data from partial reads which may happen since
-	 * we’re rounding user read requests to a multiple of a max packet size.
+	 * we???re rounding user read requests to a multiple of a max packet size.
 	 *
 	 * The pointer is initialised with NULL value and may be set by
 	 * __ffs_epfile_read_data function to point to a temporary buffer.
@@ -159,34 +160,34 @@ struct ffs_epfile {
 	 *
 	 * == State transitions ==
 	 *
-	 * • ptr == NULL:  (initial state)
-	 *   ◦ __ffs_epfile_read_buffer_free: go to ptr == DROP
-	 *   ◦ __ffs_epfile_read_buffered:    nop
-	 *   ◦ __ffs_epfile_read_data allocates temp buffer: go to ptr == buf
-	 *   ◦ reading finishes:              n/a, not in ‘and reading’ state
-	 * • ptr == DROP:
-	 *   ◦ __ffs_epfile_read_buffer_free: nop
-	 *   ◦ __ffs_epfile_read_buffered:    go to ptr == NULL
-	 *   ◦ __ffs_epfile_read_data allocates temp buffer: free buf, nop
-	 *   ◦ reading finishes:              n/a, not in ‘and reading’ state
-	 * • ptr == buf:
-	 *   ◦ __ffs_epfile_read_buffer_free: free buf, go to ptr == DROP
-	 *   ◦ __ffs_epfile_read_buffered:    go to ptr == NULL and reading
-	 *   ◦ __ffs_epfile_read_data:        n/a, __ffs_epfile_read_buffered
+	 * ??? ptr == NULL:  (initial state)
+	 *   ??? __ffs_epfile_read_buffer_free: go to ptr == DROP
+	 *   ??? __ffs_epfile_read_buffered:    nop
+	 *   ??? __ffs_epfile_read_data allocates temp buffer: go to ptr == buf
+	 *   ??? reading finishes:              n/a, not in ???and reading??? state
+	 * ??? ptr == DROP:
+	 *   ??? __ffs_epfile_read_buffer_free: nop
+	 *   ??? __ffs_epfile_read_buffered:    go to ptr == NULL
+	 *   ??? __ffs_epfile_read_data allocates temp buffer: free buf, nop
+	 *   ??? reading finishes:              n/a, not in ???and reading??? state
+	 * ??? ptr == buf:
+	 *   ??? __ffs_epfile_read_buffer_free: free buf, go to ptr == DROP
+	 *   ??? __ffs_epfile_read_buffered:    go to ptr == NULL and reading
+	 *   ??? __ffs_epfile_read_data:        n/a, __ffs_epfile_read_buffered
 	 *                                    is always called first
-	 *   ◦ reading finishes:              n/a, not in ‘and reading’ state
-	 * • ptr == NULL and reading:
-	 *   ◦ __ffs_epfile_read_buffer_free: go to ptr == DROP and reading
-	 *   ◦ __ffs_epfile_read_buffered:    n/a, mutex is held
-	 *   ◦ __ffs_epfile_read_data:        n/a, mutex is held
-	 *   ◦ reading finishes and …
-	 *     … all data read:               free buf, go to ptr == NULL
-	 *     … otherwise:                   go to ptr == buf and reading
-	 * • ptr == DROP and reading:
-	 *   ◦ __ffs_epfile_read_buffer_free: nop
-	 *   ◦ __ffs_epfile_read_buffered:    n/a, mutex is held
-	 *   ◦ __ffs_epfile_read_data:        n/a, mutex is held
-	 *   ◦ reading finishes:              free buf, go to ptr == DROP
+	 *   ??? reading finishes:              n/a, not in ???and reading??? state
+	 * ??? ptr == NULL and reading:
+	 *   ??? __ffs_epfile_read_buffer_free: go to ptr == DROP and reading
+	 *   ??? __ffs_epfile_read_buffered:    n/a, mutex is held
+	 *   ??? __ffs_epfile_read_data:        n/a, mutex is held
+	 *   ??? reading finishes and ???
+	 *     ??? all data read:               free buf, go to ptr == NULL
+	 *     ??? otherwise:                   go to ptr == buf and reading
+	 * ??? ptr == DROP and reading:
+	 *   ??? __ffs_epfile_read_buffer_free: nop
+	 *   ??? __ffs_epfile_read_buffered:    n/a, mutex is held
+	 *   ??? __ffs_epfile_read_data:        n/a, mutex is held
+	 *   ??? reading finishes:              free buf, go to ptr == DROP
 	 */
 	struct ffs_buffer		*read_buffer;
 #define READ_BUFFER_DROP ((struct ffs_buffer *)ERR_PTR(-ESHUTDOWN))
@@ -221,6 +222,7 @@ struct ffs_io_data {
 
 	struct usb_ep *ep;
 	struct usb_request *req;
+	int req_status;
 
 	struct ffs_data *ffs;
 };
@@ -561,6 +563,12 @@ static ssize_t ffs_ep0_read(struct file *file, char __user *buf,
 
 		spin_unlock_irq(&ffs->ev.waitq.lock);
 
+		if (len > PAGE_SIZE) {
+			pr_err("[%s] read len exceeds PAGE_SIZE\n", __func__);
+			ret = -EINVAL;
+			goto done_mutex;
+		}
+
 		if (likely(len)) {
 			data = kmalloc(len, GFP_KERNEL);
 			if (unlikely(!data)) {
@@ -707,7 +715,7 @@ static void ffs_epfile_io_complete(struct usb_ep *_ep, struct usb_request *req)
 	}
 }
 
-static ssize_t ffs_copy_to_iter(void *data, int data_len, struct iov_iter *iter)
+static ssize_t ffs_copy_to_iter(const void *data, int data_len, struct iov_iter *iter)
 {
 	ssize_t ret = copy_to_iter(data, data_len, iter);
 	if (likely(ret == data_len))
@@ -728,7 +736,7 @@ static ssize_t ffs_copy_to_iter(void *data, int data_len, struct iov_iter *iter)
 	 * internally uses a larger, aligned buffer so that such UDCs are happy.
 	 *
 	 * Unfortunately, this means that host may send more data than was
-	 * requested in read(2) system call.  f_fs doesn’t know what to do with
+	 * requested in read(2) system call.  f_fs doesn???t know what to do with
 	 * that excess data so it simply drops it.
 	 *
 	 * Was the buffer aligned in the first place, no such problem would
@@ -736,7 +744,7 @@ static ssize_t ffs_copy_to_iter(void *data, int data_len, struct iov_iter *iter)
 	 *
 	 * Data may be dropped only in AIO reads.  Synchronous reads are handled
 	 * by splitting a request into multiple parts.  This splitting may still
-	 * be a problem though so it’s likely best to align the buffer
+	 * be a problem though so it???s likely best to align the buffer
 	 * regardless of it being AIO or not..
 	 *
 	 * This only affects OUT endpoints, i.e. reading data with a read(2),
@@ -754,8 +762,7 @@ static void ffs_user_copy_worker(struct work_struct *work)
 {
 	struct ffs_io_data *io_data = container_of(work, struct ffs_io_data,
 						   work);
-	int ret = io_data->req->status ? io_data->req->status :
-					 io_data->req->actual;
+	int ret = io_data->req_status;
 	bool kiocb_has_eventfd = io_data->kiocb->ki_flags & IOCB_EVENTFD;
 
 	if (io_data->read && ret > 0) {
@@ -773,8 +780,6 @@ static void ffs_user_copy_worker(struct work_struct *work)
 	if (io_data->ffs->ffs_eventfd && !kiocb_has_eventfd)
 		eventfd_signal(io_data->ffs->ffs_eventfd, 1);
 
-	usb_ep_free_request(io_data->ep, io_data->req);
-
 	if (io_data->read)
 		kfree(io_data->to_free);
 	kfree(io_data->buf);
@@ -785,11 +790,15 @@ static void ffs_epfile_async_io_complete(struct usb_ep *_ep,
 					 struct usb_request *req)
 {
 	struct ffs_io_data *io_data = req->context;
+	struct ffs_data *ffs = io_data->ffs;
 
 	ENTER();
 
+	io_data->req_status = req->status ? req->status : req->actual;
+	usb_ep_free_request(_ep, req);
+
 	INIT_WORK(&io_data->work, ffs_user_copy_worker);
-	schedule_work(&io_data->work);
+	queue_work(ffs->io_completion_wq, &io_data->work);
 }
 
 static void __ffs_epfile_read_buffer_free(struct ffs_epfile *epfile)
@@ -838,7 +847,7 @@ static ssize_t __ffs_epfile_read_buffered(struct ffs_epfile *epfile,
 
 /* Assumes epfile->mutex is held. */
 static ssize_t __ffs_epfile_read_data(struct ffs_epfile *epfile,
-				      void *data, int data_len,
+				      const void *data, int data_len,
 				      struct iov_iter *iter)
 {
 	struct ffs_buffer *buf;
@@ -915,7 +924,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
 		/*
 		 * Do we have buffered data from previous partial read?  Check
 		 * that for synchronous case only because we do not have
-		 * facility to ‘wake up’ a pending asynchronous read and push
+		 * facility to ???wake up??? a pending asynchronous read and push
 		 * buffered data to it which we would need to make things behave
 		 * consistently.
 		 */
@@ -986,6 +995,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
 	} else if (!io_data->aio) {
 		DECLARE_COMPLETION_ONSTACK(done);
 		bool interrupted = false;
+		int ep_status;
 
 		req = ep->req;
 		req->buf      = data;
@@ -1007,17 +1017,32 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
 			 * status. usb_ep_dequeue API should guarantee no race
 			 * condition with req->complete callback.
 			 */
-			usb_ep_dequeue(ep->ep, req);
-			interrupted = ep->status < 0;
+			spin_lock_irq(&epfile->ffs->eps_lock);
+			if (epfile->ep != ep) {
+				ret = -ESHUTDOWN;
+				goto error_lock;
+			} else {
+				usb_ep_dequeue(ep->ep, req);
+				interrupted = ep->status < 0;
+			}
+			spin_unlock_irq(&epfile->ffs->eps_lock);			
 		}
+
+		spin_lock_irq(&epfile->ffs->eps_lock);
+		if (epfile->ep != ep) {
+			ret = -ESHUTDOWN;
+			goto error_lock;
+		} else
+			ep_status = ep->status;
+		spin_unlock_irq(&epfile->ffs->eps_lock);
 
 		if (interrupted)
 			ret = -EINTR;
-		else if (io_data->read && ep->status > 0)
-			ret = __ffs_epfile_read_data(epfile, data, ep->status,
+		else if (io_data->read && ep_status > 0)
+			ret = __ffs_epfile_read_data(epfile, data, ep_status,
 						     &io_data->data);
 		else
-			ret = ep->status;
+			ret = ep_status;
 		goto error_mutex;
 	} else if (!(req = usb_ep_alloc_request(ep->ep, GFP_ATOMIC))) {
 		ret = -ENOMEM;
@@ -1029,6 +1054,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
 		io_data->ep = ep->ep;
 		io_data->req = req;
 		io_data->ffs = epfile->ffs;
+		io_data->req_status = -EINPROGRESS;
 
 		req->context  = io_data;
 		req->complete = ffs_epfile_async_io_complete;
@@ -1489,7 +1515,7 @@ ffs_fs_mount(struct file_system_type *t, int flags,
 	if (unlikely(ret < 0))
 		return ERR_PTR(ret);
 
-	ffs = ffs_data_new();
+	ffs = ffs_data_new(dev_name);
 	if (unlikely(!ffs))
 		return ERR_PTR(-ENOMEM);
 	ffs->file_perms = data.perms;
@@ -1597,6 +1623,7 @@ static void ffs_data_put(struct ffs_data *ffs)
 		ffs_data_clear(ffs);
 		BUG_ON(waitqueue_active(&ffs->ev.waitq) ||
 		       waitqueue_active(&ffs->ep0req_completion.wait));
+		destroy_workqueue(ffs->io_completion_wq);
 		kfree(ffs->dev_name);
 		kfree(ffs);
 	}
@@ -1629,13 +1656,20 @@ static void ffs_data_closed(struct ffs_data *ffs)
 	ffs_data_put(ffs);
 }
 
-static struct ffs_data *ffs_data_new(void)
+/*lint -e578*/
+static struct ffs_data *ffs_data_new(const char *dev_name)
 {
 	struct ffs_data *ffs = kzalloc(sizeof *ffs, GFP_KERNEL);
 	if (unlikely(!ffs))
 		return NULL;
 
 	ENTER();
+
+	ffs->io_completion_wq = alloc_ordered_workqueue("%s", 0, dev_name);
+	if (!ffs->io_completion_wq) {
+		kfree(ffs);
+		return NULL;
+	}
 
 	atomic_set(&ffs->ref, 1);
 	atomic_set(&ffs->opened, 0);
@@ -1650,6 +1684,7 @@ static struct ffs_data *ffs_data_new(void)
 
 	return ffs;
 }
+/*lint +e578*/
 
 static void ffs_data_clear(struct ffs_data *ffs)
 {
@@ -1861,8 +1896,17 @@ static int ffs_func_eps_enable(struct ffs_function *func)
 		ep->ep->driver_data = ep;
 		ep->ep->desc = ds;
 
+#ifdef CONFIG_HISI_USB_CONFIGFS
+		if (config_ep_by_speed(ffs->gadget, &func->function,
+					ep->ep)) {
+			pr_err("ffs: config ep fail!\n");
+			ret = -EINVAL;
+			break;
+		}
+#endif
+
 		if (needs_comp_desc) {
-			comp_desc = (struct usb_ss_ep_comp_descriptor *)(ds +
+			comp_desc = (struct usb_ss_ep_comp_descriptor *)((char *)ds +
 					USB_DT_ENDPOINT_SIZE);
 			ep->ep->maxburst = comp_desc->bMaxBurst + 1;
 			ep->ep->comp_desc = comp_desc;
@@ -2959,6 +3003,11 @@ static int _ffs_func_bind(struct usb_configuration *c,
 	struct ffs_data *ffs = func->ffs;
 
 	const int full = !!func->ffs->fs_descs_count;
+	/* Always read descriptor regardless of max_speed of gadget */
+	/* const int high = gadget_is_dualspeed(func->gadget) && */
+		/* func->ffs->hs_descs_count; */
+	/* const int super = gadget_is_superspeed(func->gadget) && */
+		/* func->ffs->ss_descs_count; */
 	const int high = !!func->ffs->hs_descs_count;
 	const int super = !!func->ffs->ss_descs_count;
 
@@ -3212,7 +3261,7 @@ static int ffs_func_setup(struct usb_function *f,
 	 * types are only handled when the user flag FUNCTIONFS_ALL_CTRL_RECIP
 	 * is being used.
 	 */
-	if (ffs->state != FFS_ACTIVE)
+	if (!ffs || ffs->state != FFS_ACTIVE)
 		return -ENODEV;
 
 	switch (creq->bRequestType & USB_RECIP_MASK) {

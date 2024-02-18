@@ -1,7 +1,7 @@
 /*
  * Derived from drm_pci.c
  *
- * Copyright 2003 José Fonseca.
+ * Copyright 2003 Jos?? Fonseca.
  * Copyright 2003 Leif Delgass.
  * Copyright (c) 2009, Code Aurora Forum.
  * All Rights Reserved.

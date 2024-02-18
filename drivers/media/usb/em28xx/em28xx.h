@@ -4,7 +4,7 @@
    Copyright (C) 2005 Markus Rechberger <mrechberger@gmail.com>
 		      Ludovico Cavedon <cavedon@sssup.it>
 		      Mauro Carvalho Chehab <mchehab@infradead.org>
-   Copyright (C) 2012 Frank Schäfer <fschaefer.oss@googlemail.com>
+   Copyright (C) 2012 Frank Sch??fer <fschaefer.oss@googlemail.com>
 
    Based on the em2800 driver from Sascha Sommer <saschasommer@freenet.de>
 
@@ -189,7 +189,7 @@
    USB 2.0 spec says bulk packet size is always 512 bytes
  */
 #define EM28XX_BULK_PACKET_MULTIPLIER 384
-#define EM28XX_DVB_BULK_PACKET_MULTIPLIER 94
+#define EM28XX_DVB_BULK_PACKET_MULTIPLIER 384
 
 #define EM28XX_INTERLACED_DEFAULT 1
 

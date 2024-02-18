@@ -4,7 +4,7 @@
  * Copyright (C) 2007 Alain Degreffe (eczema@ecze.com)
  *
  *
- * Original code taken from iuutool ( Copyright (C) 2006 Juan Carlos Borrás )
+ * Original code taken from iuutool ( Copyright (C) 2006 Juan Carlos Borr??s )
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by

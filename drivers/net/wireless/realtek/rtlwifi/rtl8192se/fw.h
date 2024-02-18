@@ -232,7 +232,7 @@ struct h2c_set_pwrmode_parm {
 	u8 flag_dps_en;
 	u8 bcn_rx_en;
 	u8 bcn_pass_cnt;
-	/* beacon TO (ms). ¡§=0¡¨ no limit. */
+	/* beacon TO (ms). ????=0???? no limit. */
 	u8 bcn_to;
 	u16	bcn_itv;
 	/* only for VOIP mode. */

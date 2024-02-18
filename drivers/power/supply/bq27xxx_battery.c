@@ -4,7 +4,7 @@
  * Copyright (C) 2008 Rodolfo Giometti <giometti@linux.it>
  * Copyright (C) 2008 Eurotech S.p.A. <info@eurotech.it>
  * Copyright (C) 2010-2011 Lars-Peter Clausen <lars@metafoo.de>
- * Copyright (C) 2011 Pali Rohár <pali.rohar@gmail.com>
+ * Copyright (C) 2011 Pali Roh??r <pali.rohar@gmail.com>
  *
  * Based on a previous work by Copyright (C) 2008 Texas Instruments, Inc.
  *
@@ -73,8 +73,8 @@
 #define BQ27000_FLAG_CHGS	BIT(7) /* Charge state flag */
 
 #define BQ27XXX_RS			(20) /* Resistor sense mOhm */
-#define BQ27XXX_POWER_CONSTANT		(29200) /* 29.2 µV^2 * 1000 */
-#define BQ27XXX_CURRENT_CONSTANT	(3570) /* 3.57 µV * 1000 */
+#define BQ27XXX_POWER_CONSTANT		(29200) /* 29.2 ??V^2 * 1000 */
+#define BQ27XXX_CURRENT_CONSTANT	(3570) /* 3.57 ??V * 1000 */
 
 #define INVALID_REG_ADDR	0xff
 
@@ -495,7 +495,7 @@ static int bq27xxx_battery_read_soc(struct bq27xxx_device_info *di)
 }
 
 /*
- * Return a battery charge value in µAh
+ * Return a battery charge value in ??Ah
  * Or < 0 if something fails.
  */
 static int bq27xxx_battery_read_charge(struct bq27xxx_device_info *di, u8 reg)
@@ -518,7 +518,7 @@ static int bq27xxx_battery_read_charge(struct bq27xxx_device_info *di, u8 reg)
 }
 
 /*
- * Return the battery Nominal available capacity in µAh
+ * Return the battery Nominal available capacity in ??Ah
  * Or < 0 if something fails.
  */
 static inline int bq27xxx_battery_read_nac(struct bq27xxx_device_info *di)
@@ -535,7 +535,7 @@ static inline int bq27xxx_battery_read_nac(struct bq27xxx_device_info *di)
 }
 
 /*
- * Return the battery Full Charge Capacity in µAh
+ * Return the battery Full Charge Capacity in ??Ah
  * Or < 0 if something fails.
  */
 static inline int bq27xxx_battery_read_fcc(struct bq27xxx_device_info *di)
@@ -544,7 +544,7 @@ static inline int bq27xxx_battery_read_fcc(struct bq27xxx_device_info *di)
 }
 
 /*
- * Return the Design Capacity in µAh
+ * Return the Design Capacity in ??Ah
  * Or < 0 if something fails.
  */
 static int bq27xxx_battery_read_dcap(struct bq27xxx_device_info *di)
@@ -570,7 +570,7 @@ static int bq27xxx_battery_read_dcap(struct bq27xxx_device_info *di)
 }
 
 /*
- * Return the battery Available energy in µWh
+ * Return the battery Available energy in ??Wh
  * Or < 0 if something fails.
  */
 static int bq27xxx_battery_read_energy(struct bq27xxx_device_info *di)
@@ -796,7 +796,7 @@ static void bq27xxx_battery_poll(struct work_struct *work)
 }
 
 /*
- * Return the battery average current in µA
+ * Return the battery average current in ??A
  * Note that current can be negative signed as well
  * Or 0 if something fails.
  */

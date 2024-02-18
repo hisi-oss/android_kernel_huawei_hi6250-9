@@ -1,7 +1,7 @@
 /*
  * bq2415x charger driver
  *
- * Copyright (C) 2011-2013  Pali Rohár <pali.rohar@gmail.com>
+ * Copyright (C) 2011-2013  Pali Roh??r <pali.rohar@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1569,11 +1569,6 @@ static int bq2415x_probe(struct i2c_client *client,
 		acpi_id =
 			acpi_match_device(client->dev.driver->acpi_match_table,
 					  &client->dev);
-		if (!acpi_id) {
-			dev_err(&client->dev, "failed to match device name\n");
-			ret = -ENODEV;
-			goto error_1;
-		}
 		name = kasprintf(GFP_KERNEL, "%s-%d", acpi_id->id, num);
 	}
 	if (!name) {
@@ -1815,6 +1810,6 @@ static struct i2c_driver bq2415x_driver = {
 };
 module_i2c_driver(bq2415x_driver);
 
-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
+MODULE_AUTHOR("Pali Roh??r <pali.rohar@gmail.com>");
 MODULE_DESCRIPTION("bq2415x charger driver");
 MODULE_LICENSE("GPL");

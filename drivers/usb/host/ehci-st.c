@@ -1,7 +1,7 @@
 /*
  * ST EHCI driver
  *
- * Copyright (C) 2014 STMicroelectronics – All Rights Reserved
+ * Copyright (C) 2014 STMicroelectronics ??? All Rights Reserved
  *
  * Author: Peter Griffin <peter.griffin@linaro.org>
  *

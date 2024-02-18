@@ -74,8 +74,8 @@ static int tps65217_config_charger(struct tps65217_charger *charger)
 	 * ATTENTION, conflicting information, from p. 46
 	 *
 	 * NTC TYPE (for battery temperature measurement)
-	 *   0 – 100k (curve 1, B = 3960)
-	 *   1 – 10k  (curve 2, B = 3480) (default on reset)
+	 *   0 ??? 100k (curve 1, B = 3960)
+	 *   1 ??? 10k  (curve 2, B = 3480) (default on reset)
 	 *
 	 */
 	ret = tps65217_clear_bits(charger->tps, TPS65217_REG_CHGCONFIG1,

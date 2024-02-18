@@ -4,8 +4,8 @@
  *  Xrio Limited          -- http://www.xrio.com/
  *
  *
- * Copyright © 2008 Traverse Technologies
- * Copyright © 2008 Intel Corporation
+ * Copyright ?? 2008 Traverse Technologies
+ * Copyright ?? 2008 Intel Corporation
  *
  * Authors: Nathan Williams <nathan@traverse.com.au>
  *          David Woodhouse <dwmw2@infradead.org>

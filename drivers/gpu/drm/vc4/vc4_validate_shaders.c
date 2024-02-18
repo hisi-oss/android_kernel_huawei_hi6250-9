@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Broadcom
+ * Copyright ?? 2014 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -874,7 +874,6 @@ vc4_validate_shader(struct drm_gem_cma_object *shader_obj)
 fail:
 	kfree(validation_state.branch_targets);
 	if (validated_shader) {
-		kfree(validated_shader->uniform_addr_offsets);
 		kfree(validated_shader->texture_samples);
 		kfree(validated_shader);
 	}

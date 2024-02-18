@@ -1030,7 +1030,7 @@ int ide_cd_read_toc(ide_drive_t *drive, struct request_sense *sense)
 		 * tracks. In this case the readable TOC is empty (CDI tracks
 		 * are not included) and only holds the Leadout entry.
 		 *
-		 * Heiko Eißfeldt.
+		 * Heiko Ei??feldt.
 		 */
 		ntracks = 0;
 		stat = cdrom_read_tocentry(drive, CDROM_LEADOUT, 1, 0,
@@ -1592,8 +1592,6 @@ static int idecd_open(struct block_device *bdev, fmode_t mode)
 {
 	struct cdrom_info *info;
 	int rc = -ENXIO;
-
-	check_disk_change(bdev);
 
 	mutex_lock(&ide_cd_mutex);
 	info = ide_cd_get(bdev->bd_disk);

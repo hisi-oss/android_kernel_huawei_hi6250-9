@@ -5,8 +5,8 @@
  * line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
  * to a 2MiB memory range and use the GPIOs to select a particular range.
  *
- * Copyright © 2000 Nicolas Pitre <nico@cam.org>
- * Copyright © 2005-2009 Analog Devices Inc.
+ * Copyright ?? 2000 Nicolas Pitre <nico@cam.org>
+ * Copyright ?? 2005-2009 Analog Devices Inc.
  *
  * Enter bugs at http://blackfin.uclinux.org/
  *

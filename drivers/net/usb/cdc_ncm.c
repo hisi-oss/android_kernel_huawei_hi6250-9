@@ -1004,7 +1004,7 @@ u8 cdc_ncm_select_altsetting(struct usb_interface *intf)
 	 * which we may have matched:
 	 *
 	 *  "Functions that implement both NCM 1.0 and MBIM (an
-	 *   “NCM/MBIM function”) according to this recommendation
+	 *   ???NCM/MBIM function???) according to this recommendation
 	 *   shall provide two alternate settings for the
 	 *   Communication Interface.  Alternate setting 0, and the
 	 *   associated class and endpoint descriptors, shall be

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2013 ELAN Microelectronics Corp.
  *
- * Author: 林政維 (Duson Lin) <dusonlin@emc.com.tw>
+ * Author: ????????? (Duson Lin) <dusonlin@emc.com.tw>
  *
  * Based on cyapa driver:
  * copyright (c) 2011-2012 Cypress Semiconductor, Inc.
@@ -26,8 +26,6 @@
 #define ETP_DISABLE_CALIBRATE	0x0000
 #define ETP_DISABLE_POWER	0x0001
 #define ETP_PRESSURE_OFFSET	25
-
-#define ETP_CALIBRATE_MAX_LEN	3
 
 /* IAP Firmware handling */
 #define ETP_PRODUCT_ID_FORMAT_STRING	"%d.0"

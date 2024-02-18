@@ -1,7 +1,7 @@
 /*
  * Intel IXP4xx HSS (synchronous serial port) driver for Linux
  *
- * Copyright (C) 2007-2008 Krzysztof Hałasa <khc@pm.waw.pl>
+ * Copyright (C) 2007-2008 Krzysztof Ha??asa <khc@pm.waw.pl>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License

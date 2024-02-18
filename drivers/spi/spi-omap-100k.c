@@ -5,7 +5,7 @@
  *
  * Copyright (C) 2005, 2006 Nokia Corporation
  * Author:      Samuel Ortiz <samuel.ortiz@nokia.com> and
- *              Juha Yrj�l� <juha.yrjola@nokia.com>
+ *              Juha Yrj???l??? <juha.yrjola@nokia.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

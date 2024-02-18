@@ -1,7 +1,7 @@
 /*
  * Driver for (BCM4706)? GBit MAC core on BCMA bus.
  *
- * Copyright (C) 2012 Rafał Miłecki <zajec5@gmail.com>
+ * Copyright (C) 2012 Rafa?? Mi??ecki <zajec5@gmail.com>
  *
  * Licensed under the GNU/GPL. See COPYING for details.
  */
@@ -529,8 +529,7 @@ static void bgmac_dma_tx_ring_free(struct bgmac *bgmac,
 	int i;
 
 	for (i = 0; i < BGMAC_TX_RING_SLOTS; i++) {
-		u32 ctl1 = le32_to_cpu(dma_desc[i].ctl1);
-		unsigned int len = ctl1 & BGMAC_DESC_CTL1_LEN;
+		int len = dma_desc[i].ctl1 & BGMAC_DESC_CTL1_LEN;
 
 		slot = &ring->slots[i];
 		dev_kfree_skb(slot->skb);
@@ -1555,5 +1554,5 @@ void bgmac_enet_remove(struct bgmac *bgmac)
 }
 EXPORT_SYMBOL_GPL(bgmac_enet_remove);
 
-MODULE_AUTHOR("Rafał Miłecki");
+MODULE_AUTHOR("Rafa?? Mi??ecki");
 MODULE_LICENSE("GPL");

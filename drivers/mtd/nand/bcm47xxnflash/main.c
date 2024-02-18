@@ -1,7 +1,7 @@
 /*
  * BCM47XX NAND flash driver
  *
- * Copyright (C) 2012 Rafał Miłecki <zajec5@gmail.com>
+ * Copyright (C) 2012 Rafa?? Mi??ecki <zajec5@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -19,7 +19,7 @@
 
 MODULE_DESCRIPTION("NAND flash driver for BCMA bus");
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Rafał Miłecki");
+MODULE_AUTHOR("Rafa?? Mi??ecki");
 
 static const char *probes[] = { "bcm47xxpart", NULL };
 

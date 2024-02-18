@@ -828,7 +828,7 @@ static int st21nfca_hci_check_presence(struct nfc_hci_dev *hdev,
 		 * However, the answer to this command is taking 3 * fwi
 		 * if the card is no present.
 		 * Instead, we send an empty I-Frame with a very short
-		 * configurable fwi ~604µs.
+		 * configurable fwi ~604??s.
 		 */
 		return nfc_hci_send_cmd(hdev, target->hci_reader_gate,
 					ST21NFCA_WR_XCHG_DATA, &fwi, 1, NULL);

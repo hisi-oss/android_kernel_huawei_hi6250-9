@@ -1,7 +1,7 @@
 /*
  * Driver for BCM6328 memory-mapped LEDs, based on leds-syscon.c
  *
- * Copyright 2015 Álvaro Fernández Rojas <noltari@gmail.com>
+ * Copyright 2015 ??lvaro Fern??ndez Rojas <noltari@gmail.com>
  * Copyright 2015 Jonas Gorski <jogo@openwrt.org>
  *
  * This program is free software; you can redistribute  it and/or modify it
@@ -439,7 +439,7 @@ static struct platform_driver bcm6328_leds_driver = {
 
 module_platform_driver(bcm6328_leds_driver);
 
-MODULE_AUTHOR("Álvaro Fernández Rojas <noltari@gmail.com>");
+MODULE_AUTHOR("??lvaro Fern??ndez Rojas <noltari@gmail.com>");
 MODULE_AUTHOR("Jonas Gorski <jogo@openwrt.org>");
 MODULE_DESCRIPTION("LED driver for BCM6328 controllers");
 MODULE_LICENSE("GPL v2");

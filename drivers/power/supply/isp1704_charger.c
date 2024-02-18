@@ -2,7 +2,7 @@
  * ISP1704 USB Charger Detection driver
  *
  * Copyright (C) 2010 Nokia Corporation
- * Copyright (C) 2012 - 2013 Pali Rohár <pali.rohar@gmail.com>
+ * Copyright (C) 2012 - 2013 Pali Roh??r <pali.rohar@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -418,10 +418,6 @@ static int isp1704_charger_probe(struct platform_device *pdev)
 
 		pdata = devm_kzalloc(&pdev->dev,
 			sizeof(struct isp1704_charger_data), GFP_KERNEL);
-		if (!pdata) {
-			ret = -ENOMEM;
-			goto fail0;
-		}
 		pdata->enable_gpio = gpio;
 
 		dev_info(&pdev->dev, "init gpio %d\n", pdata->enable_gpio);

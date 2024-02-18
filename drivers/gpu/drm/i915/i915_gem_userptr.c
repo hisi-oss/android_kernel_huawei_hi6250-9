@@ -1,5 +1,5 @@
 /*
- * Copyright © 2012-2014 Intel Corporation
+ * Copyright ?? 2012-2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -776,9 +776,6 @@ i915_gem_userptr_ioctl(struct drm_device *dev, void *data, struct drm_file *file
 
 	if (args->flags & ~(I915_USERPTR_READ_ONLY |
 			    I915_USERPTR_UNSYNCHRONIZED))
-		return -EINVAL;
-
-	if (!args->user_size)
 		return -EINVAL;
 
 	if (offset_in_page(args->user_ptr | args->user_size))

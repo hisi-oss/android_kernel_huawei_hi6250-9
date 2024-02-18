@@ -482,7 +482,7 @@ static int temp_to_adc(struct axp288_fg_info *info, int tval)
 	/*
 	 * temperature is proportional to NTS thermistor resistance
 	 * ADC_RATE[5-4] determines current, 00=20uA,01=40uA,10=60uA,11=80uA
-	 * [12-bit ADC VAL] = R_NTC(Ω) * current / 800
+	 * [12-bit ADC VAL] = R_NTC(??) * current / 800
 	 */
 	adc_val = rntc * (20 + (20 * ((ret >> 4) & 0x3))) / 800;
 
@@ -504,7 +504,7 @@ static int adc_to_temp(struct axp288_fg_info *info, int adc_val)
 	/*
 	 * temperature is proportional to NTS thermistor resistance
 	 * ADC_RATE[5-4] determines current, 00=20uA,01=40uA,10=60uA,11=80uA
-	 * R_NTC(Ω) = [12-bit ADC VAL] * 800 / current
+	 * R_NTC(??) = [12-bit ADC VAL] * 800 / current
 	 */
 	r = adc_val * 800 / (20 + (20 * ((ret >> 4) & 0x3)));
 

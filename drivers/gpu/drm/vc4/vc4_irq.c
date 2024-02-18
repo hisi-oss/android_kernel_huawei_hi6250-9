@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Broadcom
+ * Copyright ?? 2014 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -224,9 +224,6 @@ vc4_irq_uninstall(struct drm_device *dev)
 
 	/* Clear any pending interrupts we might have left. */
 	V3D_WRITE(V3D_INTCTL, V3D_DRIVER_IRQS);
-
-	/* Finish any interrupt handler still in flight. */
-	disable_irq(dev->irq);
 
 	cancel_work_sync(&vc4->overflow_mem_work);
 }

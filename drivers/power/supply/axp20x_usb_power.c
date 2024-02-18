@@ -2,7 +2,7 @@
  * AXP20x PMIC USB power supply status driver
  *
  * Copyright (C) 2015 Hans de Goede <hdegoede@redhat.com>
- * Copyright (C) 2014 Bruno Prémont <bonbons@linux-vserver.org>
+ * Copyright (C) 2014 Bruno Pr??mont <bonbons@linux-vserver.org>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under  the terms of the GNU General  Public License as published by the

@@ -444,7 +444,7 @@ static void  sbs_unit_adjustment(struct i2c_client *client,
 	case POWER_SUPPLY_PROP_ENERGY_FULL:
 	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
 		/* sbs provides energy in units of 10mWh.
-		 * Convert to µWh
+		 * Convert to ??Wh
 		 */
 		val->intval *= BATTERY_MODE_CAP_MULT_WATT;
 		break;
@@ -461,7 +461,7 @@ static void  sbs_unit_adjustment(struct i2c_client *client,
 
 	case POWER_SUPPLY_PROP_TEMP:
 		/* sbs provides battery temperature in 0.1K
-		 * so convert it to 0.1°C
+		 * so convert it to 0.1??C
 		 */
 		val->intval -= TEMP_KELVIN_TO_CELSIUS;
 		break;

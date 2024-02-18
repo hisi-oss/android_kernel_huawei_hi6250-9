@@ -42,8 +42,8 @@
  *
  * Access to ATC/IOMMU mapped memory w/ associated extension of VA to 48b
  *
- * “Flat” shader memory access – These are new shader vector memory
- * operations that do not reference a T#/V# so a “pointer” is what is
+ * ???Flat??? shader memory access ??? These are new shader vector memory
+ * operations that do not reference a T#/V# so a ???pointer??? is what is
  * sourced from the vector gprs for direct access to memory.
  * This pointer space has the Shared(LDS) and Private(Scratch) memory
  * mapped into this pointer space as apertures.
@@ -60,7 +60,7 @@
  * a combination of vidMM/driver software components.  The current virtual
  * address (VA) range for GPUVM is 40b.
  *
- * As of gfxip7.1 and beyond we’re adding the ability for compute memory
+ * As of gfxip7.1 and beyond we???re adding the ability for compute memory
  * clients (CP/RLC, DMA, SHADER(ifetch, scalar, and vector ops)) to access
  * the same page tables used by host x86 processors and that are managed by
  * the operating system. This is via a technique and hardware called ATC/IOMMU.
@@ -71,9 +71,9 @@
  * There are three fundamental address modes of operation for a given VMID
  * (process) on the GPU:
  *
- *	HSA64 – 64b pointers and the default address space is ATC
- *	HSA32 – 32b pointers and the default address space is ATC
- *	GPUVM – 64b pointers and the default address space is GPUVM (driver
+ *	HSA64 ??? 64b pointers and the default address space is ATC
+ *	HSA32 ??? 32b pointers and the default address space is ATC
+ *	GPUVM ??? 64b pointers and the default address space is GPUVM (driver
  *		model mode)
  *
  *
@@ -82,12 +82,12 @@
  * A 64b pointer in the AMD64/IA64 CPU architecture is not fully utilized
  * by the CPU so an AMD CPU can only access the high area
  * (VA[63:47] == 0x1FFFF) and low area (VA[63:47 == 0) of the address space
- * so the actual VA carried to translation is 48b.  There is a “hole” in
+ * so the actual VA carried to translation is 48b.  There is a ???hole??? in
  * the middle of the 64b VA space.
  *
  * The GPU not only has access to all of the CPU accessible address space via
- * ATC/IOMMU, but it also has access to the GPUVM address space.  The “system
- * unified address” feature (SUA) is the mapping of GPUVM and ATC address
+ * ATC/IOMMU, but it also has access to the GPUVM address space.  The ???system
+ * unified address??? feature (SUA) is the mapping of GPUVM and ATC address
  * spaces into a unified pointer space.  The method we take for 64b mode is
  * to map the full 40b GPUVM address space into the hole of the 64b address
  * space.
@@ -102,10 +102,10 @@
  * Note that there are still significant portions of unused regions (holes)
  * in the 64b address space even for the GPU.  There are several places in
  * the pipeline (sw and hw), we wish to compress the 64b virtual address
- * to a 49b address.  This 49b address is constituted of an “ATC” bit
+ * to a 49b address.  This 49b address is constituted of an ???ATC??? bit
  * plus a 48b virtual address.  This 49b address is what is passed to the
  * translation hardware.  ATC==0 means the 48b address is a GPUVM address
- * (max of 2^40 – 1) intended to be translated via GPUVM page tables.
+ * (max of 2^40 ??? 1) intended to be translated via GPUVM page tables.
  * ATC==1 means the 48b address is intended to be translated via IOMMU
  * page tables.
  *
@@ -145,14 +145,14 @@
  *		1 : <client>_MC_rdreq_addr is a ATC VA
  *
  *
- * “Spare” aperture (APE1)
+ * ???Spare??? aperture (APE1)
  *
  * We use the GPUVM aperture to differentiate ATC vs. GPUVM, but we also use
  * apertures to set the Mtype field for S_LOAD/FLAT_* ops which is input to the
- * config tables for setting cache policies. The “spare” (APE1) aperture is
+ * config tables for setting cache policies. The ???spare??? (APE1) aperture is
  * motivated by getting a different Mtype from the default.
- * The default aperture isn’t an actual base/limit aperture; it is just the
- * address space that doesn’t hit any defined base/limit apertures.
+ * The default aperture isn???t an actual base/limit aperture; it is just the
+ * address space that doesn???t hit any defined base/limit apertures.
  * The following diagram is a complete picture of the gfxip7.x SUA apertures.
  * The APE1 can be placed either below or above
  * the hole (cannot be in the hole).
@@ -175,7 +175,7 @@
  * In no case is a payload that straddles multiple apertures expected to work.
  * For example a load_dword_x4 that starts in one aperture and ends in another,
  * does not work.  For the vector FLAT_* ops we have detection capability in
- * the shader for reporting a “memory violation” back to the
+ * the shader for reporting a ???memory violation??? back to the
  * SQ block for use in traps.
  * A memory violation results when an op falls into the hole,
  * or a payload straddles multiple apertures.  The S_LOAD instruction
@@ -211,7 +211,7 @@
  * and the hardware detects when a FLAT_* memory request is to be redirected
  * to the LDS or Scratch memory when it falls into one of these apertures.
  * Like the SUA apertures, the Shared/Private apertures are 64KB aligned and
- * the base/limit is “in” the aperture. For both HSA64 and GPUVM SUA modes,
+ * the base/limit is ???in??? the aperture. For both HSA64 and GPUVM SUA modes,
  * the Shared/Private apertures are always placed in a limited selection of
  * options in the hole of the 64b address space. For HSA32 mode, the
  * Shared/Private apertures can be placed anywhere in the 32b space
@@ -224,7 +224,7 @@
  * in the hole w/ a limited selection of possible locations. The requests
  * that fall in the private aperture are expanded as a function of the
  * work-item id (tid) and redirected to the location of the
- * “hidden private memory”. The hidden private can be placed in either GPUVM
+ * ???hidden private memory???. The hidden private can be placed in either GPUVM
  * or ATC space. The addresses that fall in the shared aperture are
  * re-directed to the on-chip LDS memory hardware.
  *
@@ -247,7 +247,7 @@
  * Aperture Definitions for SUA and DUA
  *
  * The interpretation of the aperture register definitions for a given
- * VMID is a function of the “SUA Mode” which is one of HSA64, HSA32, or
+ * VMID is a function of the ???SUA Mode??? which is one of HSA64, HSA32, or
  * GPUVM64 discussed in previous sections. The mode is first decoded, and
  * then the remaining register decode is a function of the mode.
  *
@@ -267,11 +267,11 @@
  * 0                                              X                 GPUVM64
  *
  * In general the hardware will ignore the PTR32 bit and treat
- * as “0” whenever DATA_ATC = “0”, but sw should set PTR32=0
+ * as ???0??? whenever DATA_ATC = ???0???, but sw should set PTR32=0
  * when DATA_ATC=0.
  *
  * The DATA_ATC bit is only set for compute dispatches.
- * All “Draw” dispatches are hardcoded to GPUVM64 mode
+ * All ???Draw??? dispatches are hardcoded to GPUVM64 mode
  * for FLAT_* / S_LOAD operations.
  */
 

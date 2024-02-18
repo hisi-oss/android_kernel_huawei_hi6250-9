@@ -2,7 +2,7 @@
  * vendor/product IDs (VID/PID) of devices using FTDI USB serial converters.
  * Please keep numerically sorted within individual areas, thanks!
  *
- * Philipp Gühring - pg@futureware.at - added the Device ID of the USB relais
+ * Philipp G??hring - pg@futureware.at - added the Device ID of the USB relais
  * from Rudolf Gugler
  *
  */
@@ -104,7 +104,7 @@
  */
 #define FTDI_ASK_RDR400_PID	0xC991	/* ASK RDR 400 series card reader */
 
-/* www.starting-point-systems.com µChameleon device */
+/* www.starting-point-systems.com ??Chameleon device */
 #define FTDI_MICRO_CHAMELEON_PID	0xCAA0	/* Product Id */
 
 /*
@@ -334,7 +334,7 @@
 
 /*
  * Teratronik product ids.
- * Submitted by O. Wölfelschneider.
+ * Submitted by O. W??lfelschneider.
  */
 #define FTDI_TERATRONIK_VCP_PID	 0xEC88	/* Teratronik device (preferring VCP driver on windows) */
 #define FTDI_TERATRONIK_D2XX_PID 0xEC89	/* Teratronik device (preferring D2XX driver on windows) */
@@ -922,9 +922,6 @@
 /*
  * RT Systems programming cables for various ham radios
  */
-/* This device uses the VID of FTDI */
-#define RTSYSTEMS_USB_VX8_PID   0x9e50  /* USB-VX8 USB to 7 pin modular plug for Yaesu VX-8 radio */
-
 #define RTSYSTEMS_VID		0x2100	/* Vendor ID */
 #define RTSYSTEMS_USB_S03_PID	0x9001	/* RTS-03 USB to Serial Adapter */
 #define RTSYSTEMS_USB_59_PID	0x9e50	/* USB-59 USB to 8 pin plug */
@@ -1442,12 +1439,6 @@
  * ATI command output: Cinterion MC55i
  */
 #define FTDI_CINTERION_MC55I_PID	0xA951
-
-/*
- * Product: FirmwareHubEmulator
- * Manufacturer: Harman Becker Automotive Systems
- */
-#define FTDI_FHE_PID		0xA9A0
 
 /*
  * Product: Comet Caller ID decoder

@@ -73,7 +73,7 @@
 
 		Jean-Jacques Michel - bug fix
 
-		Tobias Ringström - Rx interrupt status checking suggestion
+		Tobias Ringstr??m - Rx interrupt status checking suggestion
 
 		Andrew Morton - Clear blocked signals, avoid
 		buffer overrun setting current->comm.
@@ -2233,7 +2233,7 @@ static void rtl8139_poll_controller(struct net_device *dev)
 	struct rtl8139_private *tp = netdev_priv(dev);
 	const int irq = tp->pci_dev->irq;
 
-	disable_irq_nosync(irq);
+	disable_irq(irq);
 	rtl8139_interrupt(irq, dev);
 	enable_irq(irq);
 }

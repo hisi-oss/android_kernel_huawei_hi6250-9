@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright ?? 2014 Intel Corporation
  *   Daniel Vetter <daniel.vetter@ffwll.ch>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a

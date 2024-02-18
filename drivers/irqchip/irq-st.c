@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2014 STMicroelectronics – All Rights Reserved
+ *  Copyright (C) 2014 STMicroelectronics ??? All Rights Reserved
  *
  *  Author: Lee Jones <lee.jones@linaro.org>
  *

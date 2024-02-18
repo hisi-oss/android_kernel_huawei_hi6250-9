@@ -2,7 +2,7 @@
  * ---------------------------------------------------------------------------
  * drivers/nfc/st95hf/spi.h functions declarations for SPI communication
  * ---------------------------------------------------------------------------
- * Copyright (C) 2015 STMicroelectronics – All Rights Reserved
+ * Copyright (C) 2015 STMicroelectronics ??? All Rights Reserved
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,

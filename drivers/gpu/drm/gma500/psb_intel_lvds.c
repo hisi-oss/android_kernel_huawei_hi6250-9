@@ -1,5 +1,5 @@
 /*
- * Copyright © 2006-2007 Intel Corporation
+ * Copyright ?? 2006-2007 Intel Corporation
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -343,7 +343,7 @@ static void psb_intel_lvds_restore(struct drm_connector *connector)
 	}
 }
 
-enum drm_mode_status psb_intel_lvds_mode_valid(struct drm_connector *connector,
+int psb_intel_lvds_mode_valid(struct drm_connector *connector,
 				 struct drm_display_mode *mode)
 {
 	struct drm_psb_private *dev_priv = connector->dev->dev_private;

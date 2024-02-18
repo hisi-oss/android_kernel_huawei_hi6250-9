@@ -2518,9 +2518,9 @@ struct lmv_mds_md_v1 {
  *     hash = FNV_offset_basis
  *     for each octet_of_data to be hashed
  *             hash = hash XOR octet_of_data
- *             hash = hash × FNV_prime
+ *             hash = hash ?? FNV_prime
  *     return hash
- * http://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function#FNV-1a_hash
+ * http://en.wikipedia.org/wiki/Fowler???Noll???Vo_hash_function#FNV-1a_hash
  *
  * http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-reference-source
  * FNV_prime is 2^40 + 2^8 + 0xb3 = 0x100000001b3ULL

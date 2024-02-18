@@ -1,6 +1,6 @@
 /* Freescale Enhanced Local Bus Controller NAND driver
  *
- * Copyright © 2006-2007, 2010 Freescale Semiconductor
+ * Copyright ?? 2006-2007, 2010 Freescale Semiconductor
  *
  * Authors: Nick Spence <nick.spence@freescale.com>,
  *          Scott Wood <scottwood@freescale.com>

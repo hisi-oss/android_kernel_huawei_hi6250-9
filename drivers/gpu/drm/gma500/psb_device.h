@@ -1,6 +1,6 @@
 /*
- * Copyright © 2013 Patrik Jakobsson
- * Copyright © 2011 Intel Corporation
+ * Copyright ?? 2013 Patrik Jakobsson
+ * Copyright ?? 2011 Intel Corporation
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,

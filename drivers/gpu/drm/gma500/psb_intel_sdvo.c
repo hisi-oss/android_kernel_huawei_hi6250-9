@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Dave Airlie <airlied@linux.ie>
- * Copyright © 2006-2007 Intel Corporation
+ * Copyright ?? 2006-2007 Intel Corporation
  *   Jesse Barnes <jesse.barnes@intel.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -491,7 +491,7 @@ static bool psb_intel_sdvo_read_response(struct psb_intel_sdvo *psb_intel_sdvo,
 
 	/*
 	 * The documentation states that all commands will be
-	 * processed within 15µs, and that we need only poll
+	 * processed within 15??s, and that we need only poll
 	 * the status byte a maximum of 3 times in order for the
 	 * command to be complete.
 	 *

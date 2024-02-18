@@ -35,7 +35,7 @@
  * LCD voltage is a combination of ratio, gain, pot and temp
  *
  * V_LCD = V_BIAS * ratio
- * V_LCD = (C_V0 + C_PM × pot) * (1 + (T - 25) * temp)
+ * V_LCD = (C_V0 + C_PM ?? pot) * (1 + (T - 25) * temp)
  * C_V0 and C_PM depend on ratio and gain
  * T is ambient temperature
  */

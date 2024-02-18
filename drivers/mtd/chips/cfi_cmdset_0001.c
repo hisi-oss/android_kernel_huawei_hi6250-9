@@ -45,7 +45,6 @@
 #define I82802AB	0x00ad
 #define I82802AC	0x00ac
 #define PF38F4476	0x881c
-#define M28F00AP30	0x8963
 /* STMicroelectronics chips */
 #define M50LPW080       0x002F
 #define M50FLW080A	0x0080
@@ -374,17 +373,6 @@ static void cfi_fixup_major_minor(struct cfi_private *cfi,
 	if (cfi->mfr == CFI_MFR_INTEL &&
 			cfi->id == PF38F4476 && extp->MinorVersion == '3')
 		extp->MinorVersion = '1';
-}
-
-static int cfi_is_micron_28F00AP30(struct cfi_private *cfi, struct flchip *chip)
-{
-	/*
-	 * Micron(was Numonyx) 1Gbit bottom boot are buggy w.r.t
-	 * Erase Supend for their small Erase Blocks(0x8000)
-	 */
-	if (cfi->mfr == CFI_MFR_INTEL && cfi->id == M28F00AP30)
-		return 1;
-	return 0;
 }
 
 static inline struct cfi_pri_intelext *
@@ -846,11 +834,6 @@ static int chip_ready (struct map_info *map, struct flchip *chip, unsigned long 
 		/* Do not allow suspend iff read/write to EB address */
 		if ((adr & chip->in_progress_block_mask) ==
 		    chip->in_progress_block_addr)
-			goto sleep;
-
-		/* do not suspend small EBs, buggy Micron Chips */
-		if (cfi_is_micron_28F00AP30(cfi, chip) &&
-		    (chip->in_progress_block_mask == ~(0x8000-1)))
 			goto sleep;
 
 		/* Erase suspend */
@@ -1733,7 +1716,7 @@ static int __xipram do_write_buffer(struct map_info *map, struct flchip *chip,
 	ENABLE_VPP(map);
 	xip_disable(map, chip, cmd_adr);
 
-	/* §4.8 of the 28FxxxJ3A datasheet says "Any time SR.4 and/or SR.5 is set
+	/* ??4.8 of the 28FxxxJ3A datasheet says "Any time SR.4 and/or SR.5 is set
 	   [...], the device will not accept any more Write to Buffer commands".
 	   So we must check here and reset those bits if they're set. Otherwise
 	   we're just pissing in the wind */

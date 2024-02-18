@@ -214,7 +214,7 @@ struct altera_tse_mac {
 	/* MDIO address of PHY Device 1. Bits 0 to 4 hold a 5-bit PHY address */
 	u32 mdio_phy1_addr;
 
-	/* Bit[15:0]—16-bit holdoff quanta */
+	/* Bit[15:0]???16-bit holdoff quanta */
 	u32 holdoff_quant;
 
 	/* only if 100/1000 BaseX PCS, reserved otherwise */

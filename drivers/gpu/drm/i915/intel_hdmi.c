@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Dave Airlie <airlied@linux.ie>
- * Copyright © 2006-2009 Intel Corporation
+ * Copyright ?? 2006-2009 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -1452,20 +1452,12 @@ intel_hdmi_set_edid(struct drm_connector *connector)
 	struct intel_hdmi *intel_hdmi = intel_attached_hdmi(connector);
 	struct edid *edid;
 	bool connected = false;
-	struct i2c_adapter *i2c;
 
 	intel_display_power_get(dev_priv, POWER_DOMAIN_GMBUS);
 
-	i2c = intel_gmbus_get_adapter(dev_priv, intel_hdmi->ddc_bus);
-
-	edid = drm_get_edid(connector, i2c);
-
-	if (!edid && !intel_gmbus_is_forced_bit(i2c)) {
-		DRM_DEBUG_KMS("HDMI GMBUS EDID read failed, retry using GPIO bit-banging\n");
-		intel_gmbus_force_bit(i2c, true);
-		edid = drm_get_edid(connector, i2c);
-		intel_gmbus_force_bit(i2c, false);
-	}
+	edid = drm_get_edid(connector,
+			    intel_gmbus_get_adapter(dev_priv,
+			    intel_hdmi->ddc_bus));
 
 	intel_hdmi_dp_dual_mode_detect(connector, edid != NULL);
 

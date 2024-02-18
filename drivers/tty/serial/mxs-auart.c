@@ -274,8 +274,8 @@
 /*
  * RW. This bit reverses the polarity of the direction control signal on the RTS
  * (or DTR) pin.
- * If 0, The direction control pin will be driven to logic ‘0’ when the
- * transmitter has data to be sent. It will be driven to logic ‘1’ after the
+ * If 0, The direction control pin will be driven to logic ???0??? when the
+ * transmitter has data to be sent. It will be driven to logic ???1??? after the
  * last bit of data has been transmitted.
  */
 #define ASM9260_BM_RS485CTRL_ONIV		BIT(5)
@@ -1664,10 +1664,6 @@ static int mxs_auart_probe(struct platform_device *pdev)
 		s->port.line = pdev->id < 0 ? 0 : pdev->id;
 	else if (ret < 0)
 		return ret;
-	if (s->port.line >= ARRAY_SIZE(auart_port)) {
-		dev_err(&pdev->dev, "serial%d out of range\n", s->port.line);
-		return -EINVAL;
-	}
 
 	if (of_id) {
 		pdev->id_entry = of_id->data;

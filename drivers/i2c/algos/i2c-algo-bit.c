@@ -14,7 +14,7 @@
     GNU General Public License for more details.
  * ------------------------------------------------------------------------- */
 
-/* With some changes from Frodo Looijaard <frodol@dds.nl>, Kyösti Mälkki
+/* With some changes from Frodo Looijaard <frodol@dds.nl>, Ky??sti M??lkki
    <kmalkki@cc.hut.fi> and Jean Delvare <jdelvare@suse.de> */
 
 #include <linux/kernel.h>

@@ -2,8 +2,8 @@
  * Core registration and callback routines for MTD
  * drivers and users.
  *
- * Copyright © 1999-2010 David Woodhouse <dwmw2@infradead.org>
- * Copyright © 2006      Red Hat UK Limited 
+ * Copyright ?? 1999-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright ?? 2006      Red Hat UK Limited 
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

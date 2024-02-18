@@ -240,7 +240,7 @@ static int inv_mpu6050_set_lpf_regs(struct inv_mpu6050_state *st,
  *  inv_mpu6050_init_config() - Initialize hardware, disable FIFO.
  *
  *  Initial configuration:
- *  FSR: ± 2000DPS
+ *  FSR: ?? 2000DPS
  *  DLPF: 20Hz
  *  FIFO rate: 50Hz
  *  Clock source: Gyro PLL

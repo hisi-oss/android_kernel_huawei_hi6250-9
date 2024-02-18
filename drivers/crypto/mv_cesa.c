@@ -38,7 +38,7 @@
  *   |					     | request complete
  *  \./					     |
  * IDLE -> new request -> BUSY -> done -> DEQUEUE
- *                         /°\               |
+ *                         /??\               |
  *			    |		     | more scatter entries
  *			    \________________/
  */

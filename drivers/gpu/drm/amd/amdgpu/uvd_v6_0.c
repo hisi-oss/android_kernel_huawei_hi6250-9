@@ -19,7 +19,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * Authors: Christian König <christian.koenig@amd.com>
+ * Authors: Christian K??nig <christian.koenig@amd.com>
  */
 
 #include <linux/firmware.h>

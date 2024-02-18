@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012  Smith Micro Software, Inc.
- * Copyright (c) 2012  Bjørn Mork <bjorn@mork.no>
+ * Copyright (c) 2012  Bj??rn Mork <bjorn@mork.no>
  *
  * This driver is based on and reuse most of cdc_ncm, which is
  * Copyright (C) ST-Ericsson 2010-2012
@@ -670,6 +670,6 @@ static struct usb_driver cdc_mbim_driver = {
 module_usb_driver(cdc_mbim_driver);
 
 MODULE_AUTHOR("Greg Suarez <gsuarez@smithmicro.com>");
-MODULE_AUTHOR("Bjørn Mork <bjorn@mork.no>");
+MODULE_AUTHOR("Bj??rn Mork <bjorn@mork.no>");
 MODULE_DESCRIPTION("USB CDC MBIM host driver");
 MODULE_LICENSE("GPL");

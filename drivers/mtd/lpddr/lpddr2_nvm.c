@@ -2,7 +2,7 @@
  * LPDDR2-NVM MTD driver. This module provides read, write, erase, lock/unlock
  * support for LPDDR2-NVM PCM memories
  *
- * Copyright © 2012 Micron Technology, Inc.
+ * Copyright ?? 2012 Micron Technology, Inc.
  *
  * Vincenzo Aliberti <vincenzo.aliberti@gmail.com>
  * Domenico Manna <domenico.manna@gmail.com>

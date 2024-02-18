@@ -1,7 +1,7 @@
 /*
  *		sonix sn9c102 (bayer) library
  *
- * Copyright (C) 2009-2011 Jean-François Moine <http://moinejf.free.fr>
+ * Copyright (C) 2009-2011 Jean-Fran??ois Moine <http://moinejf.free.fr>
  * Copyright (C) 2003 2004 Michel Xhaard mxhaard@magic.fr
  * Add Pas106 Stefano Mozzi (C) 2004
  *
@@ -52,7 +52,7 @@ all:
 #include <linux/input.h>
 #include "gspca.h"
 
-MODULE_AUTHOR("Jean-François Moine <http://moinejf.free.fr>");
+MODULE_AUTHOR("Jean-Fran??ois Moine <http://moinejf.free.fr>");
 MODULE_DESCRIPTION("GSPCA/SN9C102 USB Camera Driver");
 MODULE_LICENSE("GPL");
 

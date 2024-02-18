@@ -51,10 +51,10 @@
 #define USB2_VBUS_MNGMNT_SEL1	0x2C
 /*
  * For all fields in USB2_VBUS_MNGMNT_SEL1
- * 2’b00 : Override value from Reg 0x30 is selected
- * 2’b01 : utmiotg_<signal_name> from usb3_top is selected
- * 2’b10 : pipew_<signal_name> from PIPEW instance is selected
- * 2’b11 : value is 1'b0
+ * 2???b00 : Override value from Reg 0x30 is selected
+ * 2???b01 : utmiotg_<signal_name> from usb3_top is selected
+ * 2???b10 : pipew_<signal_name> from PIPEW instance is selected
+ * 2???b11 : value is 1'b0
  */
 #define USB2_VBUS_REG30		0x0
 #define USB2_VBUS_UTMIOTG	0x1
@@ -153,7 +153,7 @@ static int st_dwc3_drd_init(struct st_dwc3 *dwc3_data)
 
 		/*
 		 * USB3_DELAY_VBUSVALID is ANDed with USB_C_VBUSVALID. Thus,
-		 * when set to ‘0‘, it can delay the arrival of VBUSVALID
+		 * when set to ???0???, it can delay the arrival of VBUSVALID
 		 * information to VBUSVLDEXT2 input of the pico PHY.
 		 * We don't want to do that so we set the bit to '1'.
 		 */

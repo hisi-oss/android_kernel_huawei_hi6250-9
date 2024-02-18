@@ -2,7 +2,7 @@
  * Broadcom B43 wireless driver
  * PPR (Power Per Rate) management
  *
- * Copyright (c) 2014 Rafał Miłecki <zajec5@gmail.com>
+ * Copyright (c) 2014 Rafa?? Mi??ecki <zajec5@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

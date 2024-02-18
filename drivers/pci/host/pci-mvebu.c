@@ -1168,7 +1168,7 @@ err:
 }
 
 /*
- * Power up a PCIe port.  PCIe requires the refclk to be stable for 100µs
+ * Power up a PCIe port.  PCIe requires the refclk to be stable for 100??s
  * prior to releasing PERST.  See table 2-4 in section 2.6.2 AC Specifications
  * of the PCI Express Card Electromechanical Specification, 1.1.
  */

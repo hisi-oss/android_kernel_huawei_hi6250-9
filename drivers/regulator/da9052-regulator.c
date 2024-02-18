@@ -249,7 +249,7 @@ static int da9052_regulator_set_voltage_time_sel(struct regulator_dev *rdev,
 	int id = rdev_get_id(rdev);
 	int ret = 0;
 
-	/* The DVC controlled LDOs and DCDCs ramp with 6.25mV/µs after enabling
+	/* The DVC controlled LDOs and DCDCs ramp with 6.25mV/??s after enabling
 	 * the activate bit.
 	 */
 	switch (id) {

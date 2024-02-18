@@ -1,7 +1,7 @@
 /*
  * 1-Wire implementation for the ds2760 chip
  *
- * Copyright © 2004-2005, Szabolcs Gyurko <szabolcs.gyurko@tlt.hu>
+ * Copyright ?? 2004-2005, Szabolcs Gyurko <szabolcs.gyurko@tlt.hu>
  *
  * Use consistent with the GNU GPL is permitted,
  * provided that this copyright notice is

@@ -31,10 +31,10 @@
 /* IEEE 1588 PTP register offsets */
 #define	PTP_TCR		0x00	/* Timestamp Control Reg */
 #define	PTP_SSIR	0x04	/* Sub-Second Increment Reg */
-#define	PTP_STSR	0x08	/* System Time – Seconds Regr */
-#define	PTP_STNSR	0x0c	/* System Time – Nanoseconds Reg */
-#define	PTP_STSUR	0x10	/* System Time – Seconds Update Reg */
-#define	PTP_STNSUR	0x14	/* System Time – Nanoseconds Update Reg */
+#define	PTP_STSR	0x08	/* System Time ??? Seconds Regr */
+#define	PTP_STNSR	0x0c	/* System Time ??? Nanoseconds Reg */
+#define	PTP_STSUR	0x10	/* System Time ??? Seconds Update Reg */
+#define	PTP_STNSUR	0x14	/* System Time ??? Nanoseconds Update Reg */
 #define	PTP_TAR		0x18	/* Timestamp Addend Reg */
 
 #define	PTP_STNSUR_ADDSUB_SHIFT	31
@@ -63,8 +63,7 @@
 /* Enable Snapshot for Messages Relevant to Master */
 #define	PTP_TCR_TSMSTRENA	BIT(15)
 /* Select PTP packets for Taking Snapshots */
-#define	PTP_TCR_SNAPTYPSEL_1	BIT(16)
-#define	PTP_GMAC4_TCR_SNAPTYPSEL_1	GENMASK(17, 16)
+#define	PTP_TCR_SNAPTYPSEL_1	GENMASK(17, 16)
 /* Enable MAC address for PTP Frame Filtering */
 #define	PTP_TCR_TSENMACADDR	BIT(18)
 

@@ -4,7 +4,7 @@
  *
  * drivers/mtd/nand/nand_ecc.c
  *
- * Copyright © 2008 Koninklijke Philips Electronics NV.
+ * Copyright ?? 2008 Koninklijke Philips Electronics NV.
  *                  Author: Frans Meulenbroeks
  *
  * Completely replaces the previous ECC implementation which was written by:

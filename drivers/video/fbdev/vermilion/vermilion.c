@@ -23,8 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  * Authors:
- *   Thomas Hellström <thomas-at-tungstengraphics-dot-com>
- *   Michel Dänzer <michel-at-tungstengraphics-dot-com>
+ *   Thomas Hellstr??m <thomas-at-tungstengraphics-dot-com>
+ *   Michel D??nzer <michel-at-tungstengraphics-dot-com>
  *   Alan Hourihane <alanh-at-tungstengraphics-dot-com>
  */
 

@@ -2,7 +2,7 @@
  * Epson HWA742 LCD controller driver
  *
  * Copyright (C) 2004-2005 Nokia Corporation
- * Authors:     Juha Yrjölä   <juha.yrjola@nokia.com>
+ * Authors:     Juha Yrj??l??   <juha.yrjola@nokia.com>
  *	        Imre Deak     <imre.deak@nokia.com>
  * YUV support: Jussi Laako   <jussi.laako@nokia.com>
  *

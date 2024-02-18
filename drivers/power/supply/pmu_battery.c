@@ -1,7 +1,7 @@
 /*
  * Battery class driver for Apple PMU
  *
- *	Copyright © 2006  David Woodhouse <dwmw2@infradead.org>
+ *	Copyright ?? 2006  David Woodhouse <dwmw2@infradead.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -105,16 +105,16 @@ static int pmu_bat_get_property(struct power_supply *psy,
 		val->strval = pmu_bat_get_model_name(pbi);
 		break;
 	case POWER_SUPPLY_PROP_ENERGY_AVG:
-		val->intval = pbi->charge     * 1000; /* mWh -> µWh */
+		val->intval = pbi->charge     * 1000; /* mWh -> ??Wh */
 		break;
 	case POWER_SUPPLY_PROP_ENERGY_FULL:
-		val->intval = pbi->max_charge * 1000; /* mWh -> µWh */
+		val->intval = pbi->max_charge * 1000; /* mWh -> ??Wh */
 		break;
 	case POWER_SUPPLY_PROP_CURRENT_AVG:
-		val->intval = pbi->amperage   * 1000; /* mA -> µA */
+		val->intval = pbi->amperage   * 1000; /* mA -> ??A */
 		break;
 	case POWER_SUPPLY_PROP_VOLTAGE_AVG:
-		val->intval = pbi->voltage    * 1000; /* mV -> µV */
+		val->intval = pbi->voltage    * 1000; /* mV -> ??V */
 		break;
 	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG:
 		val->intval = pbi->time_remaining;

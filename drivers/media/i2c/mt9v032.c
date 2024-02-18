@@ -285,7 +285,7 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
 
 		/* After releasing reset we need to wait 10 clock cycles
 		 * before accessing the sensor over I2C. As the minimum SYSCLK
-		 * frequency is 13MHz, waiting 1µs will be enough in the worst
+		 * frequency is 13MHz, waiting 1??s will be enough in the worst
 		 * case.
 		 */
 		udelay(1);

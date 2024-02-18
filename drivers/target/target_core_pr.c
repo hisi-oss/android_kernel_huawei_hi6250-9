@@ -3825,7 +3825,7 @@ core_scsi3_pri_read_reservation(struct se_cmd *cmd)
 		 * RESERVE IN command with READ RESERVATION service action as
 		 * follows:
 		 * a) For a persistent reservation of the type Write Exclusive
-		 *    - All Registrants or Exclusive Access ­ All Regitrants,
+		 *    - All Registrants or Exclusive Access ?? All Regitrants,
 		 *      the reservation key shall be set to zero; or
 		 * b) For all other persistent reservation types, the
 		 *    reservation key shall be set to the registered

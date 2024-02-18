@@ -1,9 +1,9 @@
 /*
  * Interface for NOR flash driver whose high address lines are latched
  *
- * Copyright © 2000 Nicolas Pitre <nico@cam.org>
- * Copyright © 2005-2008 Analog Devices Inc.
- * Copyright © 2008 MontaVista Software, Inc. <source@mvista.com>
+ * Copyright ?? 2000 Nicolas Pitre <nico@cam.org>
+ * Copyright ?? 2005-2008 Analog Devices Inc.
+ * Copyright ?? 2008 MontaVista Software, Inc. <source@mvista.com>
  *
  * This file is licensed under the terms of the GNU General Public License
  * version 2. This program is licensed "as is" without any warranty of any

@@ -1,4 +1,4 @@
-/* Copyright © 2005 Agere Systems Inc.
+/* Copyright ?? 2005 Agere Systems Inc.
  * All rights reserved.
  *   http://www.agere.com
  *
@@ -9,7 +9,7 @@
  * software indicates your acceptance of these terms and conditions.  If you do
  * not agree with these terms and conditions, do not use the software.
  *
- * Copyright © 2005 Agere Systems Inc.
+ * Copyright ?? 2005 Agere Systems Inc.
  * All rights reserved.
  *
  * Redistribution and use in source or binary forms, with or without

@@ -10,7 +10,7 @@
 
  (c) 2008 Aidan Thornton <makosoft@googlemail.com>
 
- (c) 2012 Frank Schäfer <fschaefer.oss@googlemail.com>
+ (c) 2012 Frank Sch??fer <fschaefer.oss@googlemail.com>
 
  Based on cx88-dvb, saa7134-dvb and videobuf-dvb originally written by:
 	(c) 2004, 2005 Chris Pascoe <c.pascoe@itee.uq.edu.au>
@@ -2016,8 +2016,6 @@ static int em28xx_dvb_fini(struct em28xx *dev)
 		}
 	}
 
-	em28xx_unregister_dvb(dvb);
-
 	/* remove I2C SEC */
 	client = dvb->i2c_client_sec;
 	if (client) {
@@ -2039,6 +2037,7 @@ static int em28xx_dvb_fini(struct em28xx *dev)
 		i2c_unregister_device(client);
 	}
 
+	em28xx_unregister_dvb(dvb);
 	kfree(dvb);
 	dev->dvb = NULL;
 	kref_put(&dev->ref, em28xx_free_device);

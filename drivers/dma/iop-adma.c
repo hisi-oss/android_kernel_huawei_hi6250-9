@@ -1,6 +1,6 @@
 /*
  * offload engine driver for the Intel Xscale series of i/o processors
- * Copyright © 2006, Intel Corporation.
+ * Copyright ?? 2006, Intel Corporation.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,

@@ -578,17 +578,12 @@ static irqreturn_t cp_interrupt (int irq, void *dev_instance)
 	struct cp_private *cp;
 	int handled = 0;
 	u16 status;
-	u16 mask;
 
 	if (unlikely(dev == NULL))
 		return IRQ_NONE;
 	cp = netdev_priv(dev);
 
 	spin_lock(&cp->lock);
-
-	mask = cpr16(IntrMask);
-	if (!mask)
-		goto out_unlock;
 
 	status = cpr16(IntrStatus);
 	if (!status || (status == 0xFFFF))
@@ -999,7 +994,7 @@ static inline void cp_start_hw (struct cp_private *cp)
 
 	/*
 	 * These (at least TxRingAddr) need to be configured after the
-	 * corresponding bits in CpCmd are enabled. Datasheet v1.6 §6.33
+	 * corresponding bits in CpCmd are enabled. Datasheet v1.6 ??6.33
 	 * (C+ Command Register) recommends that these and more be configured
 	 * *after* the [RT]xEnable bits in CpCmd are set. And on some hardware
 	 * it's been observed that the TxRingAddr is actually reset to garbage

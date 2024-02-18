@@ -22,7 +22,7 @@
  * next paragraph) shall be included in all copies or substantial portions
  * of the Software.
  *
- * Authors: Christian König <christian.koenig@amd.com>
+ * Authors: Christian K??nig <christian.koenig@amd.com>
  */
 
 #include <linux/firmware.h>

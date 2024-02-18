@@ -39,22 +39,22 @@
 /*
  * gpio mapping
  *
-	XL_config_D0 – gpio1_31
-	Xl_config_d1 – gpio1_30
-	Xl_config_d2 – gpio1_29
-	Xl_config_d3 – gpio1_28
-	Xl_config_d4 – gpio1_27
-	Xl_config_d5 – gpio1_26
-	Xl_config_d6 – gpio1_25
-	Xl_config_d7 – gpio1_24
-	Xl_config_d8 – gpio1_23
-	Xl_config_d9 – gpio1_22
-	Xl_config_d10 – gpio1_21
-	Xl_config_d11 – gpio1_20
-	Xl_config_d12 – gpio1_19
-	Xl_config_d13 – gpio1_18
-	Xl_config_d14 – gpio1_16
-	Xl_config_d15 – gpio1_14
+	XL_config_D0 ??? gpio1_31
+	Xl_config_d1 ??? gpio1_30
+	Xl_config_d2 ??? gpio1_29
+	Xl_config_d3 ??? gpio1_28
+	Xl_config_d4 ??? gpio1_27
+	Xl_config_d5 ??? gpio1_26
+	Xl_config_d6 ??? gpio1_25
+	Xl_config_d7 ??? gpio1_24
+	Xl_config_d8 ??? gpio1_23
+	Xl_config_d9 ??? gpio1_22
+	Xl_config_d10 ??? gpio1_21
+	Xl_config_d11 ??? gpio1_20
+	Xl_config_d12 ??? gpio1_19
+	Xl_config_d13 ??? gpio1_18
+	Xl_config_d14 ??? gpio1_16
+	Xl_config_d15 ??? gpio1_14
 *
 */
 

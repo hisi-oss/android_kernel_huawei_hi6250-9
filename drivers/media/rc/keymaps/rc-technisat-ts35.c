@@ -1,6 +1,6 @@
 /* rc-technisat-ts35.c - Keytable for TechniSat TS35 remote
  *
- * Copyright (c) 2013 by Jan Klötzke <jan@kloetzke.net>
+ * Copyright (c) 2013 by Jan Kl??tzke <jan@kloetzke.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as

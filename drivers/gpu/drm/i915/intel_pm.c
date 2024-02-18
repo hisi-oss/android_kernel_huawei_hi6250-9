@@ -1,5 +1,5 @@
 /*
- * Copyright © 2012 Intel Corporation
+ * Copyright ?? 2012 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -2855,7 +2855,7 @@ bool ilk_disable_lp_wm(struct drm_device *dev)
 	return _ilk_disable_lp_wm(dev_priv, WM_DIRTY_LP_ALL);
 }
 
-#define SKL_SAGV_BLOCK_TIME	30 /* µs */
+#define SKL_SAGV_BLOCK_TIME	30 /* ??s */
 
 /*
  * Return the index of a plane in the SKL DDB and wm result arrays.  Primary
@@ -3045,7 +3045,7 @@ bool intel_can_enable_sagv(struct drm_atomic_state *state)
 
 		/*
 		 * If any of the planes on this pipe don't enable wm levels
-		 * that incur memory latencies higher then 30µs we can't enable
+		 * that incur memory latencies higher then 30??s we can't enable
 		 * the SAGV
 		 */
 		if (latency < SKL_SAGV_BLOCK_TIME)
@@ -7913,8 +7913,8 @@ int sandybridge_pcode_read(struct drm_i915_private *dev_priv, u32 mbox, u32 *val
 	return 0;
 }
 
-int sandybridge_pcode_write_timeout(struct drm_i915_private *dev_priv,
-				    u32 mbox, u32 val, int timeout_us)
+int sandybridge_pcode_write(struct drm_i915_private *dev_priv,
+			    u32 mbox, u32 val)
 {
 	int status;
 
@@ -7935,7 +7935,7 @@ int sandybridge_pcode_write_timeout(struct drm_i915_private *dev_priv,
 
 	if (intel_wait_for_register_fw(dev_priv,
 				       GEN6_PCODE_MAILBOX, GEN6_PCODE_READY, 0,
-				       timeout_us)) {
+				       500)) {
 		DRM_ERROR("timeout waiting for pcode write (%d) to finish\n", mbox);
 		return -ETIMEDOUT;
 	}

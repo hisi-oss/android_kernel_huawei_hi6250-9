@@ -1,5 +1,5 @@
 /*
- * Copyright © 2006-2007 Intel Corporation
+ * Copyright ?? 2006-2007 Intel Corporation
  * Copyright (c) 2006 Dave Airlie <airlied@linux.ie>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -321,8 +321,7 @@ static void intel_enable_lvds(struct intel_encoder *encoder,
 
 	I915_WRITE(PP_CONTROL(0), I915_READ(PP_CONTROL(0)) | PANEL_POWER_ON);
 	POSTING_READ(lvds_encoder->reg);
-
-	if (intel_wait_for_register(dev_priv, PP_STATUS(0), PP_ON, PP_ON, 5000))
+	if (intel_wait_for_register(dev_priv, PP_STATUS(0), PP_ON, PP_ON, 1000))
 		DRM_ERROR("timed out waiting for panel to power on\n");
 
 	intel_panel_enable_backlight(intel_connector);
@@ -862,14 +861,6 @@ static const struct dmi_system_id intel_no_lvds[] = {
 		.matches = {
 			DMI_MATCH(DMI_BOARD_VENDOR, "Intel"),
 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "D525MW"),
-		},
-	},
-	{
-		.callback = intel_no_lvds_dmi_callback,
-		.ident = "Radiant P845",
-		.matches = {
-			DMI_MATCH(DMI_SYS_VENDOR, "Radiant Systems Inc"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "P845"),
 		},
 	},
 

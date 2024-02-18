@@ -1,6 +1,6 @@
 /*
- * Copyright © 2010 Intel Corporation
- * Copyright © 2010 Francisco Jerez <currojerez@riseup.net>
+ * Copyright ?? 2010 Intel Corporation
+ * Copyright ?? 2010 Francisco Jerez <currojerez@riseup.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -144,9 +144,9 @@ __list_add(struct list_head *entry,
  * Insert a new element after the given list head. The new element does not
  * need to be initialised as empty list.
  * The list changes from:
- *      head → some element → ...
+ *      head ??? some element ??? ...
  * to
- *      head → new element → older element → ...
+ *      head ??? new element ??? older element ??? ...
  *
  * Example:
  * struct foo *newfoo = malloc(...);
@@ -165,9 +165,9 @@ list_add(struct list_head *entry, struct list_head *head)
  * Append a new element to the end of the list given with this list head.
  *
  * The list changes from:
- *      head → some element → ... → lastelement
+ *      head ??? some element ??? ... ??? lastelement
  * to
- *      head → some element → ... → lastelement → new element
+ *      head ??? some element ??? ... ??? lastelement ??? new element
  *
  * Example:
  * struct foo *newfoo = malloc(...);

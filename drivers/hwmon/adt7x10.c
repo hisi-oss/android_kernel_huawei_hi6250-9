@@ -221,7 +221,7 @@ static int ADT7X10_REG_TO_TEMP(struct adt7x10_data *data, s16 reg)
 		reg &= ADT7X10_T13_VALUE_MASK;
 	/*
 	 * temperature is stored in twos complement format, in steps of
-	 * 1/128°C
+	 * 1/128??C
 	 */
 	return DIV_ROUND_CLOSEST(reg * 1000, 128);
 }

@@ -293,7 +293,7 @@ static void pullup_on(void)
 /*
  * IXP4xx has its buses wired up in a way that relies on never doing any
  * byte swaps, independent of whether it runs in big-endian or little-endian
- * mode, as explained by Krzysztof Hałasa.
+ * mode, as explained by Krzysztof Ha??asa.
  *
  * We only support pxa25x in little-endian mode, but it is very likely
  * that it works the same way.

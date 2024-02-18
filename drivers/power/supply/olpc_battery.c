@@ -1,7 +1,7 @@
 /*
  * Battery driver for One Laptop Per Child board.
  *
- *	Copyright © 2006-2010  David Woodhouse <dwmw2@infradead.org>
+ *	Copyright ?? 2006-2010  David Woodhouse <dwmw2@infradead.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -23,9 +23,9 @@
 
 #define EC_BAT_VOLTAGE	0x10	/* uint16_t,	*9.76/32,    mV   */
 #define EC_BAT_CURRENT	0x11	/* int16_t,	*15.625/120, mA   */
-#define EC_BAT_ACR	0x12	/* int16_t,	*6250/15,    µAh  */
-#define EC_BAT_TEMP	0x13	/* uint16_t,	*100/256,   °C  */
-#define EC_AMB_TEMP	0x14	/* uint16_t,	*100/256,   °C  */
+#define EC_BAT_ACR	0x12	/* int16_t,	*6250/15,    ??Ah  */
+#define EC_BAT_TEMP	0x13	/* uint16_t,	*100/256,   ??C  */
+#define EC_AMB_TEMP	0x14	/* uint16_t,	*100/256,   ??C  */
 #define EC_BAT_STATUS	0x15	/* uint8_t,	bitmask */
 #define EC_BAT_SOC	0x16	/* uint8_t,	percentage */
 #define EC_BAT_SERIAL	0x17	/* uint8_t[6] */

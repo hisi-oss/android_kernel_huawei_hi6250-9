@@ -1,5 +1,5 @@
 /*
- * Copyright © 2009 - Maxim Levitsky
+ * Copyright ?? 2009 - Maxim Levitsky
  * driver for Ricoh xD readers
  *
  * This program is free software; you can redistribute it and/or modify

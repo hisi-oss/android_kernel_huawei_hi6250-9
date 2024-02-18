@@ -3,7 +3,7 @@
   Broadcom B43 wireless driver
   IEEE 802.11n 2059 radio device data tables
 
-  Copyright (c) 2011 Rafał Miłecki <zajec5@gmail.com>
+  Copyright (c) 2011 Rafa?? Mi??ecki <zajec5@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

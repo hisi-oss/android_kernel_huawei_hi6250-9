@@ -10,7 +10,7 @@
  * Original driver:
  * Copyright (C) 2005 Nokia Corporation
  * Author: Paul Mundt <paul.mundt@nokia.com>
- *         Juha Yrjölä <juha.yrjola@nokia.com>
+ *         Juha Yrj??l?? <juha.yrjola@nokia.com>
  * OMAP Dual-mode timer framework support by Timo Teras
  *
  * Some parts based off of TI's 24xx code:
@@ -97,9 +97,6 @@ static int __init ti_32k_timer_init(struct device_node *np)
 		pr_err("Can't ioremap 32k timer base\n");
 		return -ENXIO;
 	}
-
-	if (!of_machine_is_compatible("ti,am43"))
-		ti_32k_timer.cs.flags |= CLOCK_SOURCE_SUSPEND_NONSTOP;
 
 	ti_32k_timer.counter = ti_32k_timer.base;
 

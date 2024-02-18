@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Red Hat, Inc.
- * Copyright © 2014 The Chromium OS Authors
+ * Copyright ?? 2014 The Chromium OS Authors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software")

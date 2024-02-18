@@ -24,7 +24,7 @@
  * Authors: Dave Airlie
  *          Alex Deucher
  *          Jerome Glisse
- *          Christian König
+ *          Christian K??nig
  */
 #include <drm/drmP.h>
 #include "radeon.h"

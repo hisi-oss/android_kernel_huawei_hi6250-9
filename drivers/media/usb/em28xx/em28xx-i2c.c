@@ -5,7 +5,7 @@
 		      Markus Rechberger <mrechberger@gmail.com>
 		      Mauro Carvalho Chehab <mchehab@infradead.org>
 		      Sascha Sommer <saschasommer@freenet.de>
-   Copyright (C) 2013 Frank Schäfer <fschaefer.oss@googlemail.com>
+   Copyright (C) 2013 Frank Sch??fer <fschaefer.oss@googlemail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

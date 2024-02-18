@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2006-2007 Intel Corporation
+ * Copyright ???? 2006-2007 Intel Corporation
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -99,7 +99,7 @@ void mdfldWaitForPipeEnable(struct drm_device *dev, int pipe)
 	/* Wait for for the pipe enable to take effect. */
 	for (count = 0; count < COUNT_MAX; count++) {
 		temp = REG_READ(map->conf);
-		if (temp & PIPEACONF_PIPE_STATE)
+		if ((temp & PIPEACONF_PIPE_STATE) == 1)
 			break;
 	}
 }

@@ -1,7 +1,7 @@
 /*
- * Copyright © 2004 Texas Instruments, Jian Zhang <jzhang@ti.com>
- * Copyright © 2004 Micron Technology Inc.
- * Copyright © 2004 David Brownell
+ * Copyright ?? 2004 Texas Instruments, Jian Zhang <jzhang@ti.com>
+ * Copyright ?? 2004 Micron Technology Inc.
+ * Copyright ?? 2004 David Brownell
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

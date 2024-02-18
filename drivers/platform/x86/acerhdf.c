@@ -57,7 +57,7 @@
  * (http://download.intel.com/design/processor/datashts/320032.pdf) the
  * CPU's optimal operating limits denoted in junction temperature as
  * measured by the on-die thermal monitor are within 0 <= Tj <= 90. So,
- * assume 89°C is critical temperature.
+ * assume 89??C is critical temperature.
  */
 #define ACERHDF_TEMP_CRIT 89000
 #define ACERHDF_FAN_OFF 0
@@ -233,7 +233,6 @@ static const struct bios_settings bios_tbl[] = {
 	{"Gateway", "LT31",   "v1.3201",  0x55, 0x58, {0x9e, 0x00}, 0},
 	{"Gateway", "LT31",   "v1.3302",  0x55, 0x58, {0x9e, 0x00}, 0},
 	{"Gateway", "LT31",   "v1.3303t", 0x55, 0x58, {0x9e, 0x00}, 0},
-	{"Gateway", "LT31",   "v1.3307",  0x55, 0x58, {0x9e, 0x00}, 0},
 	/* Packard Bell */
 	{"Packard Bell", "DOA150",  "v0.3104",  0x55, 0x58, {0x21, 0x00}, 0},
 	{"Packard Bell", "DOA150",  "v0.3105",  0x55, 0x58, {0x20, 0x00}, 0},

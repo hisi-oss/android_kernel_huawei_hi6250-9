@@ -6,7 +6,7 @@
 		      Markus Rechberger <mrechberger@gmail.com>
 		      Mauro Carvalho Chehab <mchehab@infradead.org>
 		      Sascha Sommer <saschasommer@freenet.de>
-   Copyright (C) 2012 Frank Schäfer <fschaefer.oss@googlemail.com>
+   Copyright (C) 2012 Frank Sch??fer <fschaefer.oss@googlemail.com>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -2093,13 +2093,13 @@ struct em28xx_board em28xx_boards[] = {
 		.input           = { {
 			.type     = EM28XX_VMUX_COMPOSITE,
 			.vmux     = TVP5150_COMPOSITE1,
-			.amux     = EM28XX_AMUX_LINE_IN,
+			.amux     = EM28XX_AUDIO_SRC_LINE,
 			.gpio     = terratec_av350_unmute_gpio,
 
 		}, {
 			.type     = EM28XX_VMUX_SVIDEO,
 			.vmux     = TVP5150_SVIDEO,
-			.amux     = EM28XX_AMUX_LINE_IN,
+			.amux     = EM28XX_AUDIO_SRC_LINE,
 			.gpio     = terratec_av350_unmute_gpio,
 		} },
 	},

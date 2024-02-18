@@ -15,9 +15,9 @@
 
 /*
  *        Documentation:
- *        - "Common ISDN API - Perfil Português - Versão 2.1",
+ *        - "Common ISDN API - Perfil Portugu??s - Vers??o 2.1",
  *           Telecom Portugal, Fev 1992.
- *        - "Common ISDN API - Especificação de protocolos para
+ *        - "Common ISDN API - Especifica????o de protocolos para
  *           acesso aos canais B", Inesc, Jan 1994.
  */
 

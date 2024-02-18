@@ -5,8 +5,8 @@
  *    Kevin Wells <kevin.wells@nxp.com>
  *    Roland Stigge <stigge@antcom.de>
  *
- * Copyright © 2011 NXP Semiconductors
- * Copyright © 2012 Roland Stigge
+ * Copyright ?? 2011 NXP Semiconductors
+ * Copyright ?? 2012 Roland Stigge
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

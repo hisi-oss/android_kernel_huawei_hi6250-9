@@ -145,10 +145,8 @@ static int asus_wireless_remove(struct acpi_device *adev)
 {
 	struct asus_wireless_data *data = acpi_driver_data(adev);
 
-	if (data->wq) {
-		devm_led_classdev_unregister(&adev->dev, &data->led);
+	if (data->wq)
 		destroy_workqueue(data->wq);
-	}
 	return 0;
 }
 
@@ -172,5 +170,5 @@ static struct acpi_driver asus_wireless_driver = {
 module_acpi_driver(asus_wireless_driver);
 
 MODULE_DESCRIPTION("Asus Wireless Radio Control Driver");
-MODULE_AUTHOR("João Paulo Rechi Vita <jprvita@gmail.com>");
+MODULE_AUTHOR("Jo??o Paulo Rechi Vita <jprvita@gmail.com>");
 MODULE_LICENSE("GPL");

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Dave Airlie <airlied@linux.ie>
- * Copyright © 2006-2007 Intel Corporation
+ * Copyright ?? 2006-2007 Intel Corporation
  *   Jesse Barnes <jesse.barnes@intel.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -543,7 +543,7 @@ static bool intel_sdvo_read_response(struct intel_sdvo *intel_sdvo,
 
 	/*
 	 * The documentation states that all commands will be
-	 * processed within 15µs, and that we need only poll
+	 * processed within 15??s, and that we need only poll
 	 * the status byte a maximum of 3 times in order for the
 	 * command to be complete.
 	 *
@@ -556,7 +556,7 @@ static bool intel_sdvo_read_response(struct intel_sdvo *intel_sdvo,
 	 * with an additional delay of 30ms applied for TVs added later after
 	 * many experiments. To accommodate both sets of delays, we do a
 	 * sequence of slow checks if the device is falling behind and fails
-	 * to reply within 5*15µs.
+	 * to reply within 5*15??s.
 	 */
 	if (!intel_sdvo_read_byte(intel_sdvo,
 				  SDVO_I2C_CMD_STATUS,

@@ -1,7 +1,7 @@
 /*
  * MTD Oops/Panic logger
  *
- * Copyright © 2007 Nokia Corporation. All rights reserved.
+ * Copyright ?? 2007 Nokia Corporation. All rights reserved.
  *
  * Author: Richard Purdie <rpurdie@openedhand.com>
  *

@@ -9,7 +9,7 @@
  * Additional contributions by:
  *	Tony Lindgren <tony@atomide.com>
  *	Imre Deak <imre.deak@nokia.com>
- *	Juha Yrjölä <juha.yrjola@solidboot.com>
+ *	Juha Yrj??l?? <juha.yrjola@solidboot.com>
  *	Syed Khasim <x0khasim@ti.com>
  *	Nishant Menon <nm@ti.com>
  *

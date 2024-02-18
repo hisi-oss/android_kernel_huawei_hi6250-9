@@ -6,9 +6,9 @@
  *  could probably support others (Winbond WEC102X, NatSemi, etc)
  *  with minor modifications.
  *
- *  Original Author: David Härdeman <david@hardeman.nu>
+ *  Original Author: David H??rdeman <david@hardeman.nu>
  *     Copyright (C) 2012 Sean Young <sean@mess.org>
- *     Copyright (C) 2009 - 2011 David Härdeman <david@hardeman.nu>
+ *     Copyright (C) 2009 - 2011 David H??rdeman <david@hardeman.nu>
  *
  *  Dedicated to my daughter Matilda, without whose loving attention this
  *  driver would have been finished in half the time and with a fraction
@@ -1227,6 +1227,6 @@ wbcir_exit(void)
 module_init(wbcir_init);
 module_exit(wbcir_exit);
 
-MODULE_AUTHOR("David Härdeman <david@hardeman.nu>");
+MODULE_AUTHOR("David H??rdeman <david@hardeman.nu>");
 MODULE_DESCRIPTION("Winbond SuperI/O Consumer IR Driver");
 MODULE_LICENSE("GPL");

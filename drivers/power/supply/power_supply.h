@@ -1,9 +1,9 @@
 /*
  *  Functions private to power supply class
  *
- *  Copyright © 2007  Anton Vorontsov <cbou@mail.ru>
- *  Copyright © 2004  Szabolcs Gyurko
- *  Copyright © 2003  Ian Molton <spyro@f2s.com>
+ *  Copyright ?? 2007  Anton Vorontsov <cbou@mail.ru>
+ *  Copyright ?? 2004  Szabolcs Gyurko
+ *  Copyright ?? 2003  Ian Molton <spyro@f2s.com>
  *
  *  Modified: 2004, Oct     Szabolcs Gyurko
  *

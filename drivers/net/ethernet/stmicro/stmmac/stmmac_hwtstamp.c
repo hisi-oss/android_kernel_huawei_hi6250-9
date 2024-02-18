@@ -38,7 +38,6 @@ static u32 stmmac_config_sub_second_increment(void __iomem *ioaddr,
 {
 	u32 value = readl(ioaddr + PTP_TCR);
 	unsigned long data;
-	u32 reg_value;
 
 	/* For GMAC3.x, 4.x versions, convert the ptp_clock to nano second
 	 *	formula = (1/ptp_clock) * 1000000000
@@ -55,11 +54,10 @@ static u32 stmmac_config_sub_second_increment(void __iomem *ioaddr,
 
 	data &= PTP_SSIR_SSINC_MASK;
 
-	reg_value = data;
 	if (gmac4)
-		reg_value <<= GMAC4_PTP_SSIR_SSINC_SHIFT;
+		data = data << GMAC4_PTP_SSIR_SSINC_SHIFT;
 
-	writel(reg_value, ioaddr + PTP_SSIR);
+	writel(data, ioaddr + PTP_SSIR);
 
 	return data;
 }
@@ -122,7 +120,7 @@ static int stmmac_adjust_systime(void __iomem *ioaddr, u32 sec, u32 nsec,
 	if (add_sub) {
 		/* If the new sec value needs to be subtracted with
 		 * the system time, then MAC_STSUR reg should be
-		 * programmed with (2^32 – <new_sec_value>)
+		 * programmed with (2^32 ??? <new_sec_value>)
 		 */
 		if (gmac4)
 			sec = (100000000ULL - sec);

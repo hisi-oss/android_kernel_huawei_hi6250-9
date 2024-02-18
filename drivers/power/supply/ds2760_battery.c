@@ -1,7 +1,7 @@
 /*
  * Driver for batteries with DS2760 chips inside.
  *
- * Copyright © 2007 Anton Vorontsov
+ * Copyright ?? 2007 Anton Vorontsov
  *	       2004-2007 Matt Reimer
  *	       2004 Szabolcs Gyurko
  *
@@ -38,17 +38,17 @@ struct ds2760_device_info {
 	unsigned long update_time;	/* jiffies when data read */
 	char raw[DS2760_DATA_SIZE];	/* raw DS2760 data */
 	int voltage_raw;		/* units of 4.88 mV */
-	int voltage_uV;			/* units of µV */
+	int voltage_uV;			/* units of ??V */
 	int current_raw;		/* units of 0.625 mA */
-	int current_uA;			/* units of µA */
+	int current_uA;			/* units of ??A */
 	int accum_current_raw;		/* units of 0.25 mAh */
-	int accum_current_uAh;		/* units of µAh */
-	int temp_raw;			/* units of 0.125 °C */
-	int temp_C;			/* units of 0.1 °C */
-	int rated_capacity;		/* units of µAh */
+	int accum_current_uAh;		/* units of ??Ah */
+	int temp_raw;			/* units of 0.125 ??C */
+	int temp_C;			/* units of 0.1 ??C */
+	int rated_capacity;		/* units of ??Ah */
 	int rem_capacity;		/* percentage */
-	int full_active_uAh;		/* units of µAh */
-	int empty_uAh;			/* units of µAh */
+	int full_active_uAh;		/* units of ??Ah */
+	int empty_uAh;			/* units of ??Ah */
 	int life_sec;			/* units of seconds */
 	int charge_status;		/* POWER_SUPPLY_STATUS_* */
 
@@ -103,7 +103,7 @@ static int rated_capacities[] = {
 #endif
 };
 
-/* array is level at temps 0°C, 10°C, 20°C, 30°C, 40°C
+/* array is level at temps 0??C, 10??C, 20??C, 30??C, 40??C
  * temp is in Celsius */
 static int battery_interpolate(int array[], int temp)
 {
@@ -154,7 +154,7 @@ static int ds2760_battery_read_status(struct ds2760_device_info *di)
 	di->voltage_uV = di->voltage_raw * 4880;
 
 	/* DS2760 reports current in signed units of 0.625mA, but the battery
-	 * class reports in units of µA, so convert by multiplying by 625. */
+	 * class reports in units of ??A, so convert by multiplying by 625. */
 	di->current_raw =
 	    (((signed char)di->raw[DS2760_CURRENT_MSB]) << 5) |
 			  (di->raw[DS2760_CURRENT_LSB] >> 3);
@@ -166,8 +166,8 @@ static int ds2760_battery_read_status(struct ds2760_device_info *di)
 			   di->raw[DS2760_CURRENT_ACCUM_LSB];
 	di->accum_current_uAh = di->accum_current_raw * 250;
 
-	/* DS2760 reports temperature in signed units of 0.125°C, but the
-	 * battery class reports in units of 1/10 °C, so we convert by
+	/* DS2760 reports temperature in signed units of 0.125??C, but the
+	 * battery class reports in units of 1/10 ??C, so we convert by
 	 * multiplying by .125 * 10 = 1.25. */
 	di->temp_raw = (((signed char)di->raw[DS2760_TEMP_MSB]) << 3) |
 				     (di->raw[DS2760_TEMP_LSB] >> 5);
@@ -181,7 +181,7 @@ static int ds2760_battery_read_status(struct ds2760_device_info *di)
 	else
 		di->rated_capacity = di->raw[DS2760_RATED_CAPACITY] * 10;
 
-	di->rated_capacity *= 1000; /* convert to µAh */
+	di->rated_capacity *= 1000; /* convert to ??Ah */
 
 	/* Calculate the full level at the present temperature. */
 	di->full_active_uAh = di->raw[DS2760_ACTIVE_FULL] << 8 |
@@ -198,7 +198,7 @@ static int ds2760_battery_read_status(struct ds2760_device_info *di)
 		scale[i] = scale[i - 1] + di->raw[DS2760_ACTIVE_FULL + 1 + i];
 
 	di->full_active_uAh = battery_interpolate(scale, di->temp_C / 10);
-	di->full_active_uAh *= 1000; /* convert to µAh */
+	di->full_active_uAh *= 1000; /* convert to ??Ah */
 
 	/* Calculate the empty level at the present temperature. */
 	scale[4] = di->raw[DS2760_ACTIVE_EMPTY + 4];
@@ -206,7 +206,7 @@ static int ds2760_battery_read_status(struct ds2760_device_info *di)
 		scale[i] = scale[i + 1] + di->raw[DS2760_ACTIVE_EMPTY + i];
 
 	di->empty_uAh = battery_interpolate(scale, di->temp_C / 10);
-	di->empty_uAh *= 1000; /* convert to µAh */
+	di->empty_uAh *= 1000; /* convert to ??Ah */
 
 	if (di->full_active_uAh == di->empty_uAh)
 		di->rem_capacity = 0;

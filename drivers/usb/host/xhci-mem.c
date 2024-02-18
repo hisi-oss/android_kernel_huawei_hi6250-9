@@ -2173,7 +2173,7 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
 			addr, port_offset, port_count, major_revision);
 	/* Port count includes the current port offset */
 	if (port_offset == 0 || (port_offset + port_count - 1) > num_ports)
-		/* WTF? "Valid values are ‘1’ to MaxPorts" */
+		/* WTF? "Valid values are ???1??? to MaxPorts" */
 		return;
 
 	rhub->psi_count = XHCI_EXT_PORT_PSIC(temp);
@@ -2225,6 +2225,11 @@ static void xhci_add_in_port(struct xhci_hcd *xhci, unsigned int num_ports,
 			xhci->hw_lpm_support = 1;
 		}
 	}
+
+#ifdef CONFIG_USB_DWC3_NYET_ABNORMAL
+	if (xhci->quirks & XHCI_DISABLE_LPM)
+		xhci->sw_lpm_support = 0;
+#endif
 
 	port_offset--;
 	for (i = port_offset; i < (port_offset + port_count); i++) {

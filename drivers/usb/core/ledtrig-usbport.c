@@ -1,7 +1,7 @@
 /*
  * USB port LED trigger
  *
- * Copyright (C) 2016 Rafał Miłecki <rafal@milecki.pl>
+ * Copyright (C) 2016 Rafa?? Mi??ecki <rafal@milecki.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -308,6 +308,6 @@ static void __exit usbport_trig_exit(void)
 module_init(usbport_trig_init);
 module_exit(usbport_trig_exit);
 
-MODULE_AUTHOR("Rafał Miłecki <rafal@milecki.pl>");
+MODULE_AUTHOR("Rafa?? Mi??ecki <rafal@milecki.pl>");
 MODULE_DESCRIPTION("USB port trigger");
 MODULE_LICENSE("GPL v2");
