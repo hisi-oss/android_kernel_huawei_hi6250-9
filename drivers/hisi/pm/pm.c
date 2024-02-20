@@ -27,9 +27,9 @@
 #include <linux/mfd/hisi_pmic.h>
 #include "hisi_lpregs.h"
 
+#ifdef CONFIG_HUAWEI_DUBAI
 #include <chipset_common/dubai/dubai.h>
-
-
+#endif
 
 #include <soc_gpio_interface.h>
 
@@ -168,7 +168,9 @@ void pm_gic_pending_dump(void)
 					printk("(gpio-%d)", gpio);
                 }
 				/* notify dubai module to update wakeup information */
+#ifdef CONFIG_HUAWEI_DUBAI
 				dubai_update_wakeup_info("DUBAI_TAG_KERNEL_WAKEUP", "irq=%s gpio=%d", g_ap_irq_name[irq], gpio);
+#endif
                                 if (BETA_USER == get_logusertype_flag()) {
                                           g_latt_wakeuptime = hisi_getcurtime() / 1000000;
                                           g_latt_sourcename = g_ap_irq_name[irq];
