@@ -667,6 +667,7 @@ u32 rdr_get_reboot_type(void)
 	return g_reboot_type;
 }
 
+#ifdef CONFIG_USE_BOOTFAIL_RECOVERY_SOLUTION
 static int __init early_parse_reboot_reason_cmdline(char *reboot_reason_cmdline)
 {
 	int i;
@@ -683,8 +684,8 @@ static int __init early_parse_reboot_reason_cmdline(char *reboot_reason_cmdline)
 	BB_PRINT_PN("[%s][%s][%d]\n", __func__, g_reboot_reason, g_reboot_type);
 	return 0;
 }
-
 early_param("reboot_reason", early_parse_reboot_reason_cmdline);
+#endif
 
 void *bbox_vmap(phys_addr_t paddr, size_t size)
 {
