@@ -64,7 +64,7 @@ static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
 		*result = ltc2990_voltage_to_int(val) * 1942 / (4 * 100);
 		break;
 	case LTC2990_VCC_MSB:
-		/* Vcc, 305.18μV/LSB, 2.5V offset */
+		/* Vcc, 305.18??V/LSB, 2.5V offset */
 		*result = (ltc2990_voltage_to_int(val) * 30518 /
 			   (4 * 100 * 1000)) + 2500;
 		break;

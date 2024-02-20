@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2015 Broadcom
+ * Copyright ?? 2014-2015 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

@@ -10,7 +10,7 @@
 
  (c) 2008 Aidan Thornton <makosoft@googlemail.com>
 
- (c) 2012 Frank Schäfer <fschaefer.oss@googlemail.com>
+ (c) 2012 Frank Sch??fer <fschaefer.oss@googlemail.com>
 
  Based on cx88-dvb, saa7134-dvb and videobuf-dvb originally written by:
 	(c) 2004, 2005 Chris Pascoe <c.pascoe@itee.uq.edu.au>

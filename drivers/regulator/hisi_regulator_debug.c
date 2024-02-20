@@ -77,7 +77,7 @@ typedef struct {
 
 typedef struct {
 	u64  current_time;
-	/* 0:enable 1:set vol  2£ºmode */
+	/* 0:enable 1:set vol  2??mode */
 	u8 item;
 	u8 mode;
 	u16 enalbe_count;

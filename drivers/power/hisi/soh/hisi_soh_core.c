@@ -1136,7 +1136,7 @@ static int soh_create_sysfs_file(struct hisi_soh_device *di)
 #endif
 /*************************************************************************
   Function:        soh_acr_start_check
-  Description:     check acr start valid by temp current and bat cycle¡¢soc.
+  Description:     check acr start valid by temp current and bat cycle??soc.
   Input:           NA
   Output:          NA
   Return:          0:start check success
@@ -1828,7 +1828,7 @@ static int soh_ovp_uninit(struct hisi_soh_device *di)
 }
 /*************************************************************************
   Function:        soh_dcr_start_check
-  Description:     check dcr start valid by temp current and bat cycle¡¢soc.
+  Description:     check dcr start valid by temp current and bat cycle??soc.
   Input:           NA
   Output:          NA
   Return:          0:start check success

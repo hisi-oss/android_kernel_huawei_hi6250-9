@@ -214,10 +214,10 @@ size_t ion_get_used_memory(struct ion_heap *heap);
 /**
 * ion_secmem_get_phys - returns the physical address and len of a handle,
 							just for tzdriver
-* @client:»       the client
-* @handle:»       the handle
-* @addr:»       a pointer to put the address in
-* @len:»       a pointer to put the length in
+* @client:??       the client
+* @handle:??       the handle
+* @addr:??       a pointer to put the address in
+* @len:??       a pointer to put the length in
 */
 int ion_secmem_get_phys(struct ion_client *client, struct ion_handle *handle,
 			phys_addr_t *addr, size_t *len);

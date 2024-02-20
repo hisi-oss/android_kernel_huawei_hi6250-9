@@ -2,7 +2,7 @@
  * Copyright @ Huawei Technologies Co., Ltd. 1998-2017. All rights reserved.
  *
  * Author:
- * Markku Kylänpää <markku.kylanpaa@vtt.fi>
+ * Markku Kyl??np???? <markku.kylanpaa@vtt.fi>
  * yudong<yudong2@huawei.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -725,7 +725,7 @@ static void __exit tpmtee_cleanup(void)
 module_init(tpmtee_init);
 module_exit(tpmtee_cleanup);
 
-MODULE_AUTHOR("Markku Kylänpää (markku.kylanpaa@vtt.fi)");
+MODULE_AUTHOR("Markku Kyl??np???? (markku.kylanpaa@vtt.fi)");
 MODULE_DESCRIPTION("TPM TEE Driver");
 MODULE_VERSION("2.0");
 MODULE_LICENSE("GPL");

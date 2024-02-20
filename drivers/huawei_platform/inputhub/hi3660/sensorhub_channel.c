@@ -40,12 +40,12 @@ extern int read_gyro_sensor_offset_from_nv(void);
 extern int read_handpress_offset_from_nv(void);
 /*******************************************************************************************
 Function:       shb_read
-Description:    定义/dev/sensorhub节点的读函数，从kernel的事件缓冲区中读数据
-Data Accessed:  无
-Data Updated:   无
+Description:    ????/dev/sensorhub????????????????kernel????????????????????
+Data Accessed:  ??
+Data Updated:   ??
 Input:          struct file *file, char __user *buf, size_t count, loff_t *pos
-Output:         无
-Return:         实际读取数据的长度
+Output:         ??
+Return:         ??????????????????
 *******************************************************************************************/
 static ssize_t shb_read(struct file *file, char __user *buf, size_t count,
               loff_t *pos)
@@ -215,12 +215,12 @@ static void send_sensor_calib_data(void)
 
 /*******************************************************************************************
 Function:       shb_ioctl
-Description:    定义/dev/sensorhub节点的ioctl函数，主要用于设置传感器命令和获取MCU是否存在
-Data Accessed:  无
-Data Updated:   无
-Input:          struct file *file, unsigned int cmd, unsigned long arg，cmd是命令码，arg是命令跟的参数
-Output:         无
-Return:         成功或者失败信息
+Description:    ????/dev/sensorhub??????ioctl??????????????????????????????????MCU????????
+Data Accessed:  ??
+Data Updated:   ??
+Input:          struct file *file, unsigned int cmd, unsigned long arg??cmd??????????arg??????????????
+Output:         ??
+Return:         ????????????????
 *******************************************************************************************/
 static long shb_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
@@ -262,12 +262,12 @@ static long shb_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 /*******************************************************************************************
 Function:       shb_open
-Description:    定义/dev/sensorhub节点的open函数，暂未实现实质功能
-Data Accessed:  无
-Data Updated:   无
+Description:    ????/dev/sensorhub??????open??????????????????????
+Data Accessed:  ??
+Data Updated:   ??
 Input:          struct inode *inode, struct file *file
-Output:         无
-Return:         成功或者失败信息
+Output:         ??
+Return:         ????????????????
 *******************************************************************************************/
 static int shb_open(struct inode *inode, struct file *file)
 {
@@ -277,12 +277,12 @@ static int shb_open(struct inode *inode, struct file *file)
 
 /*******************************************************************************************
 Function:       shb_release
-Description:    定义/dev/sensorhub节点的release函数，暂未实现实质功能
-Data Accessed:  无
-Data Updated:   无
+Description:    ????/dev/sensorhub??????release??????????????????????
+Data Accessed:  ??
+Data Updated:   ??
 Input:          struct inode *inode, struct file *file
-Output:         无
-Return:         成功或者失败信息
+Output:         ??
+Return:         ????????????????
 *******************************************************************************************/
 static int shb_release(struct inode *inode, struct file *file)
 {
@@ -312,12 +312,12 @@ static struct miscdevice senorhub_miscdev = {
 
 /*******************************************************************************************
 Function:       sensorhub_init
-Description:    申请kernel缓冲区并初始化读写指针，注册msic设备
-Data Accessed:  无
-Data Updated:   无
-Input:          无
-Output:         无
-Return:         成功或者失败信息
+Description:    ????kernel????????????????????????????msic????
+Data Accessed:  ??
+Data Updated:   ??
+Input:          ??
+Output:         ??
+Return:         ????????????????
 *******************************************************************************************/
 int __init sensorhub_init(void)
 {
@@ -346,12 +346,12 @@ int __init sensorhub_init(void)
 
 /*******************************************************************************************
 Function:       sensorhub_exit
-Description:    释放kernel缓冲区并初始化读写指针，注销msic设备
-Data Accessed:  无
-Data Updated:   无
-Input:          无
-Output:         无
-Return:         成功或者失败信息
+Description:    ????kernel????????????????????????????msic????
+Data Accessed:  ??
+Data Updated:   ??
+Input:          ??
+Output:         ??
+Return:         ????????????????
 *******************************************************************************************/
 void __exit sensorhub_exit(void)
 {

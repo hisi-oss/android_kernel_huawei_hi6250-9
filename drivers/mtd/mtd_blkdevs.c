@@ -1,7 +1,7 @@
 /*
  * Interface to Linux block layer for MTD 'translation layers'.
  *
- * Copyright © 2003-2010 David Woodhouse <dwmw2@infradead.org>
+ * Copyright ?? 2003-2010 David Woodhouse <dwmw2@infradead.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

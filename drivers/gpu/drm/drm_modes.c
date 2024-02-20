@@ -1,7 +1,7 @@
 /*
- * Copyright © 1997-2003 by The XFree86 Project, Inc.
- * Copyright © 2007 Dave Airlie
- * Copyright © 2007-2008 Intel Corporation
+ * Copyright ?? 1997-2003 by The XFree86 Project, Inc.
+ * Copyright ?? 2007 Dave Airlie
+ * Copyright ?? 2007-2008 Intel Corporation
  *   Jesse Barnes <jesse.barnes@intel.com>
  * Copyright 2005-2006 Luc Verhaegen
  * Copyright (c) 2001, Andy Ritger  aritger@nvidia.com
@@ -230,7 +230,7 @@ struct drm_display_mode *drm_cvt_mode(struct drm_device *dev, int hdisplay,
 
 	if (!reduced) {
 		/* simplify the GTF calculation */
-		/* 4) Minimum time of vertical sync + back porch interval (µs)
+		/* 4) Minimum time of vertical sync + back porch interval (??s)
 		 * default 550.0
 		 */
 		int tmp1, tmp2;
@@ -290,7 +290,7 @@ struct drm_display_mode *drm_cvt_mode(struct drm_device *dev, int hdisplay,
 		drm_mode->vsync_end = drm_mode->vsync_start + vsync;
 	} else {
 		/* Reduced blanking */
-		/* Minimum vertical blanking interval time (µs)- default 460 */
+		/* Minimum vertical blanking interval time (??s)- default 460 */
 #define CVT_RB_MIN_VBLANK	460
 		/* Fixed number of clocks for horizontal sync */
 #define CVT_RB_H_SYNC		32

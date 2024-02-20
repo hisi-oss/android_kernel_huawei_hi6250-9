@@ -1,5 +1,5 @@
 /*
- * Copyright © 2006-2007 Intel Corporation
+ * Copyright ?? 2006-2007 Intel Corporation
  * Copyright (c) 2006 Dave Airlie <airlied@linux.ie>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a

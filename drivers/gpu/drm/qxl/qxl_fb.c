@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 Red Hat
+ * Copyright ?? 2013 Red Hat
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

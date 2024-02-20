@@ -17,7 +17,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * Authors: Rafał Miłecki <zajec5@gmail.com>
+ * Authors: Rafa?? Mi??ecki <zajec5@gmail.com>
  *          Alex Deucher <alexdeucher@gmail.com>
  */
 #include <drm/drmP.h>

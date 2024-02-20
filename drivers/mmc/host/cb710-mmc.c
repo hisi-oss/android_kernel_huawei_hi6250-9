@@ -1,7 +1,7 @@
 /*
  *  cb710/mmc.c
  *
- *  Copyright by Michał Mirosław, 2008-2009
+ *  Copyright by Micha?? Miros??aw, 2008-2009
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -774,7 +774,7 @@ static struct platform_driver cb710_mmc_driver = {
 
 module_platform_driver(cb710_mmc_driver);
 
-MODULE_AUTHOR("Michał Mirosław <mirq-linux@rere.qmqm.pl>");
+MODULE_AUTHOR("Micha?? Miros??aw <mirq-linux@rere.qmqm.pl>");
 MODULE_DESCRIPTION("ENE CB710 memory card reader driver - MMC/SD part");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:cb710-mmc");

@@ -619,7 +619,7 @@ static int nx842_OF_upd_maxsglen(struct nx842_devdata *devdata,
  *  that can be synchronously compressed. The second series of cells
  *  represents the maximums that can be synchronously decompressed.
  *  1. The first cell in each series contains the count of the number of
- *     data length, scatter list elements pairs that follow – each being
+ *     data length, scatter list elements pairs that follow ??? each being
  *     of the form
  *    a. One cell data byte length
  *    b. One cell total number of scatter list elements

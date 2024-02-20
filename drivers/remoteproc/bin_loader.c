@@ -11,7 +11,7 @@
  * Suman Anna <s-anna@ti.com>
  * Robert Tivy <rtivy@ti.com>
  * Armando Uribe De Leon <x0095078@ti.com>
- * Sjur Brændeland <sjur.brandeland@stericsson.com>
+ * Sjur Br??ndeland <sjur.brandeland@stericsson.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

@@ -106,9 +106,9 @@
 
 #define DEFAULT_SAMPLE_TIME		1000
 
-/* V at 25°C of 696 mV */
+/* V at 25??C of 696 mV */
 #define VF610_VTEMP25_3V0		950
-/* V at 25°C of 699 mV */
+/* V at 25??C of 699 mV */
 #define VF610_VTEMP25_3V3		867
 /* Typical sensor slope coefficient at all temperatures */
 #define VF610_TEMP_SLOPE_COEFF		1840
@@ -673,8 +673,8 @@ static int vf610_read_raw(struct iio_dev *indio_dev,
 		case IIO_TEMP:
 			/*
 			 * Calculate in degree Celsius times 1000
-			 * Using the typical sensor slope of 1.84 mV/°C
-			 * and VREFH_ADC at 3.3V, V at 25°C of 699 mV
+			 * Using the typical sensor slope of 1.84 mV/??C
+			 * and VREFH_ADC at 3.3V, V at 25??C of 699 mV
 			 */
 			*val = 25000 - ((int)info->value - VF610_VTEMP25_3V3) *
 					1000000 / VF610_TEMP_SLOPE_COEFF;

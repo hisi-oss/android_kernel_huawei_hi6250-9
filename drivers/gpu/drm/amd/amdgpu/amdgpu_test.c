@@ -19,7 +19,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * Authors: Michel Dänzer
+ * Authors: Michel D??nzer
  */
 #include <drm/drmP.h>
 #include <drm/amdgpu_drm.h>

@@ -2,7 +2,7 @@
  * and bytewerk.org candleLight USB CAN interfaces.
  *
  * Copyright (C) 2013-2016 Geschwister Schneider Technologie-,
- * Entwicklungs- und Vertriebs UG (Haftungsbeschränkt).
+ * Entwicklungs- und Vertriebs UG (Haftungsbeschr??nkt).
  * Copyright (C) 2016 Hubert Denkmair
  *
  * Many thanks to all socketcan devs!

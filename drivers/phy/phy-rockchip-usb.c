@@ -322,13 +322,13 @@ static const struct rockchip_usb_phy_pdata rk3188_pdata = {
 /*
  * Enable the bypass of uart2 data through the otg usb phy.
  * Original description in the TRM.
- * 1. Disable the OTG block by setting OTGDISABLE0 to 1’b1.
+ * 1. Disable the OTG block by setting OTGDISABLE0 to 1???b1.
  * 2. Disable the pull-up resistance on the D+ line by setting
- *    OPMODE0[1:0] to 2’b01.
+ *    OPMODE0[1:0] to 2???b01.
  * 3. To ensure that the XO, Bias, and PLL blocks are powered down in Suspend
- *    mode, set COMMONONN to 1’b1.
- * 4. Place the USB PHY in Suspend mode by setting SUSPENDM0 to 1’b0.
- * 5. Set BYPASSSEL0 to 1’b1.
+ *    mode, set COMMONONN to 1???b1.
+ * 4. Place the USB PHY in Suspend mode by setting SUSPENDM0 to 1???b0.
+ * 5. Set BYPASSSEL0 to 1???b1.
  * 6. To transmit data, controls BYPASSDMEN0, and BYPASSDMDATA0.
  * To receive data, monitor FSVPLUS0.
  *

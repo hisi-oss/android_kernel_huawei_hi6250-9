@@ -1,7 +1,7 @@
 /*
  * comedi/drivers/pcl730.c
  * Driver for Advantech PCL-730 and clones
- * José Luis Sánchez
+ * Jos?? Luis S??nchez
  */
 
 /*
@@ -13,7 +13,7 @@
  *   [ICP] ISO-730 (iso730), P8R8-DIO (p8r8dio), P16R16-DIO (p16r16dio),
  *   [Diamond Systems] OPMM-1616-XT (opmm-1616-xt), PEARL-MM-P (pearl-mm-p),
  *   IR104-PBF (ir104-pbf),
- * Author: José Luis Sánchez (jsanchezv@teleline.es)
+ * Author: Jos?? Luis S??nchez (jsanchezv@teleline.es)
  * Status: untested
  *
  * Configuration options:

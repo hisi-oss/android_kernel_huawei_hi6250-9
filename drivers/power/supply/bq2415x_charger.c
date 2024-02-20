@@ -1,7 +1,7 @@
 /*
  * bq2415x charger driver
  *
- * Copyright (C) 2011-2013  Pali Rohár <pali.rohar@gmail.com>
+ * Copyright (C) 2011-2013  Pali Roh??r <pali.rohar@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1810,6 +1810,6 @@ static struct i2c_driver bq2415x_driver = {
 };
 module_i2c_driver(bq2415x_driver);
 
-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
+MODULE_AUTHOR("Pali Roh??r <pali.rohar@gmail.com>");
 MODULE_DESCRIPTION("bq2415x charger driver");
 MODULE_LICENSE("GPL");

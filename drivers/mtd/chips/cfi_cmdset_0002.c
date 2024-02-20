@@ -495,15 +495,15 @@ static void cfi_fixup_m29ew_erase_suspend(struct map_info *map,
  * the RESUME command by using the udelay() function available in Linux.
  * The DELAY value must be tuned based on the customer's platform.
  * The maximum value that fixes the problem in all cases is 500us.
- * But, in our experience, a delay of 30 µs to 50 µs is sufficient
+ * But, in our experience, a delay of 30 ??s to 50 ??s is sufficient
  * in most cases.
- * We have chosen 500µs because this latency is acceptable.
+ * We have chosen 500??s because this latency is acceptable.
  */
 static void cfi_fixup_m29ew_delay_after_resume(struct cfi_private *cfi)
 {
 	/*
 	 * Resolving the Delay After Resume Issue see Micron TN-13-07
-	 * Worst case delay must be 500µs but 30-50µs should be ok as well
+	 * Worst case delay must be 500??s but 30-50??s should be ok as well
 	 */
 	if (is_m29ew(cfi))
 		cfi_udelay(500);

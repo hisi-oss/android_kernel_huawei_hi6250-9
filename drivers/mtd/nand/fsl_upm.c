@@ -1,7 +1,7 @@
 /*
  * Freescale UPM NAND driver.
  *
- * Copyright © 2007-2008  MontaVista Software, Inc.
+ * Copyright ?? 2007-2008  MontaVista Software, Inc.
  *
  * Author: Anton Vorontsov <avorontsov@ru.mvista.com>
  *

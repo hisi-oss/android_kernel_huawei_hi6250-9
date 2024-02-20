@@ -58,9 +58,9 @@ static int polar_curr_interval[POLAR_CURR_ARRAY_NUM] = {
 static int polar_curr_vector_interval[POLAR_CURR_ARRAY_VECTOR_NUM] = {
     200, 150, 400, 1000};
 
-/*----全极化OCV温度表 ----*/
-/*soc(0~100):2.5%一档
-55度40度25度10度5度0度-5度-10度-20度-----*/
+/*----??????OCV?????? ----*/
+/*soc(0~100):2.5%????
+55??40??25??10??5??0??-5??-10??-20??-----*/
 
 static int polar_temp_points[POLAR_OCV_PC_TEMP_COLS] = {
     55, 40, 25, 10, 5, 0, -5, -10, -20};
@@ -156,11 +156,11 @@ static int polar_linear_interpolate(int y0, int x0, int y1, int x1, int x)
 
 /*******************************************************
   Function:        interpolate_find_pos
-  Description:     找到数组中最接近x的值
-  Input:           数组int *x_array(从大到小排)
-                    数组大小int rows
-                    插值int x
-  Output:           插值后数组中最接近x的row1和row2
+  Description:     ????????????????x????
+  Input:           ????int *x_array(??????????)
+                    ????????int rows
+                    ????int x
+  Output:           ??????????????????x??row1??row2
   Return:          NA
 ********************************************************/
 static void interpolate_find_pos(const int *x_array, int rows, int x,
@@ -200,11 +200,11 @@ static void interpolate_find_pos(const int *x_array, int rows, int x,
 
 /*******************************************************
   Function:        interpolate_find_pos_reverse
-  Description:     找到数组中最接近x的值
-  Input:           数组int *x_array(从小到大排)
-                    数组大小int rows
-                    插值int x
-  Output:           插值后数组中最接近x的row1和row2
+  Description:     ????????????????x????
+  Input:           ????int *x_array(??????????)
+                    ????????int rows
+                    ????int x
+  Output:           ??????????????????x??row1??row2
   Return:          NA
 ********************************************************/
 static void interpolate_find_pos_reverse(const int *x_array, int rows, int x,
@@ -244,11 +244,11 @@ static void interpolate_find_pos_reverse(const int *x_array, int rows, int x,
 
 /*******************************************************
   Function:        interpolate_linear_x
-  Description:     找到数组中最接近x的值
-  Input:           数组int *x_array(从小到大排)
-                    数组大小int rows
-                    插值int x
-  Output:           插值后数组中最接近x的index
+  Description:     ????????????????x????
+  Input:           ????int *x_array(??????????)
+                    ????????int rows
+                    ????int x
+  Output:           ??????????????????x??index
   Return:          NA
 ********************************************************/
 static int interpolate_linear_x(int *x_array, const int *y_array, int rows, int x)
@@ -348,11 +348,11 @@ static int interpolate_two_dimension(polar_res_tbl* lut,
 
 /*******************************************************
   Function:        interpolate_nearest_x
-  Description:     找到数组中最接近x的值
-  Input:           数组int *x_array(从大到小排)
-                    数组大小int rows
-                    插值int x
-  Output:           插值后数组中最接近x的index
+  Description:     ????????????????x????
+  Input:           ????int *x_array(??????????)
+                    ????????int rows
+                    ????int x
+  Output:           ??????????????????x??index
   Return:          NA
 ********************************************************/
 static int interpolate_nearest_x(const int *x_array, int rows, int x)
@@ -376,11 +376,11 @@ static int interpolate_nearest_x(const int *x_array, int rows, int x)
 
 /*******************************************************
   Function:        interpolate_curr_vector
-  Description:     找到数组中最接近x的值
-  Input:           数组int *curr_array
-                    数组大小int rows
-                    插值int x
-  Output:           插值后对应矢量表中的电流向量index
+  Description:     ????????????????x????
+  Input:           ????int *curr_array
+                    ????????int rows
+                    ????int x
+  Output:           ????????????????????????????index
   Return:          NA
 ********************************************************/
 static int interpolate_curr_vector(const int *x_array, int rows, int x)
@@ -479,12 +479,12 @@ static int interpolate_polar_ocv(polar_ocv_tbl *lut,
 #endif
 /*******************************************************
   Function:        get_polar_vector
-  Description:     获取极化矢量数据
-  Input:           极化矢量表polar_x_y_z_tbl* polar_vector_lut
-                   电量中心值int soc
-                   当前电池温度temp
-                   极化电流int curr
-  Output:          极化矢量值
+  Description:     ????????????????
+  Input:           ??????????polar_x_y_z_tbl* polar_vector_lut
+                   ??????????int soc
+                   ????????????temp
+                   ????????int curr
+  Output:          ??????????
   Return:          NA
 ********************************************************/
 static int get_polar_vector_value(polar_x_y_z_tbl* lut,
@@ -503,12 +503,12 @@ static int get_polar_vector_value(polar_x_y_z_tbl* lut,
 
 /*******************************************************
   Function:        get_polar_vector_res
-  Description:     获取极化矢量数据
-  Input:           极化矢量表polar_x_y_z_tbl* polar_vector_lut
-                   电量中心值int soc
-                   当前电池温度temp
-                   极化电流int curr
-  Output:          极化矢量内阻
+  Description:     ????????????????
+  Input:           ??????????polar_x_y_z_tbl* polar_vector_lut
+                   ??????????int soc
+                   ????????????temp
+                   ????????int curr
+  Output:          ????????????
   Return:          NA
 ********************************************************/
 static int get_polar_vector_res(polar_res_tbl* lut,
@@ -529,11 +529,11 @@ static int get_polar_vector_res(polar_res_tbl* lut,
 
 /*******************************************************
   Function:        interpolate_linear_a
-  Description:     从当前温度正负3度内分别找到两个有效的a值进行插值
-  Input:           polar_learn_tbl a值自学习表
-                  batt_temp_index 当前温度对应查找表的索引
-                  soc_index当前电量对应查找表的索引
-  Output:           插值后当前温度对应的a值
+  Description:     ??????????????3??????????????????????a??????????
+  Input:           polar_learn_tbl a??????????
+                  batt_temp_index ????????????????????????
+                  soc_index????????????????????????
+  Output:           ????????????????????a??
   Return:          -1:no trained data found; others:trainded a value
 ********************************************************/
 static int interpolate_linear_a(polar_learn_tbl* lut, int batt_temp_index, int soc_index)
@@ -560,7 +560,7 @@ static int interpolate_linear_a(polar_learn_tbl* lut, int batt_temp_index, int s
         temp_index--;
         if (POLAR_LEARN_TEMP_COLS <= temp_index || 0 > temp_index)
             break;
-        /*因为25度后温度不连续，超过25度不再继续查找有效值*/
+        /*????25????????????????????25????????????????????*/
         if (lut->y_array[temp_index] >= TEMP_25_DEGREE)
             break;
     polar_debug("%s:vol:%ld, temp_index:%d\n", __func__, lut->value[soc_index][temp_index].polar_vol_mv, temp_index);
@@ -585,9 +585,9 @@ static int interpolate_linear_a(polar_learn_tbl* lut, int batt_temp_index, int s
 
 /*******************************************************
   Function:        record_polar_vol
-  Description:    记录2次极化电压值(5s更新)
-  Input:          long polar_vol_uv:极化电压值
-  Output:         2次极化电压值列表
+  Description:    ????2????????????(5s????)
+  Input:          long polar_vol_uv:??????????
+  Output:         2????????????????
   Return:          NA
 ********************************************************/
 static void record_polar_vol(long polar_vol_uv)
@@ -826,12 +826,12 @@ ssize_t polar_self_learn_show(struct device *dev, struct device_attribute *attr,
 
 /*******************************************************
   Function:        store_trained_a
-  Description:    记录学习到的a值
-  Input:          polar_learn_tbl* lut:自学习表
-                  int batt_temp_degc:电池温度
-                  int soc:当前电量
-                  long trained_a:自学习系数a
-                  long polar_vol_uv:本次自学习a值对应的极化电压
+  Description:    ????????????a??
+  Input:          polar_learn_tbl* lut:????????
+                  int batt_temp_degc:????????
+                  int soc:????????
+                  long trained_a:??????????a
+                  long polar_vol_uv:??????????a????????????????
   Output:         NA
   Return:          NA
 ********************************************************/
@@ -859,12 +859,12 @@ static void store_trained_a(polar_learn_tbl* lut, int batt_temp_degc, int soc,
 
 /*******************************************************
   Function:        get_trained_polar_vol
-  Description:    查询本次自学习a值对应的极化电压
-  Input:          polar_learn_tbl* lut:自学习表
-                  int batt_temp_degc:电池温度
-                  int soc:当前电量
+  Description:    ??????????????a????????????????
+  Input:          polar_learn_tbl* lut:????????
+                  int batt_temp_degc:????????
+                  int soc:????????
   Output:         NA
-  Return:         long polar_vol_uv:本次自学习a值对应的极化电压
+  Return:         long polar_vol_uv:??????????a????????????????
 ********************************************************/
 static short get_trained_polar_vol(polar_learn_tbl* lut, int batt_temp_degc, int soc)
 {
@@ -879,12 +879,12 @@ static short get_trained_polar_vol(polar_learn_tbl* lut, int batt_temp_degc, int
 
 /*******************************************************
   Function:        get_trained_a
-  Description:    查询本次自学习a值
-  Input:          polar_learn_tbl* lut:自学习表
-                  int batt_temp_degc:电池温度
-                  int soc:当前电量
+  Description:    ??????????????a??
+  Input:          polar_learn_tbl* lut:????????
+                  int batt_temp_degc:????????
+                  int soc:????????
   Output:         NA
-  Return:         long polar_vol_uv:本次自学习a值
+  Return:         long polar_vol_uv:??????????a??
 ********************************************************/
 static long get_trained_a(polar_learn_tbl* lut, int batt_temp_degc, int soc)
 {
@@ -898,17 +898,17 @@ static long get_trained_a(polar_learn_tbl* lut, int batt_temp_degc, int soc)
                     batt_temp_degc);
     polar_debug("%s:temp:%d,temp_idx:%d,soc:%d,soc_idx:%d\n", __func__,
         batt_temp_degc, batt_temp_index, soc, soc_index);
-    /*超出温度范围内，返回-1*/
+    /*????????????????????-1*/
     if (batt_temp_index >= POLAR_LEARN_TEMP_COLS || batt_temp_index  < 0)
         return -1;
-    /*超出电量范围内，返回-1*/
+    /*????????????????????-1*/
     if (soc_index >= POLAR_RES_PC_CURR_ROWS || soc_index < 0)
         return -1;
-    /*当前电量温度对应的自学习表中极化电压不为0，则认为a值有效*/
+    /*????????????????????????????????????????0????????a??????*/
     if (0 != lut->value[soc_index][batt_temp_index].polar_vol_mv) {
         trained_a = lut->value[soc_index][batt_temp_index].a_trained;
     } else if (TEMP_25_DEGREE > batt_temp_degc) {
-    /*如果当前温度小于25，且该温度、电量节点没有自学习值，可通过插值方式获取a值*/
+    /*????????????????25????????????????????????????????????????????????????a??*/
         trained_a = interpolate_linear_a(lut, batt_temp_index, soc_index);
     }
     return trained_a;
@@ -916,16 +916,16 @@ static long get_trained_a(polar_learn_tbl* lut, int batt_temp_degc, int soc)
 
 /*******************************************************
   Function:        could_vbat_learn_a
-  Description:    查询电池条件是否可以自学习
-  Input:          struct hisi_polar_device *di:设备信息
-                  int ocv_soc_mv:当前电量对应ocv
-                  int vol_now_mv:当前电压
-                  int cur:当前电流
-                  long polar_vol_uv:当前极化电压
-                  int temp:电池温度
-                  int soc:当前电量
+  Description:    ??????????????????????????
+  Input:          struct hisi_polar_device *di:????????
+                  int ocv_soc_mv:????????????ocv
+                  int vol_now_mv:????????
+                  int cur:????????
+                  long polar_vol_uv:????????????
+                  int temp:????????
+                  int soc:????????
   Output:         NA
-  Return:         TRUE:可以自学习/FALSE:不可以进行自学习
+  Return:         TRUE:??????????/FALSE:????????????????
 ********************************************************/
 static bool could_vbat_learn_a (struct hisi_polar_device *di, int ocv_soc_mv,
                                 int vol_now_mv, int cur, long polar_vol_uv,
@@ -938,46 +938,46 @@ static bool could_vbat_learn_a (struct hisi_polar_device *di, int ocv_soc_mv,
     if (NULL == di)
         return FALSE;
     polar_debug("%s:v_cutoff:%d\n", __func__, di->v_cutoff);
-    /*VBAT(tn)+I(tn)*RPCB> Vcutoff-100mV@放电电流为负*/
+    /*VBAT(tn)+I(tn)*RPCB> Vcutoff-100mV@????????????*/
     if (VBAT_LEARN_GAP_MV <= (int)di->v_cutoff - vol_now_mv)
         return FALSE;
-    /*即[OCV(tn)-VBAT(tn)+I(tn)*RPCB]/ [OCV(tn)-Vcutoff+I(tn)*RPCB]>0.8@放电电流为负*/
+    /*??[OCV(tn)-VBAT(tn)+I(tn)*RPCB]/ [OCV(tn)-Vcutoff+I(tn)*RPCB]>0.8@????????????*/
     vol_coe = (TENTH * (ocv_soc_mv - vol_now_mv)) /(ocv_soc_mv - (int)di->v_cutoff +
             (cur * ((int)di->r_pcb / UOHM_PER_MOHM))/UVOLT_PER_MVOLT);
     polar_debug("%s:vol_coe:%d, last_avgcurr_5s:%d\n", __func__, vol_coe, di->last_avgcurr_5s);
     if (VBAT_LEARN_COE_HIGH < vol_coe)
         return TRUE;
-    /*平均电流I<-1.5A@放电电流为负*/
+    /*????????I<-1.5A@????????????*/
     if (di->last_avgcurr_5s < VBAT_LEARN_AVGCURR_HIGH)
         return TRUE;
     polar_vol_trained = get_trained_polar_vol(&polar_learn_lut, temp, soc);
     polar_debug("%s:trained_vol:%ld\n", __func__, polar_vol_trained);
-    /*即0.6<[OCV(tn)-VBAT(tn)+I(tn)*RPCB]/ [OCV(tn)-Vcutoff+I(tn)*RPCB]≤0.8
-    且Vpert(tn)< Vpert_ training(SOCn ,Tempm) @放电电流为负*/
+    /*??0.6<[OCV(tn)-VBAT(tn)+I(tn)*RPCB]/ [OCV(tn)-Vcutoff+I(tn)*RPCB]??0.8
+    ??Vpert(tn)< Vpert_ training(SOCn ,Tempm) @????????????*/
     if (VBAT_LEARN_COE_LOW < vol_coe && polar_vol_mv < polar_vol_trained)
         return TRUE;
-    /*即-1.5A<最近5s放电平均电流I≤-0.5A
-    且Vpert(tn)< Vpert_ training(SOCn ,Tempm) @放电电流为正*/
+    /*??-1.5A<????5s????????????I??-0.5A
+    ??Vpert(tn)< Vpert_ training(SOCn ,Tempm) @????????????*/
     if (di->last_avgcurr_5s < VBAT_LEARN_AVGCURR_LOW
             && polar_vol_mv < polar_vol_trained)
         return TRUE;
-    /*不满足上述条件，则不进行自学习*/
+    /*??????????????????????????????*/
     return FALSE;
 }
 
 
 /*******************************************************
   Function:        could_learn_a
-  Description:    查询电池条件是否可以自学习
-  Input:          struct hisi_polar_device *di:设备信息
-                  int ocv_soc_mv:当前电量对应ocv
-                  int vol_now_mv:当前电压
-                  int cur:当前电流
-                  long polar_vol_uv:当前极化电压
-                  int temp:电池温度
-                  int soc:当前电量
+  Description:    ??????????????????????????
+  Input:          struct hisi_polar_device *di:????????
+                  int ocv_soc_mv:????????????ocv
+                  int vol_now_mv:????????
+                  int cur:????????
+                  long polar_vol_uv:????????????
+                  int temp:????????
+                  int soc:????????
   Output:         NA
-  Return:         TRUE:可以自学习/FALSE:不可以进行自学习
+  Return:         TRUE:??????????/FALSE:????????????????
 ********************************************************/
 static bool could_learn_a (struct hisi_polar_device *di, int ocv_soc_mv,
                                 int vol_now_mv, int cur, long polar_vol_uv,
@@ -987,7 +987,7 @@ static bool could_learn_a (struct hisi_polar_device *di, int ocv_soc_mv,
 
     if (NULL == di)
         return FALSE;
-    /*Vpert(tn-1)、Vpert(tn)<0@放电电流为负，且Vpert(tn)<Vpert(tn-1)*/
+    /*Vpert(tn-1)??Vpert(tn)<0@????????????????Vpert(tn)<Vpert(tn-1)*/
     if (0 <= polar_vol_uv)
         return FALSE;
     mutex_lock(&di->polar_vol_lock);
@@ -1003,7 +1003,7 @@ static bool could_learn_a (struct hisi_polar_device *di, int ocv_soc_mv,
         return FALSE;
     }
     mutex_unlock(&di->polar_vol_lock);
-    /*判断电池相关其他条件*/
+    /*????????????????????*/
     polar_debug("%s:ocv:%d,vol_now:%d,cur:%d,temp:%d,soc:%d\n", __func__,
                 ocv_soc_mv, vol_now_mv, cur, temp, soc);
     if (FALSE == could_vbat_learn_a(di, ocv_soc_mv, vol_now_mv, cur,
@@ -1037,11 +1037,11 @@ static bool could_update_b (struct hisi_polar_device *di, long polar_vol_uv)
 }
 /*******************************************************
   Function:        update_polar_error_b
-  Description:     更新极化电压b值
-  Input:           电量查表OCV ocv_soc_mv
-                   当前电压 vol_now_mv
-                   当前极化电压 polar_vol_uv
-  Output:          更新后的极化电压b值
+  Description:     ????????????b??
+  Input:           ????????OCV ocv_soc_mv
+                   ???????? vol_now_mv
+                   ???????????? polar_vol_uv
+  Output:          ????????????????b??
   Return:          NA
 ********************************************************/
 static void update_polar_error_b(int ocv_soc_mv, int vol_now_mv,
@@ -1062,10 +1062,10 @@ static void update_polar_error_b(int ocv_soc_mv, int vol_now_mv,
 
 /*******************************************************
   Function:        calc_weighted_a
-  Description:     加权平均计算a值
-  Input:          a_trained，需要加权的a值
-                  是否需要加入a值滤波队列 enqueue
-  Output:          平均后的a值
+  Description:     ????????????a??
+  Input:          a_trained????????????a??
+                  ????????????a?????????? enqueue
+  Output:          ????????a??
   Return:          NA
 ********************************************************/
 static long calc_weighted_a(long a_trained, int enqueue)
@@ -1097,8 +1097,8 @@ static long calc_weighted_a(long a_trained, int enqueue)
 
 /*******************************************************
   Function:        polar_learn_lut_init
-  Description:     自学习表初始化
-  Input:         自学习表lut
+  Description:     ??????????????
+  Input:         ????????lut
   Output:         NA
   Return:          NA
 ********************************************************/
@@ -1116,11 +1116,11 @@ static void polar_learn_lut_init(polar_learn_tbl* lut)
 }
 /*******************************************************
   Function:        update_polar_error_a
-  Description:     更新极化电压a值
-  Input:           电量查表OCV ocv_soc_mv
-                   当前电压 vol_now_mv
-                   当前极化电压 polar_vol_uv
-  Output:          更新后的极化电压a值
+  Description:     ????????????a??
+  Input:           ????????OCV ocv_soc_mv
+                   ???????? vol_now_mv
+                   ???????????? polar_vol_uv
+  Output:          ????????????????a??
   Return:          NA
 ********************************************************/
 static void update_polar_error_a(int ocv_soc_mv, int vol_now_mv, int cur,
@@ -1180,14 +1180,14 @@ get_a:
 }
 /*******************************************************
   Function:        get_estimate_max_avg_curr
-  Description:     计算最大负载电流
-  Input:           全局设备信息指针di
-                   soc当前电量
-                   polar_vol当前极化电压
-                   polar_past过去5s-20min内的极化电压
-                   电池温度batt_temp_degc
+  Description:     ????????????????
+  Input:           ????????????????di
+                   soc????????
+                   polar_vol????????????
+                   polar_past????5s-20min????????????
+                   ????????batt_temp_degc
   Output:
-  Return:         最大负载电流(mA)
+  Return:         ????????????(mA)
 ********************************************************/
 static int get_estimate_max_avg_curr(int ocv_soc_mv, int vol_now,
                 int soc, long polar_vol, long polar_past,
@@ -1235,7 +1235,7 @@ polar_past:%ld\n", __func__, polar_vol_future, ocv_soc_mv, v_cutoff,
         polar_debug("%s:res_zero:%d, polar_vector:%d, polar_res_future:%d,\
 res_vector:%d, res:%d\n", __func__, res_zero, polar_vector,
             polar_res_future, res_vector, res);
-        /*calculate polar_res_future in mΩ*/
+        /*calculate polar_res_future in m??*/
         polar_res_future = (polar_res_future * polar_err_a)
             /(POLAR_ERR_COE_MUL * POLAR_RES_MHOM_MUL) + r_pcb / UOHM_PER_MOHM;
         if (0 != polar_res_future)
@@ -1265,7 +1265,7 @@ res_vector:%d, res:%d\n", __func__, res_zero, polar_vector,
                         /res_vector;
                 polar_debug("%s:predict:curr_future:%d,res_zero:%d,\
 polar_res_future:%d\n", __func__, curr_future, res_zero, polar_res_future);
-                /*calculate polar_res_future in mΩ*/
+                /*calculate polar_res_future in m??*/
                 polar_res_future = (polar_res_future * polar_err_a)
                     /(POLAR_ERR_COE_MUL * POLAR_RES_MHOM_MUL)
                         + r_pcb / UOHM_PER_MOHM;
@@ -1285,12 +1285,12 @@ polar_res_future:%d\n", __func__, curr_future, res_zero, polar_res_future);
 
 /*******************************************************
   Function:        get_estimate_peak_curr
-  Description:     计算最大峰值电流
-  Input:           全局设备信息指针di
-                   soc当前电量
-                   电池温度batt_temp_degc
+  Description:     ????????????????
+  Input:           ????????????????di
+                   soc????????
+                   ????????batt_temp_degc
   Output:
-  Return:         最大峰值电流(mA)
+  Return:         ????????????(mA)
 ********************************************************/
 static int get_estimate_peak_curr(int ocv_soc_mv, long polar_vol, int soc,
                         int batt_temp_degc, int v_cutoff, int r_pcb)
@@ -1317,7 +1317,7 @@ static int get_estimate_peak_curr(int ocv_soc_mv, long polar_vol, int soc,
             batt_temp_degc, soc, curr_future, 0);
         if (0 != res_vector)
             res_zero = (res_zero * res) / res_vector;
-        /*voltage in uv,resistence in mΩ,curr in mA*/
+        /*voltage in uv,resistence in m??,curr in mA*/
         curr_temp = ((long)(ocv_soc_mv - v_cutoff) * UVOLT_PER_MVOLT
               -(polar_err_b1 + polar_err_a * polar_err_b2 / POLAR_ERR_COE_MUL))
                     /(r_pcb / UOHM_PER_MOHM + polar_err_a * res_zero
@@ -1340,7 +1340,7 @@ ocv_soc_mv:%d, v_cutoff:%d\n", __func__, curr_future, res_zero,
                 batt_temp_degc, soc, curr_future, 0);
             if (0 != res_vector)
                 res_zero = (res_zero * res) / res_vector;
-            /*voltage in uv,resistence in mΩ,curr in mA*/
+            /*voltage in uv,resistence in m??,curr in mA*/
             curr_temp = ((long)(ocv_soc_mv - v_cutoff) * UVOLT_PER_MVOLT
                -(polar_err_b1 + polar_err_a * polar_err_b2 / POLAR_ERR_COE_MUL))
                         /(r_pcb / UOHM_PER_MOHM + polar_err_a * res_zero
@@ -1358,14 +1358,14 @@ ocv_soc_mv:%d, v_cutoff:%d\n", __func__, curr_future, res_zero,
 
 /*******************************************************
   Function:        calculate_polar_volatge
-  Description:     计算极化电压
-  Input:           全局设备信息指针di
-                   极化矢量表polar_x_y_z_tbl* polar_vector_lut
-                   极化阻抗表polar_res_tbl* polar_res_lut
-                   当前电量int soc
-                   当前电池温度temp
+  Description:     ????????????
+  Input:           ????????????????di
+                   ??????????polar_x_y_z_tbl* polar_vector_lut
+                   ??????????polar_res_tbl* polar_res_lut
+                   ????????int soc
+                   ????????????temp
   Output:
-  Return:          极化电压(uV)
+  Return:          ????????(uV)
 ********************************************************/
 static long calculate_polar_volatge(int soc, int temp)
 {
@@ -1392,7 +1392,7 @@ static long calculate_polar_volatge(int soc, int temp)
                     temp, soc_avg, abs(curr_avg));
             polar_vector = get_polar_vector_value(&polar_vector_lut,
                     temp, soc_avg, abs(curr_avg), t_index + 1);
-            /*curr_avg is in ma, ratio is in percentage, res is in 0.1mΩ*/
+            /*curr_avg is in ma, ratio is in percentage, res is in 0.1m??*/
             if (0 != res_vector)
                 vol_sum += (long)curr_avg * ((((long)ratio
                     *(res / POLAR_RES_MHOM_MUL))/POLAR_RATIO_PERCENTAGE)
@@ -1406,15 +1406,15 @@ static long calculate_polar_volatge(int soc, int temp)
 
 /*******************************************************
   Function:        calculate_polar_vol_r0
-  Description:     计算极化电压
-  Input:           全局设备信息指针di
-                   极化矢量表polar_x_y_z_tbl* polar_vector_lut
-                   极化阻抗表polar_res_tbl* polar_res_lut
-                   当前电量int soc
-                   当前电池温度temp
-                   当前电流curr
+  Description:     ????????????
+  Input:           ????????????????di
+                   ??????????polar_x_y_z_tbl* polar_vector_lut
+                   ??????????polar_res_tbl* polar_res_lut
+                   ????????int soc
+                   ????????????temp
+                   ????????curr
   Output:
-  Return:          R0对应的极化电压(uV)
+  Return:          R0??????????????(uV)
 ********************************************************/
 static long calculate_polar_vol_r0(int soc, int temp, int curr)
 {
@@ -1436,9 +1436,9 @@ static long calculate_polar_vol_r0(int soc, int temp, int curr)
 
 /*******************************************************
   Function:        add_polar_info
-  Description:     极化数据求和
+  Description:     ????????????
   Input:          struct ploarized_info *ppolar, int t_index
-  Output:         t_index某个时间区间内的极化数据求和
+  Output:         t_index????????????????????????????
   Return:          NA
 ********************************************************/
 static void add_polar_info(int current_ma, int duration, int t_index)
@@ -1447,13 +1447,13 @@ static void add_polar_info(int current_ma, int duration, int t_index)
 
     if (0 > t_index || POLAR_TIME_ARRAY_NUM <= t_index || 0 >= duration)
         return;
-    /*找到对应的电流区间*/
+    /*??????????????????*/
     for (curr_index = 0; curr_index < POLAR_CURR_ARRAY_NUM; curr_index++){
         if (abs(current_ma) <= polar_curr_interval[curr_index])
             break;
     }
-    /*反极化是否需要考虑，方案中没有标明，电流用绝对值代替*/
-    /*电流大于2c的情况也要计算到POLAR_CURR_ARRAY_NUM*/
+    /*????????????????????????????????????????????????????*/
+    /*????????2c????????????????POLAR_CURR_ARRAY_NUM*/
     polar_avg_curr_info[t_index][curr_index].current_avg +=
                                     ((long)current_ma * duration);
     polar_avg_curr_info[t_index][curr_index].cnt++;
@@ -1486,15 +1486,15 @@ static void update_polar_avg_curr(struct hisi_polar_device *di, int predict_msec
                     di->last_avgcurr_5s, di->last_avgcurr_25s);
     }
 
-    /*求Tn区间内的各电流区间平均电流*/
+    /*??Tn??????????????????????????*/
     for (t_index = 0; t_index < POLAR_TIME_ARRAY_NUM; t_index++) {
         for (curr_index = 0; curr_index < (POLAR_CURR_ARRAY_NUM + 1);
                     curr_index++){
-            /*平均电流计算cc/t*/
+            /*????????????cc/t*/
             if (0 != polar_avg_curr_info[t_index][curr_index].duration) {
                 polar_avg_curr_info[t_index][curr_index].current_avg /=
                 polar_avg_curr_info[t_index][curr_index].duration;
-            /*电流对应时间比例计算*/
+            /*????????????????????*/
                 if (0 != t_index)
                     time_interval = (int)(polar_sample_interval[t_index]
                                     - polar_sample_interval[t_index - 1]);
@@ -1519,9 +1519,9 @@ static void update_polar_avg_curr(struct hisi_polar_device *di, int predict_msec
 
 /*******************************************************
   Function:        polar_info_calc
-  Description:     极化数据计算
+  Description:     ????????????
   Input:          struct smartstar_coul_device *di
-  Output:         分Tn区间极化电流和ratio、电量中心值
+  Output:         ??Tn??????????????ratio????????????
   Return:          NA
 ********************************************************/
 static void polar_info_calc(struct hisi_polar_device *di, int predict_msec)
@@ -1544,7 +1544,7 @@ static void polar_info_calc(struct hisi_polar_device *di, int predict_msec)
                         struct ploarized_info, list);
     last_soc_avg = ppolar_head->soc_now;
     head_sample_time = ppolar_head->sample_time + predict_msec;
-    /*遍历循环链表，求Tn时间内各电流区间的平均电流*/
+    /*????????????????Tn??????????????????????????*/
     list_for_each(pos, &(di->polar_head.list)){
         ppolar = list_entry(pos, struct ploarized_info, list);
         node_sample_time = ppolar->sample_time;
@@ -1570,20 +1570,20 @@ static void polar_info_calc(struct hisi_polar_device *di, int predict_msec)
                         -temp_duration_time;
                     node_sample_time = head_sample_time
                         -polar_sample_interval[t_index];
-                    /*求Tn区间内的电量中心值*/
+                    /*??Tn??????????????????*/
                     polar_avg_curr_info[t_index][0].soc_avg =
                         TWO_AVG(ppolar->soc_now, last_soc_avg);
                     last_soc_avg = ppolar->soc_now;
-                    /*节点的时间相对头结点超过Tn，进入下一个Tn区间*/
+                    /*????????????????????????Tn????????????Tn????*/
                     t_index++;
                 }
         } else {
         /*sample end time of each node is in Tn*/
-            /*求Tn区间内的电量中心值*/
+            /*??Tn??????????????????*/
                 polar_avg_curr_info[t_index][0].soc_avg =
                         TWO_AVG(ppolar->soc_now, last_soc_avg);
                 last_soc_avg = ppolar->soc_now;
-                /*节点的时间相对头结点超过Tn，进入下一个Tn区间*/
+                /*????????????????????????Tn????????????Tn????*/
                 t_index++;
             }
         }
@@ -1593,11 +1593,11 @@ static void polar_info_calc(struct hisi_polar_device *di, int predict_msec)
 
 /*******************************************************
   Function:        fill_up_polar_fifo
-  Description:     极化数据放入fifo中
-  Input:           极化数据struct ploarized_info *ppolar
-                   head:极化数据索引的链表头
-                   rbuffer:极化数据存放的循环buffer
-                   total_sample_time:该buffer存放数据的总采样时间
+  Description:     ????????????fifo??
+  Input:           ????????struct ploarized_info *ppolar
+                   head:????????????????????
+                   rbuffer:??????????????????buffer
+                   total_sample_time:??buffer????????????????????
   Output:       NA
   Return:       NA
 ********************************************************/
@@ -1726,12 +1726,12 @@ static enum hrtimer_restart sample_timer_func(struct hrtimer *timer)
 
 /*******************************************************
   Function:        get_polar_vol
-  Description:     获取极化电压
+  Description:     ????????????
   Input:          soc_now:0.1% percent
-                  batt_temp:℃
+                  batt_temp:??
                   curr_now:ma
   Output:
-  Return:          极化电压(uV)
+  Return:          ????????(uV)
 ********************************************************/
 static long get_polar_vol(struct hisi_polar_device *di, int soc_now,
                             int batt_temp, int curr_now)
@@ -1747,11 +1747,11 @@ static long get_polar_vol(struct hisi_polar_device *di, int soc_now,
 
 /*******************************************************
   Function:        copy_fifo_buffer
-  Description:     将fifo中的35s数据拷贝到20min的buffer
-  Input:           fifo_head:fifo的链表头
-                   polar_head:极化buffer的链表头
-                   fifo_rbuffer:fifo的循环buffer
-                   polar_rbuffer:极化信息的循环buffer
+  Description:     ??fifo????35s??????????20min??buffer
+  Input:           fifo_head:fifo????????
+                   polar_head:????buffer????????
+                   fifo_rbuffer:fifo??????buffer
+                   polar_rbuffer:??????????????buffer
   Output:          NA
   Return:          NA
 ********************************************************/
@@ -1777,7 +1777,7 @@ void copy_fifo_buffer(struct list_head* fifo_head,
 }
 /*******************************************************
   Function:        sync_sample_info
-  Description:     极化数据同步
+  Description:     ????????????
   Input:           NA
   Output:          NA
   Return:          NA
@@ -1849,8 +1849,8 @@ void sync_sample_info(void)
 EXPORT_SYMBOL(sync_sample_info);
 /*******************************************************
   Function:        is_polar_list_ready
-  Description:     判断极化数据链表是否满20min
-         注意:只在resume时调用，不做spinlock互斥
+  Description:     ??????????????????????20min
+         ????:????resume????????????spinlock????
   Input:           NA
   Output:          NA
   Return:          TRUE/FALSE
@@ -1875,14 +1875,14 @@ bool is_polar_list_ready(void)
 EXPORT_SYMBOL(is_polar_list_ready);
 /*******************************************************
   Function:        get_resume_polar_info
-  Description:     获取唤醒极化数据，并复制到fifo中
-              注意:只在resume中调用，没有做互斥处理
-  Input:           int eco_ibat:eco下t0时刻电流采样值
-                   int curr:t0时刻之前的平均电流
-                   int duration:t0时刻之前的平均电流持续时间
-                   int sample_time:t0时刻的采样时间(rtc时间)
-                   int temp:当前温度
-                   int soc:当前电量
+  Description:     ??????????????????????????fifo??
+              ????:????resume??????????????????????
+  Input:           int eco_ibat:eco??t0??????????????
+                   int curr:t0??????????????????
+                   int duration:t0??????????????????????????
+                   int sample_time:t0??????????????(rtc????)
+                   int temp:????????
+                   int soc:????????
   Output:          NA
   Return:          NA
 ********************************************************/
@@ -1929,7 +1929,7 @@ void get_resume_polar_info(int eco_ibat, int curr, int duration, int sample_time
 EXPORT_SYMBOL(get_resume_polar_info);
 /*******************************************************
   Function:        start_polar_sample
-  Description:     开始采样定时器
+  Description:     ??????????????
   Input:           NA
   Output:          NA
   Return:          NA
@@ -1952,7 +1952,7 @@ void start_polar_sample(void)
 EXPORT_SYMBOL(start_polar_sample);
 /*******************************************************
   Function:        start_polar_sample
-  Description:     停止采样定时器
+  Description:     ??????????????
   Input:           NA
   Output:          NA
   Return:          NA
@@ -1968,13 +1968,13 @@ void stop_polar_sample(void)
 EXPORT_SYMBOL(stop_polar_sample);
 /*******************************************************
   Function:        polar_params_calculate
-  Description:     更新极化数据和供电能力
-  Input:           struct polar_calc_info* polar:极化数据结构体
-                   int ocv_soc_mv:当前电量对应ocv
-                   int vol_now:当前电压
-                   int cur:当前电流
-                   bool update_a:是否更新修正系数
-  Output:          更新极化数据和供电能力
+  Description:     ??????????????????????
+  Input:           struct polar_calc_info* polar:??????????????
+                   int ocv_soc_mv:????????????ocv
+                   int vol_now:????????
+                   int cur:????????
+                   bool update_a:????????????????
+  Output:          ??????????????????????
   Return:          NA
 ********************************************************/
 int polar_params_calculate(struct polar_calc_info* polar,int ocv_soc_mv,
@@ -2025,12 +2025,12 @@ EXPORT_SYMBOL(polar_params_calculate);
 
 /*******************************************************
   Function:        polar_ocv_params_calc
-  Description:     更新极化OCV数据
-  Input:           struct polar_calc_info* polar:极化数据结构体
-                   int batt_soc_real:当前电量
-                   int temp:当前温度
-                   int cur:当前电流
-  Output:          更新极化ocv数据
+  Description:     ????????OCV????
+  Input:           struct polar_calc_info* polar:??????????????
+                   int batt_soc_real:????????
+                   int temp:????????
+                   int cur:????????
+  Output:          ????????ocv????
   Return:          NA
 ********************************************************/
 int polar_ocv_params_calc(struct polar_calc_info* polar,
@@ -2055,7 +2055,7 @@ EXPORT_SYMBOL(polar_ocv_params_calc);
 
 /*******************************************************
   Function:        clear_polar_err_b
-  Description:     清空修正系数b值，只在ocv更新时起作用，流程需要保证互斥
+  Description:     ????????????b????????ocv??????????????????????????????
   Input:          NA
   Output:          NA
   Return:          NA
@@ -2345,9 +2345,9 @@ static DEVICE_ATTR(self_learn_value, (S_IRUSR | S_IRGRP), polar_self_learn_show,
 #endif
 /*******************************************************
   Function:        polar_info_init
-  Description:     极化相关数据初始化(根据电池容量初始化电流档位)
+  Description:     ??????????????????(??????????????????????????)
   Input:          struct smartstar_coul_device *di
-  Output:           初始化后的极化档位数据
+  Output:           ??????????????????????
   Return:          NA
 ********************************************************/
 static int polar_info_init(struct hisi_polar_device *di)

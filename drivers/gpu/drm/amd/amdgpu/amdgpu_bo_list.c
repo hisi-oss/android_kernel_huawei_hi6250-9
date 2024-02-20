@@ -25,7 +25,7 @@
  */
 /*
  * Authors:
- *    Christian König <deathsimple@vodafone.de>
+ *    Christian K??nig <deathsimple@vodafone.de>
  */
 
 #include <drm/drmP.h>

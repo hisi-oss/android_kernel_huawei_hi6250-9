@@ -4,7 +4,7 @@
 * Version:       0.1.2
 * Description:   Irda KingSun Dazzle USB Dongle
 * Status:        Experimental
-* Author:        Alex Villacís Lasso <a_villacis@palosanto.com>
+* Author:        Alex Villac??s Lasso <a_villacis@palosanto.com>
 *
 *    Based on stir4200, mcs7780, kingsun-sir drivers.
 *
@@ -808,6 +808,6 @@ static struct usb_driver irda_driver = {
 
 module_usb_driver(irda_driver);
 
-MODULE_AUTHOR("Alex Villacís Lasso <a_villacis@palosanto.com>");
+MODULE_AUTHOR("Alex Villac??s Lasso <a_villacis@palosanto.com>");
 MODULE_DESCRIPTION("IrDA-USB Dongle Driver for KingSun Dazzle");
 MODULE_LICENSE("GPL");

@@ -11,7 +11,7 @@
  *
  * Copyright (C) 1995-1997 Simon G. Vogl, 1998-2000 Hans Berglund
  *
- * And which acknowledged Kyösti Mälkki <kmalkki@cc.hut.fi>,
+ * And which acknowledged Ky??sti M??lkki <kmalkki@cc.hut.fi>,
  * Frodo Looijaard <frodol@dds.nl>, Martin Bailey<mbailey@littlefeet-inc.com>
  *
  * Major cleanup by Deepak Saxena <dsaxena@plexity.net>, 01/2005:

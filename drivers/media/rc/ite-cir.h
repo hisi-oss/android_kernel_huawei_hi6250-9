@@ -1,7 +1,7 @@
 /*
  * Driver for ITE Tech Inc. IT8712F/IT8512F CIR
  *
- * Copyright (C) 2010 Juan Jesús García de Soria <skandalfo@gmail.com>
+ * Copyright (C) 2010 Juan Jes??s Garc??a de Soria <skandalfo@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -211,7 +211,7 @@ struct ite_dev {
  * hardware data obtained from:
  *
  * IT8712F
- * Environment Control – Low Pin Count Input / Output
+ * Environment Control ??? Low Pin Count Input / Output
  * (EC - LPC I/O)
  * Preliminary Specification V0. 81
  */

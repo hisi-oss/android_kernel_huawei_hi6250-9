@@ -2,7 +2,7 @@
  * Support functions for OMAP GPIO
  *
  * Copyright (C) 2003-2005 Nokia Corporation
- * Written by Juha Yrjölä <juha.yrjola@nokia.com>
+ * Written by Juha Yrj??l?? <juha.yrjola@nokia.com>
  *
  * Copyright (C) 2009 Texas Instruments
  * Added OMAP4 support - Santosh Shilimkar <santosh.shilimkar@ti.com>

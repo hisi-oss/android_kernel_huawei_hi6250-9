@@ -45,7 +45,7 @@ void qla4xxx_process_mbox_intr(struct scsi_qla_host *ha, int out_count)
 }
 
 /**
- * qla4xxx_is_intr_poll_mode – Are we allowed to poll for interrupts?
+ * qla4xxx_is_intr_poll_mode ??? Are we allowed to poll for interrupts?
  * @ha: Pointer to host adapter structure.
  * @ret: 1=polling mode, 0=non-polling mode
  **/

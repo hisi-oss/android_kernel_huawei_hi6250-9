@@ -69,7 +69,7 @@ fi_flow_node *fi_flow_add(fi_pkt *pktinfo, fi_flow_head *head)
 {
 	fi_flow_node *newnode;
 
-	/* 流规模超出上限 */
+	/* ?????????????? */
 	if (atomic_read(&g_fi_flow.nodenum) > FI_FLOW_NODE_LIMIT)
 	{
 		FI_LOGD(" : FI flow node out of limit");
@@ -184,12 +184,12 @@ void fi_flow_clear(void)
 	fi_flow_node *node;
 	fi_flow_node *tmp;
 
-	/* 遍历hash桶 */
+	/* ????hash?? */
 	for (i = 0; i < FI_FLOW_TABLE_SIZE; i++)
 	{
 		head = g_fi_flow.flow_table + i;
 
-		/* 遍历链表, 释放流结点 */
+		/* ????????, ?????????? */
 		if (list_empty(&(head->list)))
 		{
 			continue;

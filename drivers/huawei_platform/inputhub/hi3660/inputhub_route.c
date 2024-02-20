@@ -3139,7 +3139,7 @@ int is_ps_near(void)
 	if(-1 != vibrator_ps_data)
 		return vibrator_ps_data;
 	else
-		return 1;  //Ä¬ÈÏÔ¶Àë
+		return 1;  //????????
 }
 int is_vibrator_issue_gesture(void)
 {

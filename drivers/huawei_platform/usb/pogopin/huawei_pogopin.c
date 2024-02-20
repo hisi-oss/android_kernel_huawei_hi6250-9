@@ -374,7 +374,7 @@ static int set_direction_request_irq(struct pogopin_device_info *di)
 		hw_pogopin_err("pogopin_device error");
 		return ret;
 	}
-	//GPIO 方向设置
+	//GPIO ????????????
 	ret = gpio_direction_output(di->usb_switch_gpio, 0);
 	if (ret < 0) {
 		hw_pogopin_err("Could not set usb_switch_gpio direction.\n");
@@ -407,7 +407,7 @@ static int set_direction_request_irq(struct pogopin_device_info *di)
 		hw_pogopin_err("Could not set typec_int_gpio direction.\n");
 		goto out;
 	}
-	//获取中断号
+	//???????????????
 	di->pogopin_int_irq = gpio_to_irq(di->pogopin_int_gpio);
 	if (di->pogopin_int_irq < 0) {
 		hw_pogopin_err("could not map pogopin_int_gpio to irq\n");
@@ -416,7 +416,7 @@ static int set_direction_request_irq(struct pogopin_device_info *di)
 	}
 	hw_pogopin_dbg("%s-%d di->pogopin_int_irq = %d\n ", __func__, __LINE__, di->pogopin_int_irq);
 
-	//注册中断
+	//????????????
 	gpio_value = gpio_get_value(di->pogopin_int_gpio);
 
 	if (0 == gpio_value){  //Pogopin insert
@@ -466,7 +466,7 @@ static int parse_and_request_gpios(struct pogopin_device_info *di, struct device
 	if(!pogopin_support){
 		return ret;
 	}
-	// usb 切换GPIO
+	// usb ??????GPIO
 	di->usb_switch_gpio = of_get_named_gpio(np, "usb_switch_gpio", 0);
 	if (!gpio_is_valid(di->usb_switch_gpio)) {
 		hw_pogopin_err("usb_switch_gpio is not valid\n");
@@ -475,14 +475,14 @@ static int parse_and_request_gpios(struct pogopin_device_info *di, struct device
 	}
 	hw_pogopin_dbg("%s-%d di->usb_switch_gpio = %d\n ", __func__, __LINE__, di->usb_switch_gpio);
 
-	//GPIO 请求
+	//GPIO ??????
 	ret = gpio_request(di->usb_switch_gpio, "usb_switch");
 	if (ret) {
 		hw_pogopin_err("could not request usb_switch_gpio\n");
 		goto gpio_request_usb_switch_failed;
 	}
 
-	//power 切换GPIO
+	//power ??????GPIO
 	di->power_switch_gpio = of_get_named_gpio(np, "power_switch_gpio", 0);
 	if (!gpio_is_valid(di->power_switch_gpio)) {
 		hw_pogopin_err("power_switch_gpio is not valid\n");
@@ -499,7 +499,7 @@ static int parse_and_request_gpios(struct pogopin_device_info *di, struct device
 	}
 	hw_pogopin_dbg("%s-%d di->switch_power_gpio = %d\n", __func__, __LINE__, di->switch_power_gpio);
 
-	//GPIO 请求
+	//GPIO ??????
 	ret = gpio_request(di->power_switch_gpio, "power_switch");
 	if (ret) {
 		hw_pogopin_err("could not request power_switch_gpio\n");
@@ -511,7 +511,7 @@ static int parse_and_request_gpios(struct pogopin_device_info *di, struct device
 		hw_pogopin_err("could not request switch_power_gpio\n");
 		goto gpio_request_switch_power_failed;
 	}
-	//buck 切换GPIO
+	//buck ??????GPIO
 	di->buck_boost_gpio = of_get_named_gpio(np, "buck_boost_gpio", 0);
 	if (!gpio_is_valid(di->buck_boost_gpio)) {
 		hw_pogopin_err("buck_boost_gpio is not valid\n");
@@ -520,14 +520,14 @@ static int parse_and_request_gpios(struct pogopin_device_info *di, struct device
 	}
 	hw_pogopin_dbg("%s-%d di->buck_boost_gpio = %d\n", __func__, __LINE__, di->buck_boost_gpio);
 
-	//GPIO 请求
+	//GPIO ??????
 	ret = gpio_request(di->buck_boost_gpio, "buck_boost");
 	if (ret) {
 		hw_pogopin_err("could not request buck_boost_gpio\n");
 		goto gpio_request_buck_boost_failed;
 	}
 
-	//pogopin 中断 GPIO
+	//pogopin ?????? GPIO
 	di->pogopin_int_gpio = of_get_named_gpio(np, "pogopin_int_gpio", 0);
 	if (!gpio_is_valid(di->pogopin_int_gpio)) {
 		hw_pogopin_err("pogopin_int_gpio is not valid\n");
@@ -536,14 +536,14 @@ static int parse_and_request_gpios(struct pogopin_device_info *di, struct device
 	}
 	hw_pogopin_dbg("%s-%d di->pogopin_int_gpio = %d\n", __func__, __LINE__, di->pogopin_int_gpio);
 
-	//GPIO 请求
+	//GPIO ??????
 	ret = gpio_request(di->pogopin_int_gpio, "pogopin_int");
 	if (ret) {
 		hw_pogopin_err("could not request pogopin_int_gpio\n");
 		goto gpio_request_pogopin_int_failed;
 	}
 
-	//typec 中断 GPIO
+	//typec ?????? GPIO
 	di->typec_int_gpio = of_get_named_gpio(np, "typec_int_gpio", 0);
 	if (!gpio_is_valid(di->typec_int_gpio)) {
 		hw_pogopin_err("typec_int_gpio is not valid\n");
@@ -552,7 +552,7 @@ static int parse_and_request_gpios(struct pogopin_device_info *di, struct device
 	}
 	hw_pogopin_dbg("%s-%d di->typec_int_gpio = %d\n", __func__, __LINE__, di->typec_int_gpio);
 
-	//GPIO 请求
+	//GPIO ??????
 	ret = gpio_request(di->typec_int_gpio, "typec_int");
 	if (ret) {
 		hw_pogopin_err("could not request typec_int_gpio\n");
@@ -615,7 +615,7 @@ static int pogopin_probe(struct platform_device *pdev)
 		return ret;
 	}
 
-	//分配内存
+	//????????????
 	di = (struct pogopin_device_info *)devm_kzalloc(&pdev->dev, sizeof(*di), GFP_KERNEL);
 	if (NULL == di) {
 		hw_pogopin_err("%s alloc pogopin_dev failed! not enough memory\n", __func__);

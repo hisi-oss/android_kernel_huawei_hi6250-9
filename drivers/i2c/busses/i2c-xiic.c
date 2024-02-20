@@ -463,7 +463,7 @@ static irqreturn_t xiic_process(int irq, void *dev_id)
 			xiic_wakeup(i2c, STATE_ERROR);
 	}
 	if (pend & (XIIC_INTR_TX_EMPTY_MASK | XIIC_INTR_TX_HALF_MASK)) {
-		/* Transmit register/FIFO is empty or ½ empty */
+		/* Transmit register/FIFO is empty or ?? empty */
 
 		clr |= (pend &
 			(XIIC_INTR_TX_EMPTY_MASK | XIIC_INTR_TX_HALF_MASK));

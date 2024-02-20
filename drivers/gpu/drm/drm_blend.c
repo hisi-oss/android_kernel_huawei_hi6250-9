@@ -118,7 +118,7 @@
  * like the zpos property. Otherwise it's not possible to allow different
  * rotation modes on different planes.
  *
- * Since a rotation by 180° degress is the same as reflecting both along the x
+ * Since a rotation by 180?? degress is the same as reflecting both along the x
  * and the y axis the rotation property is somewhat redundant. Drivers can use
  * drm_rotation_simplify() to normalize values of this property.
  *

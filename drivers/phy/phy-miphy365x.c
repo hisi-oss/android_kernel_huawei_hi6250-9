@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 STMicroelectronics – All Rights Reserved
+ * Copyright (C) 2014 STMicroelectronics ??? All Rights Reserved
  *
  * STMicroelectronics PHY driver MiPHY365 (for SoC STiH416).
  *

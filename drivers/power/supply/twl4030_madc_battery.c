@@ -2,7 +2,7 @@
  * Dumb driver for LiIon batteries using TWL4030 madc.
  *
  * Copyright 2013 Golden Delicious Computers
- * Lukas Märdian <lukas@goldelico.com>
+ * Lukas M??rdian <lukas@goldelico.com>
  *
  * Based on dumb driver for gta01 battery
  * Copyright 2009 Openmoko, Inc
@@ -273,6 +273,6 @@ static struct platform_driver twl4030_madc_battery_driver = {
 module_platform_driver(twl4030_madc_battery_driver);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Lukas Märdian <lukas@goldelico.com>");
+MODULE_AUTHOR("Lukas M??rdian <lukas@goldelico.com>");
 MODULE_DESCRIPTION("twl4030_madc battery driver");
 MODULE_ALIAS("platform:twl4030_madc_battery");

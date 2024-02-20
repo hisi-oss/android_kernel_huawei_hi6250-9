@@ -47,7 +47,7 @@ static int htu21_read_raw(struct iio_dev *indio_dev,
 	switch (mask) {
 	case IIO_CHAN_INFO_PROCESSED:
 		switch (channel->type) {
-		case IIO_TEMP:	/* in milli °C */
+		case IIO_TEMP:	/* in milli ??C */
 			ret = ms_sensors_ht_read_temperature(dev_data,
 							     &temperature);
 			if (ret)

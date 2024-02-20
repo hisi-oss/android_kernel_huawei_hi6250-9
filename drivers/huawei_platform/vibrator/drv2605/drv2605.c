@@ -518,12 +518,12 @@ static void drv2605_change_mode(struct i2c_client *client, char mode)
 
 /*******************************************************************************************
 Function:	read_vibrator_calib_value_from_nv
-Description:   读取NV项中的vibrator 校准数据
-Data Accessed:  无
-Data Updated:   无
-Input:         无
-Output:         无
-Return:         成功或者失败信息: 0->成功, -1->失败
+Description:   ????NV??????vibrator ????????
+Data Accessed:  ??
+Data Updated:   ??
+Input:         ??
+Output:         ??
+Return:         ????????????????: 0->????, -1->????
 *******************************************************************************************/
 static int read_vibrator_calib_value_from_nv(void)
 {
@@ -555,12 +555,12 @@ static int read_vibrator_calib_value_from_nv(void)
 
 /*******************************************************************************************
 Function:	write_vibrator_calib_value_to_nv
-Description:  将temp数据写入NV 项中
-Data Accessed:  无
-Data Updated:   无
-Input:        vibrator 校准值
-Output:         无
-Return:         成功或者失败信息: 0->成功, -1->失败
+Description:  ??temp????????NV ????
+Data Accessed:  ??
+Data Updated:   ??
+Input:        vibrator ??????
+Output:         ??
+Return:         ????????????????: 0->????, -1->????
 *******************************************************************************************/
 static int write_vibrator_calib_value_to_nv(char *temp)
 {
@@ -601,12 +601,12 @@ static int write_vibrator_calib_value_to_nv(char *temp)
 
 /*******************************************************************************************
 Function:	save_vibrator_calib_value_to_reg
-Description:  将校准值写入芯片寄存器中
-Data Accessed:  无
-Data Updated:   无
-Input:        无
-Output:         无
-Return:         成功或者失败信息: 0->成功, -1->失败
+Description:  ????????????????????????
+Data Accessed:  ??
+Data Updated:   ??
+Input:        ??
+Output:         ??
+Return:         ????????????????: 0->????, -1->????
 *******************************************************************************************/
 static int save_vibrator_calib_value_to_reg(void)
 {

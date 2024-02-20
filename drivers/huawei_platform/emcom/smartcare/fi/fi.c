@@ -20,16 +20,16 @@ fi_ctx g_fi_ctx;
 	static struct nf_hook_ops fi_nfhooks[] = {
 #endif
 	{
-		.hook        = fi_hook_out,                 /* 回调函数 */
-		.pf          = PF_INET,                     /* nf协议链 */
-		.hooknum     = NF_INET_LOCAL_OUT,           /* 表示本机发出的报文 */
-		.priority    = NF_IP_PRI_FILTER - 1,        /* 优先级 */
+		.hook        = fi_hook_out,                 /* ???????? */
+		.pf          = PF_INET,                     /* nf?????? */
+		.hooknum     = NF_INET_LOCAL_OUT,           /* ?????????????????? */
+		.priority    = NF_IP_PRI_FILTER - 1,        /* ?????? */
 	},
 	{
-		.hook        = fi_hook_in,                  /* 回调函数 */
-		.pf          = PF_INET,                     /* nf协议链 */
-		.hooknum     = NF_INET_LOCAL_IN,            /* 表示目标地址是本机的报文 */
-		.priority    = NF_IP_PRI_FILTER - 1,        /* 优先级 */
+		.hook        = fi_hook_in,                  /* ???????? */
+		.pf          = PF_INET,                     /* nf?????? */
+		.hooknum     = NF_INET_LOCAL_IN,            /* ???????????????????????? */
+		.priority    = NF_IP_PRI_FILTER - 1,        /* ?????? */
 	},
 };
 
@@ -75,17 +75,17 @@ void fi_register_nf_hook(void)
 {
 	int ret = 0;
 
-	/* 加锁 */
+	/* ???? */
 	mutex_lock(&(g_fi_ctx.nf_mutex));
 
-	/* 如果已经存在钩子函数，就不再注册 */
+	/* ???????????????????????????????? */
 	if (g_fi_ctx.nf_exist == FI_TRUE)
 	{
 		mutex_unlock(&(g_fi_ctx.nf_mutex));
 		return;
 	}
 
-	/* 注册netfilter钩子函数 */
+	/* ????netfilter???????? */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,14,1)
 	ret = nf_register_net_hooks(&init_net, fi_nfhooks, ARRAY_SIZE(fi_nfhooks));
 #else
@@ -93,18 +93,18 @@ void fi_register_nf_hook(void)
 #endif
 	if (ret == 0)
 	{
-		/* 如果注册成功，需要设置标记 */
+		/* ?????????????????????????? */
 		g_fi_ctx.nf_exist = FI_TRUE;
 
-		/* 有钩子就有定时器 */
+		/* ???????????????? */
 		g_fi_ctx.tm.expires = jiffies + HZ / FI_TIMER_INTERVAL;
 		add_timer(&g_fi_ctx.tm);
 	}
 
-	/* 尽快释放锁 */
+	/* ?????????? */
 	mutex_unlock(&(g_fi_ctx.nf_mutex));
 
-	/* 释放锁之后再记录日志 */
+	/* ???????????????????? */
 	if (ret)
 	{
 		FI_LOGE(" : FI register nf hooks failed, ret=%d", ret);
@@ -120,24 +120,24 @@ void fi_register_nf_hook(void)
 
 void fi_unregister_nf_hook(void)
 {
-	/* 加锁 */
+	/* ???? */
 	mutex_lock(&(g_fi_ctx.nf_mutex));
 
-	/* 如果不存在钩子函数，直接返回*/
+	/* ????????????????????????????*/
 	if (g_fi_ctx.nf_exist == FI_FALSE)
 	{
 		mutex_unlock(&(g_fi_ctx.nf_mutex));
 		return;
 	}
 
-	/* 删除netfilter钩子函数 */
+	/* ????netfilter???????? */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,14,1)
 	nf_unregister_net_hooks(&init_net, fi_nfhooks, ARRAY_SIZE(fi_nfhooks));
 #else
 	nf_unregister_hooks(fi_nfhooks, ARRAY_SIZE(fi_nfhooks));
 #endif
 
-	/* 删除定时器, 定时器与钩子函数同时存在同时删除 */
+	/* ??????????, ???????????????????????????????? */
 	del_timer(&g_fi_ctx.tm);
 
 	g_fi_ctx.nf_exist = FI_FALSE;
@@ -159,7 +159,7 @@ fi_app_info *fi_find_appinfo(uint32_t uid)
 		return NULL;
 	}
 
-	/* 查找uid */
+	/* ????uid */
 	for (i = 0; i < FI_APPID_MAX; i++)
 	{
 		if (g_fi_ctx.appinfo[i].uid == uid)
@@ -181,7 +181,7 @@ static uint32_t fi_find_appid(uint32_t uid)
 		return FI_APPID_NULL;
 	}
 
-	/* 只在appidmin和appidmax的范围内查找，避免全表遍历，提升性能 */
+	/* ????appidmin??appidmax???????????????????????????????????? */
 	for (i = g_fi_ctx.appidmin; i <= g_fi_ctx.appidmax; i++)
 	{
 		if ((g_fi_ctx.appinfo[i].uid == uid) && (g_fi_ctx.appinfo[i].valid))
@@ -198,19 +198,19 @@ static inline int fi_pkt_check(struct sk_buff *skb, int dir)
 {
 	struct iphdr *iph = ip_hdr(skb);
 
-	/* 只关注ip报文 */
+	/* ??????ip???? */
 	if (!iph || skb->len <= FI_MIN_IP_PKT_LEN)
 	{
 		return FI_FAILURE;
 	}
 
-	/* 只关注ipv4的报文 */
+	/* ??????ipv4?????? */
 	if (iph->version != FI_IP_VER_4)
 	{
 		return FI_FAILURE;
 	}
 
-	/* 不关注环回接口的报文 */
+	/* ???????????????????? */
 	if ((*(uint8_t *)&(iph->saddr) == FI_LOOP_ADDR) ||
 	    (*(uint8_t *)&(iph->daddr) == FI_LOOP_ADDR))
 	{
@@ -242,8 +242,8 @@ static inline int fi_pkt_check(struct sk_buff *skb, int dir)
 
 static inline int fi_parse_mptcp(fi_pkt *pktinfo, struct tcphdr *tcph, uint32_t hdrlen)
 {
-	uint8_t   optkind = 0;      /* tcp选型的类型 */
-	uint8_t   optlen  = 0;      /* tcp选项的长度 */
+	uint8_t   optkind = 0;      /* tcp?????????? */
+	uint8_t   optlen  = 0;      /* tcp?????????? */
 	uint32_t  leftlen = hdrlen - sizeof(struct tcphdr);
 	uint8_t  *leftdata = (uint8_t *)tcph + sizeof(struct tcphdr);
 	uint32_t *seqack;
@@ -257,38 +257,38 @@ static inline int fi_parse_mptcp(fi_pkt *pktinfo, struct tcphdr *tcph, uint32_t 
 		leftdata += FI_TCP_OPT_HDR_LEN;
 		leftlen  -= FI_TCP_OPT_HDR_LEN;
 
-		/* 找到mptcp选项 */
+		/* ????mptcp???? */
 		if (optkind == FI_TCP_OPT_MPTCP)
 		{
 			break;
 		}
 	}
 
-	/* 不是mptcp报文 */
+	/* ????mptcp???? */
 	if (optkind != FI_TCP_OPT_MPTCP)
 	{
 		return FI_SUCCESS;
 	}
 
-	/* 开始解析mptcp选项, 首先检查数据长度 */
+	/* ????????mptcp????, ???????????????? */
 	if ((leftlen + 2 < optlen) || (optlen < FI_MPTCP_DSS_MINLEN))
 	{
-		/* 忽略选项错误 */
+		/* ???????????? */
 		return FI_SUCCESS;
 	}
 
-	/* 必须是dss选型 */
+	/* ??????dss???? */
 	mptcpdss = (fi_mptcp_dss *)leftdata;
 	if (mptcpdss->subtype != FI_MPTCP_SUBTYPE_DSS)
 	{
 		return FI_SUCCESS;
 	}
 
-	/* 扣除dss首部长度 */
+	/* ????dss???????? */
 	leftdata += sizeof(fi_mptcp_dss);
 	leftlen  -= sizeof(fi_mptcp_dss);
 
-	/* 再次计算并检查dss应该有的长度 */
+	/* ??????????????dss???????????? */
 	optlen = sizeof(uint32_t) * (mptcpdss->seq8 + mptcpdss->seqpre +
 	                             mptcpdss->ack8 + mptcpdss->ackpre);
 	if (leftlen < optlen)
@@ -296,12 +296,12 @@ static inline int fi_parse_mptcp(fi_pkt *pktinfo, struct tcphdr *tcph, uint32_t 
 		return FI_SUCCESS;
 	}
 
-	/* 到这里，说明一定可以提取到seq或ack，但有的报文不含seq，所以先置零 */
+	/* ??????????????????????????seq??ack????????????????seq???????????? */
 	pktinfo->seq = 0;
 	pktinfo->ack = 0;
 	pktinfo->mptcp = FI_TRUE;
 
-	/* 提取ack */
+	/* ????ack */
 	if (mptcpdss->ackpre && (leftlen >= sizeof(uint32_t)))
 	{
 		seqack = (uint32_t *)leftdata;
@@ -310,7 +310,7 @@ static inline int fi_parse_mptcp(fi_pkt *pktinfo, struct tcphdr *tcph, uint32_t 
 		leftdata += sizeof(uint32_t);
 		leftlen  -= sizeof(uint32_t);
 
-		/* 如果是8字节的ack，只取低4字节就行了 */
+		/* ??????8??????ack????????4?????????? */
 		if (mptcpdss->ack8 && (leftlen >= sizeof(uint32_t)))
 		{
 			seqack = (uint32_t *)leftdata;
@@ -321,7 +321,7 @@ static inline int fi_parse_mptcp(fi_pkt *pktinfo, struct tcphdr *tcph, uint32_t 
 		}
 	}
 
-	/* 提取seq */
+	/* ????seq */
 	if (mptcpdss->seqpre && (leftlen >= sizeof(uint32_t)))
 	{
 		seqack = (uint32_t *)leftdata;
@@ -330,7 +330,7 @@ static inline int fi_parse_mptcp(fi_pkt *pktinfo, struct tcphdr *tcph, uint32_t 
 		leftdata += sizeof(uint32_t);
 		leftlen  -= sizeof(uint32_t);
 
-		/* 如果是8字节的seq，只取低4字节就行了 */
+		/* ??????8??????seq????????4?????????? */
 		if (mptcpdss->seq8 && (leftlen >= sizeof(uint32_t)))
 		{
 			seqack = (uint32_t *)leftdata;
@@ -353,17 +353,17 @@ static inline int fi_pkt_parse(fi_pkt *pktinfo, struct sk_buff *skb, int dir)
 	unsigned int   iphlen = 0;      /* ip header len */
 	unsigned int   l4hlen = 0;      /* tcp/udp header len */
 
-	/* 已在上文做过基本检查，报文一定为IP报文，长度一定大于20 */
+	/* ????????????????????????????????IP??????????????????20 */
 	iph    = ip_hdr(skb);
 	iphlen = iph->ihl * FI_IP_HDR_LEN_BASE;
 
-	/* UDP报文解析 */
+	/* UDP???????? */
 	if (iph->protocol == FI_IPPROTO_UDP)
 	{
 		udph   = udp_hdr(skb);
 		l4hlen = sizeof(struct udphdr);
 
-		/* 检查skb中报文的长度 */
+		/* ????skb???????????? */
 		if (skb->len < iphlen + l4hlen + skb->data_len)
 		{
 			return FI_FAILURE;
@@ -375,13 +375,13 @@ static inline int fi_pkt_parse(fi_pkt *pktinfo, struct sk_buff *skb, int dir)
 		pktinfo->sport = ntohs(udph->source);
 		pktinfo->dport = ntohs(udph->dest);
 	}
-	/* 不是UDP则一定是TCP */
+	/* ????UDP????????TCP */
 	else
 	{
 		tcph   = tcp_hdr(skb);
 		l4hlen = tcph->doff * FI_TCP_HDR_LEN_BASE;
 
-		/* 检查skb中报文的长度 */
+		/* ????skb???????????? */
 		if (skb->len < iphlen + l4hlen + skb->data_len)
 		{
 			return FI_FAILURE;
@@ -401,7 +401,7 @@ static inline int fi_pkt_parse(fi_pkt *pktinfo, struct sk_buff *skb, int dir)
 		}
 	}
 
-	/* 只关注端口大于1023的 */
+	/* ??????????????1023?? */
 	if ((pktinfo->sport < FI_BATTLE_START_PORT_MIN) ||
 	    (pktinfo->dport < FI_BATTLE_START_PORT_MIN))
 	{
@@ -421,13 +421,13 @@ static inline int fi_pkt_parse(fi_pkt *pktinfo, struct sk_buff *skb, int dir)
 
 void fi_timer_callback(unsigned long arg)
 {
-	/* 老化流表 */
+	/* ???????? */
 	fi_flow_age();
 
-	/* 定期发送rtt, 更新游戏状态 */
+	/* ????????rtt, ???????????? */
 	fi_rtt_timer();
 
-	/* 定时器下次触发的时间 */
+	/* ???????????????????? */
 	mod_timer(&g_fi_ctx.tm, jiffies + HZ / FI_TIMER_INTERVAL);
 
 	return;
@@ -438,7 +438,7 @@ static bool fi_streq(char *data, uint32_t datalen, char *str)
 {
 	uint32_t strLen = strlen(str);
 
-	/* data字符串后有多余的'\0' */
+	/* data????????????????'\0' */
 	if (datalen >= strLen + 1)
 	{
 		if (!memcmp(data, str, strLen + 1))
@@ -446,7 +446,7 @@ static bool fi_streq(char *data, uint32_t datalen, char *str)
 			return FI_TRUE;
 		}
 	}
-	/* data不是以'\0'结尾 */
+	/* data??????'\0'???? */
 	else if (datalen == strLen)
 	{
 		if (!memcmp(data, str, strLen))
@@ -481,10 +481,10 @@ static void fi_appid_shrink(void)
 {
 	uint32_t i;
 
-	/* appidmin向前移 */
+	/* appidmin?????? */
 	for (i = g_fi_ctx.appidmin; (i <= g_fi_ctx.appidmax) && (i < FI_APPID_MAX); i++)
 	{
-		/* valid为假表示该游戏已退出 */
+		/* valid???????????????????? */
 		if (!(g_fi_ctx.appinfo[i].valid))
 		{
 			g_fi_ctx.appidmin = i;
@@ -495,10 +495,10 @@ static void fi_appid_shrink(void)
 		}
 	}
 
-	/* appidmax向后移 */
+	/* appidmax?????? */
 	for (i = g_fi_ctx.appidmax; (i >= g_fi_ctx.appidmin) && (i > 0); i--)
 	{
-		/* valid为假表示该游戏已退出 */
+		/* valid???????????????????? */
 		if (!(g_fi_ctx.appinfo[i].valid))
 		{
 			g_fi_ctx.appidmax = i;
@@ -509,7 +509,7 @@ static void fi_appid_shrink(void)
 		}
 	}
 
-	/* 说明已经没有appid了 */
+	/* ????????????appid?? */
 	i = g_fi_ctx.appidmin;
 	if ((g_fi_ctx.appidmin == g_fi_ctx.appidmax) && !(g_fi_ctx.appinfo[i].valid))
 	{
@@ -584,7 +584,7 @@ static void fi_proc_applaunch(void *data, int32_t len)
 	fi_app_info *appinfo;
 	uint32_t appid;
 
-	/* 参数检查 */
+	/* ???????? */
 	if ((!data) || (len < sizeof(fi_msg_applaunch)))
 	{
 		FI_LOGE(" : FI illegal data length %d in FI app launch", len);
@@ -594,7 +594,7 @@ static void fi_proc_applaunch(void *data, int32_t len)
 	msg  = (fi_msg_applaunch *)data;
 	len -= sizeof(fi_msg_applaunch);
 
-	/* 将字符串形式的appname转化为appid */
+	/* ??????????????appname??????appid */
 	appid = fi_appname_to_appid(msg->appname, len);
 	if (!FI_APPID_VALID(appid))
 	{
@@ -604,10 +604,10 @@ static void fi_proc_applaunch(void *data, int32_t len)
 
 	fi_appid_add(appid);
 
-	/* 创建nf钩子, 如果已经存在就不再增加 */
+	/* ????nf????, ?????????????????????? */
 	fi_register_nf_hook();
 
-	/* 开始赋值 */
+	/* ???????? */
 	appinfo = &g_fi_ctx.appinfo[appid];
 	appinfo->appid = appid;
 	appinfo->uid   = msg->uid;
@@ -627,7 +627,7 @@ static void fi_proc_appstatus(void *data, int32_t len)
 	fi_app_info *appinfo;
 	uint32_t appid;
 
-	/* 参数检查 */
+	/* ???????? */
 	if ((!data) || (len < sizeof(fi_msg_appstatus)))
 	{
 		FI_LOGE(" : FI illegal data length %d in FI set app status", len);
@@ -646,34 +646,34 @@ static void fi_proc_appstatus(void *data, int32_t len)
 
 	FI_LOGI(" : FI recv app status appid=%u, appstatus=%u", appid, msg->appstatus);
 
-	/* 需要更新一下uid，记录app当前的状态 */
+	/* ????????????uid??????app?????????? */
 	appinfo = &g_fi_ctx.appinfo[appid];
 	appinfo->uid = msg->uid;
 	appinfo->appstatus = msg->appstatus;
 
-	/* 如果是游戏退出 */
+	/* ?????????????? */
 	if (msg->appstatus == GAME_SDK_STATE_DIE)
 	{
 		fi_gamectx *gamectx;
 
-		/* 不要清除uid, 其它内核线程可能还会用到, 将标记置为false即可 */
+		/* ????????uid, ????????????????????????, ??????????false???? */
 		appinfo->valid = FI_FALSE;
 
 		gamectx = g_fi_ctx.gamectx + appid;
 
-		/* 发送对战结束 */
+		/* ???????????? */
 		if (FI_BATTLING(gamectx->appstatus))
 		{
 			fi_rtt_status(gamectx->appid, FI_STATUS_BATTLE_STOP);
 		}
 
-		/* 清除rtt缓存 */
+		/* ????rtt???? */
 		memset(gamectx, 0, sizeof(fi_gamectx));
 
-		/* 收缩appid范围 */
+		/* ????appid???? */
 		fi_appid_shrink();
 
-		/* 如果没有appid, 则删除nf钩子 */
+		/* ????????appid, ??????nf???? */
 		if (FI_HAS_NO_APPID(g_fi_ctx))
 		{
 			fi_unregister_nf_hook();
@@ -699,7 +699,7 @@ void fi_reflect_status(int32_t event, uint8_t *data, uint16_t len)
 
 	msg = (fi_msg_appstatus *)data;
 
-	/* 如果是游戏加载，消息类型固定为GAME_SDK_STATE_FOREGROUND */
+	/* ??????????????????????????????GAME_SDK_STATE_FOREGROUND */
 	if (event == NETLINK_EMCOM_DK_SMARTCARE_FI_APP_LAUNCH)
 	{
 		status = GAME_SDK_STATE_FOREGROUND;
@@ -713,7 +713,7 @@ void fi_reflect_status(int32_t event, uint8_t *data, uint16_t len)
 		return;
 	}
 
-	/* 上报游戏状态 */
+	/* ???????????? */
 	report.uid = msg->uid;
 	report.status = status;
 	report.apptype = FI_APP_TYPE_GAME;
@@ -729,15 +729,15 @@ void fi_event_process(int32_t event, uint8_t *pdata, uint16_t len)
 {
 	FI_LOGD(" : FI received cmd %d, datalen %u.", event, len);
 
-	/* 根据不同的消息id进行不同的处理 */
+	/* ??????????????id?????????????? */
 	switch (event)
 	{
-		/* 游戏启动 */
+		/* ???????? */
 		case NETLINK_EMCOM_DK_SMARTCARE_FI_APP_LAUNCH:
 			fi_proc_applaunch(pdata, len);
 			break;
 
-		/* 游戏状态变化 */
+		/* ???????????? */
 		case NETLINK_EMCOM_DK_SMARTCARE_FI_APP_STATUS:
 			fi_proc_appstatus(pdata, len);
 			break;
@@ -747,7 +747,7 @@ void fi_event_process(int32_t event, uint8_t *pdata, uint16_t len)
 			break;
 	}
 
-	/* 将游戏状态变化消息同时发送到framework */
+	/* ????????????????????????????framework */
 	fi_reflect_status(event, pdata, len);
 
 	return;
@@ -771,13 +771,13 @@ static void fi_hook(struct sk_buff *skb, int dir)
 		return;
 	}
 
-	/* 过滤出ipv4 udp&tcp */
+	/* ??????ipv4 udp&tcp */
 	if (fi_pkt_check(skb, dir) != FI_SUCCESS)
 	{
 		return;
 	}
 
-	/* 上行报文通过uid过滤，下行报文获取不到uid, 通过流表过滤 */
+	/* ????????????uid??????????????????????uid, ???????????? */
 	if (dir == FI_DIR_UP)
 	{
 		sk = skb->sk;
@@ -786,7 +786,7 @@ static void fi_hook(struct sk_buff *skb, int dir)
 			return;
 		}
 
-		/* tcp上行报文还需要检查当前连接状态 */
+		/* tcp?????????????????????????????? */
 		if ((iph->protocol == FI_IPPROTO_TCP) &&
 		    (sk->sk_state != TCP_ESTABLISHED))
 		{
@@ -795,7 +795,7 @@ static void fi_hook(struct sk_buff *skb, int dir)
 
 		kuid = sock_i_uid(sk);
 
-		/* 只处理游戏报文, 通过uid过滤 */
+		/* ??????????????, ????uid???? */
 		appid = fi_find_appid(kuid.val);
 		if (!FI_APPID_VALID(appid))
 		{
@@ -805,7 +805,7 @@ static void fi_hook(struct sk_buff *skb, int dir)
 		addflow = FI_TRUE;
 	}
 
-	/* 报文解析, 只关注端口大于1023的 */
+	/* ????????, ??????????????1023?? */
 	if (fi_pkt_parse(&pktinfo, skb, dir) != FI_SUCCESS)
 	{
 		return;
@@ -816,7 +816,7 @@ static void fi_hook(struct sk_buff *skb, int dir)
 
 	fi_flow_lock();
 
-	/* 上行报文查找或创建流, 下行报文仅仅查找流 */
+	/* ????????????????????, ?????????????????? */
 	flow = fi_flow_get(&pktinfo, head, addflow);
 	if (flow == NULL)
 	{
@@ -833,7 +833,7 @@ static void fi_hook(struct sk_buff *skb, int dir)
 		appid = flow->flowctx.appid;
 	}
 
-	/* fi主入口 */
+	/* fi?????? */
 	fi_rtt_entrance(&pktinfo, &(flow->flowctx), appid);
 	fi_flow_unlock();
 
@@ -875,7 +875,7 @@ void fi_para_init(void)
 
 void fi_init(void)
 {
-	/* 初始化模块运行参数 */
+	/* ?????????????????? */
 	fi_para_init();
 
 	FI_LOGI(" : FI init kernel module successfully, mem used %lu",
@@ -887,10 +887,10 @@ void fi_init(void)
 
 void fi_deinit(void)
 {
-	/* 删除nf注册的钩子函数, 删除定时器 */
+	/* ????nf??????????????, ?????????? */
 	fi_unregister_nf_hook();
 
-	/* 清空流表 */
+	/* ???????? */
 	fi_flow_clear();
 
 	FI_LOGI(" : FI deinit kernel module successfully");

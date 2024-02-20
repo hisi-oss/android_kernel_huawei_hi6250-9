@@ -1,9 +1,9 @@
 /*
  * Mainly by David Woodhouse, somewhat modified by Jordan Crouse
  *
- * Copyright © 2006-2007  Red Hat, Inc.
- * Copyright © 2006-2007  Advanced Micro Devices, Inc.
- * Copyright © 2009       VIA Technology, Inc.
+ * Copyright ?? 2006-2007  Red Hat, Inc.
+ * Copyright ?? 2006-2007  Advanced Micro Devices, Inc.
+ * Copyright ?? 2009       VIA Technology, Inc.
  * Copyright (c) 2010-2011  Andres Salomon <dilinger@queued.net>
  *
  * This program is free software.  You can redistribute it and/or

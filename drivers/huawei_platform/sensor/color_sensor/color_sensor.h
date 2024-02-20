@@ -163,7 +163,7 @@ enum ReportType{
     /*16 raw data SEQ: c,r,g,b,w,0,...,0 */
     AWB_SENSOR_RAW_SEQ_TYPE_C_R_G_B_W = 2,
 
-    /* the final 16 raw data SEQ , must be aligned with camera HAL's data structure£º awb_sensor_info_t */
+    /* the final 16 raw data SEQ , must be aligned with camera HAL's data structure???? awb_sensor_info_t */
     AWB_SENSOR_RAW_SEQ_TYPE_COMMON = 9,
     AWB_SENSOR_RAW_SEQ_TYPE_MAX,
 };

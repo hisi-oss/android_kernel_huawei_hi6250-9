@@ -1021,7 +1021,7 @@ enum hsm_states {
 #define HSM_FLAGS_MASK  (HSM_USER_MASK | HSM_STATUS_MASK)
 
 /**
- * HSM request progress state
+ * HSM??request progress state
  */
 enum hsm_progress_states {
 	HPS_WAITING	= 1,

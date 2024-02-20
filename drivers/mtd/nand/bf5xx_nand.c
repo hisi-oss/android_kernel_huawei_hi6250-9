@@ -10,8 +10,8 @@
  * Copyright (c) 2007 Ben Dooks <ben@simtec.co.uk>
  *
  * Derived from drivers/mtd/nand/cafe.c
- * Copyright © 2006 Red Hat, Inc.
- * Copyright © 2006 David Woodhouse <dwmw2@infradead.org>
+ * Copyright ?? 2006 Red Hat, Inc.
+ * Copyright ?? 2006 David Woodhouse <dwmw2@infradead.org>
  *
  * Changelog:
  *	12-Jun-2007  Bryan Wu:  Initial version

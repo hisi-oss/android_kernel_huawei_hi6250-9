@@ -3,9 +3,9 @@
  *
  * TRIZEPS PCMCIA specific routines.
  *
- * Author:	Jürgen Schindele
+ * Author:	J??rgen Schindele
  * Created:	20 02, 2006
- * Copyright:	Jürgen Schindele
+ * Copyright:	J??rgen Schindele
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

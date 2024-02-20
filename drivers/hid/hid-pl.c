@@ -9,10 +9,10 @@
  *   - contains two reports, one for each port (HID_QUIRK_MULTI_INPUT)
  *
  *  0e8f:0003 "GreenAsia Inc.    USB Joystick     "
- *   - tested with König Gaming gamepad
+ *   - tested with K??nig Gaming gamepad
  *
  *  0e8f:0003 "GASIA USB Gamepad"
- *   - another version of the König gamepad
+ *   - another version of the K??nig gamepad
  *
  *  0f30:0111 "Saitek Color Rumble Pad"
  *

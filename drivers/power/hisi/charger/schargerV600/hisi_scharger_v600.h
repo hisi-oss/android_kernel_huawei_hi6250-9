@@ -213,7 +213,7 @@ struct hi6526_device_info {
 #define CHG_ILIMIT_MAX                 (CHG_ILIMIT_3100)
 #define CHG_ILIMIT_STEP_100                 (100)
 
-/* CHG_REG1调节寄存器 */
+/* CHG_REG1??????????????? */
 #define CHG_FAST_CURRENT_REG            (SOC_SCHARGER_CHARGER_CFG_REG_2_ADDR(0))
 #define CHG_FAST_ICHG_SHIFT             (SOC_SCHARGER_CHARGER_CFG_REG_2_da_chg_fast_ichg_START)
 #define CHG_FAST_ICHG_MSK               (0x1f<<CHG_FAST_ICHG_SHIFT)
@@ -576,7 +576,7 @@ struct hi6526_device_info {
 #define IRQ_VBUS_UVP_MASK       (0x01)
 #define IRQ_VBUS_UVP_UNMASK       (0x00)
 
-/* chg_reg5电池通道补偿寄存器 */
+/* chg_reg5??????????????????????????? */
 #define CHG_IR_COMP_REG                 (SOC_SCHARGER_CHARGER_CFG_REG_4_ADDR(0))
 #define CHG_IR_COMP_SHIFT               (SOC_SCHARGER_CHARGER_CFG_REG_4_da_chg_ir_set_START)
 #define CHG_IR_COMP_MSK                 (0x07<<CHG_IR_COMP_SHIFT)
@@ -673,7 +673,7 @@ struct hi6526_device_info {
 #define CHG_FCP_INIT_HAND_FAIL          (1<<SOC_SCHARGER_FCP_IRQ3_init_hand_fail_irq_START)
 #define CHG_FCP_IRQ4_REG                (SOC_SCHARGER_FCP_IRQ4_ADDR(0))
 #define CHG_FCP_ENABLE_HAND_FAIL        (1<<SOC_SCHARGER_FCP_IRQ4_enable_hand_fail_irq_START)
-/* fcp 中断寄存器5 */
+/* fcp ???????????????5 */
 #define CHG_FCP_IRQ5_REG                (SOC_SCHARGER_FCP_IRQ5_ADDR(0))
 #define CHG_FCP_SET_DET_SHIFT           (SOC_SCHARGER_FCP_IRQ5_fcp_set_d60m_int_START)
 #define CHG_FCP_SET_DET_MSK             (1<<CHG_FCP_SET_DET_SHIFT)

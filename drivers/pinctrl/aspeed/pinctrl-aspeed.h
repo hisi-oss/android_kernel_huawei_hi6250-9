@@ -142,7 +142,7 @@
  * Ball |  Default   | P0 Signal | P0 Expression             | P1 Signal | P1 Expression | Other
  * -----+------------+-----------+---------------------------+-----------+---------------+------------
  *  A12   RGMII1TXCK   GPIOT0      SCUA0[0]=1                  RMII1TXEN   Strap[6]=0      RGMII1TXCK
- *  B12   RGMII1TXCTL  GPIOT1      SCUA0[1]=1                  –           Strap[6]=0      RGMII1TXCTL
+ *  B12   RGMII1TXCTL  GPIOT1      SCUA0[1]=1                  ???           Strap[6]=0      RGMII1TXCTL
  * -----+------------+-----------+---------------------------+-----------+---------------+------------
  *
  * A12 demonstrates that the "Other" signal isn't always GPIO - in this case

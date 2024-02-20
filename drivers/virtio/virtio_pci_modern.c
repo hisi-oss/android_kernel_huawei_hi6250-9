@@ -25,7 +25,7 @@
  * Type-safe wrappers for io accesses.
  * Use these to enforce at compile time the following spec requirement:
  *
- * The driver MUST access each field using the “natural” access
+ * The driver MUST access each field using the ???natural??? access
  * method, i.e. 32-bit accesses for 32-bit fields, 16-bit accesses
  * for 16-bit fields and 8-bit accesses for 8-bit fields.
  */

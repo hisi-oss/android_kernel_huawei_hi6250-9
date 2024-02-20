@@ -87,7 +87,7 @@ static int tsys01_read_raw(struct iio_dev *indio_dev,
 	switch (mask) {
 	case IIO_CHAN_INFO_PROCESSED:
 		switch (channel->type) {
-		case IIO_TEMP:	/* in milli °C */
+		case IIO_TEMP:	/* in milli ??C */
 			ret = tsys01_read_temperature(indio_dev, &temperature);
 			if (ret)
 				return ret;

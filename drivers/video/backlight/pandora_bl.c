@@ -3,7 +3,7 @@
  * Pandora uses TWL4030 PWM0 -> TPS61161 combo for control backlight.
  * Based on pwm_bl.c
  *
- * Copyright 2009,2012 Gražvydas Ignotas <notasas@gmail.com>
+ * Copyright 2009,2012 Gra??vydas Ignotas <notasas@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -148,7 +148,7 @@ static struct platform_driver pandora_backlight_driver = {
 
 module_platform_driver(pandora_backlight_driver);
 
-MODULE_AUTHOR("Gražvydas Ignotas <notasas@gmail.com>");
+MODULE_AUTHOR("Gra??vydas Ignotas <notasas@gmail.com>");
 MODULE_DESCRIPTION("Pandora Backlight Driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:pandora-backlight");

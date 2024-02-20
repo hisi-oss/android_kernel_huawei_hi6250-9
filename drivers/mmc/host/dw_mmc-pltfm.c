@@ -54,7 +54,7 @@ int dw_mci_pltfm_register(struct platform_device *pdev,
 
 	/* Get registers' physical base address */
 	host->phy_regs = regs->start;
-	/*私有IP数据初始化*/
+	/*??????IP???????????????*/
 	if (drv_data && drv_data->init) {
 		ret = drv_data->init(host);
 		if (ret)

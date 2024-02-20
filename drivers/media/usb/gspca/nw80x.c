@@ -1,7 +1,7 @@
 /*
  * DivIO nw80x subdriver
  *
- * Copyright (C) 2011 Jean-François Moine (http://moinejf.free.fr)
+ * Copyright (C) 2011 Jean-Fran??ois Moine (http://moinejf.free.fr)
  * Copyright (C) 2003 Sylvain Munaut <tnt@246tNt.com>
  *			Kjell Claesson <keyson@users.sourceforge.net>
  *

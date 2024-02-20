@@ -1,6 +1,6 @@
 /**************************************************************************
  *
- * Copyright © 2012-2014 VMware, Inc., Palo Alto, CA., USA
+ * Copyright ?? 2012-2014 VMware, Inc., Palo Alto, CA., USA
  * All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a

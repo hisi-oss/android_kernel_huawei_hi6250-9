@@ -6,7 +6,7 @@
  * Hwmon integration:
  * Copyright (C) 2011  Jean Delvare <jdelvare@suse.de>
  * Copyright (C) 2013, 2014  Guenter Roeck <linux@roeck-us.net>
- * Copyright (C) 2014, 2015  Pali Rohár <pali.rohar@gmail.com>
+ * Copyright (C) 2014, 2015  Pali Roh??r <pali.rohar@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -86,7 +86,7 @@ static bool disallow_fan_type_call;
 #define I8K_HWMON_HAVE_FAN3	(1 << 6)
 
 MODULE_AUTHOR("Massimo Dal Zotto (dz@debian.org)");
-MODULE_AUTHOR("Pali Rohár <pali.rohar@gmail.com>");
+MODULE_AUTHOR("Pali Roh??r <pali.rohar@gmail.com>");
 MODULE_DESCRIPTION("Dell laptop SMM BIOS hwmon driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("i8k");
@@ -528,14 +528,14 @@ static int i8k_proc_show(struct seq_file *seq, void *offset)
 	int fn_key, cpu_temp, ac_power;
 	int left_fan, right_fan, left_speed, right_speed;
 
-	cpu_temp	= i8k_get_temp(0);			/* 11100 µs */
-	left_fan	= i8k_get_fan_status(I8K_FAN_LEFT);	/*   580 µs */
-	right_fan	= i8k_get_fan_status(I8K_FAN_RIGHT);	/*   580 µs */
-	left_speed	= i8k_get_fan_speed(I8K_FAN_LEFT);	/*   580 µs */
-	right_speed	= i8k_get_fan_speed(I8K_FAN_RIGHT);	/*   580 µs */
-	fn_key		= i8k_get_fn_status();			/*   750 µs */
+	cpu_temp	= i8k_get_temp(0);			/* 11100 ??s */
+	left_fan	= i8k_get_fan_status(I8K_FAN_LEFT);	/*   580 ??s */
+	right_fan	= i8k_get_fan_status(I8K_FAN_RIGHT);	/*   580 ??s */
+	left_speed	= i8k_get_fan_speed(I8K_FAN_LEFT);	/*   580 ??s */
+	right_speed	= i8k_get_fan_speed(I8K_FAN_RIGHT);	/*   580 ??s */
+	fn_key		= i8k_get_fn_status();			/*   750 ??s */
 	if (power_status)
-		ac_power = i8k_get_power_status();		/* 14700 µs */
+		ac_power = i8k_get_power_status();		/* 14700 ??s */
 	else
 		ac_power = -1;
 

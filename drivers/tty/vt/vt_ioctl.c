@@ -398,7 +398,7 @@ int vt_ioctl(struct tty_struct *tty,
 
 	case KDGKBTYPE:
 		/*
-		 * this is naïve.
+		 * this is na??ve.
 		 */
 		ucval = KB_101;
 		ret = put_user(ucval, (char __user *)arg);

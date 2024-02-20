@@ -619,7 +619,7 @@ static int si470x_vidioc_g_tuner(struct file *file, void *priv,
 		tuner->audmode = V4L2_TUNER_MODE_MONO;
 
 	/* min is worst, max is best; signal:0..0xffff; rssi: 0..0xff */
-	/* measured in units of dbµV in 1 db increments (max at ~75 dbµV) */
+	/* measured in units of db??V in 1 db increments (max at ~75 db??V) */
 	tuner->signal = (radio->registers[STATUSRSSI] & STATUSRSSI_RSSI);
 	/* the ideal factor is 0xffff/75 = 873,8 */
 	tuner->signal = (tuner->signal * 873) + (8 * tuner->signal / 10);

@@ -213,7 +213,7 @@ dsu_pmu_event_attr_is_visible(struct kobject *kobj, struct attribute *attr,
 					struct dev_ext_attribute, attr.attr);
 	unsigned long evt = (uintptr_t)eattr->var;
 
-	return test_bit(evt, dsu_pmu->cpmceid_bitmap) ? attr->mode : 0;/* [false alarm]:返回值为mode或者是0，都是无符号值 */
+	return test_bit(evt, dsu_pmu->cpmceid_bitmap) ? attr->mode : 0;/* [false alarm]:????????????mode?????????0????????????????????? */
 }
 /*lint -restore*/
 
@@ -415,7 +415,7 @@ static irqreturn_t dsu_pmu_handle_irq(int irq_num, void *dev)
 		handled = true;
 	}
 
-	return IRQ_RETVAL(handled);/* [false alarm]: 返回值类型没有问题，是枚举值*/
+	return IRQ_RETVAL(handled);/* [false alarm]: ??????????????????????????????????????????*/
 }
 
 static void dsu_pmu_start(struct perf_event *event, int pmu_flags)
@@ -546,7 +546,7 @@ static bool dsu_pmu_validate_group(struct perf_event *event)
 	if (event->group_leader == event)
 		return true;
 
-	memset(fake_hw.used_mask, 0, sizeof(fake_hw.used_mask));/* [false alarm]:memset清零操作，内存大小没有问题 */
+	memset(fake_hw.used_mask, 0, sizeof(fake_hw.used_mask));/* [false alarm]:memset??????????????????????????????????????? */
 	if (!dsu_pmu_validate_event(event->pmu, &fake_hw, leader))
 		return false;
 	list_for_each_entry(sibling, &leader->sibling_list, group_entry) {
@@ -965,7 +965,7 @@ static int dsu_pmu_cpu_online(unsigned int cpu, struct hlist_node *node)
 	struct dsu_pmu *dsu_pmu = hlist_entry_safe(node, struct dsu_pmu,
 						   cpuhp_node);
 
-	if (!cpumask_test_cpu(cpu, &dsu_pmu->associated_cpus))/* [false alarm]:nb在调用点已经判空 */
+	if (!cpumask_test_cpu(cpu, &dsu_pmu->associated_cpus))/* [false alarm]:nb???????????????????????? */
 		return 0;
 
 	/* If the PMU is already managed, there is nothing to do */
@@ -985,7 +985,7 @@ static int dsu_pmu_cpu_teardown(unsigned int cpu, struct hlist_node *node)
 						   cpuhp_node);
 
 	raw_spin_lock(&dsu_pmu->pmu_lock);
-	if (!cpumask_test_and_clear_cpu(cpu, &dsu_pmu->active_cpu)){/* [false alarm]:nb在调用点已经判空 */
+	if (!cpumask_test_and_clear_cpu(cpu, &dsu_pmu->active_cpu)){/* [false alarm]:nb???????????????????????? */
 		raw_spin_unlock(&dsu_pmu->pmu_lock);
 		return 0;
 	}

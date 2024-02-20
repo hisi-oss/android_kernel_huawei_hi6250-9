@@ -1,7 +1,7 @@
 /*
  * Driver for BCM6358 memory-mapped LEDs, based on leds-syscon.c
  *
- * Copyright 2015 Álvaro Fernández Rojas <noltari@gmail.com>
+ * Copyright 2015 ??lvaro Fern??ndez Rojas <noltari@gmail.com>
  *
  * This program is free software; you can redistribute  it and/or modify it
  * under  the terms of  the GNU General  Public License as published by the
@@ -235,7 +235,7 @@ static struct platform_driver bcm6358_leds_driver = {
 
 module_platform_driver(bcm6358_leds_driver);
 
-MODULE_AUTHOR("Álvaro Fernández Rojas <noltari@gmail.com>");
+MODULE_AUTHOR("??lvaro Fern??ndez Rojas <noltari@gmail.com>");
 MODULE_DESCRIPTION("LED driver for BCM6358 controllers");
 MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:leds-bcm6358");

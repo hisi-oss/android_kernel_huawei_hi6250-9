@@ -1,6 +1,6 @@
 /* ir-sony-decoder.c - handle Sony IR Pulse/Space protocol
  *
- * Copyright (C) 2010 by David Härdeman <david@hardeman.nu>
+ * Copyright (C) 2010 by David H??rdeman <david@hardeman.nu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -191,5 +191,5 @@ module_init(ir_sony_decode_init);
 module_exit(ir_sony_decode_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("David Härdeman <david@hardeman.nu>");
+MODULE_AUTHOR("David H??rdeman <david@hardeman.nu>");
 MODULE_DESCRIPTION("Sony IR protocol decoder");

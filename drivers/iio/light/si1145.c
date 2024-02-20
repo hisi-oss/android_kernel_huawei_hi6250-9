@@ -695,8 +695,8 @@ static int si1145_read_raw(struct iio_dev *indio_dev,
 		switch (chan->type) {
 		case IIO_TEMP:
 			/*
-			 * -ADC offset - ADC counts @ 25°C -
-			 *   35 * ADC counts / °C
+			 * -ADC offset - ADC counts @ 25??C -
+			 *   35 * ADC counts / ??C
 			 */
 			*val = -256 - 11136 + 25 * 35;
 			return IIO_VAL_INT;

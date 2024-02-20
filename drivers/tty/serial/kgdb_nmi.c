@@ -2,7 +2,7 @@
  * KGDB NMI serial console
  *
  * Copyright 2010 Google, Inc.
- *		  Arve Hjønnevåg <arve@android.com>
+ *		  Arve Hj??nnev??g <arve@android.com>
  *		  Colin Cross <ccross@android.com>
  * Copyright 2012 Linaro Ltd.
  *		  Anton Vorontsov <anton.vorontsov@linaro.org>

@@ -873,7 +873,7 @@ static int ad7280_probe(struct spi_device *spi)
 
 	/*
 	 * Total Conversion Time = ((tACQ + tCONV) *
-	 *			   (Number of Conversions per Part)) −
+	 *			   (Number of Conversions per Part)) ???
 	 *			   tACQ + ((N - 1) * tDELAY)
 	 *
 	 * Readback Delay = Total Conversion Time + tWAIT

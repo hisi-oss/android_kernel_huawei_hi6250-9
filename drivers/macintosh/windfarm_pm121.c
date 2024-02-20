@@ -1,7 +1,7 @@
 /*
  * Windfarm PowerMac thermal control. iMac G5 iSight
  *
- * (c) Copyright 2007 Étienne Bersac <bersace@gmail.com>
+ * (c) Copyright 2007 ??tienne Bersac <bersace@gmail.com>
  *
  * Bits & pieces from windfarm_pm81.c by (c) Copyright 2005 Benjamin
  * Herrenschmidt, IBM Corp. <benh@kernel.crashing.org>
@@ -756,7 +756,7 @@ static void pm121_cpu_fans_tick(struct pm121_cpu_state *st)
 		return;
 	}
 
-	pr_debug("pm121: CPU Fans tick ! CPU temp: %d.%03d°C, power: %d.%03d\n",
+	pr_debug("pm121: CPU Fans tick ! CPU temp: %d.%03d??C, power: %d.%03d\n",
 		 FIX32TOPRINT(temp), FIX32TOPRINT(power));
 
 	if (temp > st->pid.param.tmax)
@@ -1047,7 +1047,7 @@ static void __exit pm121_exit(void)
 module_init(pm121_init);
 module_exit(pm121_exit);
 
-MODULE_AUTHOR("Étienne Bersac <bersace@gmail.com>");
+MODULE_AUTHOR("??tienne Bersac <bersace@gmail.com>");
 MODULE_DESCRIPTION("Thermal control logic for iMac G5 (iSight)");
 MODULE_LICENSE("GPL");
 

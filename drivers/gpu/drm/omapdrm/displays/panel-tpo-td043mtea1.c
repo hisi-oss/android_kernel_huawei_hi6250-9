@@ -1,7 +1,7 @@
 /*
  * TPO TD043MTEA1 Panel driver
  *
- * Author: Gražvydas Ignotas <notasas@gmail.com>
+ * Author: Gra??vydas Ignotas <notasas@gmail.com>
  * Converted to new DSS device model: Tomi Valkeinen <tomi.valkeinen@ti.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -648,6 +648,6 @@ static struct spi_driver tpo_td043_spi_driver = {
 module_spi_driver(tpo_td043_spi_driver);
 
 MODULE_ALIAS("spi:tpo,td043mtea1");
-MODULE_AUTHOR("Gražvydas Ignotas <notasas@gmail.com>");
+MODULE_AUTHOR("Gra??vydas Ignotas <notasas@gmail.com>");
 MODULE_DESCRIPTION("TPO TD043MTEA1 LCD Driver");
 MODULE_LICENSE("GPL");

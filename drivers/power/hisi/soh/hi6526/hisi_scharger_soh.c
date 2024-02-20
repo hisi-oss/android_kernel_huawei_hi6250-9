@@ -218,7 +218,7 @@ STATIC int hisi_soh_scharger_acr_calculate_acr(void)
   Description:   get acr chip temperature
   Input:         NA
   Output:        NA
-  Return:        temerature (бу)
+  Return:        temerature (??)
   Remart:      NA
 ********************************************************/
 STATIC int hisi_soh_scharger_acr_get_chip_temp(void)

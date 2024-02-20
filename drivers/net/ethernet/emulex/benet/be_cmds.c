@@ -22,10 +22,10 @@
 char *be_misconfig_evt_port_state[] = {
 	"Physical Link is functional",
 	"Optics faulted/incorrectly installed/not installed - Reseat optics. If issue not resolved, replace.",
-	"Optics of two types installed – Remove one optic or install matching pair of optics.",
-	"Incompatible optics – Replace with compatible optics for card to function.",
-	"Unqualified optics – Replace with Avago optics for Warranty and Technical Support.",
-	"Uncertified optics – Replace with Avago-certified optics to enable link operation."
+	"Optics of two types installed ??? Remove one optic or install matching pair of optics.",
+	"Incompatible optics ??? Replace with compatible optics for card to function.",
+	"Unqualified optics ??? Replace with Avago optics for Warranty and Technical Support.",
+	"Uncertified optics ??? Replace with Avago-certified optics to enable link operation."
 };
 
 static char *be_port_misconfig_evt_severity[] = {

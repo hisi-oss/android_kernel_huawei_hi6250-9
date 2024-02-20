@@ -14,7 +14,7 @@
  *
  * Copyright (C) 2005 Narayanan R S <nars@kadamba.org>
  *
- * Copyright (C) 2001-2002 Alcôve <www.alcove.com>
+ * Copyright (C) 2001-2002 Alc??ve <www.alcove.com>
  *
  * Copyright (C) 2001 Michael Ashley <m.ashley@unsw.edu.au>
  *

@@ -528,7 +528,7 @@ EXPORT_SYMBOL(mma9551_update_config_bits);
  *		the interrupt line has the same value as the selected bit,
  *		while polarity=1 means the line is inverted.
  *
- * Assign a bit from an application’s status register to a specific GPIO pin.
+ * Assign a bit from an application???s status register to a specific GPIO pin.
  *
  * Locking note: This function must be called with the device lock held.
  * Locking is not handled inside the function. Callers should ensure they

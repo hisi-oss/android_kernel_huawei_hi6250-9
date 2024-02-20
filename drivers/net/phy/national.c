@@ -87,7 +87,7 @@ static int ns_ack_interrupt(struct phy_device *phydev)
 	if (ret < 0)
 		return ret;
 
-	/* Clear the interrupt status bit by writing a “1”
+	/* Clear the interrupt status bit by writing a ???1???
 	 * to the corresponding bit in INT_CLEAR (2:0 are reserved) */
 	ret = phy_write(phydev, DP83865_INT_CLEAR, ret & ~0x7);
 

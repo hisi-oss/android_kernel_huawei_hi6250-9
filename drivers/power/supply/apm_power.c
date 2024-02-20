@@ -1,6 +1,6 @@
 /*
- * Copyright © 2007 Anton Vorontsov <cbou@mail.ru>
- * Copyright © 2007 Eugeny Boger <eugenyboger@dgap.mipt.ru>
+ * Copyright ?? 2007 Anton Vorontsov <cbou@mail.ru>
+ * Copyright ?? 2007 Eugeny Boger <eugenyboger@dgap.mipt.ru>
  *
  * Author: Eugeny Boger <eugenyboger@dgap.mipt.ru>
  *

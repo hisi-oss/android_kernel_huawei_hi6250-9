@@ -1,7 +1,7 @@
 /*
  * Loopback driver for rc-core,
  *
- * Copyright (c) 2010 David Härdeman <david@hardeman.nu>
+ * Copyright (c) 2010 David H??rdeman <david@hardeman.nu>
  *
  * This driver receives TX data and passes it back as RX data,
  * which is useful for (scripted) debugging of rc-core without
@@ -242,5 +242,5 @@ module_param(debug, bool, S_IRUGO | S_IWUSR);
 MODULE_PARM_DESC(debug, "Enable debug messages");
 
 MODULE_DESCRIPTION("Loopback device for rc-core debugging");
-MODULE_AUTHOR("David Härdeman <david@hardeman.nu>");
+MODULE_AUTHOR("David H??rdeman <david@hardeman.nu>");
 MODULE_LICENSE("GPL");

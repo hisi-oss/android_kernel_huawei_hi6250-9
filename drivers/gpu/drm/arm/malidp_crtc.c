@@ -94,7 +94,7 @@ static int malidp_crtc_atomic_check(struct drm_crtc *crtc,
 
 	/*
 	 * check if there is enough rotation memory available for planes
-	 * that need 90° and 270° rotation. Each plane has set its required
+	 * that need 90?? and 270?? rotation. Each plane has set its required
 	 * memory size in the ->plane_check() callback, here we only make
 	 * sure that the sums are less that the total usable memory.
 	 *

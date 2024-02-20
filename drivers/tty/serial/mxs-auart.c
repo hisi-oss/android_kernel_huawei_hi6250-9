@@ -274,8 +274,8 @@
 /*
  * RW. This bit reverses the polarity of the direction control signal on the RTS
  * (or DTR) pin.
- * If 0, The direction control pin will be driven to logic ‘0’ when the
- * transmitter has data to be sent. It will be driven to logic ‘1’ after the
+ * If 0, The direction control pin will be driven to logic ???0??? when the
+ * transmitter has data to be sent. It will be driven to logic ???1??? after the
  * last bit of data has been transmitted.
  */
 #define ASM9260_BM_RS485CTRL_ONIV		BIT(5)

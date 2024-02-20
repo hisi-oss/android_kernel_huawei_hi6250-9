@@ -6,7 +6,7 @@
  *	Copyright (C) 2013 Qiang Yu <yuq825@gmail.com>
  *
  *	https://github.com/hno/Allwinner-Info
- *	Copyright (C) 2013 Henrik Nordström <Henrik Nordström>
+ *	Copyright (C) 2013 Henrik Nordstr??m <Henrik Nordstr??m>
  *
  *	Copyright (C) 2013 Dmitriy B. <rzk333@gmail.com>
  *	Copyright (C) 2013 Sergey Lapin <slapin@ossfans.org>

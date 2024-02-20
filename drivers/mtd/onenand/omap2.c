@@ -3,9 +3,9 @@
  *
  *  OneNAND driver for OMAP2 / OMAP3
  *
- *  Copyright © 2005-2006 Nokia Corporation
+ *  Copyright ?? 2005-2006 Nokia Corporation
  *
- *  Author: Jarkko Lavinen <jarkko.lavinen@nokia.com> and Juha Yrjölä
+ *  Author: Jarkko Lavinen <jarkko.lavinen@nokia.com> and Juha Yrj??l??
  *  IRQ and DMA support written by Timo Teras
  *
  * This program is free software; you can redistribute it and/or modify it

@@ -3,7 +3,7 @@
  *
  *  Copyright (C) 2013 - 2014 Xilinx
  *
- *  Sören Brinkmann <soren.brinkmann@xilinx.com>
+ *  S??ren Brinkmann <soren.brinkmann@xilinx.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License v2 as published by

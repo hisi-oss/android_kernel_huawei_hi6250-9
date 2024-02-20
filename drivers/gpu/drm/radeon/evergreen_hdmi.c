@@ -1,7 +1,7 @@
 /*
  * Copyright 2008 Advanced Micro Devices, Inc.
  * Copyright 2008 Red Hat Inc.
- * Copyright 2009 Christian König.
+ * Copyright 2009 Christian K??nig.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,8 +21,8 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * Authors: Christian König
- *          Rafał Miłecki
+ * Authors: Christian K??nig
+ *          Rafa?? Mi??ecki
  */
 #include <linux/hdmi.h>
 #include <drm/drmP.h>

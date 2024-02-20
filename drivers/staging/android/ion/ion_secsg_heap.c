@@ -267,7 +267,7 @@ static int __secsg_create_pool(struct ion_secsg_heap *secsg_heap)
 	}
 	gen_pool_set_algo(secsg_heap->pool, gen_pool_best_fit, NULL);
 
-	/* Add all memory to genpool first，one chunk only*/
+	/* Add all memory to genpool first???one chunk only*/
 	cma_base = cma_get_base(secsg_heap->cma);
 	cma_size = cma_get_size(secsg_heap->cma);
 

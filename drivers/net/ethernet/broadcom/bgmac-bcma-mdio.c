@@ -1,7 +1,7 @@
 /*
  * Driver for (BCM4706)? GBit MAC core on BCMA bus.
  *
- * Copyright (C) 2012 Rafał Miłecki <zajec5@gmail.com>
+ * Copyright (C) 2012 Rafa?? Mi??ecki <zajec5@gmail.com>
  *
  * Licensed under the GNU/GPL. See COPYING for details.
  */
@@ -262,5 +262,5 @@ void bcma_mdio_mii_unregister(struct mii_bus *mii_bus)
 }
 EXPORT_SYMBOL_GPL(bcma_mdio_mii_unregister);
 
-MODULE_AUTHOR("Rafał Miłecki");
+MODULE_AUTHOR("Rafa?? Mi??ecki");
 MODULE_LICENSE("GPL");

@@ -574,7 +574,7 @@ struct setpwrmode_parm  {
 				   * driver  when it receives bcn_pass_cnt
 				   * beacons.
 				   */
-	u8	bcn_to;		  /* beacon TO (ms). ¡§=0¡¨ no limit.*/
+	u8	bcn_to;		  /* beacon TO (ms). ????=0???? no limit.*/
 	u16	bcn_itv;
 	u8	app_itv; /* only for VOIP mode. */
 	u8	awake_bcn_itv;

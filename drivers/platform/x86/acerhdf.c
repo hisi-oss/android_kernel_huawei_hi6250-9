@@ -57,7 +57,7 @@
  * (http://download.intel.com/design/processor/datashts/320032.pdf) the
  * CPU's optimal operating limits denoted in junction temperature as
  * measured by the on-die thermal monitor are within 0 <= Tj <= 90. So,
- * assume 89°C is critical temperature.
+ * assume 89??C is critical temperature.
  */
 #define ACERHDF_TEMP_CRIT 89000
 #define ACERHDF_FAN_OFF 0

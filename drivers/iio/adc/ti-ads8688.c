@@ -41,9 +41,9 @@
 
 /*
  * enum ads8688_range - ADS8688 reference voltage range
- * @ADS8688_PLUSMINUS25VREF: Device is configured for input range ±2.5 * VREF
- * @ADS8688_PLUSMINUS125VREF: Device is configured for input range ±1.25 * VREF
- * @ADS8688_PLUSMINUS0625VREF: Device is configured for input range ±0.625 * VREF
+ * @ADS8688_PLUSMINUS25VREF: Device is configured for input range ??2.5 * VREF
+ * @ADS8688_PLUSMINUS125VREF: Device is configured for input range ??1.25 * VREF
+ * @ADS8688_PLUSMINUS0625VREF: Device is configured for input range ??0.625 * VREF
  * @ADS8688_PLUS25VREF: Device is configured for input range 0 - 2.5 * VREF
  * @ADS8688_PLUS125VREF: Device is configured for input range 0 - 1.25 * VREF
  */
@@ -292,7 +292,7 @@ static int ads8688_write_raw(struct iio_dev *indio_dev,
 	mutex_lock(&st->lock);
 	switch (mask) {
 	case IIO_CHAN_INFO_SCALE:
-		/* If the offset is 0 the ±2.5 * VREF mode is not available */
+		/* If the offset is 0 the ??2.5 * VREF mode is not available */
 		offset = ads8688_range_def[st->range[chan->channel]].offset;
 		if (offset == 0 && val2 == ads8688_range_def[0].scale * st->vref_mv) {
 			mutex_unlock(&st->lock);
@@ -320,7 +320,7 @@ static int ads8688_write_raw(struct iio_dev *indio_dev,
 		}
 
 		/*
-		 * If the device are in ±2.5 * VREF mode, it's not allowed to
+		 * If the device are in ??2.5 * VREF mode, it's not allowed to
 		 * switch to a mode where the offset is 0
 		 */
 		if (val == 0 &&

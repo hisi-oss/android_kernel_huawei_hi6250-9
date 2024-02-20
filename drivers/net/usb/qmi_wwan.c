@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012  Bjørn Mork <bjorn@mork.no>
+ * Copyright (c) 2012  Bj??rn Mork <bjorn@mork.no>
  *
  * The probing code is heavily inspired by cdc_ether, which is:
  * Copyright (C) 2003-2005 by David Brownell
@@ -1058,6 +1058,6 @@ static struct usb_driver qmi_wwan_driver = {
 
 module_usb_driver(qmi_wwan_driver);
 
-MODULE_AUTHOR("Bjørn Mork <bjorn@mork.no>");
+MODULE_AUTHOR("Bj??rn Mork <bjorn@mork.no>");
 MODULE_DESCRIPTION("Qualcomm MSM Interface (QMI) WWAN driver");
 MODULE_LICENSE("GPL");

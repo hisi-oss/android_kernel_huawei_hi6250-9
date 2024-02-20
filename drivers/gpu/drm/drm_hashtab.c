@@ -29,7 +29,7 @@
  * Simple open hash tab implementation.
  *
  * Authors:
- * Thomas Hellström <thomas-at-tungstengraphics-dot-com>
+ * Thomas Hellstr??m <thomas-at-tungstengraphics-dot-com>
  */
 
 #include <drm/drmP.h>

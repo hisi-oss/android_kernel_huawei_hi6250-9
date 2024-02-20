@@ -994,7 +994,7 @@ static inline void cp_start_hw (struct cp_private *cp)
 
 	/*
 	 * These (at least TxRingAddr) need to be configured after the
-	 * corresponding bits in CpCmd are enabled. Datasheet v1.6 §6.33
+	 * corresponding bits in CpCmd are enabled. Datasheet v1.6 ??6.33
 	 * (C+ Command Register) recommends that these and more be configured
 	 * *after* the [RT]xEnable bits in CpCmd are set. And on some hardware
 	 * it's been observed that the TxRingAddr is actually reset to garbage

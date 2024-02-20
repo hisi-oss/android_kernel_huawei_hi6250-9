@@ -1773,12 +1773,12 @@ static uint8_t gyro_sensor_calibrate_data[MAX_SENSOR_CALIBRATE_DATA_LENGTH];
 static uint8_t handpress_calibrate_data[MAX_SENSOR_CALIBRATE_DATA_LENGTH];
 /*******************************************************************************
 Function:	read_gsensor_offset_from_nv
-Description:   读取NV项中的gsensor 校准数据，并发送给mcu 侧
-Data Accessed:  无
-Data Updated:   无
-Input:         无
-Output:         无
-Return:         成功或者失败信息: 0->成功, -1->失败
+Description:   ????NV??????gsensor ??????????????????mcu ??
+Data Accessed:  ??
+Data Updated:   ??
+Input:         ??
+Output:         ??
+Return:         ????????????????: 0->????, -1->????
 *******************************************************************************/
 int read_gsensor_offset_from_nv(void)
 {
@@ -1845,12 +1845,12 @@ int read_gsensor_offset_from_nv(void)
 
 /*******************************************************************************
 Function:	write_gsensor_offset_to_nv
-Description:  将temp数据写入NV 项中
-Data Accessed:  无
-Data Updated:   无
-Input:        g-sensor 校准值
-Output:         无
-Return:         成功或者失败信息: 0->成功, -1->失败
+Description:  ??temp????????NV ????
+Data Accessed:  ??
+Data Updated:   ??
+Input:        g-sensor ??????
+Output:         ??
+Return:         ????????????????: 0->????, -1->????
 *******************************************************************************/
 int write_gsensor_offset_to_nv(char *temp, int length)
 {
@@ -3388,12 +3388,12 @@ const char *get_sensor_info_by_tag(int tag)
 
 /*******************************************************************************
 Function:	sensor_set_cfg_data
-Description: 其他配置信息，例如是否需要根据电池电流大小校准指南针
-Data Accessed:  无
-Data Updated:   无
-Input:        无
-Output:         无
-Return:         成功或者失败信息: 0->成功, -1->失败
+Description: ????????????????????????????????????????????????????
+Data Accessed:  ??
+Data Updated:   ??
+Input:        ??
+Output:         ??
+Return:         ????????????????: 0->????, -1->????
 *******************************************************************************/
 int sensor_set_current_info(void)
 {

@@ -14,7 +14,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- * With some changes from Kyösti Mälkki <kmalkki@cc.hut.fi> and
+ * With some changes from Ky??sti M??lkki <kmalkki@cc.hut.fi> and
  * Frodo Looijaard <frodol@dds.nl>, and also from Martin Bailey
  * <mbailey@littlefeet-inc.com>
  *

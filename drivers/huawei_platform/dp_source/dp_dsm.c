@@ -92,7 +92,7 @@ HWLOG_REGIST();
 #define DP_DSM_DPCD_REVISION_MASK   (0x0F)
 
 // Manufacturer ID.
-// These IDs are assigned by Microsoft, they are PNP IDs "00001=A§; ※00010=B§; ... ※11010=Z§.
+// These IDs are assigned by Microsoft, they are PNP IDs "00001=A??; ??00010=B??; ... ??11010=Z??.
 // Bit 7 (at address 08h) is 0
 // the first character (letter) is located at bits 6 -> 2 (at address 08h),
 // the second character (letter) is located at bits 1 & 0 (at address 08h) and bits 7 -> 5 (at address 09h),
@@ -113,10 +113,10 @@ HWLOG_REGIST();
 // * ASCII text (monitor name (required), monitor serial number or unstructured text)
 // * 6 Additional standard timing information blocks
 // * Colour point data
-// 54每71	Descriptor 1
-// 72每89	Descriptor 2
-// 90每107	Descriptor 3
-// 108每125	Descriptor 4
+// 54?C71	Descriptor 1
+// 72?C89	Descriptor 2
+// 90?C107	Descriptor 3
+// 108?C125	Descriptor 4
 #define DP_DSM_EDID_DESC_OFFSET         (0x36) // from 54 bytes
 #define DP_DSM_EDID_DESC_NUM            (4)
 #define DP_DSM_EDID_DESC_SIZE           (18)

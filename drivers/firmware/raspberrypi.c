@@ -2,7 +2,7 @@
  * Defines interfaces for interacting wtih the Raspberry Pi firmware's
  * property channel.
  *
- * Copyright © 2015 Broadcom
+ * Copyright ?? 2015 Broadcom
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
