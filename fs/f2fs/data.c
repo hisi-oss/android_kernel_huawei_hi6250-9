@@ -243,9 +243,11 @@ static struct bio *__bio_alloc(struct f2fs_sb_info *sbi, block_t blk_addr,
 	bio->bi_end_io = is_read ? f2fs_read_end_io : f2fs_write_end_io;
 	bio->bi_private = is_read ? NULL : sbi;
 #ifdef CONFIG_F2FS_FS_ENCRYPTION
+#ifdef CONFIG_HISI_BLK
 	bio->hisi_bio.ci_key = NULL;
 	bio->hisi_bio.ci_key_len = 0;
 	bio->hisi_bio.ci_key_index = -1;
+#endif
 #endif
 
 	return bio;
@@ -470,12 +472,14 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
 	bio = __bio_alloc(fio->sbi, fio->new_blkaddr, 1, is_read_io(fio->op));
 
 #ifdef CONFIG_F2FS_FS_ENCRYPTION
+#ifdef CONFIG_HISI_BLK
 	if (fio->ci_key) {
 		bio->hisi_bio.ci_key = fio->ci_key;
 		bio->hisi_bio.ci_key_len = fio->ci_key_len;
 		bio->hisi_bio.ci_key_index = fio->ci_key_index;
 		bio->hisi_bio.index = page->index;
 	}
+#endif
 #endif
 
 	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
@@ -533,11 +537,13 @@ next:
 			!__same_bdev(sbi, fio->new_blkaddr, io->bio)))
 		__submit_merged_bio(io);
 #ifdef CONFIG_F2FS_FS_ENCRYPTION
+#ifdef CONFIG_HISI_BLK
 	else if ((io->bio) && ((io->bio->hisi_bio.ci_key != fio->ci_key) ||
 				(io->bio->hisi_bio.ci_key_len != fio->ci_key_len) ||
 				(fio->ci_key &&	io->last_index_in_bio !=
 						bio_page->index - 1)))
 		__submit_merged_bio(io);
+#endif
 #endif
 
 alloc_new:
@@ -568,17 +574,21 @@ alloc_new:
 
 		io->fio = *fio;
 #ifdef CONFIG_F2FS_FS_ENCRYPTION
+#ifdef CONFIG_HISI_BLK
 		io->bio->hisi_bio.ci_key = fio->ci_key;
 		io->bio->hisi_bio.ci_key_len = fio->ci_key_len;
 		io->bio->hisi_bio.ci_key_index = fio->ci_key_index;
 		if (fio->ci_key)
 			io->bio->hisi_bio.index = bio_page->index;
 #endif
+#endif
 	}
 
 #ifdef CONFIG_F2FS_FS_ENCRYPTION
+#ifdef CONFIG_HISI_BLK
 	f2fs_bug_on(sbi, (io->bio->hisi_bio.ci_key != fio->ci_key) ||
 			(io->bio->hisi_bio.ci_key_len != fio->ci_key_len));
+#endif
 #endif
 
 	if (bio_add_page(io->bio, bio_page, PAGE_SIZE, 0) < PAGE_SIZE) {
@@ -641,12 +651,14 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
 	bio->bi_private = ctx;
 	bio_set_op_attrs(bio, REQ_OP_READ, 0);
 #ifdef CONFIG_F2FS_FS_ENCRYPTION
+#ifdef CONFIG_HISI_BLK
 	if (need_key) {
 		bio->hisi_bio.ci_key = fscrypt_ci_key(inode);
 		bio->hisi_bio.ci_key_len = fscrypt_ci_key_len(inode);
 		bio->hisi_bio.ci_key_index = fscrypt_ci_key_index(inode);
 		bio->hisi_bio.index = page->index;
 	}
+#endif
 #endif
 
 	return bio;

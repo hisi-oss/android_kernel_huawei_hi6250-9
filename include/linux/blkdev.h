@@ -351,7 +351,6 @@ enum blk_freeze_obj_type {
 typedef void (*lld_dump_status_fn)(struct request_queue *, enum blk_dump_scenario);
 typedef int (*blk_direct_flush_fn)(struct request_queue *);
 
-#ifdef CONFIG_HISI_BLK
 enum blk_lld_base {
 	BLK_LLD_QUEUE_BASE = 0,
 	BLK_LLD_QUEUE_TAG_BASE,
@@ -449,7 +448,6 @@ struct blk_dev_lld {
 	unsigned long write_len; /* accumulated write len of the whole device */
 	unsigned long discard_len; /* accumulated discard len of the whole device */
 };
-#endif
 
 struct blk_queue_tag {
 	struct request **tag_index;	/* map of busy tags */
@@ -1200,7 +1198,7 @@ do {								\
 } while (0)
 #endif
 
-extern void blk_queue_dump_register(struct request_queue *q, lld_dump_status_fn func);
+// extern void blk_queue_dump_register(struct request_queue *q, lld_dump_status_fn func);
 extern int blk_register_queue(struct gendisk *disk);
 extern void blk_unregister_queue(struct gendisk *disk);
 extern blk_qc_t generic_make_request(struct bio *bio);
@@ -2244,9 +2242,6 @@ static inline int blk_queue_flush_async_support(struct request_queue *q){ return
 static inline void blk_mq_tagset_ufs_mq_iosched_enable(struct blk_mq_tag_set *tag_set, int enable){}
 static inline void blk_power_off_flush(int emergency){}
 static inline void blk_generic_freeze(void *freeze_obj, enum blk_freeze_obj_type type, bool freeze){};
-static void bio_set_streamid(struct bio *bio, unsigned char id){};
-static unsigned char bio_get_streamid(struct bio *bio){return 0;}
-static unsigned char req_get_streamid(struct request *req){return 0;}
 static inline void blk_lld_idle_notify(struct blk_dev_lld *lld){}
 #endif
 

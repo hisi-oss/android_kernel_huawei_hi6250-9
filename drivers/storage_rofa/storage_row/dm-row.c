@@ -392,6 +392,7 @@ static void row_fix_bio_cieinfo(struct bio *bio, const struct bio *base_bio)
 	unsigned int bvec_off;
 	sector_t sec_downrnd;
 
+#ifdef CONFIG_HISI_BLK
 	bio->hisi_bio.ci_key = base_bio->hisi_bio.ci_key;
 	bio->hisi_bio.ci_key_len = base_bio->hisi_bio.ci_key_len;
 	bio->hisi_bio.ci_key_index = base_bio->hisi_bio.ci_key_index;
@@ -403,6 +404,7 @@ static void row_fix_bio_cieinfo(struct bio *bio, const struct bio *base_bio)
 		bvec_off = (bio->bi_iter.bi_sector - sec_downrnd) >> 3;
 		bio->hisi_bio.index = base_bio->hisi_bio.index + bvec_off;
 	}
+#endif
 #endif
 }
 
@@ -998,7 +1000,10 @@ static int row_read_fill_chunk(struct dm_row *s, struct bio *ref)
 	}
 
 	row_fix_bio_cieinfo(bio, ref);
+
+#ifdef CONFIG_HISI_BLK
 	row_skip_hisi_bio_count(bio);
+#endif
 
 	/* read from original device */
 	q = bdev_get_queue(s->origin->bdev);
@@ -1026,7 +1031,10 @@ static int row_read_fill_chunk(struct dm_row *s, struct bio *ref)
 	 * current->bio_list and only return to wait
 	 * when the current request is blocked
 	 */
+#ifdef CONFIG_HISI_BLK
 	row_skip_hisi_bio_count(bio);
+#endif
+
 	q = bdev_get_queue(s->cow->bdev);
 	err = submit_bio_mkreq_wait(q->make_request_fn, q, bio);
 	if (err)
@@ -1122,7 +1130,9 @@ static int row_map(struct dm_target *ti, struct bio *bio)
 		goto out_remapped;
 	} else {
 		bio->bi_bdev = s->origin->bdev;
+#ifdef CONFIG_HISI_BLK
 		row_skip_hisi_bio_count(bio);
+#endif
 		/*
 		 * always SUBMITTED for avoid infinite remapping loop.
 		 * we can do some duplicate check both in mrfn redirection pipe
