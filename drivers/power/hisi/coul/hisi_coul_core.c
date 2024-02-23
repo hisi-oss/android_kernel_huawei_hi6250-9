@@ -15,7 +15,7 @@
 #include "inputhub_bridge.h"
 #endif
 
-#define COUL_CORE_INFO
+// #define COUL_CORE_INFO
 #ifndef COUL_CORE_INFO
 #define coul_core_debug(fmt, args...)do {} while (0)
 #define coul_core_info(fmt, args...) do {} while (0)
