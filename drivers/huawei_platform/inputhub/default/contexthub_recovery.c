@@ -403,7 +403,6 @@ static void sh_wait_fs(char* path)
 	    fd = sys_access(path, 0);
 	    if (fd) {
 	        msleep(10);
-	        hwlog_info("%s wait ...\n", __func__);
 	    }
 	}
 	while (fd);
